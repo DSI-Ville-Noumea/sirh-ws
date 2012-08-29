@@ -1,0 +1,159 @@
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-16 09:01:04
+project --topLevelPackage nc.noumea.mairie --projectName SIRH_Kiosque --java 6 --packaging WAR
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-16 09:01:16
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-16 09:01:19
+hint
+jpa setup --database DB2_400 --provider HIBERNATE 
+hint
+entity jpa --class nc.noumea.mairie.model.bean --entityName Agent --serializable --table AGENT --schema SIRH
+entity jpa --class ~.model.bean.Agent --table AGENT --identifierColumn ID_AGENT --identifierField idAgent --identifierType java.lang.Integer
+hint
+field number --fieldName nomatr --type java.lang.Integer --column NOMATR --notNull
+entity jpa --class ~.bean.Enfant --serializable 
+entity jpa --class ~.model.bean.ParentEnfant --table PARENT_ENFANT --identifierColumn ID_AGENT --identifierField idAgent --identifierType java.lang.Integer
+field number --type java.lang.Integer --fieldName idEnfant --column ID_ENFANT --notNull 
+focus --class ~.bean.Agent
+field set --type ~.bean.Enfant --fieldName enfant --cardinality MANY_TO_MANY
+// [failed] field reference --type ~.bean.Enfant --fieldName enfant2 --cardinality MANY_TO_MANY --joinColumnName ID_AGENT --referencedColumnName ID_ENFANT
+// [failed] field set --type ~.bean.Enfant --fieldName enfant --cardinality MANY_TO_MANY --mappedBy ParentEnfant
+field set --type ~.bean.Enfant --fieldName enfant2 --cardinality MANY_TO_MANY --mappedBy ParentEnfant
+focus --class ~.bean.Enfant
+field string --fieldName nom --notNull 
+web mvc json setup
+web mvc json add --jsonObject ~.bean.Agent --class nc.noumea.mairie.web.controller.AgentController
+perform clean 
+perform clean
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-16 10:38:45
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-16 10:41:08
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-16 10:54:11
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-20 13:41:39
+field string --fieldName nomPatronymique  --class ~.model.bean.Agent --column NOM_PATRONYMIQUE
+field string --fieldName nomMarital  --column NOM_MARITAL
+field string --fieldName nomUsage  --column NOM_USAGE
+field string --fieldName prenomUsage  --column PRENOM_USAGE
+field string --fieldName prenom  --column PRENOM
+field date --type java.util.Date --fieldName dateNaissance --column DATE_NAISSANCE --notNull 
+// [failed] focus --class ~.model.bean.SituationFamiliale
+entity jpa --class ~.model.bean.SituationFamiliale --entityName SituationFamiliale --identifierColumn ID_SITUATION_FAMILIALE --identifierField idSituationFamiliale --identifierType java.lang.Integer
+field number --fieldName idSituationFamiliale --type java.lang.Integer --column ID_SITUATION_FAMILIALE --notNull 
+field string --fieldName libSituationFamiliale --column LIB_SITUATION_FAMILIALE --notNull 
+// [failed] field reference --type ~.model.bean.SituationFamiliale --fieldName idSituationFamiliale --joinColumnName ID_SITUATION_FAMILIALE --referencedColumnName ID_SITUATION_FAMILIALE --cardinality ONE_TO_ONE 
+field reference --type ~.model.bean.SituationFamiliale --fieldName idSituationFamiliale --joinColumnName ID_SITUATION_FAMILIALE --referencedColumnName ID_SITUATION_FAMILIALE --cardinality ONE_TO_ONE 
+focus --class ~.model.bean.Agent
+field reference --type ~.model.bean.SituationFamiliale --fieldName idSituationFamiliale --joinColumnName ID_SITUATION_FAMILIALE --referencedColumnName ID_SITUATION_FAMILIALE --cardinality ONE_TO_ONE 
+focus --class ~.model.bean.Agent
+field reference --type ~.model.bean.SituationFamiliale --fieldName situationFamiliale --joinColumnName ID_SITUATION_FAMILIALE --referencedColumnName ID_SITUATION_FAMILIALE --cardinality ONE_TO_ONE 
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-20 15:52:11
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-20 15:53:00
+focus --class ~.model.bean.Agent
+entity jpa --class ~.model.bean.Siviet --schema MAIRIE --table SIVIET
+// [failed] field string --fieldName numCafat  --column NUM_CAFAT --
+focus --class ~.model.bean.Agent
+field string --fieldName numCafat  --column NUM_CAFAT --
+field string --fieldName numRuamm  --column NUM_RUAMM
+field string --fieldName numMutuelle  --column NUM_MUTUELLE
+field string --fieldName numCre  --column NUM_CRE
+field string --fieldName numIrcafex  --column NUM_IRCAFEX
+field string --fieldName numClr  --column NUM_CLR
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-20 16:40:33
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-21 08:28:33
+entity jpa --class ~.model.bean.Banque --schema MAIRIE --table SIGUIC
+field number --type java.lang.Integer --fieldName cdBanq --column CDBANQ --notNull 
+field number --type java.lang.Integer --fieldName cdGuic --column CDGUIC --notNull 
+field string --fieldName liGuic --column LIGUIC --notNull 
+focus --class ~.model.bean.Agent
+field reference --type ~.model.bean.Banque --fieldName cdBanque --cardinality MANY_TO_ONE --joinColumnName CDBANQ --referencedColumnName CDBANQ 
+field reference --type ~.model.bean.Banque --fieldName cdGuic --cardinality MANY_TO_ONE --joinColumnName CDGUIC --referencedColumnName CDGUIC 
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-21 08:56:01
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-21 16:09:35
+entity jpa --class ~.model.bean.SIVIET --schema MAIRIE --table SIVIET
+field number --fieldName codePays --type java.lang.Integer --column CODPAY
+field number --fieldName sousCodePays --type java.lang.Integer --column SCODPA
+focus --class ~.model.bean.Agent
+entity jpa --class ~.model.bean.Sicomm --entityName Sicomm --identifierColumn CODCOM --identifierField codCommune --identifierType java.lang.Integer
+field string --fieldName libCommune --column LIBVIL --notNull
+focus --class ~.model.bean.Agent
+// [failed] field reference --type ~.model.bean.Sicomm --fieldName codeCommuneNaissFr --referencedColumnName CODE_COMMUNE_NAISS_FR
+field reference --type ~.model.bean.Sicomm --fieldName codeCommuneNaissFr --referencedColumnName CODE_COMMUNE_NAISS_FR --joinColumnName CODE_COMMUNE_NAISS_FR 
+entity jpa --class ~.model.bean.SIVIET --schema MAIRIE --table SIVIET
+field number --fieldName codePays --type java.lang.Integer --column CODPAY
+field number --fieldName sousCodePays --type java.lang.Integer --column SCODPA
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-21 16:46:16
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-22 08:31:52
+focus --class ~.model.bean.Agent
+field number --type java.lang.Integer --fieldName codeCommuneNaissEt --column CODE_COMMUNE_NAISS_ET
+field number --type java.lang.Integer --fieldName codePaysNaissEt --column CODE_PAYS_NAISS_ET
+focus --class ~.model.bean.SIVIET
+field string --fieldName libCop --column LIBCOP
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-22 08:45:07
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-22 09:28:04
+focus --class ~.model.bean.SIVIET
+perform clean
+perform package 
+perform package 
+focus --class ~.model.bean.Agent
+field string --fieldName intituleCompte --column INTITULE_COMPTE
+field number --type java.lang.Integer --fieldName rib --column RIB
+field string --fieldName numCompte --column NUM_COMPTE
+field number --type java.lang.Integer --fieldName codeBanque --column CD_BANQUE
+field number --type java.lang.Integer --fieldName codeGuichet --column CD_GUICHET
+field string --fieldName rueNonNoumea --column RUE_NON_NOUMEA
+field string --fieldName bP --column BP
+field string --fieldName adresseComplementaire --column ADRESSE_COMPLEMENTAIRE
+field string --fieldName numRue --column NUM_RUE
+field string --fieldName bisTer --column NUM_RUE_BIS_TER
+entity jpa --class ~.model.bean.Sicdpox1 --table SICDPOX1
+entity jpa --class ~.model.bean.Sicomm --table SICOMM --identifierColumn CODCOM --identifierField codeCommune
+field string --fieldName libVil --column LIBVIL --notNull 
+field number --type java.lang.Integer --fieldName codePostalVilleDom --column CPOS_VILLE_DOM
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-22 16:40:54
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-23 13:45:17
+entity jpa --class ~.model.bean.Contact --table CONTACT --schema SIRH --identifierColumn ID_CONTACT --identifierField idContact
+entity jpa --class ~.model.bean.TypeContact --table R_TYPE_CONTACT --schema SIRH --identifierColumn ID_TYPE_CONTACT --identifierField idTypeContact
+focus --class ~.model.bean.Contact
+field number --type java.lang.Integer --fieldName idAgent --column ID_AGENT
+focus --class ~.model.bean.TypeContact
+field string --fieldName libelle --column LIBELLE
+focus --class ~.model.bean.Contact
+field string --fieldName description --column DESCRIPTION 
+field string --fieldName diffusable --column DIFFUSABLE
+field boolean --fieldName prioritaire --column PRIORITAIRE
+entity jpa --class ~.model.bean.Enfant 
+entity jpa --class ~.model.pk.ParentEnfant
+entity jpa --class ~.model.pk.ParentEnfantPK
+entity jpa --class ~.model.bean.ParentEnfant
+entity jpa --class ~.model.bean.SpSold
+focus --class ~.model.bean.SpSold 
+field number --type java.lang.Double --fieldName soldeAnneePrec --column SOLDE1
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-23 15:48:33
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-24 08:43:02
+focus --class ~.model.bean.Spcong
+field string --fieldName test --column CDSAM
+field number --type java.lang.Integer --fieldName datDeb --column DATDEB
+entity jpa --class ~.model.bean.FichePoste --identifierColumn ID_FICHE_POSTE --identifierField idFichePoste --schema SIRH --table FICHE_POSTE
+entity jpa --class ~.model.bean.Affectation --identifierColumn ID_AFFECTATION --identifierField idAffectation --table AFFECTATION --schema SIRH
+entity jpa --class TitrePoste --table P_TITRE_POSTE --schema SIRH --identifierColumn ID_TITRE_POSTE --identifierField idTitrePoste
+entity jpa --class ~.model.bean.StatutFichePoste --identifierColumn ID_STATUT_FP --identifierField idStatutFp --table R_STATUT_FP --schema SIRH
+field string --fieldName libStatut --column LIB_STATUT_FP --notNull 
+entity jpa --class ~.model.bean.Silieu --table SILIEU --schema MAIRIE --identifierColumn CDLIEU --identifierField codeLieu
+entity jpa --class ~.model.bean.Budget --table R_BUDGET --schema SIRH --identifierColumn ID_BUDGET --identifierField idBudget
+entity jpa --class ~.model.bean.Spbhor --table SPBHOR --schema MAIRIE --identifierColumn CDTHOR --identifierField cdThor
+entity jpa --class ~.model.bean.Siserv --table SISERV --schema MAIRIE --identifierColumn SERVI --identifierField servi
+entity jpa --class ~.model.bean.Spgeng --table SPGENG --schema MAIRIE --identifierColumn CDGENG --identifierField cdGeng
+perform clean
+perform package 
+entity jpa --class ~.model.bean.TEST --schema SIRH --identifierType java.lang.String
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-24 15:41:20
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-27 09:22:01
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-27 13:03:29
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-28 16:15:52
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-28 16:46:24
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-29 08:39:28
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-29 08:54:13
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-29 09:02:11
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-29 09:05:42
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-29 10:28:13
+json add --class ~.model.bean.Enfant
+json add --class ~.model.bean.Enfant
+focus --class ~.model.bean.Enfant
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-29 15:08:20
