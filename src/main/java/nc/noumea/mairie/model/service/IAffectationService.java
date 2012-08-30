@@ -4,5 +4,5 @@ import nc.noumea.mairie.model.bean.Affectation;
 
 public interface IAffectationService {
 
-	public Affectation getAffectationCouranteAgent(Integer id);
+	public Affectation getAffectationFP(Long idFichePoste);
 }

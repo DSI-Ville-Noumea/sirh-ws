@@ -10,8 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.FichePoste;
 
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,7 +38,7 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public Agent getAgentAffectationCourante(Integer id) {
+	public List<Agent> getAgentService(String servi, Integer idAgent) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = null;
@@ -47,34 +47,69 @@ public class AgentService implements IAgentService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Agent res = null;
+		String codeService = null;
+		if (servi.endsWith("A")) {
+			codeService = servi.substring(0, servi.length() - 1);
+		} else {
+			codeService = servi;
+		}
+
 		Query query = entityManager
 				.createQuery(
-						"select ag from Agent ag, Affectation aff "
-								+ "where aff.agent.idAgent = ag.idAgent and "
-								+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent  "
+								+ " and fp.idFichePoste = aff.fichePoste.idFichePoste "
+								+ "and fp.service.servi like :codeServ and aff.agent.idAgent != :idAgent "
+								+ "and aff.dateDebutAff<=:dateJour and "
 								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
 						Agent.class);
-		query.setParameter("idAgent", id);
+		query.setParameter("codeServ", codeService + "%");
+		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
-		List<Agent> la = query.getResultList();
+		List<Agent> lag = query.getResultList();
 
-		for (Agent a : la)
-			res = a;
-
-		return res;
+		return lag;
 	}
 
 	@Override
-	public List<FichePoste> getFichePosteEnfant(Integer id) {
-		Query query = entityManager.createQuery("select fp from FichePoste fp "
-				+ "where fp.responsable.idFichePoste in " + "("
-				+ "select aff.fichePoste.idFichePoste from Affectation aff "
-				+ "where aff.agent.idAgent = :idAgent" + ")", FichePoste.class);
-		query.setParameter("idAgent", id);
-		List<FichePoste> lfp = query.getResultList();
-
-		return lfp;
+	public JSONObject removeAll(JSONObject json) {
+		json.remove("idAgent");
+		json.remove("nomatr");
+		json.remove("nomPatronymique");
+		json.remove("nomMarital");
+		json.remove("nomUsage");
+		json.remove("prenomUsage");
+		json.remove("prenom");
+		json.remove("civilite");
+		json.remove("dateNaissance");
+		json.remove("situationFamiliale");
+		json.remove("numCafat");
+		json.remove("numRuamm");
+		json.remove("numMutuelle");
+		json.remove("numCre");
+		json.remove("numIrcafex");
+		json.remove("numClr");
+		json.remove("codeCommuneNaissFr");
+		json.remove("codeCommuneNaissEt");
+		json.remove("codePaysNaissEt");
+		json.remove("intituleCompte");
+		json.remove("rib");
+		json.remove("numCompte");
+		json.remove("codeBanque");
+		json.remove("codeGuichet");
+		json.remove("lieuNaissance");
+		json.remove("banque");
+		json.remove("voie");
+		json.remove("rueNonNoumea");
+		json.remove("BP");
+		json.remove("adresseComplementaire");
+		json.remove("numRue");
+		json.remove("bisTer");
+		json.remove("codeCommuneVilleDom");
+		json.remove("codeCommuneVilleBP");
+		json.remove("codePostalVilleDom");
+		json.remove("codePostalVilleBP");
+		json.remove("version");
+		return json;
 	}
 
 }

@@ -42,10 +42,18 @@ public class SpcongService implements ISpcongService {
 
 	@Override
 	public List<Spcong> getToutHistoriqueConge(Long nomatr) {
+		// on veut l'historique au delà d'1 an
+		Date dateJour = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateJourString = sdf.format(dateJour);
+		Integer annee = Integer.valueOf(dateJourString.substring(0, 4)) - 1;
+		String datFinMax = annee.toString()
+				+ dateJourString.substring(4, dateJourString.length());
 		Query query = entityManager.createQuery(
 				"select spcong from Spcong spcong "
-						+ "where spcong.id.nomatr=:nomatr", Spcong.class);
+						+ "where spcong.id.nomatr=:nomatr and spcong.datFin<:datFin", Spcong.class);
 		query.setParameter("nomatr", nomatr.intValue());
+		query.setParameter("datFin", Integer.valueOf(datFinMax));
 		List<Spcong> lcong = query.getResultList();
 
 		return lcong;

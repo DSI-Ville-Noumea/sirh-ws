@@ -4,6 +4,7 @@
 package nc.noumea.mairie.model.bean;
 
 import nc.noumea.mairie.model.bean.Competence;
+import nc.noumea.mairie.model.bean.TypeCompetence;
 
 privileged aspect Competence_Roo_JavaBean {
     
@@ -13,6 +14,14 @@ privileged aspect Competence_Roo_JavaBean {
     
     public void Competence.setNomCompetence(String nomCompetence) {
         this.nomCompetence = nomCompetence;
+    }
+    
+    public TypeCompetence Competence.getTypeCompetence() {
+        return this.typeCompetence;
+    }
+    
+    public void Competence.setTypeCompetence(TypeCompetence typeCompetence) {
+        this.typeCompetence = typeCompetence;
     }
     
 }

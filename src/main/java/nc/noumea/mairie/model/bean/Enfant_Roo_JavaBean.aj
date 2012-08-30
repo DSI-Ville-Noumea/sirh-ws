@@ -3,7 +3,9 @@
 
 package nc.noumea.mairie.model.bean;
 
+import java.util.Date;
 import nc.noumea.mairie.model.bean.Enfant;
+import nc.noumea.mairie.model.bean.Sicomm;
 
 privileged aspect Enfant_Roo_JavaBean {
     
@@ -13,6 +15,54 @@ privileged aspect Enfant_Roo_JavaBean {
     
     public void Enfant.setNom(String nom) {
         this.nom = nom;
+    }
+    
+    public String Enfant.getPrenom() {
+        return this.prenom;
+    }
+    
+    public void Enfant.setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+    
+    public String Enfant.getSexe() {
+        return this.sexe;
+    }
+    
+    public void Enfant.setSexe(String sexe) {
+        this.sexe = sexe;
+    }
+    
+    public Date Enfant.getDateNaissance() {
+        return this.dateNaissance;
+    }
+    
+    public void Enfant.setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+    
+    public Sicomm Enfant.getCodeCommuneNaissFr() {
+        return this.codeCommuneNaissFr;
+    }
+    
+    public void Enfant.setCodeCommuneNaissFr(Sicomm codeCommuneNaissFr) {
+        this.codeCommuneNaissFr = codeCommuneNaissFr;
+    }
+    
+    public Integer Enfant.getCodeCommuneNaissEt() {
+        return this.codeCommuneNaissEt;
+    }
+    
+    public void Enfant.setCodeCommuneNaissEt(Integer codeCommuneNaissEt) {
+        this.codeCommuneNaissEt = codeCommuneNaissEt;
+    }
+    
+    public Integer Enfant.getCodePaysNaissEt() {
+        return this.codePaysNaissEt;
+    }
+    
+    public void Enfant.setCodePaysNaissEt(Integer codePaysNaissEt) {
+        this.codePaysNaissEt = codePaysNaissEt;
     }
     
 }

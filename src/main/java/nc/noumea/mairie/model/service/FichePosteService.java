@@ -46,4 +46,18 @@ public class FichePosteService implements IFichePosteService {
 
 		return res;
 	}
+
+	@Override
+	public FichePoste getFichePoste(Long idFichePoste) {
+		FichePoste res = null;
+		Query query = entityManager.createQuery("select fp from FichePoste fp "
+				+ "where fp.idFichePoste =:idFP)", FichePoste.class);
+		query.setParameter("idFP", idFichePoste);
+		List<FichePoste> lfp = query.getResultList();
+
+		for (FichePoste fp : lfp)
+			res = fp;
+
+		return res;
+	}
 }

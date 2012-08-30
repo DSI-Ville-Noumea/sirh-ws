@@ -1,8 +1,5 @@
 package nc.noumea.mairie.model.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,25 +17,13 @@ public class AffectationService implements IAffectationService {
 	transient EntityManager entityManager;
 
 	@Override
-	public Affectation getAffectationCouranteAgent(Integer id) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = null;
-		try {
-			dateJour = sdf.parse(dateTemp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public Affectation getAffectationFP(Long idFichePoste) {
 		Affectation res = null;
-		Query query = entityManager
-				.createQuery(
-						"select aff from Affectation aff , Agent ag "
-								+ "where  ag.idAgent = aff.agent.idAgent  and "
-								+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
-						Affectation.class);
-		query.setParameter("idAgent", id);
-		query.setParameter("dateJour", dateJour);
+		Query query = entityManager.createQuery(
+				"select aff from Affectation aff "
+						+ "where  aff.fichePoste.idFichePoste =:idFichePoste)",
+				Affectation.class);
+		query.setParameter("idFichePoste", idFichePoste);
 		List<Affectation> laff = query.getResultList();
 
 		for (Affectation aff : laff)

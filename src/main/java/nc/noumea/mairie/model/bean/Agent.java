@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -33,7 +34,7 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT")
 public class Agent {
 
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "PARENT_ENFANT", joinColumns = { @javax.persistence.JoinColumn(name = "ID_AGENT") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ENFANT"))
 	private Set<Enfant> enfants = new HashSet<Enfant>();
 
@@ -56,6 +57,9 @@ public class Agent {
 
 	@Column(name = "PRENOM")
 	private String prenom;
+
+	@Column(name = "CIVILITE")
+	private String civilite;
 
 	@NotNull
 	@Column(name = "DATE_NAISSANCE")
@@ -171,6 +175,7 @@ public class Agent {
 		json.remove("nomUsage");
 		json.remove("prenomUsage");
 		json.remove("prenom");
+		json.remove("civilite");
 		json.remove("dateNaissance");
 		json.remove("situationFamiliale");
 		json.remove("numCafat");
@@ -292,7 +297,7 @@ public class Agent {
 		return json.toJSONString();
 	}
 
-	public String titulaireFPToJson() {
+	public String responsableHierarchiqueToJson(String titrePoste) {
 		String test = new JSONSerializer().exclude("*.class").serialize(this);
 		JSONObject json = null;
 		try {
@@ -303,6 +308,14 @@ public class Agent {
 		json = enleveTousChamps(json);
 		json.put("nom", nomUsage);
 		json.put("prenom", prenomUsage);
+		json.put("position", titrePoste);
+		if (civilite.equals("0")) {
+			json.put("titre", "Monsieur");
+		} else if (civilite.equals("1")) {
+			json.put("titre", "Madame");
+		} else {
+			json.put("titre", "Mademoiselle");
+		}
 
 		return json.toJSONString();
 	}

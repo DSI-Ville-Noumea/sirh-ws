@@ -69,6 +69,14 @@ privileged aspect Agent_Roo_JavaBean {
         this.prenom = prenom;
     }
     
+    public String Agent.getCivilite() {
+        return this.civilite;
+    }
+    
+    public void Agent.setCivilite(String civilite) {
+        this.civilite = civilite;
+    }
+    
     public Date Agent.getDateNaissance() {
         return this.dateNaissance;
     }

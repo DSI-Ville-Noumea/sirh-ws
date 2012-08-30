@@ -28,8 +28,6 @@ public class SivietService implements ISivietService {
 
 		query.setParameter("codePays", codePays);
 		query.setParameter("sousCodePays", codeCommune);
-		// System.out.println("Params : " + query.getParameters());
-		// System.out.println("Query : " + query.toString());
 		List<SIVIET> lfp = query.getResultList();
 
 		for (SIVIET fp : lfp)

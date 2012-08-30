@@ -1,15 +1,19 @@
 package nc.noumea.mairie.web.controller;
 
 import java.util.List;
-import java.util.Set;
 
+import nc.noumea.mairie.model.bean.Activite;
 import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.CadreEmploi;
+import nc.noumea.mairie.model.bean.Competence;
 import nc.noumea.mairie.model.bean.Contact;
 import nc.noumea.mairie.model.bean.Enfant;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.NiveauEtude;
 import nc.noumea.mairie.model.bean.SIVIET;
 import nc.noumea.mairie.model.bean.Siguic;
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.SpSold;
 import nc.noumea.mairie.model.bean.Spcong;
 import nc.noumea.mairie.model.service.IAffectationService;
@@ -17,6 +21,7 @@ import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.IContactService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.model.service.ISiguicService;
+import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.model.service.ISivietService;
 import nc.noumea.mairie.model.service.ISoldeService;
 import nc.noumea.mairie.model.service.ISpcongService;
@@ -34,6 +39,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import flexjson.JSONSerializer;
 
 @RooWebJson(jsonObject = Agent.class)
 @Controller
@@ -64,15 +71,8 @@ public class AgentController {
 	@Autowired
 	IAffectationService affSrv;
 
-	@RequestMapping(value = "/tst", headers = "Accept=application/json")
-	@ResponseBody
-	public ResponseEntity<String> tst() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		List<Agent> result = Agent.findAllAgents();
-		return new ResponseEntity<String>(Agent.toJsonArray(result), headers,
-				HttpStatus.OK);
-	}
+	@Autowired
+	ISiservService siservSrv;
 
 	@RequestMapping(value = "/etatCivil", headers = "Accept=application/json")
 	@ResponseBody
@@ -94,6 +94,10 @@ public class AgentController {
 		}
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+		}
 		String res = "";
 		if (ag.getCodeCommuneNaissFr() == null) {
 			SIVIET siviet = sivietSrv.getLieuNaissEtr(ag.getCodePaysNaissEt(),
@@ -108,10 +112,6 @@ public class AgentController {
 				res = res.replace("\"", "");
 				ag.setLieuNaissance(res);
 			}
-		}
-
-		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>(ag.etatCivilToJson(), headers,
 				HttpStatus.OK);
@@ -141,9 +141,9 @@ public class AgentController {
 		if (ag == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
+		String res = Enfant.enfantToJsonArray(ag.getEnfants(), sivietSrv);
 
-		return new ResponseEntity<String>(Enfant.toJsonArray(ag.getEnfants()), headers,
-				HttpStatus.OK);
+		return new ResponseEntity<String>(res, headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/couvertureSociale", headers = "Accept=application/json")
@@ -193,6 +193,9 @@ public class AgentController {
 		}
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+		if (ag == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+		}
 		String res = "";
 		if (ag.getCodeBanque() != null && ag.getCodeGuichet() != null) {
 			Siguic siguic = siguicSrv.getBanque(ag.getCodeBanque(),
@@ -207,9 +210,6 @@ public class AgentController {
 				res = res.replace("\"", "");
 				ag.setBanque(res);
 			}
-		}
-		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>(ag.banqueToJson(), headers,
 				HttpStatus.OK);
@@ -403,12 +403,49 @@ public class AgentController {
 		if (fp == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<String>(fp.fpToJson(), headers, HttpStatus.OK);
+		String service = "";
+		if (fp.getService().getServi() != null) {
+			Siserv divisionService = siservSrv.getDivision(fp.getService()
+					.getServi());
+			if (divisionService != null) {
+				service = divisionService.getLiServ();
+			} else {
+				Siserv servicePoste = siservSrv.getService(fp.getService()
+						.getServi());
+				if (servicePoste != null) {
+					service = servicePoste.getLiServ();
+				}
+			}
+		}
+		String direction = "";
+		if (fp.getService().getServi() != null) {
+			Siserv directionService = siservSrv.getDirection(fp.getService()
+					.getServi());
+			if (directionService != null) {
+				direction = directionService.getLiServ();
+			}
+		}
+		String section = "";
+		if (fp.getService().getServi() != null) {
+			Siserv sectionService = siservSrv.getSection(fp.getService()
+					.getServi());
+			if (sectionService != null) {
+				section = sectionService.getLiServ();
+			}
+		}
+		String res = fp.fpToJson(
+				Activite.activiteToJsonArray(fp.getActivites()),
+				Competence.competenceToJsonArray(fp.getCompetences()),
+				CadreEmploi.cadreEmploiToJsonArray(fp.getCardresEmploi()),
+				NiveauEtude.niveauEtudeToJsonArray(fp.getNiveauEtude()),
+				service, direction, section);
+
+		return new ResponseEntity<String>(res, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/titulaireFichePoste", headers = "Accept=application/json")
+	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getTitulaireFichePosteAgent(
+	public ResponseEntity<String> getSuperieurHierarchiqueAgent(
 			@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
@@ -424,31 +461,50 @@ public class AgentController {
 		} else {
 			newIdAgent = idAgent.toString();
 		}
-		Agent ag = agentSrv.getAgentAffectationCourante(Integer
-				.valueOf(newIdAgent));
-		Affectation aff = affSrv.getAffectationCouranteAgent(Integer
-				.valueOf(newIdAgent));
 
-		if (ag == null) {
+		FichePoste fp = fpSrv.getFichePosteAgent(Integer.valueOf(newIdAgent));
+
+		if (fp == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
-		if (aff == null) {
+		Affectation affSuperieurHierarchique = affSrv.getAffectationFP(fp
+				.getResponsable().getIdFichePoste());
+
+		if (affSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
-		//String res = ag.titulaireFPToJson() + aff.infoTitulaire();
-		String res = ag.titulaireFPToJson() ;
+		Agent superieurHierarchique = agentSrv
+				.getAgent(affSuperieurHierarchique.getAgent().getIdAgent());
+
+		if (superieurHierarchique == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+		}
+		FichePoste fichePosteSuperieurHierarchique = fpSrv
+				.getFichePoste(affSuperieurHierarchique.getFichePoste()
+						.getIdFichePoste());
+
+		if (fichePosteSuperieurHierarchique == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+		}
+
+		String res = superieurHierarchique
+				.responsableHierarchiqueToJson(fichePosteSuperieurHierarchique
+						.getTitrePoste().getLibTitrePoste());
+
 		return new ResponseEntity<String>(res, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/fichePosteEnfant", headers = "Accept=application/json")
+	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getFichePosteEnfants(
-			@RequestParam(value = "idAgent", required = true) Long idAgent) {
+	public ResponseEntity<String> getEquipeAgent(
+			@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent;
 		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
 			String matr = idAgent.toString().substring(2,
 					idAgent.toString().length());
 			String prefixe = idAgent.toString().substring(0, 2);
@@ -457,30 +513,51 @@ public class AgentController {
 			newIdAgent = idAgent.toString();
 		}
 
-		List<FichePoste> lfp = agentSrv.getFichePosteEnfant(Integer
+		FichePoste fpAgent = fpSrv.getFichePosteAgent(Integer
 				.valueOf(newIdAgent));
 
-		if (lfp == null) {
+		if (fpAgent == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+		}
+		List<Agent> lagentService = agentSrv.getAgentService(fpAgent
+				.getService().getServi(), Integer.valueOf(newIdAgent));
+
+		if (lagentService == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
 		}
 
-		// On supprimer du résultat json le champ responsable
-		JSONArray jsonLfp = null;
+		String test = new JSONSerializer().exclude("*.class").serialize(
+				lagentService);
+		JSONArray jsonAr = null;
 		try {
-			jsonLfp = (JSONArray) new JSONParser().parse(FichePoste
-					.toJsonArray(lfp));
-
-			for (int i = 0; i < jsonLfp.size(); i++) {
-				JSONObject ob = (JSONObject) jsonLfp.get(i);
-				ob.remove("responsable");
-			}
+			jsonAr = (JSONArray) new JSONParser().parse(test);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>(headers,
-					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		for (int i = 0; i < jsonAr.size(); i++) {
+			JSONObject json = (JSONObject) jsonAr.get(i);
+			String nomAgentEquipe = (String) json.get("nomUsage");
+			String prenomAgentEquipe = (String) json.get("prenomUsage");
+			String civiliteAgentEquipe = (String) json.get("civilite");
+			// pour le titre du poste
+			Long idAgentEquipe = (Long) json.get("idAgent");
+			FichePoste fp = fpSrv.getFichePosteAgent(idAgentEquipe.intValue());
+			json = agentSrv.removeAll(json);
+			json.put("position", fp.getTitrePoste().getLibTitrePoste().trim());
+			json.put("nom", nomAgentEquipe);
+			json.put("prenom", prenomAgentEquipe);
+			if (civiliteAgentEquipe.equals("0")) {
+				json.put("titre", "Monsieur");
+			} else if (civiliteAgentEquipe.equals("1")) {
+				json.put("titre", "Madame");
+			} else {
+				json.put("titre", "Mademoiselle");
+			}
+			jsonAr.remove(i);
+			jsonAr.add(i, json);
 		}
 
-		return new ResponseEntity<String>(jsonLfp.toJSONString(), headers,
+		return new ResponseEntity<String>(jsonAr.toJSONString(), headers,
 				HttpStatus.OK);
 	}
 }
