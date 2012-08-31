@@ -1,0 +1,265 @@
+﻿ -----
+ SIRH
+ -----
+ Noémie NICOLAS
+ -----
+  26/03/2012
+  
+Web Services de l'agent
+
+* Spécifications
+
+ Il s'agit des spécifications concernant les web services de l'agent.
+ 
+ {{{../doc/specifications/SIRH11_SFD_kiosque-V2.0.docx}Specifications Web Services AGENT}}
+
+* Json
+
+** EtatCivil
+
+ URL : /agents/etatCivil?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "nomPatronymique": "SALES",
+  "nomUsage": "SALES",
+  "titre": "Monsieur",
+  "prenom": "ADRIEN",
+  "situationFamiliale": "Célibataire",
+  "nomMarital": "",
+  "dateNaissance": "/Date(157035600000)/",
+  "lieuNaissance": "A renseigner"
+}
++------------------------------------------+	
+
+** Adresse
+
+ URL : /agents/adresse?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "codeCommuneVilleDom": "Païta",
+  "rue": "testjrhjklfhsdjkfhsjkqdq fhqsdjkqfhjsdqhm fhsdjqmfhsdjqhfsjdkmqhfqsj hfsdjqfhsdjqhfjkdfh hsqdfjmfhqsjdfhqsdjfhsjdhfqsdjf",
+  "bisTer": "B",
+  "codePostalVilleBP": 98890,
+  "BP": "7182",
+  "codeCommuneVilleBP": "Païta",
+  "adresseComplementaire": "LOTISSEMENT SAVANNAH",
+  "codePostalVilleDom": 98890,
+  "numRue": "299"
+}
++------------------------------------------+		
+
+** Contacts
+
+ URL : /agents/contacts?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+  {
+      "typeContact": "MOBILE PERSONNEL",
+      "description": "787785",
+      "prioritaire": "oui",
+      "diffusable": "non"
+  },
+  {
+      "typeContact": "TELEPHONE",
+      "description": "999999",
+      "prioritaire": "oui",
+      "diffusable": "non"
+  },
+  {
+      "typeContact": "TELEPHONE",
+      "description": "888888",
+      "prioritaire": "non",
+      "diffusable": "non"
+  }
+]
++------------------------------------------+		
+
+** Enfants
+
+ URL : /agents/enfants?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+  {
+      "prenom": "MATTHIEU",
+      "dateNaissance": "/Date(736261200000)/",
+      "lieuNaissance": "Nouméa",
+      "sexe": "M",
+      "aCharge": "",
+      "nom": "QUINQUIS"
+  },
+  {
+      "prenom": "JONATHAN",
+      "dateNaissance": "/Date(1036501200000)/",
+      "lieuNaissance": "Nouméa",
+      "sexe": "M",
+      "aCharge": "",
+      "nom": "QUINQUIS"
+  },
+  {
+      "prenom": "LAURA",
+      "dateNaissance": "/Date(661957200000)/",
+      "lieuNaissance": "Nouméa",
+      "sexe": "F",
+      "aCharge": "",
+      "nom": "QUINQUIS"
+  }
+]
++------------------------------------------+	
+
+** Banque
+
+ URL : /agents/banque?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "intituleCompte": "MME CHRISTINE FRANCHETTE",
+  "rib": 78,
+  "numCompte": "10729702016",
+  "banque": "B.C.I AGENCE MAIRIE"
+}
++------------------------------------------+	
+
+** Couverture Sociale
+
+ URL : /agents/couvertureSociale?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "numIrcafex": "",
+  "numCre": "",
+  "numMutuelle": "070285CHA0173",
+  "numCafat": "403664",
+  "numClr": "",
+  "numRuamm": "403664"
+}
++------------------------------------------+	
+
+** Solde Conge
+
+ URL : /agents/soldeConge?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "soldeAnneePrec": 0,
+  "soldeAnneeEnCours": 12
+}
++------------------------------------------+	
+
+** Historique Conge
+
+ URL sur 1 an  : /agents/histoConge?idAgent=90xxxx
+
+ URL au delà de 1 an  : /agents/histoCongeAll?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+ {
+   "typeConge": "CONGE ANNUEL",
+   "statut": "Validé",
+   "datFin": "/Date(1337864400000)/",
+   "datDeb": "/Date(1337518800000)/",
+   "nbJours": 5,
+   "samediDecompte": "non"
+ },
+ {
+   "typeConge": "CONGE ANNUEL",
+   "statut": "Validé",
+   "datFin": "/Date(1327582800000)/",
+   "datDeb": "/Date(1326632400000)/",
+   "nbJours": 12,
+   "samediDecompte": ""
+ },
+ {
+   "typeConge": "CONGE ANNUEL",
+   "statut": "Validé",
+   "datFin": "/Date(1324990800000)/",
+   "datDeb": "/Date(1324818000000)/",
+   "nbJours": 3,
+   "samediDecompte": ""
+ }
+]
++------------------------------------------+	
+
+** Fiche poste agent
+
+ URL : /agents/fichePoste?idAgent=90xxxx
+ 
++------------------------------------------+
+{      
+   "budget": "BP budget primitif",
+   "lieuPoste": "HOTEL DE VILLE",
+   "titrePoste": "GESTIONNAIRE RESSOURCES HUMAINES",
+   "opi": null,
+   "direction": "Direction des Ressources Humaines",
+   "missions": "Travail en cours Le chargé du recrutement analyse le besoin de personnel sur un poste, conseille sur la procédure la plus adaptée (mobilité interne, recrutement externe), recherche des candidats et conseille le recruteur sur le choix des personnes à recruter.",
+   "competences": "[{"typeCompetence":"Savoir-faire","nomCompetence":"Déterminer les essences à porter"},{"typeCompetence":"Savoir-faire","nomCompetence":"Élaborer des notes d'aide à la décision"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Sens de la communication"},{"typeCompetence":"Savoir-faire","nomCompetence":"Organiser et encadrer une césarisassion"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Sens de l'organisation et réactivité"},{"typeCompetence":"Savoir-faire","nomCompetence":"Utiliser des méthodes d'analyse du comportement en milieu professionnel"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Sens de l'écoute"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Sens de la discipline"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Autonomie"},{"typeCompetence":"Savoir-faire","nomCompetence":"Utiliser les référentiels métiers"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Goût pour les contacts humains"},{"typeCompetence":"Savoir-faire","nomCompetence":"Maîtriser des techniques d'entretien professionnel"},{"typeCompetence":"Savoir-faire","nomCompetence":"Rédiger un compte-rendu d'entretien"},{"typeCompetence":"Comportement professionnel","nomCompetence":"Sens du conseil"},{"typeCompetence":"Savoir-faire","nomCompetence":"Écouter et conseiller, voire coacher"}]",
+   "numFP": "2009/156",
+   "niveauEtude": "IV",
+   "section": "DRH SEFP Section Emploi et Formation",
+   "annee": 2009,
+   "cadreEmploi": "REDACTEUR",
+   "activites": "[{"nomActivite":"Participation à la détection de candidats potentiels (suivi des étudiants boursiers, des dispositifs Cadre avenir\u0085)"},{"nomActivite":"Participation aux commissions de recrutement et conduite d'entretiens de recrutement"},{"nomActivite":"Analyse des demandes de recrutement et définition des profils et des avis de vacance de poste"},{"nomActivite":"Préparation de l'intégration des nouveaux recrutés"},{"nomActivite":"Organisation de la communication des offres d'emploi"},{"nomActivite":"Gestion des candidatures spontanées et des demandes de stage"},{"nomActivite":"Constitution d'un vivier de candidatures internes et externes"}]",
+   "statutFP": "Validée",
+   "budgete": "Temps complet",
+   "gradePoste": "REDACTEUR",
+   "service": "DRH Service Emploi, Formation et Prévention",
+   "reglementaire": "Temps complet",
+   "nfa": "020"    
+}
++------------------------------------------+	
+
+** Supérieur hiérarchique de l'agent
+
+ URL : /agents/superieurHierarchique?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "position": "CHEF DE SECTION",
+  "titre": "Madame",
+  "prenom": "CORINNE",
+  "nom": "AUBERT"
+}
++------------------------------------------+	
+
+** Equipe de l'agent
+
+ URL : /agents/equipe?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+ {
+   "position": "DEVELOPPEUR",
+   "titre": "Monsieur",
+   "prenom": "FREDERIC",
+   "nom": "DOS SANTOS"
+ },
+ {
+   "position": "CHEF DE PROJET INFORMATIQUE",
+   "titre": "Monsieur",
+   "prenom": "LUC",
+   "nom": "BOURDIL"
+ },
+ {
+   "position": "CHEF DE DEPARTEMENT",
+   "titre": "Monsieur",
+   "prenom": "ADRIEN",
+   "nom": "SALES"
+ }
+] 
++------------------------------------------+	
+
+** L'agent est-il un chef ?
+
+ URL : /agents/estChef?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "estResponsable": true
+}
++------------------------------------------+
+
+ 

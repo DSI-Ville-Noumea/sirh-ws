@@ -111,7 +111,9 @@ public class Enfant {
 			json.remove("codeCommuneNaissFr");
 			json.remove("codeCommuneNaissEt");
 			json.remove("codePaysNaissEt");
-
+			// TODO
+			// pour le moment on ne sait pas recupere enfant à charge
+			json.put("aCharge", "");
 			jsonAr.remove(i);
 			jsonAr.add(i, json);
 

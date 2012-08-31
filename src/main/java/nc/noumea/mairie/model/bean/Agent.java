@@ -220,8 +220,7 @@ public class Agent {
 		json.put("nomPatronymique", nomPatronymique);
 		json.put("nomMarital", nomMarital);
 		json.put("nomUsage", nomUsage);
-		json.put("prenomUsage", prenomUsage);
-		json.put("prenom", prenom);
+		json.put("prenom", prenomUsage);
 		json.put("situationFamiliale",
 				situationFamiliale.getLibSituationFamiliale());
 		if (dateNaissance != null) {
@@ -231,6 +230,13 @@ public class Agent {
 			json.put("lieuNaissance", codeCommuneNaissFr.getLibVil().trim());
 		} else {
 			json.put("lieuNaissance", lieuNaissance);
+		}
+		if (civilite.equals("0")) {
+			json.put("titre", "Monsieur");
+		} else if (civilite.equals("1")) {
+			json.put("titre", "Madame");
+		} else {
+			json.put("titre", "Mademoiselle");
 		}
 		return json.toJSONString();
 	}

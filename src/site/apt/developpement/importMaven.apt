@@ -1,0 +1,20 @@
+ -----
+ SIRH
+ -----
+ Noémie NICOLAS
+ -----
+  26/03/2012
+
+Importer un projet MAVEN dans STS
+
+ Dans STS, <<Fichier>> puis <<Importer>>
+  
+[../img/dev/STS/Importer_1.png]
+
+=====================
+
+[../img/dev/STS/Importer_2.png] 
+
+=====================
+
+[../img/dev/STS/Importer_3.png]
