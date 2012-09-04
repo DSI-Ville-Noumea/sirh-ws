@@ -321,8 +321,8 @@
 		</dependency>
     </dependencies>
     <build>
-		<!-- <finalName>sirh##${project.version}-${buildNumber}</finalName> -->
-		<finalName>sirh##${project.version}</finalName>
+		<!-- <finalName>sirhws##${project.version}-${buildNumber}</finalName> -->
+		<finalName>sirhws##${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
