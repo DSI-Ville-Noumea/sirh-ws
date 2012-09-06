@@ -72,21 +72,63 @@ public class Agent {
 
 	@Column(name = "NUM_CAFAT")
 	private String numCafat;
+    
+    public String getNumCafat() {
+    	if(this.numCafat!=null){
+    		return this.numCafat.trim();
+    	}
+        return this.numCafat;
+    }	
 
 	@Column(name = "NUM_RUAMM")
 	private String numRuamm;
+    
+    public String getNumRuamm() {
+    	if(this.numRuamm!=null){
+    		return this.numRuamm.trim();
+    	}
+        return this.numRuamm;
+    }
 
 	@Column(name = "NUM_MUTUELLE")
 	private String numMutuelle;
+    
+    public String getNumMutuelle() {
+    	if(this.numMutuelle!=null){
+    		return this.numMutuelle.trim();
+    	}
+        return this.numMutuelle;
+    }
 
 	@Column(name = "NUM_CRE")
 	private String numCre;
+    
+    public String getNumCre() {
+    	if(this.numCre!=null){
+    		return this.numCre.trim();
+    	}
+        return this.numCre;
+    }
 
 	@Column(name = "NUM_IRCAFEX")
 	private String numIrcafex;
+    
+    public String getNumIrcafex() {
+    	if(this.numIrcafex!=null){
+    		return this.numIrcafex.trim();
+    	}
+        return this.numIrcafex;
+    }
 
 	@Column(name = "NUM_CLR")
 	private String numClr;
+    
+    public String getNumClr() {
+    	if(this.numClr!=null){
+    		return this.numClr.trim();
+    	}
+        return this.numClr;
+    }
 
 	@ManyToOne
 	@JoinColumn(name = "CODE_COMMUNE_NAISS_FR", referencedColumnName = "CODCOM")
