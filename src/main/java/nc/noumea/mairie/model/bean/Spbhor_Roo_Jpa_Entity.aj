@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Spbhor;
@@ -18,22 +15,9 @@ privileged aspect Spbhor_Roo_Jpa_Entity {
     
     declare @type: Spbhor: @Table(schema = "MAIRIE", name = "SPBHOR");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "CDTHOR")
-    private Long Spbhor.cdThor;
-    
     @Version
     @Column(name = "version")
     private Integer Spbhor.version;
-    
-    public Long Spbhor.getCdThor() {
-        return this.cdThor;
-    }
-    
-    public void Spbhor.setCdThor(Long id) {
-        this.cdThor = id;
-    }
     
     public Integer Spbhor.getVersion() {
         return this.version;

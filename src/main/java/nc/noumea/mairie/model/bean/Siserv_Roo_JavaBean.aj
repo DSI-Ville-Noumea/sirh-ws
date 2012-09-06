@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Siserv;
 
 privileged aspect Siserv_Roo_JavaBean {
     
+    public String Siserv.getServi() {
+        return this.servi;
+    }
+    
+    public void Siserv.setServi(String servi) {
+        this.servi = servi;
+    }
+    
     public String Siserv.getLiServ() {
         return this.liServ;
     }

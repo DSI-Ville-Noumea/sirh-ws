@@ -21,17 +21,17 @@ privileged aspect Affectation_Roo_Jpa_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_AFFECTATION")
-    private Long Affectation.idAffectation;
+    private Integer Affectation.idAffectation;
     
     @Version
     @Column(name = "version")
     private Integer Affectation.version;
     
-    public Long Affectation.getIdAffectation() {
+    public Integer Affectation.getIdAffectation() {
         return this.idAffectation;
     }
     
-    public void Affectation.setIdAffectation(Long id) {
+    public void Affectation.setIdAffectation(Integer id) {
         this.idAffectation = id;
     }
     

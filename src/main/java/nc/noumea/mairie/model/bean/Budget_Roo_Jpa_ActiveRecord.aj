@@ -28,7 +28,7 @@ privileged aspect Budget_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Budget o", Budget.class).getResultList();
     }
     
-    public static Budget Budget.findBudget(Long idBudget) {
+    public static Budget Budget.findBudget(Integer idBudget) {
         if (idBudget == null) return null;
         return entityManager().find(Budget.class, idBudget);
     }

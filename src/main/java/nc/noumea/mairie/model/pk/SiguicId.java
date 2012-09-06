@@ -22,9 +22,9 @@ public class SiguicId implements Serializable {
 		this.codeGuichet = codeGuichet;
 	}
 
-	@Column(name = "CDBANQ", insertable = false, updatable = false)
+	@Column(name = "CDBANQ", insertable = false, updatable = false,columnDefinition="decimal")
 	private Integer codeBanque;
 
-	@Column(name = "CDGUIC", insertable = false, updatable = false)
+	@Column(name = "CDGUIC", insertable = false, updatable = false,columnDefinition="decimal")
 	private Integer codeGuichet;
 }

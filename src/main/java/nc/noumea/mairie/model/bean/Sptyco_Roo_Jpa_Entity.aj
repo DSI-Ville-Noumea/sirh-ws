@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Sptyco;
@@ -18,22 +15,9 @@ privileged aspect Sptyco_Roo_Jpa_Entity {
     
     declare @type: Sptyco: @Table(schema = "MAIRIE", name = "SPTYCO");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "TYPE2")
-    private Integer Sptyco.idType;
-    
     @Version
     @Column(name = "version")
     private Integer Sptyco.version;
-    
-    public Integer Sptyco.getIdType() {
-        return this.idType;
-    }
-    
-    public void Sptyco.setIdType(Integer id) {
-        this.idType = id;
-    }
     
     public Integer Sptyco.getVersion() {
         return this.version;

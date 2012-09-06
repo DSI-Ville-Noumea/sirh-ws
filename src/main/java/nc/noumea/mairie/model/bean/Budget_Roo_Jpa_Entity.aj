@@ -21,17 +21,17 @@ privileged aspect Budget_Roo_Jpa_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_BUDGET")
-    private Long Budget.idBudget;
+    private Integer Budget.idBudget;
     
     @Version
     @Column(name = "version")
     private Integer Budget.version;
     
-    public Long Budget.getIdBudget() {
+    public Integer Budget.getIdBudget() {
         return this.idBudget;
     }
     
-    public void Budget.setIdBudget(Long id) {
+    public void Budget.setIdBudget(Integer id) {
         this.idBudget = id;
     }
     

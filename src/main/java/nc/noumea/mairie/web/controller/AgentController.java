@@ -96,7 +96,7 @@ public class AgentController {
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		String res = "";
 		if (ag.getCodeCommuneNaissFr() == null) {
@@ -139,7 +139,7 @@ public class AgentController {
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		String res = Enfant.enfantToJsonArray(ag.getEnfants(), sivietSrv);
 
@@ -168,7 +168,7 @@ public class AgentController {
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<String>(ag.couvertureSocialeToJson(),
 				headers, HttpStatus.OK);
@@ -194,7 +194,7 @@ public class AgentController {
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		String res = "";
 		if (ag.getCodeBanque() != null && ag.getCodeGuichet() != null) {
@@ -236,7 +236,7 @@ public class AgentController {
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<String>(ag.adresseToJson(), headers,
 				HttpStatus.OK);
@@ -264,7 +264,7 @@ public class AgentController {
 				.getContactsAgent(Long.valueOf(newIdAgent));
 
 		if (lc == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		JSONArray jsonLfp = null;
 		try {
@@ -298,7 +298,7 @@ public class AgentController {
 		SpSold solde = soldeSrv.getSoldeConge(Integer.valueOf(nomatr));
 
 		if (solde == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<String>(solde.soldeToJson(), headers,
 				HttpStatus.OK);
@@ -326,7 +326,7 @@ public class AgentController {
 				.valueOf(nomatr));
 
 		if (lcong == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		JSONArray jsonLcong = null;
 		try {
@@ -362,7 +362,7 @@ public class AgentController {
 				.valueOf(nomatr));
 
 		if (lcong == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		JSONArray jsonLcong = null;
 		try {
@@ -373,7 +373,7 @@ public class AgentController {
 		}
 
 		if (jsonLcong == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
 		return new ResponseEntity<String>(jsonLcong.toJSONString(), headers,
@@ -402,7 +402,7 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fp == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		String service = "";
 		if (fp.getService().getServi() != null) {
@@ -467,26 +467,26 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fp == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		Affectation affSuperieurHierarchique = affSrv.getAffectationFP(fp
 				.getResponsable().getIdFichePoste());
 
 		if (affSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		Agent superieurHierarchique = agentSrv
 				.getAgent(affSuperieurHierarchique.getAgent().getIdAgent());
 
 		if (superieurHierarchique == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		FichePoste fichePosteSuperieurHierarchique = fpSrv
 				.getFichePoste(affSuperieurHierarchique.getFichePoste()
 						.getIdFichePoste());
 
 		if (fichePosteSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
 		String res = superieurHierarchique
@@ -519,13 +519,13 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fpAgent == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		List<Agent> lagentService = agentSrv.getAgentService(fpAgent
 				.getService().getServi(), Integer.valueOf(newIdAgent));
 
 		if (lagentService == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
 		String test = new JSONSerializer().exclude("*.class").serialize(
@@ -588,15 +588,15 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fpAgent == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
-		Long idFichePosteAgent = fpAgent.getIdFichePoste();
+		Integer idFichePosteAgent = fpAgent.getIdFichePoste();
 
 		List<FichePoste> lfpAgentService = fpSrv.getFichePosteAgentService(
 				fpAgent.getService().getServi(), Integer.valueOf(newIdAgent));
 
 		if (lfpAgentService == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
 		// on parcours la liste des agents du service et on regarde si la fiche

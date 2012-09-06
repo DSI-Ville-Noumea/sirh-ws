@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Siserv;
@@ -18,22 +15,9 @@ privileged aspect Siserv_Roo_Jpa_Entity {
     
     declare @type: Siserv: @Table(schema = "MAIRIE", name = "SISERV");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "SERVI")
-    private String Siserv.servi;
-    
     @Version
     @Column(name = "version")
     private Integer Siserv.version;
-    
-    public String Siserv.getServi() {
-        return this.servi;
-    }
-    
-    public void Siserv.setServi(String id) {
-        this.servi = id;
-    }
     
     public Integer Siserv.getVersion() {
         return this.version;

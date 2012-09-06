@@ -28,7 +28,7 @@ privileged aspect Affectation_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Affectation o", Affectation.class).getResultList();
     }
     
-    public static Affectation Affectation.findAffectation(Long idAffectation) {
+    public static Affectation Affectation.findAffectation(Integer idAffectation) {
         if (idAffectation == null) return null;
         return entityManager().find(Affectation.class, idAffectation);
     }

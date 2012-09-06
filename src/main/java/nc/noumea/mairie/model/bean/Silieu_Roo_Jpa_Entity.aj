@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Silieu;
@@ -18,22 +15,9 @@ privileged aspect Silieu_Roo_Jpa_Entity {
     
     declare @type: Silieu: @Table(schema = "MAIRIE", name = "SILIEU");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "CDLIEU")
-    private Long Silieu.codeLieu;
-    
     @Version
     @Column(name = "version")
     private Integer Silieu.version;
-    
-    public Long Silieu.getCodeLieu() {
-        return this.codeLieu;
-    }
-    
-    public void Silieu.setCodeLieu(Long id) {
-        this.codeLieu = id;
-    }
     
     public Integer Silieu.getVersion() {
         return this.version;

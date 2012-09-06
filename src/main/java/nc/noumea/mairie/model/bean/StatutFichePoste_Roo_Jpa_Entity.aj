@@ -21,17 +21,17 @@ privileged aspect StatutFichePoste_Roo_Jpa_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_STATUT_FP")
-    private Long StatutFichePoste.idStatutFp;
+    private Integer StatutFichePoste.idStatutFp;
     
     @Version
     @Column(name = "version")
     private Integer StatutFichePoste.version;
     
-    public Long StatutFichePoste.getIdStatutFp() {
+    public Integer StatutFichePoste.getIdStatutFp() {
         return this.idStatutFp;
     }
     
-    public void StatutFichePoste.setIdStatutFp(Long id) {
+    public void StatutFichePoste.setIdStatutFp(Integer id) {
         this.idStatutFp = id;
     }
     

@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Sivoie;
 
 privileged aspect Sivoie_Roo_JavaBean {
     
+    public Integer Sivoie.getIdVoie() {
+        return this.idVoie;
+    }
+    
+    public void Sivoie.setIdVoie(Integer idVoie) {
+        this.idVoie = idVoie;
+    }
+    
     public String Sivoie.getLiVoie() {
         return this.liVoie;
     }

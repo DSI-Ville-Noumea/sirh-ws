@@ -92,25 +92,25 @@ public class Agent {
 	@JoinColumn(name = "CODE_COMMUNE_NAISS_FR", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneNaissFr;
 
-	@Column(name = "CODE_COMMUNE_NAISS_ET")
+	@Column(name = "CODE_COMMUNE_NAISS_ET", columnDefinition="numeric")
 	private Integer codeCommuneNaissEt;
 
-	@Column(name = "CODE_PAYS_NAISS_ET")
+	@Column(name = "CODE_PAYS_NAISS_ET", columnDefinition="numeric")
 	private Integer codePaysNaissEt;
 
 	@Column(name = "INTITULE_COMPTE")
 	private String intituleCompte;
 
-	@Column(name = "RIB")
+	@Column(name = "RIB", columnDefinition="numeric")
 	private Integer rib;
 
 	@Column(name = "NUM_COMPTE")
 	private String numCompte;
 
-	@Column(name = "CD_BANQUE")
+	@Column(name = "CD_BANQUE", columnDefinition="decimal")
 	private Integer codeBanque;
 
-	@Column(name = "CD_GUICHET")
+	@Column(name = "CD_GUICHET", columnDefinition="decimal")
 	private Integer codeGuichet;
 
 	private String lieuNaissance;
@@ -144,10 +144,10 @@ public class Agent {
 	@JoinColumn(name = "CCOM_VILLE_BP", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneVilleBP;
 
-	@Column(name = "CPOS_VILLE_DOM")
+	@Column(name = "CPOS_VILLE_DOM", columnDefinition="numeric")
 	private Integer codePostalVilleDom;
 
-	@Column(name = "CPOS_VILLE_BP")
+	@Column(name = "CPOS_VILLE_BP", columnDefinition="numeric")
 	private Integer codePostalVilleBP;
 
 	public String getLieuNaissance() {

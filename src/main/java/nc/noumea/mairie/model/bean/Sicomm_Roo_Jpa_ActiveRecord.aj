@@ -3,6 +3,7 @@
 
 package nc.noumea.mairie.model.bean;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,7 +29,7 @@ privileged aspect Sicomm_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Sicomm o", Sicomm.class).getResultList();
     }
     
-    public static Sicomm Sicomm.findSicomm(Long codeCommune) {
+    public static Sicomm Sicomm.findSicomm(BigDecimal codeCommune) {
         if (codeCommune == null) return null;
         return entityManager().find(Sicomm.class, codeCommune);
     }

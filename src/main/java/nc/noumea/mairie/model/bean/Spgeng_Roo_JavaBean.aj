@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Spgeng;
 
 privileged aspect Spgeng_Roo_JavaBean {
     
+    public String Spgeng.getCdgeng() {
+        return this.cdgeng;
+    }
+    
+    public void Spgeng.setCdgeng(String cdgeng) {
+        this.cdgeng = cdgeng;
+    }
+    
     public String Spgeng.getLiGrad() {
         return this.liGrad;
     }

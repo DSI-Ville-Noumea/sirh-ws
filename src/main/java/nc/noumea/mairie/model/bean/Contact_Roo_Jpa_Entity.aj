@@ -21,17 +21,17 @@ privileged aspect Contact_Roo_Jpa_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_CONTACT")
-    private Long Contact.idContact;
+    private Integer Contact.idContact;
     
     @Version
     @Column(name = "version")
     private Integer Contact.version;
     
-    public Long Contact.getIdContact() {
+    public Integer Contact.getIdContact() {
         return this.idContact;
     }
     
-    public void Contact.setIdContact(Long id) {
+    public void Contact.setIdContact(Integer id) {
         this.idContact = id;
     }
     

@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -11,10 +12,14 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierColumn = "TYPE2", schema = "MAIRIE", identifierField = "idType", identifierType = Integer.class, table = "SPTYCO")
+@RooJpaActiveRecord(schema = "MAIRIE", table = "SPTYCO")
 public class Sptyco {
+	
+	@Id
+	@Column(name = "TYPE2", columnDefinition = "numeric")
+	private Integer idType;
 
 	@NotNull
-	@Column(name = "LICONG")
+	@Column(name = "LICONG", columnDefinition = "char")
 	private String libTypeConge;
 }

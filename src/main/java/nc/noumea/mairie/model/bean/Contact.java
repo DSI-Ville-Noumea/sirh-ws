@@ -20,7 +20,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierColumn = "ID_CONTACT", identifierField = "idContact", schema = "SIRH", table = "CONTACT")
+@RooJpaActiveRecord(identifierType = Integer.class, identifierColumn = "ID_CONTACT", identifierField = "idContact", schema = "SIRH", table = "CONTACT")
 public class Contact {
 
 	@OneToOne
@@ -36,7 +36,7 @@ public class Contact {
 	@Column(name = "DIFFUSABLE")
 	private String diffusable;
 
-	@Column(name = "PRIORITAIRE")
+	@Column(name = "PRIORITAIRE",columnDefinition="smallint")
 	private Integer prioritaire;
 
 	private static JSONObject enleveTousChamps(JSONObject json) {
@@ -68,8 +68,8 @@ public class Contact {
 			JSONObject typCon = (JSONObject) json.get("typeContact");
 			typCon.remove("idTypeContact");
 			typCon.remove("version");
-			//TODO
-			//bidouille pour le moment
+			// TODO
+			// bidouille pour le moment
 			String libTypeContact = (String) typCon.get("libelle");
 			typCon.remove("libelle");
 			json.put("typeContact", libTypeContact);

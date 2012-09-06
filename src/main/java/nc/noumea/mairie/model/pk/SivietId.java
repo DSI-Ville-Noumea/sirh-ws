@@ -22,9 +22,9 @@ public class SivietId implements Serializable {
 		this.sousCodePays = sousCodePays;
 	}
 
-	@Column(name = "CODPAY", insertable = false, updatable = false)
+	@Column(name = "CODPAY", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer codePays;
 
-	@Column(name = "SCODPA", insertable = false, updatable = false)
+	@Column(name = "SCODPA", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer sousCodePays;
 }

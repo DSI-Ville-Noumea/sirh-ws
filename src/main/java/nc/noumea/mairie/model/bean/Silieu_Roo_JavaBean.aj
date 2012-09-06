@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Silieu;
 
 privileged aspect Silieu_Roo_JavaBean {
     
+    public Long Silieu.getCodeLieu() {
+        return this.codeLieu;
+    }
+    
+    public void Silieu.setCodeLieu(Long codeLieu) {
+        this.codeLieu = codeLieu;
+    }
+    
     public String Silieu.getLibelleLieu() {
         return this.libelleLieu;
     }

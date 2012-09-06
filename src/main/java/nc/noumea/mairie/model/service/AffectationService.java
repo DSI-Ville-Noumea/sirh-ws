@@ -17,7 +17,7 @@ public class AffectationService implements IAffectationService {
 	transient EntityManager entityManager;
 
 	@Override
-	public Affectation getAffectationFP(Long idFichePoste) {
+	public Affectation getAffectationFP(Integer idFichePoste) {
 		Affectation res = null;
 		Query query = entityManager.createQuery(
 				"select aff from Affectation aff "

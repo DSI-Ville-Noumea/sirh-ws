@@ -3,6 +3,7 @@
 
 package nc.noumea.mairie.model.bean;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,17 +22,17 @@ privileged aspect Sicomm_Roo_Jpa_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CODCOM")
-    private Long Sicomm.codeCommune;
+    private BigDecimal Sicomm.codeCommune;
     
     @Version
     @Column(name = "version")
     private Integer Sicomm.version;
     
-    public Long Sicomm.getCodeCommune() {
+    public BigDecimal Sicomm.getCodeCommune() {
         return this.codeCommune;
     }
     
-    public void Sicomm.setCodeCommune(Long id) {
+    public void Sicomm.setCodeCommune(BigDecimal id) {
         this.codeCommune = id;
     }
     

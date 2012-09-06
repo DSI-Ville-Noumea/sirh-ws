@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.FichePoste;
 
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public FichePoste getFichePoste(Long idFichePoste) {
+	public FichePoste getFichePoste(Integer idFichePoste) {
 		FichePoste res = null;
 		Query query = entityManager.createQuery("select fp from FichePoste fp "
 				+ "where fp.idFichePoste =:idFP)", FichePoste.class);

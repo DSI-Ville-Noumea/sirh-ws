@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.json.simple.JSONObject;
@@ -16,15 +17,19 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierColumn = "NOMATR", schema = "MAIRIE", identifierField = "nomatr", identifierType = Integer.class, table = "SPSOLD")
+@RooJpaActiveRecord(schema = "MAIRIE",  table = "SPSOLD")
 public class SpSold {
+		
+	@Id
+	@Column(name = "NOMATR", columnDefinition = "numeric")
+	private Integer nomatr;
 
 	@NotNull
-	@Column(name = "SOLDE1")
+	@Column(name = "SOLDE1", columnDefinition = "decimal")
 	private Double soldeAnneeEnCours;
 
 	@NotNull
-	@Column(name = "SOLDE2")
+	@Column(name = "SOLDE2", columnDefinition = "decimal")
 	private Double soldeAnneePrec;
 
 	private JSONObject enleveTousChamps(JSONObject json) {

@@ -169,3 +169,7 @@ field boolean --fieldName enfantACharge --column ENFANT_A_CHARGE
 json add --class ~.model.bean.ParentEnfant
 json add --class ~.model.pk.ParentEnfantPK
 // Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-30 16:14:01
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-09-07 08:44:57
+// [failed] entity jpa --class nc.noumea.mairie.test --identifierType java.lang.Number 
+// [failed] entity jpa --class nc.noumea.mairie.testNono --identifierType java.lang.Number 
+entity jpa --class nc.noumea.mairie.Nono --identifierType java.lang.Number 

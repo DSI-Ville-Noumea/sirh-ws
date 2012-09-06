@@ -51,10 +51,10 @@ public class Enfant {
 	@JoinColumn(name = "CODE_COMMUNE_NAISS_FR", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneNaissFr;
 
-	@Column(name = "CODE_COMMUNE_NAISS_ET")
+	@Column(name = "CODE_COMMUNE_NAISS_ET", columnDefinition="numeric")
 	private Integer codeCommuneNaissEt;
 
-	@Column(name = "CODE_PAYS_NAISS_ET")
+	@Column(name = "CODE_PAYS_NAISS_ET", columnDefinition="numeric")
 	private Integer codePaysNaissEt;
 
 	private static JSONObject enleveTousChamps(JSONObject json) {

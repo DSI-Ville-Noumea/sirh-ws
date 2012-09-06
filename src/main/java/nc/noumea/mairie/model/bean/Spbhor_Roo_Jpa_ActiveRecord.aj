@@ -28,8 +28,8 @@ privileged aspect Spbhor_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Spbhor o", Spbhor.class).getResultList();
     }
     
-    public static Spbhor Spbhor.findSpbhor(Long cdThor) {
-        if (cdThor == null) return null;
+    public static Spbhor Spbhor.findSpbhor(String cdThor) {
+        if (cdThor == null || cdThor.length() == 0) return null;
         return entityManager().find(Spbhor.class, cdThor);
     }
     

@@ -28,7 +28,7 @@ privileged aspect TitrePoste_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM TitrePoste o", TitrePoste.class).getResultList();
     }
     
-    public static TitrePoste TitrePoste.findTitrePoste(Long idTitrePoste) {
+    public static TitrePoste TitrePoste.findTitrePoste(Integer idTitrePoste) {
         if (idTitrePoste == null) return null;
         return entityManager().find(TitrePoste.class, idTitrePoste);
     }

@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.SpSold;
@@ -18,22 +15,9 @@ privileged aspect SpSold_Roo_Jpa_Entity {
     
     declare @type: SpSold: @Table(schema = "MAIRIE", name = "SPSOLD");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "NOMATR")
-    private Integer SpSold.nomatr;
-    
     @Version
     @Column(name = "version")
     private Integer SpSold.version;
-    
-    public Integer SpSold.getNomatr() {
-        return this.nomatr;
-    }
-    
-    public void SpSold.setNomatr(Integer id) {
-        this.nomatr = id;
-    }
     
     public Integer SpSold.getVersion() {
         return this.version;

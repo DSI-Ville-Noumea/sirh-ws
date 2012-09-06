@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Spbhor;
 
 privileged aspect Spbhor_Roo_JavaBean {
     
+    public String Spbhor.getCdThor() {
+        return this.cdThor;
+    }
+    
+    public void Spbhor.setCdThor(String cdThor) {
+        this.cdThor = cdThor;
+    }
+    
     public String Spbhor.getLibHor() {
         return this.libHor;
     }

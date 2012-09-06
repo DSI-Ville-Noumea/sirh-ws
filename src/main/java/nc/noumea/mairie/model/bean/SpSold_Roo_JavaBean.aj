@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.SpSold;
 
 privileged aspect SpSold_Roo_JavaBean {
     
+    public Integer SpSold.getNomatr() {
+        return this.nomatr;
+    }
+    
+    public void SpSold.setNomatr(Integer nomatr) {
+        this.nomatr = nomatr;
+    }
+    
     public Double SpSold.getSoldeAnneeEnCours() {
         return this.soldeAnneeEnCours;
     }

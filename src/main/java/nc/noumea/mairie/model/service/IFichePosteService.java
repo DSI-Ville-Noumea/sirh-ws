@@ -8,7 +8,7 @@ public interface IFichePosteService {
 
 	public FichePoste getFichePosteAgentAffectationEnCours(Integer id);
 
-	public FichePoste getFichePoste(Long idFichePoste);
+	public FichePoste getFichePoste(Integer integer);
 
 	public List<FichePoste> getFichePosteAgentService(String servi,
 			Integer idAgent);

@@ -28,7 +28,7 @@ privileged aspect Contact_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Contact o", Contact.class).getResultList();
     }
     
-    public static Contact Contact.findContact(Long idContact) {
+    public static Contact Contact.findContact(Integer idContact) {
         if (idContact == null) return null;
         return entityManager().find(Contact.class, idContact);
     }

@@ -22,9 +22,9 @@ public class SpcongId implements Serializable {
 		this.datDeb = datDeb;
 	}
 
-	@Column(name = "NOMATR", insertable = false, updatable = false)
+	@Column(name = "NOMATR", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer nomatr;
 
-	@Column(name = "DATDEB", insertable = false, updatable = false)
+	@Column(name = "DATDEB", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer datDeb;
 }

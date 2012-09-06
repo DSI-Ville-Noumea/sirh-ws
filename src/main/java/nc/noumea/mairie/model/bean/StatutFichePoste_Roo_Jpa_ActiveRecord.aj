@@ -28,7 +28,7 @@ privileged aspect StatutFichePoste_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM StatutFichePoste o", StatutFichePoste.class).getResultList();
     }
     
-    public static StatutFichePoste StatutFichePoste.findStatutFichePoste(Long idStatutFp) {
+    public static StatutFichePoste StatutFichePoste.findStatutFichePoste(Integer idStatutFp) {
         if (idStatutFp == null) return null;
         return entityManager().find(StatutFichePoste.class, idStatutFp);
     }

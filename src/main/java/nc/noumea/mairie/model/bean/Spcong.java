@@ -38,19 +38,19 @@ public class Spcong implements Serializable {
 	private Sptyco typeConge;
 
 	@NotNull
-	@Column(name = "DATFIN")
+	@Column(name = "DATFIN", columnDefinition = "numeric")
 	private Integer datFin;
 
 	@NotNull
-	@Column(name = "NBJOUR")
+	@Column(name = "NBJOUR", columnDefinition = "decimal")
 	private Integer nbJours;
 
 	@NotNull
-	@Column(name = "CDVALI")
+	@Column(name = "CDVALI", columnDefinition = "char")
 	private String statut;
 
 	@NotNull
-	@Column(name = "CDSAM")
+	@Column(name = "CDSAM", columnDefinition = "char")
 	private String samediDecompte;
 
 	public Spcong() {

@@ -26,7 +26,7 @@ public class SIVIET implements Serializable {
 	@EmbeddedId
 	private SivietId id;
 
-	@Column(name = "LIBCOP")
+	@Column(name = "LIBCOP", columnDefinition = "char")
 	private String libCop;
 
 	public SIVIET() {

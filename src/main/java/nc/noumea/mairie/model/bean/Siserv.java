@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -11,10 +12,13 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierType = String.class,identifierColumn = "SERVI", identifierField = "servi", schema = "MAIRIE", table = "SISERV")
+@RooJpaActiveRecord(schema = "MAIRIE", table = "SISERV")
 public class Siserv {
+	@Id
+	@Column(name = "SERVI", columnDefinition = "char")
+	private String servi;
 
 	@NotNull
-	@Column(name = "LISERV")
+	@Column(name = "LISERV", columnDefinition = "char")
 	private String liServ;
 }

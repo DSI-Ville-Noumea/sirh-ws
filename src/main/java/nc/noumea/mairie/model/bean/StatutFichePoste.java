@@ -8,10 +8,10 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(identifierColumn = "ID_STATUT_FP", identifierField = "idStatutFp", schema = "SIRH", table = "R_STATUT_FP")
+@RooJpaActiveRecord(identifierType = Integer.class, identifierColumn = "ID_STATUT_FP", identifierField = "idStatutFp", schema = "SIRH", table = "R_STATUT_FP")
 public class StatutFichePoste {
-
-    @NotNull
-    @Column(name = "LIB_STATUT_FP")
-    private String libStatut;
+	
+	@NotNull
+	@Column(name = "LIB_STATUT_FP")
+	private String libStatut;
 }

@@ -26,7 +26,7 @@ public class Siguic implements Serializable {
 	@EmbeddedId
 	private SiguicId id;
 
-	@Column(name = "LIGUIC")
+	@Column(name = "LIGUIC",columnDefinition="char")
 	private String liGuic;
 
 	public Siguic() {

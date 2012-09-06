@@ -26,7 +26,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE")
+@RooJpaActiveRecord(identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE")
 public class FichePoste {
 
 	@ManyToOne
@@ -49,7 +49,7 @@ public class FichePoste {
 	private String nfa;
 
 	@NotNull
-	@Column(name = "ANNEE_CREATION")
+	@Column(name = "ANNEE_CREATION", columnDefinition="numeric")
 	private Integer annee;
 
 	@NotNull
@@ -151,7 +151,7 @@ public class FichePoste {
 		// pour la fiche de poste de l'agent on supprime le responsable
 		json.remove("responsable");
 
-		//gestion des services
+		// gestion des services
 		json.remove("service");
 		json.put("service", service.trim());
 		json.put("direction", direction.trim());

@@ -5,9 +5,6 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Spgeng;
@@ -18,22 +15,9 @@ privileged aspect Spgeng_Roo_Jpa_Entity {
     
     declare @type: Spgeng: @Table(schema = "MAIRIE", name = "SPGENG");
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "CDGENG")
-    private String Spgeng.cdgeng;
-    
     @Version
     @Column(name = "version")
     private Integer Spgeng.version;
-    
-    public String Spgeng.getCdgeng() {
-        return this.cdgeng;
-    }
-    
-    public void Spgeng.setCdgeng(String id) {
-        this.cdgeng = id;
-    }
     
     public Integer Spgeng.getVersion() {
         return this.version;

@@ -7,6 +7,14 @@ import nc.noumea.mairie.model.bean.Sptyco;
 
 privileged aspect Sptyco_Roo_JavaBean {
     
+    public Integer Sptyco.getIdType() {
+        return this.idType;
+    }
+    
+    public void Sptyco.setIdType(Integer idType) {
+        this.idType = idType;
+    }
+    
     public String Sptyco.getLibTypeConge() {
         return this.libTypeConge;
     }
