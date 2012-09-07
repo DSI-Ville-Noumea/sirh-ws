@@ -514,6 +514,8 @@ public class AgentController {
 		} else {
 			newIdAgent = idAgent.toString();
 		}
+		// si la personne est chef alors on affiche aussi les FDP de l'équipe
+		boolean estAgentChef = getAgentChef(idAgent);
 
 		FichePoste fpAgent = fpSrv.getFichePosteAgentAffectationEnCours(Integer
 				.valueOf(newIdAgent));
@@ -543,6 +545,7 @@ public class AgentController {
 			String civiliteAgentEquipe = (String) json.get("civilite");
 			// pour le titre du poste
 			Long idAgentEquipe = (Long) json.get("idAgent");
+			String objetFichePoste = getFichePosteAgentEquipe(idAgentEquipe);
 			FichePoste fp = fpSrv
 					.getFichePosteAgentAffectationEnCours(idAgentEquipe
 							.intValue());
@@ -557,6 +560,10 @@ public class AgentController {
 			} else {
 				json.put("titre", "Mademoiselle");
 			}
+			if (estAgentChef) {
+				json.put("fichePoste", objetFichePoste);
+
+			}
 			jsonAr.remove(i);
 			jsonAr.add(i, json);
 		}
@@ -565,13 +572,9 @@ public class AgentController {
 				HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
-	@ResponseBody
-	public ResponseEntity<String> getAgentChef(
+	public boolean getAgentChef(
 			@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent;
 		if (idAgent.toString().length() == 6) {
@@ -588,7 +591,7 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fpAgent == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return false;
 		}
 		Integer idFichePosteAgent = fpAgent.getIdFichePoste();
 
@@ -596,7 +599,7 @@ public class AgentController {
 				fpAgent.getService().getServi(), Integer.valueOf(newIdAgent));
 
 		if (lfpAgentService == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return false;
 		}
 
 		// on parcours la liste des agents du service et on regarde si la fiche
@@ -620,10 +623,69 @@ public class AgentController {
 				break;
 			}
 		}
-		JSONObject json = new JSONObject();
-		json.put("estResponsable", estResponsable);
+		//JSONObject json = new JSONObject();
+		//json.put("estResponsable", estResponsable);
 
-		return new ResponseEntity<String>(json.toJSONString(), headers,
-				HttpStatus.OK);
+		return estResponsable;
+	}
+
+	public String getFichePosteAgentEquipe(
+			@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
+		// on remanie l'idAgent
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2,
+					idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		FichePoste fp = fpSrv.getFichePosteAgentAffectationEnCours(Integer
+				.valueOf(newIdAgent));
+
+		if (fp == null) {
+			return null;
+		}
+		String service = "";
+		if (fp.getService().getServi() != null) {
+			Siserv divisionService = siservSrv.getDivision(fp.getService()
+					.getServi());
+			if (divisionService != null) {
+				service = divisionService.getLiServ();
+			} else {
+				Siserv servicePoste = siservSrv.getService(fp.getService()
+						.getServi());
+				if (servicePoste != null) {
+					service = servicePoste.getLiServ();
+				}
+			}
+		}
+		String direction = "";
+		if (fp.getService().getServi() != null) {
+			Siserv directionService = siservSrv.getDirection(fp.getService()
+					.getServi());
+			if (directionService != null) {
+				direction = directionService.getLiServ();
+			}
+		}
+		String section = "";
+		if (fp.getService().getServi() != null) {
+			Siserv sectionService = siservSrv.getSection(fp.getService()
+					.getServi());
+			if (sectionService != null) {
+				section = sectionService.getLiServ();
+			}
+		}
+		String res = fp.fpToJson(
+				Activite.activiteToJsonArray(fp.getActivites()),
+				Competence.competenceToJsonArray(fp.getCompetences()),
+				CadreEmploi.cadreEmploiToJsonArray(fp.getCardresEmploi()),
+				NiveauEtude.niveauEtudeToJsonArray(fp.getNiveauEtude()),
+				service, direction, section);
+
+		return res;
 	}
 }
