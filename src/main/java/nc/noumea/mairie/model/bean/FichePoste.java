@@ -49,7 +49,7 @@ public class FichePoste {
 	private String nfa;
 
 	@NotNull
-	@Column(name = "ANNEE_CREATION", columnDefinition="numeric")
+	@Column(name = "ANNEE_CREATION", columnDefinition = "numeric")
 	private Integer annee;
 
 	@NotNull
