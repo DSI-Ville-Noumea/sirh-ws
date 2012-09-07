@@ -173,3 +173,4 @@ json add --class ~.model.pk.ParentEnfantPK
 // [failed] entity jpa --class nc.noumea.mairie.test --identifierType java.lang.Number 
 // [failed] entity jpa --class nc.noumea.mairie.testNono --identifierType java.lang.Number 
 entity jpa --class nc.noumea.mairie.Nono --identifierType java.lang.Number 
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-09-07 15:50:19

@@ -324,7 +324,7 @@
     <build>
 		<!-- <finalName>sirhws##${project.version}-${buildNumber}</finalName> -->
 		<!--<finalName>sirhws##${project.version}-${maven.build.timestamp}</finalName>-->
-		<finalName>sirhws-${maven.build.timestamp}-${project.version}</finalName>
+		<finalName>sirhws##${maven.build.timestamp}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
