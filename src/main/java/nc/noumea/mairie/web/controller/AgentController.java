@@ -568,7 +568,7 @@ public class AgentController {
 			jsonAr.add(i, json);
 		}
 
-		return new ResponseEntity<String>(jsonAr.toJSONString().replace("\\","").replace("\"[","[").replace("]\"","]"), headers,
+		return new ResponseEntity<String>(jsonAr.toJSONString().replace("\\","").replace("\"[","[").replace("]\"","]").replace("\"{","{").replace("}\"","}"), headers,
 				HttpStatus.OK);
 	}
 
