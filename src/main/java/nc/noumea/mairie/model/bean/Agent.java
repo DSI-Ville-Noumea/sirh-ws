@@ -72,92 +72,110 @@ public class Agent {
 
 	@Column(name = "NUM_CAFAT")
 	private String numCafat;
-    
-    public String getNumCafat() {
-    	if(this.numCafat!=null){
-    		return this.numCafat.trim();
-    	}
-        return this.numCafat;
-    }	
+
+	public String getNumCafat() {
+		if (this.numCafat != null) {
+			return this.numCafat.trim();
+		}
+		return this.numCafat;
+	}
 
 	@Column(name = "NUM_RUAMM")
 	private String numRuamm;
-    
-    public String getNumRuamm() {
-    	if(this.numRuamm!=null){
-    		return this.numRuamm.trim();
-    	}
-        return this.numRuamm;
-    }
+
+	public String getNumRuamm() {
+		if (this.numRuamm != null) {
+			return this.numRuamm.trim();
+		}
+		return this.numRuamm;
+	}
 
 	@Column(name = "NUM_MUTUELLE")
 	private String numMutuelle;
-    
-    public String getNumMutuelle() {
-    	if(this.numMutuelle!=null){
-    		return this.numMutuelle.trim();
-    	}
-        return this.numMutuelle;
-    }
+
+	public String getNumMutuelle() {
+		if (this.numMutuelle != null) {
+			return this.numMutuelle.trim();
+		}
+		return this.numMutuelle;
+	}
 
 	@Column(name = "NUM_CRE")
 	private String numCre;
-    
-    public String getNumCre() {
-    	if(this.numCre!=null){
-    		return this.numCre.trim();
-    	}
-        return this.numCre;
-    }
+
+	public String getNumCre() {
+		if (this.numCre != null) {
+			return this.numCre.trim();
+		}
+		return this.numCre;
+	}
 
 	@Column(name = "NUM_IRCAFEX")
 	private String numIrcafex;
-    
-    public String getNumIrcafex() {
-    	if(this.numIrcafex!=null){
-    		return this.numIrcafex.trim();
-    	}
-        return this.numIrcafex;
-    }
+
+	public String getNumIrcafex() {
+		if (this.numIrcafex != null) {
+			return this.numIrcafex.trim();
+		}
+		return this.numIrcafex;
+	}
 
 	@Column(name = "NUM_CLR")
 	private String numClr;
-    
-    public String getNumClr() {
-    	if(this.numClr!=null){
-    		return this.numClr.trim();
-    	}
-        return this.numClr;
-    }
+
+	public String getNumClr() {
+		if (this.numClr != null) {
+			return this.numClr.trim();
+		}
+		return this.numClr;
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "CODE_COMMUNE_NAISS_FR", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneNaissFr;
 
-	@Column(name = "CODE_COMMUNE_NAISS_ET", columnDefinition="numeric")
+	@Column(name = "CODE_COMMUNE_NAISS_ET", columnDefinition = "numeric")
 	private Integer codeCommuneNaissEt;
 
-	@Column(name = "CODE_PAYS_NAISS_ET", columnDefinition="numeric")
+	@Column(name = "CODE_PAYS_NAISS_ET", columnDefinition = "numeric")
 	private Integer codePaysNaissEt;
 
 	@Column(name = "INTITULE_COMPTE")
 	private String intituleCompte;
 
-	@Column(name = "RIB", columnDefinition="numeric")
+	public String getIntituleCompte() {
+		if (this.intituleCompte != null)
+			return this.intituleCompte.trim();
+		return this.intituleCompte;
+	}
+
+	@Column(name = "RIB", columnDefinition = "numeric")
 	private Integer rib;
 
 	@Column(name = "NUM_COMPTE")
 	private String numCompte;
 
-	@Column(name = "CD_BANQUE", columnDefinition="decimal")
+	@Column(name = "CD_BANQUE", columnDefinition = "decimal")
 	private Integer codeBanque;
 
-	@Column(name = "CD_GUICHET", columnDefinition="decimal")
+	@Column(name = "CD_GUICHET", columnDefinition = "decimal")
 	private Integer codeGuichet;
 
 	private String lieuNaissance;
 
+	public String getLieuNaissance() {
+		if (lieuNaissance != null)
+			return lieuNaissance.trim();
+		return lieuNaissance;
+	}
+
 	private String banque;
+
+	public String getBanque() {
+		if (banque != null)
+			return banque.trim();
+		return banque;
+	}
 
 	@OneToOne
 	@JoinColumn(name = "ID_VOIE", referencedColumnName = "CDVOIE")
@@ -169,14 +187,38 @@ public class Agent {
 	@Column(name = "BP")
 	private String bP;
 
+	public String getBP() {
+		if (this.bP == null)
+			return "";
+		return this.bP.trim();
+	}
+
 	@Column(name = "ADRESSE_COMPLEMENTAIRE")
 	private String adresseComplementaire;
 
+	public String getAdresseComplementaire() {
+		if (this.adresseComplementaire == null)
+			return "";
+		return this.adresseComplementaire.trim();
+	}
+
 	@Column(name = "NUM_RUE")
 	private String numRue;
+    
+    public String getNumRue() {
+		if (this.numRue == null)
+			return "";
+		return this.numRue.trim();
+    }
 
 	@Column(name = "NUM_RUE_BIS_TER")
 	private String bisTer;
+    
+    public String getBisTer() {
+		if (this.bisTer == null)
+			return "";
+		return this.bisTer.trim();
+    }
 
 	@ManyToOne
 	@JoinColumn(name = "CCOM_VILLE_DOM", referencedColumnName = "CODCOM")
@@ -186,27 +228,11 @@ public class Agent {
 	@JoinColumn(name = "CCOM_VILLE_BP", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneVilleBP;
 
-	@Column(name = "CPOS_VILLE_DOM", columnDefinition="numeric")
+	@Column(name = "CPOS_VILLE_DOM", columnDefinition = "numeric")
 	private Integer codePostalVilleDom;
 
-	@Column(name = "CPOS_VILLE_BP", columnDefinition="numeric")
+	@Column(name = "CPOS_VILLE_BP", columnDefinition = "numeric")
 	private Integer codePostalVilleBP;
-
-	public String getLieuNaissance() {
-		return lieuNaissance;
-	}
-
-	public void setLieuNaissance(String lieuNaissance) {
-		this.lieuNaissance = lieuNaissance;
-	}
-
-	public String getBanque() {
-		return banque;
-	}
-
-	public void setBanque(String banque) {
-		this.banque = banque;
-	}
 
 	private JSONObject enleveTousChamps(JSONObject json) {
 		JSONObject res = json;
@@ -259,10 +285,10 @@ public class Agent {
 			e.printStackTrace();
 		}
 		json = enleveTousChamps(json);
-		json.put("nomPatronymique", nomPatronymique);
-		json.put("nomMarital", nomMarital);
-		json.put("nomUsage", nomUsage);
-		json.put("prenom", prenomUsage);
+		json.put("nomPatronymique", getNomPatronymique());
+		json.put("nomMarital", getNomMarital());
+		json.put("nomUsage", getNomUsage());
+		json.put("prenom", getPrenomUsage());
 		json.put("situationFamiliale",
 				situationFamiliale.getLibSituationFamiliale());
 		if (dateNaissance != null) {
@@ -271,7 +297,7 @@ public class Agent {
 		if (codeCommuneNaissFr != null) {
 			json.put("lieuNaissance", codeCommuneNaissFr.getLibVil().trim());
 		} else {
-			json.put("lieuNaissance", lieuNaissance);
+			json.put("lieuNaissance", getLieuNaissance());
 		}
 		if (civilite.equals("0")) {
 			json.put("titre", "Monsieur");
@@ -292,12 +318,12 @@ public class Agent {
 			e.printStackTrace();
 		}
 		json = enleveTousChamps(json);
-		json.put("numCafat", numCafat);
-		json.put("numRuamm", numRuamm);
-		json.put("numMutuelle", numMutuelle);
-		json.put("numCre", numCre);
-		json.put("numIrcafex", numIrcafex);
-		json.put("numClr", numClr);
+		json.put("numCafat", getNumCafat());
+		json.put("numRuamm", getNumRuamm());
+		json.put("numMutuelle", getNumMutuelle());
+		json.put("numCre", getNumCre());
+		json.put("numIrcafex", getNumIrcafex());
+		json.put("numClr", getNumClr());
 		return json.toJSONString();
 	}
 
@@ -310,11 +336,10 @@ public class Agent {
 			e.printStackTrace();
 		}
 		json = enleveTousChamps(json);
-		json.put("intituleCompte", intituleCompte == null ? null
-				: intituleCompte.trim());
-		json.put("rib", rib);
-		json.put("numCompte", numCompte == null ? null : numCompte.trim());
-		json.put("banque", banque == null ? null : banque.trim());
+		json.put("intituleCompte", getIntituleCompte());
+		json.put("rib", getRib());
+		json.put("numCompte", getNumCompte());
+		json.put("banque", getBanque());
 		return json.toJSONString();
 	}
 
@@ -328,18 +353,17 @@ public class Agent {
 		}
 		json = enleveTousChamps(json);
 		json.put("rue", voie == null ? rueNonNoumea : voie.getLiVoie().trim());
-		json.put("BP", bP == null ? null : bP.trim());
-		json.put("adresseComplementaire", adresseComplementaire == null ? null
-				: adresseComplementaire.trim());
-		json.put("numRue", numRue == null ? null : numRue.trim());
-		json.put("bisTer", bisTer == null ? null : bisTer.trim());
-		json.put("codeCommuneVilleDom", codeCommuneVilleDom == null ? null
+		json.put("BP", getBP());
+		json.put("adresseComplementaire", getAdresseComplementaire());
+		json.put("numRue", getNumRue());
+		json.put("bisTer", getBisTer());
+		json.put("codeCommuneVilleDom", codeCommuneVilleDom == null ? ""
 				: codeCommuneVilleDom.getLibVil().trim());
-		json.put("codeCommuneVilleBP", codeCommuneVilleBP == null ? null
+		json.put("codeCommuneVilleBP", codeCommuneVilleBP == null ? ""
 				: codeCommuneVilleBP.getLibVil().trim());
-		json.put("codePostalVilleDom", codePostalVilleDom == null ? null
+		json.put("codePostalVilleDom", codePostalVilleDom == null ? ""
 				: codePostalVilleDom);
-		json.put("codePostalVilleBP", codePostalVilleBP == null ? null
+		json.put("codePostalVilleBP", codePostalVilleBP == null ? ""
 				: codePostalVilleBP);
 
 		return json.toJSONString();
@@ -354,8 +378,8 @@ public class Agent {
 			e.printStackTrace();
 		}
 		json = enleveTousChamps(json);
-		json.put("nom", nomUsage);
-		json.put("prenom", prenomUsage);
+		json.put("nom", getNomUsage());
+		json.put("prenom", getPrenomUsage());
 		json.put("position", titrePoste);
 		if (civilite.equals("0")) {
 			json.put("titre", "Monsieur");

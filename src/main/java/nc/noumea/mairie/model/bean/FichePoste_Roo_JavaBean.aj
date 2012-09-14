@@ -43,10 +43,6 @@ privileged aspect FichePoste_Roo_JavaBean {
         this.budget = budget;
     }
     
-    public String FichePoste.getOpi() {
-        return this.opi;
-    }
-    
     public void FichePoste.setOpi(String opi) {
         this.opi = opi;
     }
