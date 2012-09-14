@@ -361,9 +361,9 @@ public class Agent {
 				: codeCommuneVilleDom.getLibVil().trim());
 		json.put("codeCommuneVilleBP", codeCommuneVilleBP == null ? ""
 				: codeCommuneVilleBP.getLibVil().trim());
-		json.put("codePostalVilleDom", codePostalVilleDom == null ? ""
+		json.put("codePostalVilleDom", codePostalVilleDom == null ? 0
 				: codePostalVilleDom);
-		json.put("codePostalVilleBP", codePostalVilleBP == null ? ""
+		json.put("codePostalVilleBP", codePostalVilleBP == null ? 0
 				: codePostalVilleBP);
 
 		return json.toJSONString();

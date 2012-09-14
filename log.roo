@@ -175,3 +175,6 @@ json add --class ~.model.pk.ParentEnfantPK
 entity jpa --class nc.noumea.mairie.Nono --identifierType java.lang.Number 
 // Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-09-07 15:50:19
 // Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-09-14 09:35:25
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-09-14 11:54:23
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-09-14 13:22:45
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-09-14 13:35:49
