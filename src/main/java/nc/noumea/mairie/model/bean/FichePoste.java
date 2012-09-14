@@ -44,6 +44,12 @@ public class FichePoste {
 	@Column(name = "OPI")
 	private String opi;
 
+	public String getOpi() {
+		if (this.opi == null)
+			return "";
+		return this.opi;
+	}
+
 	@NotNull
 	@Column(name = "NFA")
 	private String nfa;
@@ -133,6 +139,7 @@ public class FichePoste {
 				resCadreEmp.length());
 		resCadreEmp = resCadreEmp.replace("\"", "");
 		resCadreEmp = resCadreEmp.replace("]", "");
+		resCadreEmp = resCadreEmp.replace("[", "");
 		json.put("cadreEmploi", resCadreEmp);
 		// on ajoute le niveau etude
 		// on ne veut que le libelle du niveau etude
@@ -145,6 +152,7 @@ public class FichePoste {
 				resNiveauEtude.indexOf(":") + 1, resNiveauEtude.length());
 		resNiveauEtude = resNiveauEtude.replace("\"", "");
 		resNiveauEtude = resNiveauEtude.replace("]", "");
+		resNiveauEtude = resNiveauEtude.replace("[", "");
 		json.put("niveauEtude", resNiveauEtude);
 
 		json = enleveTousChamps(json);
@@ -241,11 +249,6 @@ public class FichePoste {
 		statutPoste = statutPoste.replace("\"", "");
 		json.put("statutFP", statutPoste.trim());
 
-		return json.toJSONString();
-	}
-
-	public String superieurHierarchiqueAgentToJson() {
-		// TODO Auto-generated method stub
-		return null;
+		return json.toJSONString().replace("\\","");
 	}
 }

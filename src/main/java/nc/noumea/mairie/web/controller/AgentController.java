@@ -441,7 +441,7 @@ public class AgentController {
 				NiveauEtude.niveauEtudeToJsonArray(fp.getNiveauEtude()),
 				service, direction, section);
 
-		return new ResponseEntity<String>(res, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(res.replace("\"[","[").replace("]\"","]"), headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
@@ -568,7 +568,7 @@ public class AgentController {
 			jsonAr.add(i, json);
 		}
 
-		return new ResponseEntity<String>(jsonAr.toJSONString(), headers,
+		return new ResponseEntity<String>(jsonAr.toJSONString().replace("\\","").replace("\"[","[").replace("]\"","]"), headers,
 				HttpStatus.OK);
 	}
 
@@ -623,8 +623,6 @@ public class AgentController {
 				break;
 			}
 		}
-		//JSONObject json = new JSONObject();
-		//json.put("estResponsable", estResponsable);
 
 		return estResponsable;
 	}
@@ -688,4 +686,70 @@ public class AgentController {
 
 		return res;
 	}
+	
+	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> getAgentChefPortail(
+			@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		// on remanie l'idAgent
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2,
+					idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		JSONObject jsonChef = new JSONObject();
+		boolean estResponsable = false;
+		jsonChef.put("estResponsable", estResponsable);
+
+		FichePoste fpAgent = fpSrv.getFichePosteAgentAffectationEnCours(Integer
+				.valueOf(newIdAgent));
+
+		if (fpAgent == null) {
+			return  new ResponseEntity<String>(jsonChef.toJSONString(), headers,
+					HttpStatus.OK);
+		}
+		Integer idFichePosteAgent = fpAgent.getIdFichePoste();
+
+		List<FichePoste> lfpAgentService = fpSrv.getFichePosteAgentService(
+				fpAgent.getService().getServi(), Integer.valueOf(newIdAgent));
+
+		if (lfpAgentService == null) {
+			return new ResponseEntity<String>(jsonChef.toJSONString(), headers,
+					HttpStatus.OK);
+		}
+
+		// on parcours la liste des agents du service et on regarde si la fiche
+		// de poste de l'agent est responsable de au moins 1 personne de la
+		// liste
+		String test = new JSONSerializer().exclude("*.class").serialize(
+				lfpAgentService);
+		JSONArray jsonAr = null;
+		try {
+			jsonAr = (JSONArray) new JSONParser().parse(test);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		for (int i = 0; i < jsonAr.size(); i++) {
+			JSONObject json = (JSONObject) jsonAr.get(i);
+			JSONObject responsable = (JSONObject) json.get("responsable");
+			Long idResp = (Long) responsable.get("idFichePoste");
+			if (idResp.toString().equals(idFichePosteAgent.toString())) {
+				estResponsable = true;
+				break;
+			}
+		}
+		jsonChef.put("estResponsable", estResponsable);
+
+		return new ResponseEntity<String>(jsonChef.toJSONString(), headers,
+				HttpStatus.OK);
+	}
 }
+
