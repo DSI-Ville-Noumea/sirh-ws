@@ -43,7 +43,7 @@ public class Spcong implements Serializable {
 
 	@NotNull
 	@Column(name = "NBJOUR", columnDefinition = "decimal")
-	private Integer nbJours;
+	private Double nbJours;
 
 	@NotNull
 	@Column(name = "CDVALI", columnDefinition = "char")

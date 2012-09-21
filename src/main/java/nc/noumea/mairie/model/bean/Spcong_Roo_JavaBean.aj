@@ -33,11 +33,11 @@ privileged aspect Spcong_Roo_JavaBean {
         this.datFin = datFin;
     }
     
-    public Integer Spcong.getNbJours() {
+    public Double Spcong.getNbJours() {
         return this.nbJours;
     }
     
-    public void Spcong.setNbJours(Integer nbJours) {
+    public void Spcong.setNbJours(Double nbJours) {
         this.nbJours = nbJours;
     }
     
