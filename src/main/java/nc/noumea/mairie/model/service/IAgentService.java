@@ -17,7 +17,8 @@ public interface IAgentService {
 	 */
 	public Agent getAgent(Integer id);
 
-	public List<Agent> getAgentService(String servi, Integer idAgent);
+	public List<Agent> getAgentService(String servi, Integer idAgent,
+			Integer idResponsable);
 
 	public JSONObject removeAll(JSONObject json);
 }
