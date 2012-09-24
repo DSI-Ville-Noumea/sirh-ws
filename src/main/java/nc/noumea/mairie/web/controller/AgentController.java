@@ -441,7 +441,8 @@ public class AgentController {
 				NiveauEtude.niveauEtudeToJsonArray(fp.getNiveauEtude()),
 				service, direction, section);
 
-		return new ResponseEntity<String>(res.replace("\"[","[").replace("]\"","]"), headers, HttpStatus.OK);
+		return new ResponseEntity<String>(res.replace("\"[", "[").replace(
+				"]\"", "]"), headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
@@ -523,8 +524,21 @@ public class AgentController {
 		if (fpAgent == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
-		List<Agent> lagentService = agentSrv.getAgentService(fpAgent
-				.getService().getServi(), Integer.valueOf(newIdAgent));
+
+		// on regarde qui est le chef de la personne
+		Affectation affSuperieurHierarchique = affSrv.getAffectationFP(fpAgent
+				.getResponsable().getIdFichePoste());
+
+		if (affSuperieurHierarchique == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		}
+		
+		String codeService = fpAgent.getService().getServi();
+		while (codeService.endsWith("A")) {
+			codeService = codeService.substring(0, codeService.length() - 1);
+		}
+		List<Agent> lagentService = agentSrv.getAgentService(codeService, Integer.valueOf(newIdAgent),
+				affSuperieurHierarchique.getAgent().getIdAgent());
 
 		if (lagentService == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -568,7 +582,9 @@ public class AgentController {
 			jsonAr.add(i, json);
 		}
 
-		return new ResponseEntity<String>(jsonAr.toJSONString().replace("\\","").replace("\"[","[").replace("]\"","]").replace("\"{","{").replace("}\"","}"), headers,
+		return new ResponseEntity<String>(jsonAr.toJSONString()
+				.replace("\\", "").replace("\"[", "[").replace("]\"", "]")
+				.replace("\"{", "{").replace("}\"", "}"), headers,
 				HttpStatus.OK);
 	}
 
@@ -686,7 +702,7 @@ public class AgentController {
 
 		return res;
 	}
-	
+
 	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
 	@ResponseBody
 	public ResponseEntity<String> getAgentChefPortail(
@@ -713,7 +729,7 @@ public class AgentController {
 				.valueOf(newIdAgent));
 
 		if (fpAgent == null) {
-			return  new ResponseEntity<String>(jsonChef.toJSONString(), headers,
+			return new ResponseEntity<String>(jsonChef.toJSONString(), headers,
 					HttpStatus.OK);
 		}
 		Integer idFichePosteAgent = fpAgent.getIdFichePoste();
@@ -752,4 +768,3 @@ public class AgentController {
 				HttpStatus.OK);
 	}
 }
-

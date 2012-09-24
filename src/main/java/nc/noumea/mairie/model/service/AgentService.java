@@ -38,7 +38,8 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Agent> getAgentService(String servi, Integer idAgent) {
+	public List<Agent> getAgentService(String servi, Integer idAgent,
+			Integer idResponsable) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = null;
@@ -47,23 +48,18 @@ public class AgentService implements IAgentService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		String codeService = null;
-		if (servi.endsWith("A")) {
-			codeService = servi.substring(0, servi.length() - 1);
-		} else {
-			codeService = servi;
-		}
 
 		Query query = entityManager
 				.createQuery(
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent  "
 								+ " and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ "and fp.service.servi like :codeServ and aff.agent.idAgent != :idAgent "
+								+ "and fp.service.servi like :codeServ  and aff.agent.idAgent != :idAgent and ag.idAgent!=:idResponsable "
 								+ "and aff.dateDebutAff<=:dateJour and "
 								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
 						Agent.class);
-		query.setParameter("codeServ", codeService + "%");
+		query.setParameter("codeServ", servi + "%");
 		query.setParameter("idAgent", idAgent);
+		query.setParameter("idResponsable", idResponsable);
 		query.setParameter("dateJour", dateJour);
 		List<Agent> lag = query.getResultList();
 
