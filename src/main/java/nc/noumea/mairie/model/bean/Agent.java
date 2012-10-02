@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.json.simple.JSONObject;
@@ -161,6 +162,7 @@ public class Agent {
 	@Column(name = "CD_GUICHET", columnDefinition = "decimal")
 	private Integer codeGuichet;
 
+	@Transient
 	private String lieuNaissance;
 
 	public String getLieuNaissance() {
@@ -169,6 +171,7 @@ public class Agent {
 		return lieuNaissance;
 	}
 
+	@Transient
 	private String banque;
 
 	public String getBanque() {
@@ -204,21 +207,21 @@ public class Agent {
 
 	@Column(name = "NUM_RUE")
 	private String numRue;
-    
-    public String getNumRue() {
+
+	public String getNumRue() {
 		if (this.numRue == null)
 			return "";
 		return this.numRue.trim();
-    }
+	}
 
 	@Column(name = "NUM_RUE_BIS_TER")
 	private String bisTer;
-    
-    public String getBisTer() {
+
+	public String getBisTer() {
 		if (this.bisTer == null)
 			return "";
 		return this.bisTer.trim();
-    }
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "CCOM_VILLE_DOM", referencedColumnName = "CODCOM")

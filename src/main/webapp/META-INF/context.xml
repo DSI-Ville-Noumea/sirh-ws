@@ -36,5 +36,5 @@
 		maxWait="10000" minIdle="0" removeAbandoned="true"
 		removeAbandonedTimeout="500" logAbandoned="true" name="jdbc/SIRH_Kiosque"
 		password="***REMOVED***" poolPreparedStatements="true" type="javax.sql.DataSource"
-		url="jdbc:as400://newrobin" username="***REMOVED***" validationQuery="select 1 from sysibm.sysdummy1" />
+		url="jdbc:as400://***REMOVED***" username="***REMOVED***" validationQuery="select 1 from sysibm.sysdummy1" />
 </Context>
