@@ -32,7 +32,7 @@ import flexjson.JSONSerializer;
 @RooToString
 @RooJson
 @RooSerializable
-@RooJpaActiveRecord(identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT")
+@RooJpaActiveRecord(identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

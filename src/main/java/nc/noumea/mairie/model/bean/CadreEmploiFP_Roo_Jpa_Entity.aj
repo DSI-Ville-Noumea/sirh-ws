@@ -20,24 +20,12 @@ privileged aspect CadreEmploiFP_Roo_Jpa_Entity {
     @EmbeddedId
     private CadreEmploiFPPK CadreEmploiFP.id;
     
-    @Version
-    @Column(name = "version")
-    private Integer CadreEmploiFP.version;
-    
     public CadreEmploiFPPK CadreEmploiFP.getId() {
         return this.id;
     }
     
     public void CadreEmploiFP.setId(CadreEmploiFPPK id) {
         this.id = id;
-    }
-    
-    public Integer CadreEmploiFP.getVersion() {
-        return this.version;
-    }
-    
-    public void CadreEmploiFP.setVersion(Integer version) {
-        this.version = version;
     }
     
 }

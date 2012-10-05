@@ -27,7 +27,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(schema = "MAIRIE", table = "SPCONG")
+@RooJpaActiveRecord(schema = "MAIRIE", table = "SPCONG",versionField="")
 public class Spcong implements Serializable {
 
 	@EmbeddedId

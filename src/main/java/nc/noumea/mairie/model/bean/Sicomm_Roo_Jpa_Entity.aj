@@ -24,24 +24,12 @@ privileged aspect Sicomm_Roo_Jpa_Entity {
     @Column(name = "CODCOM")
     private BigDecimal Sicomm.codeCommune;
     
-    @Version
-    @Column(name = "version")
-    private Integer Sicomm.version;
-    
     public BigDecimal Sicomm.getCodeCommune() {
         return this.codeCommune;
     }
     
     public void Sicomm.setCodeCommune(BigDecimal id) {
         this.codeCommune = id;
-    }
-    
-    public Integer Sicomm.getVersion() {
-        return this.version;
-    }
-    
-    public void Sicomm.setVersion(Integer version) {
-        this.version = version;
     }
     
 }

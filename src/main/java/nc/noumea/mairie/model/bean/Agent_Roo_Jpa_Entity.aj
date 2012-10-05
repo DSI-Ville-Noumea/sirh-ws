@@ -13,34 +13,22 @@ import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Agent;
 
 privileged aspect Agent_Roo_Jpa_Entity {
-    
-    declare @type: Agent: @Entity;
-    
-    declare @type: Agent: @Table(schema = "SIRH", name = "AGENT");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_AGENT")
-    private Integer Agent.idAgent;
-    
-    @Version
-    @Column(name = "version")
-    private Integer Agent.version;
-    
-    public Integer Agent.getIdAgent() {
-        return this.idAgent;
-    }
-    
-    public void Agent.setIdAgent(Integer id) {
-        this.idAgent = id;
-    }
-    
-    public Integer Agent.getVersion() {
-        return this.version;
-    }
-    
-    public void Agent.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: Agent: @Entity;
+
+	declare @type: Agent: @Table(schema = "SIRH", name = "AGENT");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_AGENT")
+	private Integer Agent.idAgent;
+
+	public Integer Agent.getIdAgent() {
+		return this.idAgent;
+	}
+
+	public void Agent.setIdAgent(Integer id) {
+		this.idAgent = id;
+	}
+
 }

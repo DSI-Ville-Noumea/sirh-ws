@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.TypeContact;
 
 privileged aspect TypeContact_Roo_Jpa_Entity {
-    
-    declare @type: TypeContact: @Entity;
-    
-    declare @type: TypeContact: @Table(schema = "SIRH", name = "R_TYPE_CONTACT");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_TYPE_CONTACT")
-    private Integer TypeContact.idTypeContact;
-    
-    @Version
-    @Column(name = "version")
-    private Integer TypeContact.version;
-    
-    public Integer TypeContact.getIdTypeContact() {
-        return this.idTypeContact;
-    }
-    
-    public void TypeContact.setIdTypeContact(Integer id) {
-        this.idTypeContact = id;
-    }
-    
-    public Integer TypeContact.getVersion() {
-        return this.version;
-    }
-    
-    public void TypeContact.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: TypeContact: @Entity;
+
+	declare @type: TypeContact: @Table(schema = "SIRH", name = "R_TYPE_CONTACT");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_TYPE_CONTACT")
+	private Integer TypeContact.idTypeContact;
+
+	public Integer TypeContact.getIdTypeContact() {
+		return this.idTypeContact;
+	}
+
+	public void TypeContact.setIdTypeContact(Integer id) {
+		this.idTypeContact = id;
+	}
+
 }

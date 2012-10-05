@@ -3,41 +3,27 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.ParentEnfant;
+
 import nc.noumea.mairie.model.pk.ParentEnfantPK;
 
 privileged aspect ParentEnfant_Roo_Jpa_Entity {
-    
-    declare @type: ParentEnfant: @Entity;
-    
-    declare @type: ParentEnfant: @Table(schema = "SIRH", name = "PARENT_ENFANT");
-    
-    @EmbeddedId
-    private ParentEnfantPK ParentEnfant.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer ParentEnfant.version;
-    
-    public ParentEnfantPK ParentEnfant.getId() {
-        return this.id;
-    }
-    
-    public void ParentEnfant.setId(ParentEnfantPK id) {
-        this.id = id;
-    }
-    
-    public Integer ParentEnfant.getVersion() {
-        return this.version;
-    }
-    
-    public void ParentEnfant.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: ParentEnfant: @Entity;
+
+	declare @type: ParentEnfant: @Table(schema = "SIRH", name = "PARENT_ENFANT");
+
+	@EmbeddedId
+	private ParentEnfantPK ParentEnfant.id;
+
+	public ParentEnfantPK ParentEnfant.getId() {
+		return this.id;
+	}
+
+	public void ParentEnfant.setId(ParentEnfantPK id) {
+		this.id = id;
+	}
+
 }

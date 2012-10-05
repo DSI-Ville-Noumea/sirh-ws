@@ -3,28 +3,13 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.Spcong;
 
 privileged aspect Spcong_Roo_Jpa_Entity {
-    
-    declare @type: Spcong: @Entity;
-    
-    declare @type: Spcong: @Table(schema = "MAIRIE", name = "SPCONG");
-    
-    @Version
-    @Column(name = "version")
-    private Integer Spcong.version;
-    
-    public Integer Spcong.getVersion() {
-        return this.version;
-    }
-    
-    public void Spcong.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: Spcong: @Entity;
+
+	declare @type: Spcong: @Table(schema = "MAIRIE", name = "SPCONG");
+
 }

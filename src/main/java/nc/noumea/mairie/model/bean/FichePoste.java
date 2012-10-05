@@ -26,7 +26,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE")
+@RooJpaActiveRecord(identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE", versionField = "")
 public class FichePoste {
 
 	@ManyToOne
@@ -249,6 +249,6 @@ public class FichePoste {
 		statutPoste = statutPoste.replace("\"", "");
 		json.put("statutFP", statutPoste.trim());
 
-		return json.toJSONString().replace("\\","");
+		return json.toJSONString().replace("\\", "");
 	}
 }

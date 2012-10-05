@@ -23,7 +23,7 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(identifierColumn = "ID_COMPETENCE", schema = "SIRH", identifierField = "idCompetence", identifierType = Integer.class, table = "COMPETENCE")
+@RooJpaActiveRecord(identifierColumn = "ID_COMPETENCE", schema = "SIRH", identifierField = "idCompetence", identifierType = Integer.class, table = "COMPETENCE", versionField = "")
 @RooSerializable
 public class Competence {
 
@@ -68,20 +68,20 @@ public class Competence {
 
 		}
 		jsonAr.clear();
-		if (comportement.size()>0) {
+		if (comportement.size() > 0) {
 			JSONObject json = new JSONObject();
 			json.put("typeCompetence",
 					EnumTypeCompetence.COMPORTEMENT.getValue());
 			json.put("nomCompetence", comportement);
 			jsonAr.add(json);
 		}
-		if (savoir.size()>0) {
+		if (savoir.size() > 0) {
 			JSONObject json = new JSONObject();
 			json.put("typeCompetence", EnumTypeCompetence.SAVOIR.getValue());
 			json.put("nomCompetence", savoir);
 			jsonAr.add(json);
 		}
-		if (savoirFaire.size()>0) {
+		if (savoirFaire.size() > 0) {
 			JSONObject json = new JSONObject();
 			json.put("typeCompetence",
 					EnumTypeCompetence.SAVOIR_FAIRE.getValue());

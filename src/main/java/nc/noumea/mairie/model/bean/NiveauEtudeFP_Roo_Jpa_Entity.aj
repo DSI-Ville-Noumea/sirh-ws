@@ -3,41 +3,27 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.NiveauEtudeFP;
+
 import nc.noumea.mairie.model.pk.NiveauEtudeFPPK;
 
 privileged aspect NiveauEtudeFP_Roo_Jpa_Entity {
-    
-    declare @type: NiveauEtudeFP: @Entity;
-    
-    declare @type: NiveauEtudeFP: @Table(schema = "SIRH", name = "NIVEAU_ETUDE_FP");
-    
-    @EmbeddedId
-    private NiveauEtudeFPPK NiveauEtudeFP.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer NiveauEtudeFP.version;
-    
-    public NiveauEtudeFPPK NiveauEtudeFP.getId() {
-        return this.id;
-    }
-    
-    public void NiveauEtudeFP.setId(NiveauEtudeFPPK id) {
-        this.id = id;
-    }
-    
-    public Integer NiveauEtudeFP.getVersion() {
-        return this.version;
-    }
-    
-    public void NiveauEtudeFP.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: NiveauEtudeFP: @Entity;
+
+	declare @type: NiveauEtudeFP: @Table(schema = "SIRH", name = "NIVEAU_ETUDE_FP");
+
+	@EmbeddedId
+	private NiveauEtudeFPPK NiveauEtudeFP.id;
+
+	public NiveauEtudeFPPK NiveauEtudeFP.getId() {
+		return this.id;
+	}
+
+	public void NiveauEtudeFP.setId(NiveauEtudeFPPK id) {
+		this.id = id;
+	}
+
 }

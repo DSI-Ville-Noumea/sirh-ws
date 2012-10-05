@@ -60,7 +60,7 @@
 <!--         <property name="minEvictableIdleTimeMillis" value="1800000"/> -->
 <!--     </bean> -->
 	
-	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/SIRH_Kiosque" resource-ref="true" />
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/SIRH" resource-ref="true" />
 
     <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
