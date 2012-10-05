@@ -12,9 +12,9 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(schema = "MAIRIE", table = "SPTYCO")
+@RooJpaActiveRecord(schema = "MAIRIE", table = "SPTYCO", versionField = "")
 public class Sptyco {
-	
+
 	@Id
 	@Column(name = "TYPE2", columnDefinition = "numeric")
 	private Integer idType;

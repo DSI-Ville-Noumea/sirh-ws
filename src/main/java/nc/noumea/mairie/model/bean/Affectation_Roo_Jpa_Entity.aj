@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.Affectation;
 
 privileged aspect Affectation_Roo_Jpa_Entity {
-    
-    declare @type: Affectation: @Entity;
-    
-    declare @type: Affectation: @Table(schema = "SIRH", name = "AFFECTATION");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_AFFECTATION")
-    private Integer Affectation.idAffectation;
-    
-    @Version
-    @Column(name = "version")
-    private Integer Affectation.version;
-    
-    public Integer Affectation.getIdAffectation() {
-        return this.idAffectation;
-    }
-    
-    public void Affectation.setIdAffectation(Integer id) {
-        this.idAffectation = id;
-    }
-    
-    public Integer Affectation.getVersion() {
-        return this.version;
-    }
-    
-    public void Affectation.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: Affectation: @Entity;
+
+	declare @type: Affectation: @Table(schema = "SIRH", name = "AFFECTATION");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_AFFECTATION")
+	private Integer Affectation.idAffectation;
+
+	public Integer Affectation.getIdAffectation() {
+		return this.idAffectation;
+	}
+
+	public void Affectation.setIdAffectation(Integer id) {
+		this.idAffectation = id;
+	}
+
 }

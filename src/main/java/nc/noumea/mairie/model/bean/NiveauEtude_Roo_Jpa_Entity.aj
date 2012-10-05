@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.NiveauEtude;
 
 privileged aspect NiveauEtude_Roo_Jpa_Entity {
-    
-    declare @type: NiveauEtude: @Entity;
-    
-    declare @type: NiveauEtude: @Table(schema = "SIRH", name = "R_NIVEAU_ETUDE");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_NIVEAU_ETUDE")
-    private Integer NiveauEtude.idNiveauEtude;
-    
-    @Version
-    @Column(name = "version")
-    private Integer NiveauEtude.version;
-    
-    public Integer NiveauEtude.getIdNiveauEtude() {
-        return this.idNiveauEtude;
-    }
-    
-    public void NiveauEtude.setIdNiveauEtude(Integer id) {
-        this.idNiveauEtude = id;
-    }
-    
-    public Integer NiveauEtude.getVersion() {
-        return this.version;
-    }
-    
-    public void NiveauEtude.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: NiveauEtude: @Entity;
+
+	declare @type: NiveauEtude: @Table(schema = "SIRH", name = "R_NIVEAU_ETUDE");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_NIVEAU_ETUDE")
+	private Integer NiveauEtude.idNiveauEtude;
+
+	public Integer NiveauEtude.getIdNiveauEtude() {
+		return this.idNiveauEtude;
+	}
+
+	public void NiveauEtude.setIdNiveauEtude(Integer id) {
+		this.idNiveauEtude = id;
+	}
+
 }

@@ -17,9 +17,9 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(schema = "MAIRIE",  table = "SPSOLD")
+@RooJpaActiveRecord(schema = "MAIRIE", table = "SPSOLD", versionField = "")
 public class SpSold {
-		
+
 	@Id
 	@Column(name = "NOMATR", columnDefinition = "numeric")
 	private Integer nomatr;

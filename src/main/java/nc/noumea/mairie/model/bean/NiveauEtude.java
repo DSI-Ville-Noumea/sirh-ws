@@ -18,7 +18,7 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(identifierColumn = "ID_NIVEAU_ETUDE", schema = "SIRH", identifierField = "idNiveauEtude", identifierType = Integer.class, table = "R_NIVEAU_ETUDE")
+@RooJpaActiveRecord(identifierColumn = "ID_NIVEAU_ETUDE", schema = "SIRH", identifierField = "idNiveauEtude", identifierType = Integer.class, table = "R_NIVEAU_ETUDE", versionField = "")
 @RooSerializable
 public class NiveauEtude {
 

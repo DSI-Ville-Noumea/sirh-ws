@@ -10,10 +10,10 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(schema = "MAIRIE", identifierColumn = "CODCOM", identifierField = "codeCommune", table = "SICOMM",identifierType = BigDecimal.class)
+@RooJpaActiveRecord(schema = "MAIRIE", identifierColumn = "CODCOM", identifierField = "codeCommune", table = "SICOMM", identifierType = BigDecimal.class, versionField = "")
 public class Sicomm {
 
-    @NotNull
-    @Column(name = "LIBVIL",columnDefinition="char")
-    private String libVil;
+	@NotNull
+	@Column(name = "LIBVIL", columnDefinition = "char")
+	private String libVil;
 }

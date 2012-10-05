@@ -3,28 +3,13 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.SIVIET;
 
 privileged aspect SIVIET_Roo_Jpa_Entity {
-    
-    declare @type: SIVIET: @Entity;
-    
-    declare @type: SIVIET: @Table(schema = "MAIRIE", name = "SIVIET");
-    
-    @Version
-    @Column(name = "version")
-    private Integer SIVIET.version;
-    
-    public Integer SIVIET.getVersion() {
-        return this.version;
-    }
-    
-    public void SIVIET.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: SIVIET: @Entity;
+
+	declare @type: SIVIET: @Table(schema = "MAIRIE", name = "SIVIET");
+
 }

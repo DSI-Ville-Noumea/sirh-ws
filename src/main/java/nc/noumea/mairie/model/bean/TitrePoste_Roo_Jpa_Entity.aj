@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.TitrePoste;
 
 privileged aspect TitrePoste_Roo_Jpa_Entity {
-    
-    declare @type: TitrePoste: @Entity;
-    
-    declare @type: TitrePoste: @Table(schema = "SIRH", name = "P_TITRE_POSTE");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_TITRE_POSTE")
-    private Integer TitrePoste.idTitrePoste;
-    
-    @Version
-    @Column(name = "version")
-    private Integer TitrePoste.version;
-    
-    public Integer TitrePoste.getIdTitrePoste() {
-        return this.idTitrePoste;
-    }
-    
-    public void TitrePoste.setIdTitrePoste(Integer id) {
-        this.idTitrePoste = id;
-    }
-    
-    public Integer TitrePoste.getVersion() {
-        return this.version;
-    }
-    
-    public void TitrePoste.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: TitrePoste: @Entity;
+
+	declare @type: TitrePoste: @Table(schema = "SIRH", name = "P_TITRE_POSTE");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_TITRE_POSTE")
+	private Integer TitrePoste.idTitrePoste;
+
+	public Integer TitrePoste.getIdTitrePoste() {
+		return this.idTitrePoste;
+	}
+
+	public void TitrePoste.setIdTitrePoste(Integer id) {
+		this.idTitrePoste = id;
+	}
+
 }

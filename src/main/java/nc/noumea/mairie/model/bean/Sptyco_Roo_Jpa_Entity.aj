@@ -3,28 +3,13 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.Sptyco;
 
 privileged aspect Sptyco_Roo_Jpa_Entity {
-    
-    declare @type: Sptyco: @Entity;
-    
-    declare @type: Sptyco: @Table(schema = "MAIRIE", name = "SPTYCO");
-    
-    @Version
-    @Column(name = "version")
-    private Integer Sptyco.version;
-    
-    public Integer Sptyco.getVersion() {
-        return this.version;
-    }
-    
-    public void Sptyco.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: Sptyco: @Entity;
+
+	declare @type: Sptyco: @Table(schema = "MAIRIE", name = "SPTYCO");
+
 }

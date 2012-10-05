@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.StatutFichePoste;
 
 privileged aspect StatutFichePoste_Roo_Jpa_Entity {
-    
-    declare @type: StatutFichePoste: @Entity;
-    
-    declare @type: StatutFichePoste: @Table(schema = "SIRH", name = "R_STATUT_FP");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_STATUT_FP")
-    private Integer StatutFichePoste.idStatutFp;
-    
-    @Version
-    @Column(name = "version")
-    private Integer StatutFichePoste.version;
-    
-    public Integer StatutFichePoste.getIdStatutFp() {
-        return this.idStatutFp;
-    }
-    
-    public void StatutFichePoste.setIdStatutFp(Integer id) {
-        this.idStatutFp = id;
-    }
-    
-    public Integer StatutFichePoste.getVersion() {
-        return this.version;
-    }
-    
-    public void StatutFichePoste.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: StatutFichePoste: @Entity;
+
+	declare @type: StatutFichePoste: @Table(schema = "SIRH", name = "R_STATUT_FP");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_STATUT_FP")
+	private Integer StatutFichePoste.idStatutFp;
+
+	public Integer StatutFichePoste.getIdStatutFp() {
+		return this.idStatutFp;
+	}
+
+	public void StatutFichePoste.setIdStatutFp(Integer id) {
+		this.idStatutFp = id;
+	}
+
 }

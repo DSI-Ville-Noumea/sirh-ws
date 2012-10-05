@@ -3,41 +3,27 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.CompetenceFP;
+
 import nc.noumea.mairie.model.pk.CompetenceFPPK;
 
 privileged aspect CompetenceFP_Roo_Jpa_Entity {
-    
-    declare @type: CompetenceFP: @Entity;
-    
-    declare @type: CompetenceFP: @Table(schema = "SIRH", name = "COMPETENCE_FP");
-    
-    @EmbeddedId
-    private CompetenceFPPK CompetenceFP.id;
-    
-    @Version
-    @Column(name = "version")
-    private Integer CompetenceFP.version;
-    
-    public CompetenceFPPK CompetenceFP.getId() {
-        return this.id;
-    }
-    
-    public void CompetenceFP.setId(CompetenceFPPK id) {
-        this.id = id;
-    }
-    
-    public Integer CompetenceFP.getVersion() {
-        return this.version;
-    }
-    
-    public void CompetenceFP.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: CompetenceFP: @Entity;
+
+	declare @type: CompetenceFP: @Table(schema = "SIRH", name = "COMPETENCE_FP");
+
+	@EmbeddedId
+	private CompetenceFPPK CompetenceFP.id;
+
+	public CompetenceFPPK CompetenceFP.getId() {
+		return this.id;
+	}
+
+	public void CompetenceFP.setId(CompetenceFPPK id) {
+		this.id = id;
+	}
+
 }

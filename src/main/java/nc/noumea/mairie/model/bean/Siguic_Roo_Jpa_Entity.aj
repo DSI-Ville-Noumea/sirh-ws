@@ -3,28 +3,14 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.Siguic;
 
 privileged aspect Siguic_Roo_Jpa_Entity {
     
     declare @type: Siguic: @Entity;
     
     declare @type: Siguic: @Table(schema = "MAIRIE", name = "SIGUIC");
-    
-    @Version
-    @Column(name = "version")
-    private Integer Siguic.version;
-    
-    public Integer Siguic.getVersion() {
-        return this.version;
-    }
-    
-    public void Siguic.setVersion(Integer version) {
-        this.version = version;
-    }
+ 
     
 }

@@ -3,28 +3,13 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.Spbhor;
 
 privileged aspect Spbhor_Roo_Jpa_Entity {
-    
-    declare @type: Spbhor: @Entity;
-    
-    declare @type: Spbhor: @Table(schema = "MAIRIE", name = "SPBHOR");
-    
-    @Version
-    @Column(name = "version")
-    private Integer Spbhor.version;
-    
-    public Integer Spbhor.getVersion() {
-        return this.version;
-    }
-    
-    public void Spbhor.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: Spbhor: @Entity;
+
+	declare @type: Spbhor: @Table(schema = "MAIRIE", name = "SPBHOR");
+
 }

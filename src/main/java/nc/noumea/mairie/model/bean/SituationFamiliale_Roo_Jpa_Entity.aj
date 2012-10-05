@@ -9,38 +9,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import nc.noumea.mairie.model.bean.SituationFamiliale;
 
 privileged aspect SituationFamiliale_Roo_Jpa_Entity {
-    
-    declare @type: SituationFamiliale: @Entity;
-    
-    declare @type: SituationFamiliale: @Table(schema = "SIRH", name = "R_SITUATION_FAMILIALE");
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID_SITUATION")
-    private Integer SituationFamiliale.idSituationFamiliale;
-    
-    @Version
-    @Column(name = "version")
-    private Integer SituationFamiliale.version;
-    
-    public Integer SituationFamiliale.getIdSituationFamiliale() {
-        return this.idSituationFamiliale;
-    }
-    
-    public void SituationFamiliale.setIdSituationFamiliale(Integer id) {
-        this.idSituationFamiliale = id;
-    }
-    
-    public Integer SituationFamiliale.getVersion() {
-        return this.version;
-    }
-    
-    public void SituationFamiliale.setVersion(Integer version) {
-        this.version = version;
-    }
-    
+
+	declare @type: SituationFamiliale: @Entity;
+
+	declare @type: SituationFamiliale: @Table(schema = "SIRH", name = "R_SITUATION_FAMILIALE");
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ID_SITUATION")
+	private Integer SituationFamiliale.idSituationFamiliale;
+
+	public Integer SituationFamiliale.getIdSituationFamiliale() {
+		return this.idSituationFamiliale;
+	}
+
+	public void SituationFamiliale.setIdSituationFamiliale(Integer id) {
+		this.idSituationFamiliale = id;
+	}
+
 }
