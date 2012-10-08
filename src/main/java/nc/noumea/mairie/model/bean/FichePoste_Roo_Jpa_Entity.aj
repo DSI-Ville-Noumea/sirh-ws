@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.FichePoste;
 
 privileged aspect FichePoste_Roo_Jpa_Entity {
-
-	declare @type: FichePoste: @Entity;
-
-	declare @type: FichePoste: @Table(schema = "SIRH", name = "FICHE_POSTE");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_FICHE_POSTE")
-	private Integer FichePoste.idFichePoste;
-
-	public Integer FichePoste.getIdFichePoste() {
-		return this.idFichePoste;
-	}
-
-	public void FichePoste.setIdFichePoste(Integer id) {
-		this.idFichePoste = id;
-	}
-
+    
+    declare @type: FichePoste: @Entity;
+    
+    declare @type: FichePoste: @Table(schema = "SIRH", name = "FICHE_POSTE");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_FICHE_POSTE")
+    private Integer FichePoste.idFichePoste;
+    
+    public Integer FichePoste.getIdFichePoste() {
+        return this.idFichePoste;
+    }
+    
+    public void FichePoste.setIdFichePoste(Integer id) {
+        this.idFichePoste = id;
+    }
+    
 }

@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Budget;
 
 privileged aspect Budget_Roo_Jpa_Entity {
-
-	declare @type: Budget: @Entity;
-
-	declare @type: Budget: @Table(schema = "SIRH", name = "R_BUDGET");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_BUDGET")
-	private Integer Budget.idBudget;
-
-	public Integer Budget.getIdBudget() {
-		return this.idBudget;
-	}
-
-	public void Budget.setIdBudget(Integer id) {
-		this.idBudget = id;
-	}
-
+    
+    declare @type: Budget: @Entity;
+    
+    declare @type: Budget: @Table(schema = "SIRH", name = "R_BUDGET");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_BUDGET")
+    private Integer Budget.idBudget;
+    
+    public Integer Budget.getIdBudget() {
+        return this.idBudget;
+    }
+    
+    public void Budget.setIdBudget(Integer id) {
+        this.idBudget = id;
+    }
+    
 }

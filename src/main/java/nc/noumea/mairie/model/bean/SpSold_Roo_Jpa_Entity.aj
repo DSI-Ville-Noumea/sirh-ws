@@ -5,11 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.SpSold;
 
 privileged aspect SpSold_Roo_Jpa_Entity {
-
-	declare @type: SpSold: @Entity;
-
-	declare @type: SpSold: @Table(schema = "MAIRIE", name = "SPSOLD");
-
+    
+    declare @type: SpSold: @Entity;
+    
+    declare @type: SpSold: @Table(schema = "MAIRIE", name = "SPSOLD");
+    
 }

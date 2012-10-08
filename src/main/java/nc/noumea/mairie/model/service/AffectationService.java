@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AffectationService implements IAffectationService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public Affectation getAffectationFP(Integer idFichePoste) {
 		Affectation res = null;
-		Query query = entityManager.createQuery(
+		Query query = sirhEntityManager.createQuery(
 				"select aff from Affectation aff "
 						+ "where  aff.fichePoste.idFichePoste =:idFichePoste)",
 				Affectation.class);

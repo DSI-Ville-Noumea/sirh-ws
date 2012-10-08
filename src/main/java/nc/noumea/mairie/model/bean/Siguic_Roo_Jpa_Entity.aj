@@ -5,12 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Siguic;
 
 privileged aspect Siguic_Roo_Jpa_Entity {
     
     declare @type: Siguic: @Entity;
     
     declare @type: Siguic: @Table(schema = "MAIRIE", name = "SIGUIC");
- 
     
 }

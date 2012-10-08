@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SoldeService implements ISoldeService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public SpSold getSoldeConge(Integer nomatr) {
 		SpSold res = null;
 
-		Query query = entityManager.createQuery(
+		Query query = sirhEntityManager.createQuery(
 				"select ag from SpSold ag where ag.nomatr = :nomatr",
 				SpSold.class);
 

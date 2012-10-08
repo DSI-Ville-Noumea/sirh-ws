@@ -532,13 +532,14 @@ public class AgentController {
 		if (affSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
-		
+
 		String codeService = fpAgent.getService().getServi();
 		while (codeService.endsWith("A")) {
 			codeService = codeService.substring(0, codeService.length() - 1);
 		}
-		List<Agent> lagentService = agentSrv.getAgentService(codeService, Integer.valueOf(newIdAgent),
-				affSuperieurHierarchique.getAgent().getIdAgent());
+		List<Agent> lagentService = agentSrv.getAgentService(codeService,
+				Integer.valueOf(newIdAgent), affSuperieurHierarchique
+						.getAgent().getIdAgent());
 
 		if (lagentService == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);

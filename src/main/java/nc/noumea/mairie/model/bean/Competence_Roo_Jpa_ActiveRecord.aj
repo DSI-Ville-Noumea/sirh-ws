@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Competence_Roo_Jpa_ActiveRecord {
     
-    @PersistenceContext
+    @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Competence.entityManager;
     
     public static final EntityManager Competence.entityManager() {

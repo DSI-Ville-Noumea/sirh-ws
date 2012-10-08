@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Competence;
 
 privileged aspect Competence_Roo_Jpa_Entity {
-
-	declare @type: Competence: @Entity;
-
-	declare @type: Competence: @Table(schema = "SIRH", name = "COMPETENCE");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_COMPETENCE")
-	private Integer Competence.idCompetence;
-
-	public Integer Competence.getIdCompetence() {
-		return this.idCompetence;
-	}
-
-	public void Competence.setIdCompetence(Integer id) {
-		this.idCompetence = id;
-	}
-
+    
+    declare @type: Competence: @Entity;
+    
+    declare @type: Competence: @Table(schema = "SIRH", name = "COMPETENCE");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_COMPETENCE")
+    private Integer Competence.idCompetence;
+    
+    public Integer Competence.getIdCompetence() {
+        return this.idCompetence;
+    }
+    
+    public void Competence.setIdCompetence(Integer id) {
+        this.idCompetence = id;
+    }
+    
 }

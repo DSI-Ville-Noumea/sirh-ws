@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect SpSold_Roo_Jpa_ActiveRecord {
     
-    @PersistenceContext
+    @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager SpSold.entityManager;
     
     public static final EntityManager SpSold.entityManager() {

@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpcongService implements ISpcongService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public List<Spcong> getHistoriqueCongeAnnee(Long nomatr) {
@@ -28,7 +28,7 @@ public class SpcongService implements ISpcongService {
 		String datFinMax = annee.toString()
 				+ dateJourString.substring(4, dateJourString.length());
 
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select spcong from Spcong spcong "
 								+ "where spcong.id.nomatr=:nomatr and spcong.datFin>=:datFin",
@@ -49,9 +49,11 @@ public class SpcongService implements ISpcongService {
 		Integer annee = Integer.valueOf(dateJourString.substring(0, 4)) - 1;
 		String datFinMax = annee.toString()
 				+ dateJourString.substring(4, dateJourString.length());
-		Query query = entityManager.createQuery(
-				"select spcong from Spcong spcong "
-						+ "where spcong.id.nomatr=:nomatr and spcong.datFin<:datFin", Spcong.class);
+		Query query = sirhEntityManager
+				.createQuery(
+						"select spcong from Spcong spcong "
+								+ "where spcong.id.nomatr=:nomatr and spcong.datFin<:datFin",
+						Spcong.class);
 		query.setParameter("nomatr", nomatr.intValue());
 		query.setParameter("datFin", Integer.valueOf(datFinMax));
 		List<Spcong> lcong = query.getResultList();

@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.StatutFichePoste;
 
 privileged aspect StatutFichePoste_Roo_Jpa_Entity {
-
-	declare @type: StatutFichePoste: @Entity;
-
-	declare @type: StatutFichePoste: @Table(schema = "SIRH", name = "R_STATUT_FP");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_STATUT_FP")
-	private Integer StatutFichePoste.idStatutFp;
-
-	public Integer StatutFichePoste.getIdStatutFp() {
-		return this.idStatutFp;
-	}
-
-	public void StatutFichePoste.setIdStatutFp(Integer id) {
-		this.idStatutFp = id;
-	}
-
+    
+    declare @type: StatutFichePoste: @Entity;
+    
+    declare @type: StatutFichePoste: @Table(schema = "SIRH", name = "R_STATUT_FP");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_STATUT_FP")
+    private Integer StatutFichePoste.idStatutFp;
+    
+    public Integer StatutFichePoste.getIdStatutFp() {
+        return this.idStatutFp;
+    }
+    
+    public void StatutFichePoste.setIdStatutFp(Integer id) {
+        this.idStatutFp = id;
+    }
+    
 }

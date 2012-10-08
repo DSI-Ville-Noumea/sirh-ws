@@ -5,11 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Spcong;
 
 privileged aspect Spcong_Roo_Jpa_Entity {
-
-	declare @type: Spcong: @Entity;
-
-	declare @type: Spcong: @Table(schema = "MAIRIE", name = "SPCONG");
-
+    
+    declare @type: Spcong: @Entity;
+    
+    declare @type: Spcong: @Table(schema = "MAIRIE", name = "SPCONG");
+    
 }

@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class FichePosteService implements IFichePosteService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public FichePoste getFichePosteAgentAffectationEnCours(Integer id) {
@@ -30,7 +30,7 @@ public class FichePosteService implements IFichePosteService {
 			e.printStackTrace();
 		}
 		FichePoste res = null;
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select fp from FichePoste fp, Affectation aff "
 								+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
@@ -50,8 +50,9 @@ public class FichePosteService implements IFichePosteService {
 	@Override
 	public FichePoste getFichePoste(Integer idFichePoste) {
 		FichePoste res = null;
-		Query query = entityManager.createQuery("select fp from FichePoste fp "
-				+ "where fp.idFichePoste =:idFP)", FichePoste.class);
+		Query query = sirhEntityManager.createQuery(
+				"select fp from FichePoste fp "
+						+ "where fp.idFichePoste =:idFP)", FichePoste.class);
 		query.setParameter("idFP", idFichePoste);
 		List<FichePoste> lfp = query.getResultList();
 
@@ -79,7 +80,7 @@ public class FichePosteService implements IFichePosteService {
 			codeService = servi;
 		}
 
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select fp from FichePoste fp, Agent ag , Affectation aff where aff.agent.idAgent = ag.idAgent  "
 								+ " and fp.idFichePoste = aff.fichePoste.idFichePoste "

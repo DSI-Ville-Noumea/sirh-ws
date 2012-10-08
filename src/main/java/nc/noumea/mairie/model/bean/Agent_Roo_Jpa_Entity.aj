@@ -9,26 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Agent;
 
 privileged aspect Agent_Roo_Jpa_Entity {
-
-	declare @type: Agent: @Entity;
-
-	declare @type: Agent: @Table(schema = "SIRH", name = "AGENT");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_AGENT")
-	private Integer Agent.idAgent;
-
-	public Integer Agent.getIdAgent() {
-		return this.idAgent;
-	}
-
-	public void Agent.setIdAgent(Integer id) {
-		this.idAgent = id;
-	}
-
+    
+    declare @type: Agent: @Entity;
+    
+    declare @type: Agent: @Table(schema = "SIRH", name = "AGENT");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_AGENT")
+    private Integer Agent.idAgent;
+    
+    public Integer Agent.getIdAgent() {
+        return this.idAgent;
+    }
+    
+    public void Agent.setIdAgent(Integer id) {
+        this.idAgent = id;
+    }
+    
 }

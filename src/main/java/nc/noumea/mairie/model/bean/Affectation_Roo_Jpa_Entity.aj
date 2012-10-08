@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Affectation;
 
 privileged aspect Affectation_Roo_Jpa_Entity {
-
-	declare @type: Affectation: @Entity;
-
-	declare @type: Affectation: @Table(schema = "SIRH", name = "AFFECTATION");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_AFFECTATION")
-	private Integer Affectation.idAffectation;
-
-	public Integer Affectation.getIdAffectation() {
-		return this.idAffectation;
-	}
-
-	public void Affectation.setIdAffectation(Integer id) {
-		this.idAffectation = id;
-	}
-
+    
+    declare @type: Affectation: @Entity;
+    
+    declare @type: Affectation: @Table(schema = "SIRH", name = "AFFECTATION");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_AFFECTATION")
+    private Integer Affectation.idAffectation;
+    
+    public Integer Affectation.getIdAffectation() {
+        return this.idAffectation;
+    }
+    
+    public void Affectation.setIdAffectation(Integer id) {
+        this.idAffectation = id;
+    }
+    
 }

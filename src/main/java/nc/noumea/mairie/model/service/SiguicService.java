@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class SiguicService implements ISiguicService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public Siguic getBanque(Integer codeBanque, Integer codeGuichet) {
 
 		Siguic res = null;
 
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select si from Siguic si where si.id.codeBanque = :codeBanque and si.id.codeGuichet = :codeGuichet",
 						Siguic.class);
