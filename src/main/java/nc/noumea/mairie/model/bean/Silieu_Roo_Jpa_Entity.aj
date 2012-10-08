@@ -5,11 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Silieu;
 
 privileged aspect Silieu_Roo_Jpa_Entity {
-
-	declare @type: Silieu: @Entity;
-
-	declare @type: Silieu: @Table(schema = "MAIRIE", name = "SILIEU");
-
+    
+    declare @type: Silieu: @Entity;
+    
+    declare @type: Silieu: @Table(schema = "MAIRIE", name = "SILIEU");
+    
 }

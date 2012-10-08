@@ -3,11 +3,9 @@
 
 package nc.noumea.mairie.model.bean;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.CadreEmploiFP;
 import nc.noumea.mairie.model.pk.CadreEmploiFPPK;
 

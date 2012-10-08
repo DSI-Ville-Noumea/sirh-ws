@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.CadreEmploi;
 
 privileged aspect CadreEmploi_Roo_Jpa_Entity {
-
-	declare @type: CadreEmploi: @Entity;
-
-	declare @type: CadreEmploi: @Table(schema = "SIRH", name = "P_CADRE_EMPLOI");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_CADRE_EMPLOI")
-	private Integer CadreEmploi.idCadreEmploi;
-
-	public Integer CadreEmploi.getIdCadreEmploi() {
-		return this.idCadreEmploi;
-	}
-
-	public void CadreEmploi.setIdCadreEmploi(Integer id) {
-		this.idCadreEmploi = id;
-	}
-
+    
+    declare @type: CadreEmploi: @Entity;
+    
+    declare @type: CadreEmploi: @Table(schema = "SIRH", name = "P_CADRE_EMPLOI");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_CADRE_EMPLOI")
+    private Integer CadreEmploi.idCadreEmploi;
+    
+    public Integer CadreEmploi.getIdCadreEmploi() {
+        return this.idCadreEmploi;
+    }
+    
+    public void CadreEmploi.setIdCadreEmploi(Integer id) {
+        this.idCadreEmploi = id;
+    }
+    
 }

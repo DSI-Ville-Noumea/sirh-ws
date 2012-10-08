@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AgentService implements IAgentService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public Agent getAgent(Integer id) {
 		Agent res = null;
 
-		Query query = entityManager.createQuery(
+		Query query = sirhEntityManager.createQuery(
 				"select ag from Agent ag where ag.idAgent = :idAgent",
 				Agent.class);
 
@@ -49,7 +49,7 @@ public class AgentService implements IAgentService {
 			e.printStackTrace();
 		}
 
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent  "
 								+ " and fp.idFichePoste = aff.fichePoste.idFichePoste "

@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Contact;
 
 privileged aspect Contact_Roo_Jpa_Entity {
-
-	declare @type: Contact: @Entity;
-
-	declare @type: Contact: @Table(schema = "SIRH", name = "CONTACT");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_CONTACT")
-	private Integer Contact.idContact;
-
-	public Integer Contact.getIdContact() {
-		return this.idContact;
-	}
-
-	public void Contact.setIdContact(Integer id) {
-		this.idContact = id;
-	}
-
+    
+    declare @type: Contact: @Entity;
+    
+    declare @type: Contact: @Table(schema = "SIRH", name = "CONTACT");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_CONTACT")
+    private Integer Contact.idContact;
+    
+    public Integer Contact.getIdContact() {
+        return this.idContact;
+    }
+    
+    public void Contact.setIdContact(Integer id) {
+        this.idContact = id;
+    }
+    
 }

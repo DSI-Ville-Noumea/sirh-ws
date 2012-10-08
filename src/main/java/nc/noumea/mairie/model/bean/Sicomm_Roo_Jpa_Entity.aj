@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import nc.noumea.mairie.model.bean.Sicomm;
 
 privileged aspect Sicomm_Roo_Jpa_Entity {

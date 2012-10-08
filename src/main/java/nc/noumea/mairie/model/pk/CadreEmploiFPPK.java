@@ -9,7 +9,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooEquals
 @RooIdentifier
-public final class CadreEmploiFPPK {
+public final class CadreEmploiFPPK  {
 
 	@Column(name = "ID_CADRE_EMPLOI")
 	private Integer idCadreEmploi;

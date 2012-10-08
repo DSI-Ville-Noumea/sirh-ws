@@ -12,7 +12,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(schema = "MAIRIE", table = "SPTYCO", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPTYCO", versionField = "")
 public class Sptyco {
 
 	@Id

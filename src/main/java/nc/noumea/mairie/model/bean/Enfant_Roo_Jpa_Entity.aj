@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Enfant;
 
 privileged aspect Enfant_Roo_Jpa_Entity {
-
-	declare @type: Enfant: @Entity;
-
-	declare @type: Enfant: @Table(schema = "SIRH", name = "ENFANT");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_ENFANT")
-	private Integer Enfant.idEnfant;
-
-	public Integer Enfant.getIdEnfant() {
-		return this.idEnfant;
-	}
-
-	public void Enfant.setIdEnfant(Integer id) {
-		this.idEnfant = id;
-	}
-
+    
+    declare @type: Enfant: @Entity;
+    
+    declare @type: Enfant: @Table(schema = "SIRH", name = "ENFANT");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_ENFANT")
+    private Integer Enfant.idEnfant;
+    
+    public Integer Enfant.getIdEnfant() {
+        return this.idEnfant;
+    }
+    
+    public void Enfant.setIdEnfant(Integer id) {
+        this.idEnfant = id;
+    }
+    
 }

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect CadreEmploiFP_Roo_Jpa_ActiveRecord {
     
-    @PersistenceContext
+    @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager CadreEmploiFP.entityManager;
     
     public static final EntityManager CadreEmploiFP.entityManager() {

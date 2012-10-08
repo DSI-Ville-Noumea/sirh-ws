@@ -9,24 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.NiveauEtude;
 
 privileged aspect NiveauEtude_Roo_Jpa_Entity {
-
-	declare @type: NiveauEtude: @Entity;
-
-	declare @type: NiveauEtude: @Table(schema = "SIRH", name = "R_NIVEAU_ETUDE");
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID_NIVEAU_ETUDE")
-	private Integer NiveauEtude.idNiveauEtude;
-
-	public Integer NiveauEtude.getIdNiveauEtude() {
-		return this.idNiveauEtude;
-	}
-
-	public void NiveauEtude.setIdNiveauEtude(Integer id) {
-		this.idNiveauEtude = id;
-	}
-
+    
+    declare @type: NiveauEtude: @Entity;
+    
+    declare @type: NiveauEtude: @Table(schema = "SIRH", name = "R_NIVEAU_ETUDE");
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID_NIVEAU_ETUDE")
+    private Integer NiveauEtude.idNiveauEtude;
+    
+    public Integer NiveauEtude.getIdNiveauEtude() {
+        return this.idNiveauEtude;
+    }
+    
+    public void NiveauEtude.setIdNiveauEtude(Integer id) {
+        this.idNiveauEtude = id;
+    }
+    
 }

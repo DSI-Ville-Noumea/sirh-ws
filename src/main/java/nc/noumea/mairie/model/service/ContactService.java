@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContactService implements IContactService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public List<Contact> getContactsAgent(Long id) {
-		Query query = entityManager.createQuery(
+		Query query = sirhEntityManager.createQuery(
 				"select contact from Contact contact "
 						+ "where contact.idAgent=:idAgent", Contact.class);
 		query.setParameter("idAgent", id.intValue());

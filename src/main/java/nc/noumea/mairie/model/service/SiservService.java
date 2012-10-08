@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SiservService implements ISiservService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public Siserv getDirection(String servi) {
@@ -22,7 +22,7 @@ public class SiservService implements ISiservService {
 		if (servi.length() == 4 && estAlphabetique(servi)
 				&& !servi.substring(1, 2).equals("A")) {
 			String codeDirection = servi.substring(0, 2) + "AA";
-			Query query = entityManager.createQuery(
+			Query query = sirhEntityManager.createQuery(
 					"select serv from Siserv serv "
 							+ "where  servi=:codeDirection)", Siserv.class);
 			query.setParameter("codeDirection", codeDirection);
@@ -54,7 +54,7 @@ public class SiservService implements ISiservService {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi)
 				&& !servi.substring(3, 4).equals("A")) {
-			Query query = entityManager.createQuery(
+			Query query = sirhEntityManager.createQuery(
 					"select serv from Siserv serv "
 							+ "where  servi=:codeSection)", Siserv.class);
 			query.setParameter("codeSection", servi);
@@ -73,7 +73,7 @@ public class SiservService implements ISiservService {
 		if (servi.length() == 4 && estAlphabetique(servi)
 				&& !servi.substring(2, 3).equals("A")) {
 			String codeDivision = servi.substring(0, 3) + "A";
-			Query query = entityManager.createQuery(
+			Query query = sirhEntityManager.createQuery(
 					"select serv from Siserv serv "
 							+ "where  servi=:codeDivision)", Siserv.class);
 			query.setParameter("codeDivision", codeDivision);
@@ -88,8 +88,9 @@ public class SiservService implements ISiservService {
 	@Override
 	public Siserv getService(String servi) {
 		Siserv res = null;
-		Query query = entityManager.createQuery("select serv from Siserv serv "
-				+ "where  servi=:service)", Siserv.class);
+		Query query = sirhEntityManager.createQuery(
+				"select serv from Siserv serv " + "where  servi=:service)",
+				Siserv.class);
 		query.setParameter("service", servi);
 		List<Siserv> lserv = query.getResultList();
 

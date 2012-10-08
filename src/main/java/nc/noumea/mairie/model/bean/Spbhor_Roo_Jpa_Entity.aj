@@ -5,11 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Spbhor;
 
 privileged aspect Spbhor_Roo_Jpa_Entity {
-
-	declare @type: Spbhor: @Entity;
-
-	declare @type: Spbhor: @Table(schema = "MAIRIE", name = "SPBHOR");
-
+    
+    declare @type: Spbhor: @Entity;
+    
+    declare @type: Spbhor: @Table(schema = "MAIRIE", name = "SPBHOR");
+    
 }

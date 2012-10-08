@@ -5,11 +5,12 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import nc.noumea.mairie.model.bean.Siserv;
 
 privileged aspect Siserv_Roo_Jpa_Entity {
-
-	declare @type: Siserv: @Entity;
-
-	declare @type: Siserv: @Table(schema = "MAIRIE", name = "SISERV");
-
+    
+    declare @type: Siserv: @Entity;
+    
+    declare @type: Siserv: @Table(schema = "MAIRIE", name = "SISERV");
+    
 }

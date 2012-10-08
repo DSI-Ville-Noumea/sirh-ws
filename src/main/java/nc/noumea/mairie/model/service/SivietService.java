@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class SivietService implements ISivietService {
 
-	@PersistenceContext
-	transient EntityManager entityManager;
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	transient EntityManager sirhEntityManager;
 
 	@Override
 	public SIVIET getLieuNaissEtr(Integer codePays, Integer codeCommune) {
 
 		SIVIET res = null;
 
-		Query query = entityManager
+		Query query = sirhEntityManager
 				.createQuery(
 						"select si from SIVIET si where si.id.codePays = :codePays and si.id.sousCodePays = :sousCodePays",
 						SIVIET.class);

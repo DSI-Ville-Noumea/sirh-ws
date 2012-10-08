@@ -28,4 +28,9 @@
 		removeAbandonedTimeout="500" logAbandoned="true" name="jdbc/SIRH"
 		password="***REMOVED***" poolPreparedStatements="true" type="javax.sql.DataSource"
 		url="jdbc:as400://noumea" username="***REMOVED***" validationQuery="select 1 from sysibm.sysdummy1" />
+		
+	<Resource name="jdbc/ORACLE_EAE" auth="Container" type="javax.sql.DataSource" 
+		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual" 
+		maxWait="10000" initialSize="1" username="eae" password="eae" driverClassName="oracle.jdbc.driver.OracleDriver" 
+		url="jdbc:oracle:thin:@DVLP:1521:ORADEV" poolPreparedStatements="true" />
 </Context>

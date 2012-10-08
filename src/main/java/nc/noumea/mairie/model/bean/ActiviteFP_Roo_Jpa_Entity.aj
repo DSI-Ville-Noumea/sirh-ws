@@ -6,24 +6,24 @@ package nc.noumea.mairie.model.bean;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+import nc.noumea.mairie.model.bean.ActiviteFP;
 import nc.noumea.mairie.model.pk.ActiviteFPPK;
 
 privileged aspect ActiviteFP_Roo_Jpa_Entity {
-
-	declare @type: ActiviteFP: @Entity;
-
-	declare @type: ActiviteFP: @Table(schema = "SIRH", name = "ACTIVITE_FP");
-
-	@EmbeddedId
-	private ActiviteFPPK ActiviteFP.id;
-
-	public ActiviteFPPK ActiviteFP.getId() {
-		return this.id;
-	}
-
-	public void ActiviteFP.setId(ActiviteFPPK id) {
-		this.id = id;
-	}
-
+    
+    declare @type: ActiviteFP: @Entity;
+    
+    declare @type: ActiviteFP: @Table(schema = "SIRH", name = "ACTIVITE_FP");
+    
+    @EmbeddedId
+    private ActiviteFPPK ActiviteFP.id;
+    
+    public ActiviteFPPK ActiviteFP.getId() {
+        return this.id;
+    }
+    
+    public void ActiviteFP.setId(ActiviteFPPK id) {
+        this.id = id;
+    }
+    
 }
