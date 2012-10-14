@@ -10,6 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.eae.Eae;
+import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,31 @@ public class AgentService implements IAgentService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
+
+	@Override
+	public Eae fillEaeWithAgents(Eae eaeToFill) {
+
+		eaeToFill.setAgentEvalue(Agent.findAgent(eaeToFill.getIdAgent()));
+		
+		if (eaeToFill.getIdAgentDelegataire() != null)
+			eaeToFill.setAgentDelegataire(Agent.findAgent(eaeToFill.getIdAgentDelegataire()));
+		
+		if (eaeToFill.getEaeEvaluateurs() != null)
+			for (EaeEvaluateur eval : eaeToFill.getEaeEvaluateurs())
+				fillEaeEvaluateurWithAgent(eval);
+		
+		return eaeToFill;
+		
+	}
+
+	@Override
+	public EaeEvaluateur fillEaeEvaluateurWithAgent(EaeEvaluateur eaeEvaluateurToFill) {
+		
+		Agent agent = Agent.findAgent(eaeEvaluateurToFill.getIdAgent());
+		eaeEvaluateurToFill.setAgent(agent);
+		
+		return eaeEvaluateurToFill;
+	}
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -106,6 +133,33 @@ public class AgentService implements IAgentService {
 		json.remove("codePostalVilleBP");
 		json.remove("version");
 		return json;
+	}
+
+	@Override
+	public List<Agent> getAgentService(String servi, Integer idAgent) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = null;
+		try {
+			dateJour = sdf.parse(dateTemp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Query query = sirhEntityManager
+				.createQuery(
+						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent  "
+								+ " and fp.idFichePoste = aff.fichePoste.idFichePoste "
+								+ "and fp.service.servi like :codeServ  and aff.agent.idAgent != :idAgent "
+								+ "and aff.dateDebutAff<=:dateJour and "
+								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+						Agent.class);
+		query.setParameter("codeServ", servi + "%");
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("dateJour", dateJour);
+		List<Agent> lag = query.getResultList();
+
+		return lag;
 	}
 
 }

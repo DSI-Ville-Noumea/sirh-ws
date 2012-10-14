@@ -6,5 +6,10 @@ import nc.noumea.mairie.model.bean.eae.Eae;
 
 public interface IEaeService {
 
-	List<Eae> listEaesByAgentId(int agentId);
+	List<Eae> listerEaeDelegataire(Integer idAgentDelegataire,
+			Integer idCampagneEae);
+
+	List<Eae> listerEaeSHD(Integer idAgentSHD, Integer idCampagneEae);
+
+	List<Eae> listEaesByCampagne(int idCampagne);
 }

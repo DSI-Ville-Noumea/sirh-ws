@@ -3,10 +3,13 @@
 
 package nc.noumea.mairie.model.bean.eae;
 
-import java.util.Date;
+import java.util.Set;
+import nc.noumea.mairie.enums.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.bean.eae.EaeEvaluation;
+import nc.noumea.mairie.model.bean.eae.EaeCampagne;
+import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
+import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 
 privileged aspect Eae_Roo_JavaBean {
     
@@ -18,132 +21,20 @@ privileged aspect Eae_Roo_JavaBean {
         this.idAgent = idAgent;
     }
     
-    public Integer Eae.getIdAgentShd() {
-        return this.idAgentShd;
-    }
-    
-    public void Eae.setIdAgentShd(Integer idAgentShd) {
-        this.idAgentShd = idAgentShd;
-    }
-    
-    public String Eae.getDirectionService() {
-        return this.directionService;
-    }
-    
-    public void Eae.setDirectionService(String directionService) {
-        this.directionService = directionService;
-    }
-    
-    public String Eae.getSectionService() {
-        return this.sectionService;
-    }
-    
-    public void Eae.setSectionService(String sectionService) {
-        this.sectionService = sectionService;
-    }
-    
-    public String Eae.getService() {
-        return this.service;
-    }
-    
-    public void Eae.setService(String service) {
-        this.service = service;
-    }
-    
-    public String Eae.getStatut() {
-        return this.statut;
-    }
-    
-    public void Eae.setStatut(String statut) {
-        this.statut = statut;
-    }
-    
-    public String Eae.getEtat() {
+    public EaeEtatEnum Eae.getEtat() {
         return this.etat;
     }
     
-    public void Eae.setEtat(String etat) {
+    public void Eae.setEtat(EaeEtatEnum etat) {
         this.etat = etat;
     }
     
-    public boolean Eae.isCap() {
-        return this.cap;
+    public EaeCampagne Eae.getEaeCampagne() {
+        return this.eaeCampagne;
     }
     
-    public void Eae.setCap(boolean cap) {
-        this.cap = cap;
-    }
-    
-    public boolean Eae.isDocAttache() {
-        return this.docAttache;
-    }
-    
-    public void Eae.setDocAttache(boolean docAttache) {
-        this.docAttache = docAttache;
-    }
-    
-    public Date Eae.getDateCreation() {
-        return this.dateCreation;
-    }
-    
-    public void Eae.setDateCreation(Date dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-    
-    public Date Eae.getDateFin() {
-        return this.dateFin;
-    }
-    
-    public void Eae.setDateFin(Date dateFin) {
-        this.dateFin = dateFin;
-    }
-    
-    public Date Eae.getDateEntretien() {
-        return this.dateEntretien;
-    }
-    
-    public void Eae.setDateEntretien(Date dateEntretien) {
-        this.dateEntretien = dateEntretien;
-    }
-    
-    public Integer Eae.getDureeEntretien() {
-        return this.dureeEntretien;
-    }
-    
-    public void Eae.setDureeEntretien(Integer dureeEntretien) {
-        this.dureeEntretien = dureeEntretien;
-    }
-    
-    public Date Eae.getDateFinalisation() {
-        return this.dateFinalisation;
-    }
-    
-    public void Eae.setDateFinalisation(Date dateFinalisation) {
-        this.dateFinalisation = dateFinalisation;
-    }
-    
-    public Date Eae.getDateControle() {
-        return this.dateControle;
-    }
-    
-    public void Eae.setDateControle(Date dateControle) {
-        this.dateControle = dateControle;
-    }
-    
-    public String Eae.getHeureControle() {
-        return this.heureControle;
-    }
-    
-    public void Eae.setHeureControle(String heureControle) {
-        this.heureControle = heureControle;
-    }
-    
-    public String Eae.getUserControle() {
-        return this.userControle;
-    }
-    
-    public void Eae.setUserControle(String userControle) {
-        this.userControle = userControle;
+    public void Eae.setEaeCampagne(EaeCampagne eaeCampagne) {
+        this.eaeCampagne = eaeCampagne;
     }
     
     public Integer Eae.getIdAgentDelegataire() {
@@ -154,12 +45,20 @@ privileged aspect Eae_Roo_JavaBean {
         this.idAgentDelegataire = idAgentDelegataire;
     }
     
-    public EaeEvaluation Eae.getEaeEvaluation() {
-        return this.eaeEvaluation;
+    public Set<EaeEvaluateur> Eae.getEaeEvaluateurs() {
+        return this.eaeEvaluateurs;
     }
     
-    public void Eae.setEaeEvaluation(EaeEvaluation eaeEvaluation) {
-        this.eaeEvaluation = eaeEvaluation;
+    public void Eae.setEaeEvaluateurs(Set<EaeEvaluateur> eaeEvaluateurs) {
+        this.eaeEvaluateurs = eaeEvaluateurs;
+    }
+    
+    public EaeFichePoste Eae.getEaeFichePoste() {
+        return this.eaeFichePoste;
+    }
+    
+    public void Eae.setEaeFichePoste(EaeFichePoste eaeFichePoste) {
+        this.eaeFichePoste = eaeFichePoste;
     }
     
     public Agent Eae.getAgentEvalue() {
@@ -168,14 +67,6 @@ privileged aspect Eae_Roo_JavaBean {
     
     public void Eae.setAgentEvalue(Agent agentEvalue) {
         this.agentEvalue = agentEvalue;
-    }
-    
-    public Agent Eae.getAgentShd() {
-        return this.agentShd;
-    }
-    
-    public void Eae.setAgentShd(Agent agentShd) {
-        this.agentShd = agentShd;
     }
     
     public Agent Eae.getAgentDelegataire() {
