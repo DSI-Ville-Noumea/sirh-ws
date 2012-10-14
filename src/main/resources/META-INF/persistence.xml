@@ -49,6 +49,9 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>nc.noumea.mairie.model.bean.eae.Eae</class>
         <class>nc.noumea.mairie.model.bean.eae.EaeEvaluation</class>
+        <class>nc.noumea.mairie.model.bean.eae.EaeCampagne</class>
+        <class>nc.noumea.mairie.model.bean.eae.EaeEvaluateur</class>
+        <class>nc.noumea.mairie.model.bean.eae.EaeFichePoste</class>
       	<exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>

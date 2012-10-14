@@ -1,17 +1,26 @@
 package nc.noumea.mairie.model.bean.eae;
 
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import nc.noumea.mairie.enums.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.tools.transformer.MSDateTransformer;
-import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
+import nc.noumea.mairie.tools.transformer.EaeEvaluateurToAgentTransformer;
+import nc.noumea.mairie.tools.transformer.EaeFichePosteToEaeListTransformer;
 import nc.noumea.mairie.tools.transformer.SimpleAgentTransformer;
+import nc.noumea.mairie.tools.transformer.ValueEnumTransformer;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -22,7 +31,7 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE")
+@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE", sequenceName = "EAE_S_EAE")
 @RooJson
 public class Eae {
 
@@ -34,62 +43,23 @@ public class Eae {
 	private int idAgent;
 
 	@NotNull
-	@Column(name = "ID_SHD")
-	private Integer idAgentShd;
-
-	@Column(name = "DIRECTION_SERVICE")
-	private String directionService;
-
-	@Column(name = "SECTION_SERVICE")
-	private String sectionService;
-
-	@Column(name = "SERVICE")
-	private String service;
-
-	@Column(name = "STATUT")
-	private String statut;
-
-	@NotNull
 	@Column(name = "ETAT")
-	private String etat;
+	@Enumerated(EnumType.STRING)
+	private EaeEtatEnum etat;
 
 	@NotNull
-	@Column(name = "CAP")
-	private boolean cap;
-
-	@NotNull
-	@Column(name = "DOC_ATTACHE")
-	private boolean docAttache;
-
-	@Column(name = "DATE_CREATION")
-	private Date dateCreation;
-
-	@Column(name = "DATE_FIN")
-	private Date dateFin;
-
-	@Column(name = "DATE_ENTRETIEN")
-	private Date dateEntretien;
-
-	@Column(name = "DUREE_ENTRETIEN", nullable = true)
-	private Integer dureeEntretien;
-
-	@Column(name = "DATE_FINALISE")
-	private Date dateFinalisation;
-
-	@Column(name = "DATE_CONTROLE")
-	private Date dateControle;
-
-	@Column(name = "HEURE_CONTROLE")
-	private String heureControle;
-
-	@Column(name = "USER_CONTROLE")
-	private String userControle;
+	@ManyToOne
+	@JoinColumn(name = "ID_CAMPAGNE_EAE", referencedColumnName = "ID_CAMPAGNE_EAE")
+	private EaeCampagne eaeCampagne;
 
 	@Column(name = "ID_DELEGATAIRE")
 	private Integer idAgentDelegataire;
 
-	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
-	private EaeEvaluation eaeEvaluation;
+	@OneToMany(mappedBy = "eae", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<EaeEvaluateur> eaeEvaluateurs = new HashSet<EaeEvaluateur>();
+
+	@OneToOne(optional = false, mappedBy = "eae", fetch = FetchType.LAZY)
+	private EaeFichePoste eaeFichePoste;
 
 	/*
 	 * Transient properties (will be populated by AS400 entity manager)
@@ -98,25 +68,21 @@ public class Eae {
 	private Agent agentEvalue;
 
 	@Transient
-	private Agent agentShd;
-
-	@Transient
 	private Agent agentDelegataire;
 
 	public static JSONSerializer getSerializerForEaeList() {
 
-		JSONSerializer serializer = new JSONSerializer().include("agentEvalue")
-				.include("directionService").include("sectionService")
-				.include("service").include("etat").include("cap")
-				.include("docAttache").include("dateCreation")
-				.include("dateFinalisation").include("dateControle")
-				.include("dureeEntretien").include("agentShd")
-				.include("agentDelegataire").include("eaeEvaluation.avisShd")
+		JSONSerializer serializer = new JSONSerializer()
 				.include("idEae")
-				.transform(new MSDateTransformer(), Date.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
+				.include("eaeEvaluateurs")
+				.include("agentDelegataire")
+				.include("eaeFichePoste")
 				.transform(new SimpleAgentTransformer(), Agent.class)
-				.exclude("*");
+				.transform(new EaeFichePosteToEaeListTransformer(),
+						EaeFichePoste.class)
+				.transform(new ValueEnumTransformer(), Enum.class)
+				.transform(new EaeEvaluateurToAgentTransformer(),
+						EaeEvaluateur.class).exclude("*");
 
 		return serializer;
 	}

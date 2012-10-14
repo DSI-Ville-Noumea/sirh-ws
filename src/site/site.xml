@@ -32,6 +32,8 @@
         </menu>
 		<menu name="Développement">
         	<item name="Application" href="developpement/application.html"/>
+        	<item name="WebServices" href="developpement/webServices.html"/>
+        	<item name="Base de données" href="developpement/baseDeDonnees.html"/>
         </menu>
 		<menu name="Conception">
         	<item name="Agent" href="conception/agent.html"/>

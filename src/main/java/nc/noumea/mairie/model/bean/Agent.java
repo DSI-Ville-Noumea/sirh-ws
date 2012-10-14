@@ -63,6 +63,10 @@ public class Agent {
 	private String civilite;
 
 	@NotNull
+	@Column(name = "SEXE")
+	private String sexe;
+
+	@NotNull
 	@Column(name = "DATE_NAISSANCE")
 	@Temporal(TemporalType.DATE)
 	private Date dateNaissance;
@@ -247,6 +251,7 @@ public class Agent {
 		json.remove("prenomUsage");
 		json.remove("prenom");
 		json.remove("civilite");
+		json.remove("sexe");
 		json.remove("dateNaissance");
 		json.remove("situationFamiliale");
 		json.remove("numCafat");
@@ -292,6 +297,7 @@ public class Agent {
 		json.put("nomMarital", getNomMarital());
 		json.put("nomUsage", getNomUsage());
 		json.put("prenom", getPrenomUsage());
+		json.put("sexe", getSexe());
 		json.put("situationFamiliale",
 				situationFamiliale.getLibSituationFamiliale());
 		if (dateNaissance != null) {

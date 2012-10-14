@@ -195,3 +195,17 @@ entity jpa --class nc.noumea.mairie.Nono --identifierType java.lang.Number
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-08 13:41:41
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-08 13:42:40
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-08 13:47:04
+// [failed] json add --class ~.model.bean.eae.EaeCampagne
+// [failed] json add --class ~.model.bean.eae.EaeCampagne
+entity jpa --class ~.model.bean.eae.EaeCampagne
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-08 15:56:04
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-08 16:01:03
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-08 16:10:27
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-09 09:02:52
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-09 15:02:03
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-10 08:14:41
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-10 16:27:24
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-12 09:23:56
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-12 15:30:46
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-12 15:36:41
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-12 15:44:09

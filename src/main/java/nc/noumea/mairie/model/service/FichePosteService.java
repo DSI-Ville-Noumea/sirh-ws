@@ -73,11 +73,14 @@ public class FichePosteService implements IFichePosteService {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		String codeService = null;
+		/*String codeService = null;
 		if (servi.endsWith("A")) {
 			codeService = servi.substring(0, servi.length() - 1);
 		} else {
 			codeService = servi;
+		}*/
+		while(servi.endsWith("A")){
+			servi=servi.substring(0, servi.length() - 1);
 		}
 
 		Query query = sirhEntityManager
@@ -88,7 +91,7 @@ public class FichePosteService implements IFichePosteService {
 								+ "and aff.dateDebutAff<=:dateJour and "
 								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
 						FichePoste.class);
-		query.setParameter("codeServ", codeService + "%");
+		query.setParameter("codeServ", servi + "%");
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfpag = query.getResultList();
