@@ -13,13 +13,12 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_CAMPAGNE_EAE", identifierField = "idCampagneEae", identifierType = Integer.class, table = "EAE_CAMPAGNE_EAE", versionField = "",schema="EAE")
+@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_CAMPAGNE_EAE", identifierField = "idCampagneEae", identifierType = Integer.class, table = "EAE_CAMPAGNE_EAE", versionField = "",sequenceName="EAE_S_CAMPAGNE_EAE")
 public class EaeCampagne {
 
 	@NotNull
 	@Column(name = "ANNEE")
 	private Integer annee;
-	
 
 	@Column(name = "DATE_DEBUT")
 	private Date dateDebut;
