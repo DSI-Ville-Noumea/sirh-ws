@@ -33,7 +33,7 @@
 		jmxEnabled="true" username="***REMOVED***" password="***REMOVED***"
 		driverClassName="com.ibm.as400.access.AS400JDBCDriver" url="jdbc:as400://***REMOVED***" />
 		
-	<Resource name="jdbc/SIRH_EAE" auth="Container" type="javax.sql.DataSource" 
+	<Resource name="jdbc/SIRH_WS" auth="Container" type="javax.sql.DataSource" 
 		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual" 
 		maxWait="10000" initialSize="1" username="eae" password="eae" driverClassName="oracle.jdbc.driver.OracleDriver" 
 		url="jdbc:oracle:thin:@DVLP:1521:ORADEV" poolPreparedStatements="true" />

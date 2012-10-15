@@ -12,8 +12,13 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(identifierColumn = "SERVI", identifierField = "servi", identifierType = String.class, persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SISERV", versionField = "")
+
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SISERV", versionField="")
 public class Siserv {
+	@Id
+	@Column(name = "SERVI", columnDefinition = "char")
+	private String servi;
+	
 
 	@NotNull
 	@Column(name = "LISERV", columnDefinition = "char")
