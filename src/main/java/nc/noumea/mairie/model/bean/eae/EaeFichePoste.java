@@ -26,9 +26,9 @@ public class EaeFichePoste {
 	@JoinColumn(name = "ID_EAE", unique = true, nullable = false)
 	private Eae eae;
 
-	@OneToOne
+	/*@OneToOne
 	@JoinColumn(name = "CODE_SERVICE", referencedColumnName = "SERVI")
-	private Siserv service;
+	private Siserv service;*/
 
 	@Transient
 	private Agent agentShd;
