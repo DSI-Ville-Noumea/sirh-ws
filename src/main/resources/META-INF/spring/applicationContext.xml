@@ -43,7 +43,7 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<jee:jndi-lookup id="eaeDataSource" jndi-name="jdbc/ORACLE_EAE"
+	<jee:jndi-lookup id="eaeDataSource" jndi-name="jdbc/SIRH_WS"
 		resource-ref="true" />
 
 	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/SIRH"

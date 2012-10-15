@@ -4,7 +4,6 @@
 package nc.noumea.mairie.model.bean.eae;
 
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 
@@ -24,14 +23,6 @@ privileged aspect EaeFichePoste_Roo_JavaBean {
     
     public void EaeFichePoste.setEae(Eae eae) {
         this.eae = eae;
-    }
-    
-    public Siserv EaeFichePoste.getService() {
-        return this.service;
-    }
-    
-    public void EaeFichePoste.setService(Siserv service) {
-        this.service = service;
     }
     
     public Agent EaeFichePoste.getAgentShd() {
