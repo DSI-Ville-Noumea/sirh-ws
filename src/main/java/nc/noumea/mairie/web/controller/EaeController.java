@@ -1,7 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -9,10 +8,13 @@ import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
+import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
+import nc.noumea.mairie.model.service.eae.EaeFichePosteServiceException;
 import nc.noumea.mairie.model.service.eae.IEaeEvaluateurService;
+import nc.noumea.mairie.model.service.eae.IEaeFichePosteService;
 import nc.noumea.mairie.model.service.eae.IEaeService;
 
 import org.json.simple.JSONArray;
@@ -39,6 +41,12 @@ public class EaeController {
 
 	@Autowired
 	private IEaeService eaeService;
+
+	@Autowired
+	private IFichePosteService fdpService;
+
+	@Autowired
+	private IEaeFichePosteService eaeFichePosteService;
 
 	@Autowired
 	private IEaeCampagneService eaeCampagneService;
@@ -224,37 +232,53 @@ public class EaeController {
 		for (int i = 0; i < listEaeCampagne.size(); i++) {
 			Eae eae = listEaeCampagne.get(i);
 			// si l'agent connecté est delegataire
-			if (eae.getAgentDelegataire() != null
-					&& eae.getAgentDelegataire().getIdAgent().toString()
-							.equals(ag.getIdAgent().toString())) {
-				if (!result.contains(eae)) {
-					result.add(eae);
-				}
-			}
+			/*
+			 * if (eae.getAgentDelegataire() != null &&
+			 * eae.getAgentDelegataire().getIdAgent().toString()
+			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
+			 * { result.add(eae); } }
+			 */
 			// si l'agent connecté est évaluateur
-			if (eae.getEaeEvaluateurs() != null) {
-				for (Iterator<EaeEvaluateur> iterator = eae.getEaeEvaluateurs()
-						.iterator(); iterator.hasNext();) {
-					EaeEvaluateur eval = (EaeEvaluateur) iterator.next();
-					if (eval.getAgent().getIdAgent().toString()
-							.equals(ag.getIdAgent().toString())) {
+			/*
+			 * if (eae.getEaeEvaluateurs() != null) { for
+			 * (Iterator<EaeEvaluateur> iterator = eae.getEaeEvaluateurs()
+			 * .iterator(); iterator.hasNext();) { EaeEvaluateur eval =
+			 * (EaeEvaluateur) iterator.next(); if
+			 * (eval.getAgent().getIdAgent().toString()
+			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
+			 * { result.add(eae); } } } }
+			 */
+
+			// si SHD
+			/*
+			 * if (eae.getEaeFichePoste() != null &&
+			 * eae.getEaeFichePoste().getIdAgentShd() != null) { if
+			 * (eae.getEaeFichePoste().getIdAgentShd().toString()
+			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
+			 * { result.add(eae); }
+			 * 
+			 * } }
+			 */
+			if (eae.getEaeFichePoste() != null
+					&& eae.getEaeFichePoste().getCodeService() != null) {
+				EaeFichePoste eaeFDP = eae.getEaeFichePoste();
+				try {
+					eaeFichePosteService.setService(eaeFDP,
+							eaeFDP.getCodeService());
+					FichePoste fdpConnecte = fdpService
+							.getFichePosteAgentAffectationEnCours(Integer
+									.valueOf(newIdAgent));
+					if (fdpConnecte.getService().getServi()
+							.equals(eaeFDP.getCodeService())) {
 						if (!result.contains(eae)) {
 							result.add(eae);
 						}
 					}
+				} catch (EaeFichePosteServiceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			}
 
-			// si SHD
-			if (eae.getEaeFichePoste() != null
-					&& eae.getEaeFichePoste().getIdAgentShd() != null) {
-				if (eae.getEaeFichePoste().getIdAgentShd().toString()
-						.equals(ag.getIdAgent().toString())) {
-					if (!result.contains(eae)) {
-						result.add(eae);
-					}
-
-				}
 			}
 		}
 
