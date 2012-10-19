@@ -1,6 +1,7 @@
 package nc.noumea.mairie.web.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -17,9 +18,7 @@ import nc.noumea.mairie.model.service.eae.IEaeEvaluateurService;
 import nc.noumea.mairie.model.service.eae.IEaeFichePosteService;
 import nc.noumea.mairie.model.service.eae.IEaeService;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -31,8 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import flexjson.JSONSerializer;
 
 @RooWebJson(jsonObject = Eae.class)
 @Controller
@@ -60,20 +57,19 @@ public class EaeController {
 	@Autowired
 	private IFichePosteService fpSrv;
 
-	/*
-	 * @ResponseBody
-	 * 
-	 * @RequestMapping("listEaesByAgent") public ResponseEntity<String>
-	 * listEaesByAgent(
-	 * 
-	 * @RequestParam("idAgent") int idAgent) {
-	 * 
-	 * HttpHeaders headers = new HttpHeaders(); headers.add("Content-Type",
-	 * "application/json; charset=utf-8");
-	 * 
-	 * return new ResponseEntity<String>(Eae.getSerializerForEaeList()
-	 * .serialize(result), headers, HttpStatus.OK); }
-	 */
+	private String remanieIdAgent(Long idAgent) {
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2,
+					idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		return newIdAgent;
+	}
 
 	@ResponseBody
 	@RequestMapping("/estKiosqueOuvert")
@@ -101,16 +97,7 @@ public class EaeController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
-		String newIdAgent;
-		if (idAgent.toString().length() == 6) {
-			// on remanie l'idAgent
-			String matr = idAgent.toString().substring(2,
-					idAgent.toString().length());
-			String prefixe = idAgent.toString().substring(0, 2);
-			newIdAgent = prefixe + "0" + matr;
-		} else {
-			newIdAgent = idAgent.toString();
-		}
+		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
@@ -162,30 +149,15 @@ public class EaeController {
 		if (fpAgent != null) {
 			Integer idFichePosteAgent = fpAgent.getIdFichePoste();
 
-			List<FichePoste> lfpAgentService = fpSrv.getFichePosteAgentService(
-					fpAgent.getService().getServi(),
-					Integer.valueOf(newIdAgent));
+			///si la personne est chef d'au moins 1 personne
+			List<FichePoste> lfpAgentService = fpSrv
+					.listerFichePosteAgentResp(Integer.valueOf(newIdAgent),fpAgent.getIdFichePoste());
 
-			// on parcours la liste des agents du service et on regarde si la
-			// fiche
-			// de poste de l'agent est responsable de au moins 1 personne de la
-			// liste
-			String test = new JSONSerializer().exclude("*.class").serialize(
-					lfpAgentService);
-			JSONArray jsonAr = null;
-			try {
-				jsonAr = (JSONArray) new JSONParser().parse(test);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			for (int i = 0; i < jsonAr.size(); i++) {
-				JSONObject json = (JSONObject) jsonAr.get(i);
-				JSONObject responsable = (JSONObject) json.get("responsable");
-				Long idResp = (Long) responsable.get("idFichePoste");
-				if (idResp.toString().equals(idFichePosteAgent.toString())) {
-					jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
-					break;
-				}
+			if (lfpAgentService.size() > 0) {
+				jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
+				return new ResponseEntity<String>(
+						jsonAgentHabiliteEAE.toJSONString(), headers,
+						HttpStatus.OK);
 			}
 		}
 
@@ -202,16 +174,7 @@ public class EaeController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
-		String newIdAgent;
-		if (idAgent.toString().length() == 6) {
-			// on remanie l'idAgent
-			String matr = idAgent.toString().substring(2,
-					idAgent.toString().length());
-			String prefixe = idAgent.toString().substring(0, 2);
-			newIdAgent = prefixe + "0" + matr;
-		} else {
-			newIdAgent = idAgent.toString();
-		}
+		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
@@ -232,33 +195,41 @@ public class EaeController {
 		for (int i = 0; i < listEaeCampagne.size(); i++) {
 			Eae eae = listEaeCampagne.get(i);
 			// si l'agent connecté est delegataire
-			/*
-			 * if (eae.getAgentDelegataire() != null &&
-			 * eae.getAgentDelegataire().getIdAgent().toString()
-			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
-			 * { result.add(eae); } }
-			 */
+			if (eae.getAgentDelegataire() != null
+					&& eae.getAgentDelegataire().getIdAgent().toString()
+							.equals(ag.getIdAgent().toString())) {
+				if (!result.contains(eae)) {
+					result.add(eae);
+				}
+			}
+
 			// si l'agent connecté est évaluateur
-			/*
-			 * if (eae.getEaeEvaluateurs() != null) { for
-			 * (Iterator<EaeEvaluateur> iterator = eae.getEaeEvaluateurs()
-			 * .iterator(); iterator.hasNext();) { EaeEvaluateur eval =
-			 * (EaeEvaluateur) iterator.next(); if
-			 * (eval.getAgent().getIdAgent().toString()
-			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
-			 * { result.add(eae); } } } }
-			 */
+			if (eae.getEaeEvaluateurs() != null) {
+				for (Iterator<EaeEvaluateur> iterator = eae.getEaeEvaluateurs()
+						.iterator(); iterator.hasNext();) {
+					EaeEvaluateur eval = (EaeEvaluateur) iterator.next();
+					if (eval.getAgent().getIdAgent().toString()
+							.equals(ag.getIdAgent().toString())) {
+						if (!result.contains(eae)) {
+							result.add(eae);
+						}
+					}
+				}
+			}
 
 			// si SHD
-			/*
-			 * if (eae.getEaeFichePoste() != null &&
-			 * eae.getEaeFichePoste().getIdAgentShd() != null) { if
-			 * (eae.getEaeFichePoste().getIdAgentShd().toString()
-			 * .equals(ag.getIdAgent().toString())) { if (!result.contains(eae))
-			 * { result.add(eae); }
-			 * 
-			 * } }
-			 */
+			if (eae.getEaeFichePoste() != null
+					&& eae.getEaeFichePoste().getIdAgentShd() != null) {
+				if (eae.getEaeFichePoste().getIdAgentShd().toString()
+						.equals(ag.getIdAgent().toString())) {
+					if (!result.contains(eae)) {
+						result.add(eae);
+					}
+
+				}
+			}
+
+			//si SHD++
 			if (eae.getEaeFichePoste() != null
 					&& eae.getEaeFichePoste().getCodeService() != null) {
 				EaeFichePoste eaeFDP = eae.getEaeFichePoste();
@@ -275,7 +246,6 @@ public class EaeController {
 						}
 					}
 				} catch (EaeFichePosteServiceException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 

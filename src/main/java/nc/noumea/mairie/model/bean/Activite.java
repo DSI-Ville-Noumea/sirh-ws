@@ -1,14 +1,10 @@
 package nc.noumea.mairie.model.bean;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.serializable.RooSerializable;
@@ -26,30 +22,10 @@ public class Activite {
 	@Column(name = "NOM_ACTIVITE")
 	private String nomActivite;
 
-	private static JSONObject enleveTousChamps(JSONObject json) {
-		JSONObject res = json;
-		json.remove("idActivite");
-		json.remove("version");
-		return res;
-	}
+	public static JSONSerializer getSerializerForActivite() {
 
-	public static String activiteToJsonArray(Set<Activite> activites) {
-		String test = new JSONSerializer().exclude("*.class").serialize(
-				activites);
-		JSONArray jsonAr = null;
-		try {
-			jsonAr = (JSONArray) new JSONParser().parse(test);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		for (int i = 0; i < jsonAr.size(); i++) {
-			JSONObject json = (JSONObject) jsonAr.get(i);
-			json = enleveTousChamps(json);
+		JSONSerializer serializer = new JSONSerializer().include("nomActivite").transform(new StringTrimTransformer(), String.class).exclude("*");
 
-			jsonAr.remove(i);
-			jsonAr.add(i, json);
-
-		}
-		return jsonAr.toJSONString();
+		return serializer;
 	}
 }

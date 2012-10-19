@@ -3,6 +3,7 @@
 
 package nc.noumea.mairie.model.bean;
 
+import java.util.Date;
 import nc.noumea.mairie.model.bean.Spcong;
 import nc.noumea.mairie.model.bean.Sptyco;
 import nc.noumea.mairie.model.pk.SpcongId;
@@ -25,12 +26,20 @@ privileged aspect Spcong_Roo_JavaBean {
         this.typeConge = typeConge;
     }
     
-    public Integer Spcong.getDatFin() {
-        return this.datFin;
+    public Integer Spcong.getDateFin() {
+        return this.dateFin;
     }
     
-    public void Spcong.setDatFin(Integer datFin) {
+    public void Spcong.setDateFin(Integer dateFin) {
+        this.dateFin = dateFin;
+    }
+    
+    public void Spcong.setDatFin(Date datFin) {
         this.datFin = datFin;
+    }
+    
+    public void Spcong.setDatDeb(Date datDeb) {
+        this.datDeb = datDeb;
     }
     
     public Double Spcong.getNbJours() {
@@ -41,16 +50,8 @@ privileged aspect Spcong_Roo_JavaBean {
         this.nbJours = nbJours;
     }
     
-    public String Spcong.getStatut() {
-        return this.statut;
-    }
-    
     public void Spcong.setStatut(String statut) {
         this.statut = statut;
-    }
-    
-    public String Spcong.getSamediDecompte() {
-        return this.samediDecompte;
     }
     
     public void Spcong.setSamediDecompte(String samediDecompte) {

@@ -35,19 +35,4 @@ public class Siguic implements Serializable {
 	public Siguic(Integer codeBanque, Integer codeGuichet) {
 		this.id = new SiguicId(codeBanque, codeGuichet);
 	}
-
-	public String banqueToJson() {
-		String test = new JSONSerializer().exclude("*.class").serialize(this);
-		JSONObject json = null;
-		try {
-			json = (JSONObject) new JSONParser().parse(test);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		json.remove("id");
-		json.remove("liGuic");
-		json.remove("version");
-		json.put("banque", liGuic.trim());
-		return json.toJSONString();
-	}
 }

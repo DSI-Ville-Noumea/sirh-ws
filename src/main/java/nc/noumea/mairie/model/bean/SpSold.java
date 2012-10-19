@@ -4,9 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
@@ -32,27 +29,12 @@ public class SpSold {
 	@Column(name = "SOLDE2", columnDefinition = "decimal")
 	private Double soldeAnneePrec;
 
-	private JSONObject enleveTousChamps(JSONObject json) {
-		JSONObject res = json;
-		json.remove("soldeAnneeEnCours");
-		json.remove("soldeAnneePrec");
-		json.remove("nomatr");
-		json.remove("version");
-		return res;
-	}
+	public static JSONSerializer getSerializerForAgentSoldeConge() {
 
-	public String soldeToJson() {
-		String test = new JSONSerializer().exclude("*.class").serialize(this);
-		JSONObject json = null;
-		try {
-			json = (JSONObject) new JSONParser().parse(test);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		json = enleveTousChamps(json);
-		json.put("soldeAnneeEnCours", soldeAnneeEnCours);
-		json.put("soldeAnneePrec", soldeAnneePrec);
+		JSONSerializer serializer = new JSONSerializer()
+				.include("soldeAnneeEnCours").include("soldeAnneePrec")
+				.exclude("*");
 
-		return json.toJSONString();
+		return serializer;
 	}
 }

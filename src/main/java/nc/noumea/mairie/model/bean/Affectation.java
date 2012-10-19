@@ -9,15 +9,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
-
-import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
@@ -46,30 +41,4 @@ public class Affectation {
 
 	@Column(name = "TEMPS_TRAVAIL")
 	private String tempsTravail;
-
-	private JSONObject enleveTousChamps(JSONObject json) {
-		JSONObject res = json;
-		json.remove("agent");
-		json.remove("fichePoste");
-		json.remove("idAffectation");
-		json.remove("dateDebutAff");
-		json.remove("dateFinAff");
-		json.remove("tempsTravail");
-		json.remove("version");
-		return res;
-	}
-
-	public String infoTitulaire() {
-		String test = new JSONSerializer().exclude("*.class").serialize(this);
-		JSONObject json = null;
-		try {
-			json = (JSONObject) new JSONParser().parse(test);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		json = enleveTousChamps(json);
-		json.put("tempsTravail", tempsTravail == null ? "0 %" : tempsTravail
-				+ "%");
-		return json.toJSONString();
-	}
 }

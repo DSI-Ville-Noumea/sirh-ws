@@ -69,12 +69,8 @@ privileged aspect Agent_Roo_JavaBean {
         this.prenom = prenom;
     }
     
-    public String Agent.getCivilite() {
-        return this.civilite;
-    }
-    
-    public void Agent.setCivilite(String civilite) {
-        this.civilite = civilite;
+    public void Agent.setTitre(String titre) {
+        this.titre = titre;
     }
     
     public String Agent.getSexe() {
@@ -101,24 +97,48 @@ privileged aspect Agent_Roo_JavaBean {
         this.situationFamiliale = situationFamiliale;
     }
     
+    public String Agent.getNumCafat() {
+        return this.numCafat;
+    }
+    
     public void Agent.setNumCafat(String numCafat) {
         this.numCafat = numCafat;
+    }
+    
+    public String Agent.getNumRuamm() {
+        return this.numRuamm;
     }
     
     public void Agent.setNumRuamm(String numRuamm) {
         this.numRuamm = numRuamm;
     }
     
+    public String Agent.getNumMutuelle() {
+        return this.numMutuelle;
+    }
+    
     public void Agent.setNumMutuelle(String numMutuelle) {
         this.numMutuelle = numMutuelle;
+    }
+    
+    public String Agent.getNumCre() {
+        return this.numCre;
     }
     
     public void Agent.setNumCre(String numCre) {
         this.numCre = numCre;
     }
     
+    public String Agent.getNumIrcafex() {
+        return this.numIrcafex;
+    }
+    
     public void Agent.setNumIrcafex(String numIrcafex) {
         this.numIrcafex = numIrcafex;
+    }
+    
+    public String Agent.getNumClr() {
+        return this.numClr;
     }
     
     public void Agent.setNumClr(String numClr) {
@@ -147,6 +167,10 @@ privileged aspect Agent_Roo_JavaBean {
     
     public void Agent.setCodePaysNaissEt(Integer codePaysNaissEt) {
         this.codePaysNaissEt = codePaysNaissEt;
+    }
+    
+    public String Agent.getIntituleCompte() {
+        return this.intituleCompte;
     }
     
     public void Agent.setIntituleCompte(String intituleCompte) {
@@ -185,8 +209,16 @@ privileged aspect Agent_Roo_JavaBean {
         this.codeGuichet = codeGuichet;
     }
     
+    public String Agent.getLieuNaissance() {
+        return this.lieuNaissance;
+    }
+    
     public void Agent.setLieuNaissance(String lieuNaissance) {
         this.lieuNaissance = lieuNaissance;
+    }
+    
+    public String Agent.getBanque() {
+        return this.banque;
     }
     
     public void Agent.setBanque(String banque) {
@@ -209,16 +241,32 @@ privileged aspect Agent_Roo_JavaBean {
         this.rueNonNoumea = rueNonNoumea;
     }
     
+    public String Agent.getBP() {
+        return this.bP;
+    }
+    
     public void Agent.setBP(String bP) {
         this.bP = bP;
+    }
+    
+    public String Agent.getAdresseComplementaire() {
+        return this.adresseComplementaire;
     }
     
     public void Agent.setAdresseComplementaire(String adresseComplementaire) {
         this.adresseComplementaire = adresseComplementaire;
     }
     
+    public String Agent.getNumRue() {
+        return this.numRue;
+    }
+    
     public void Agent.setNumRue(String numRue) {
         this.numRue = numRue;
+    }
+    
+    public String Agent.getBisTer() {
+        return this.bisTer;
     }
     
     public void Agent.setBisTer(String bisTer) {
@@ -255,6 +303,22 @@ privileged aspect Agent_Roo_JavaBean {
     
     public void Agent.setCodePostalVilleBP(Integer codePostalVilleBP) {
         this.codePostalVilleBP = codePostalVilleBP;
+    }
+    
+    public String Agent.getRue() {
+        return this.rue;
+    }
+    
+    public void Agent.setRue(String rue) {
+        this.rue = rue;
+    }
+    
+    public String Agent.getPosition() {
+        return this.position;
+    }
+    
+    public void Agent.setPosition(String position) {
+        this.position = position;
     }
     
 }

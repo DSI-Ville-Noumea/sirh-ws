@@ -25,7 +25,6 @@ public class EaeService implements IEaeService {
 	@Override
 	public List<Eae> listEaesByCampagne(int idCampagne) {
 
-		// TODO: this will change into a WS call to SIRH-WS in order to retrieve
 		// the list of EAEs to display
 		TypedQuery<Eae> eaeQuery = eaeEntityManager
 				.createQuery(
@@ -64,7 +63,7 @@ public class EaeService implements IEaeService {
 		Query query = eaeEntityManager
 				.createQuery(
 						"select e from Eae e "
-								+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentShd=:idAgentShd)",
+								+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)",
 						Eae.class);
 		query.setParameter("idCampagneEae", idCampagneEae);
 		query.setParameter("idAgentShd", idAgentSHD);

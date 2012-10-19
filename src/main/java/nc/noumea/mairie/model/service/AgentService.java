@@ -25,7 +25,7 @@ public class AgentService implements IAgentService {
 	@Override
 	public Eae fillEaeWithAgents(Eae eaeToFill) {
 
-		eaeToFill.setAgentEvalue(Agent.findAgent(eaeToFill.getIdAgent()));
+		//eaeToFill.setAgentEvalue(Agent.findAgent(eaeToFill.getIdAgent()));
 		
 		if (eaeToFill.getIdAgentDelegataire() != null)
 			eaeToFill.setAgentDelegataire(Agent.findAgent(eaeToFill.getIdAgentDelegataire()));
@@ -102,7 +102,8 @@ public class AgentService implements IAgentService {
 		json.remove("nomUsage");
 		json.remove("prenomUsage");
 		json.remove("prenom");
-		json.remove("civilite");
+		json.remove("titre");
+		json.remove("sexe");
 		json.remove("dateNaissance");
 		json.remove("situationFamiliale");
 		json.remove("numCafat");
@@ -126,6 +127,7 @@ public class AgentService implements IAgentService {
 		json.remove("BP");
 		json.remove("adresseComplementaire");
 		json.remove("numRue");
+		json.remove("rue");
 		json.remove("bisTer");
 		json.remove("codeCommuneVilleDom");
 		json.remove("codeCommuneVilleBP");
