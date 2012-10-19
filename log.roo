@@ -215,3 +215,9 @@ entity jpa --class ~.model.bean.eae.EaeCampagne
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-15 14:07:19
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-15 14:08:24
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-15 16:40:38
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-18 09:43:05
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-18 15:30:07
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-18 15:30:38
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-10-18 16:33:45
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-10-19 08:35:09
+enum type --class ~.enums.CiviliteEnum

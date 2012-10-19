@@ -13,14 +13,6 @@ import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 
 privileged aspect Eae_Roo_JavaBean {
     
-    public int Eae.getIdAgent() {
-        return this.idAgent;
-    }
-    
-    public void Eae.setIdAgent(int idAgent) {
-        this.idAgent = idAgent;
-    }
-    
     public EaeEtatEnum Eae.getEtat() {
         return this.etat;
     }

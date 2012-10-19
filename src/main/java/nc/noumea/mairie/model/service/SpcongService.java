@@ -31,7 +31,7 @@ public class SpcongService implements ISpcongService {
 		Query query = sirhEntityManager
 				.createQuery(
 						"select spcong from Spcong spcong "
-								+ "where spcong.id.nomatr=:nomatr and spcong.datFin>=:datFin order by spcong.id.datDeb desc",
+								+ "where spcong.id.nomatr=:nomatr and spcong.dateFin>=:datFin order by spcong.id.dateDeb desc",
 						Spcong.class);
 		query.setParameter("nomatr", nomatr.intValue());
 		query.setParameter("datFin", Integer.valueOf(datFinMax));
@@ -52,7 +52,7 @@ public class SpcongService implements ISpcongService {
 		Query query = sirhEntityManager
 				.createQuery(
 						"select spcong from Spcong spcong "
-								+ "where spcong.id.nomatr=:nomatr and spcong.datFin<:datFin order by spcong.id.datDeb desc",
+								+ "where spcong.id.nomatr=:nomatr and spcong.dateFin<:dateFin order by spcong.id.dateDeb desc",
 						Spcong.class);
 		query.setParameter("nomatr", nomatr.intValue());
 		query.setParameter("datFin", Integer.valueOf(datFinMax));

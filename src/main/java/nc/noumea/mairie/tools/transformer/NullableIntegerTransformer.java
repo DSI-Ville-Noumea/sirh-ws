@@ -9,7 +9,7 @@ public class NullableIntegerTransformer extends AbstractTransformer {
 		Integer theInteger = (Integer) arg0;
 		
 		if (theInteger == null)
-			getContext().write(null);
+			getContext().write("0");
 		else {
 			getContext().write(theInteger.toString());
 		}

@@ -17,14 +17,14 @@ public class SpcongId implements Serializable {
 	public SpcongId() {
 	}
 
-	public SpcongId(Integer nomatr, Integer datDeb) {
+	public SpcongId(Integer nomatr, Integer dateDeb) {
 		this.nomatr = nomatr;
-		this.datDeb = datDeb;
+		this.dateDeb = dateDeb;
 	}
 
 	@Column(name = "NOMATR", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer nomatr;
 
 	@Column(name = "DATDEB", insertable = false, updatable = false, columnDefinition = "numeric")
-	private Integer datDeb;
+	private Integer dateDeb;
 }

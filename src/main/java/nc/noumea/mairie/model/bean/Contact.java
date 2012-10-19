@@ -1,15 +1,14 @@
 package nc.noumea.mairie.model.bean;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
+import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
+import nc.noumea.mairie.tools.transformer.TypeContactTransformer;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
@@ -36,46 +35,33 @@ public class Contact {
 	@Column(name = "DIFFUSABLE")
 	private String diffusable;
 
-	@Column(name = "PRIORITAIRE", columnDefinition = "smallint")
-	private Integer prioritaire;
-
-	private static JSONObject enleveTousChamps(JSONObject json) {
-		JSONObject res = json;
-		json.remove("idContact");
-		json.remove("idAgent");
-		json.remove("version");
-		return res;
+	public String getDiffusable() {
+		if (this.diffusable.equals("1")) {
+			return "oui";
+		} else {
+			return "non";
+		}
 	}
 
-	public static String contactToJson(
-			List<nc.noumea.mairie.model.bean.Contact> lc) {
-		String test = new JSONSerializer().exclude("*.class").serialize(lc);
-		JSONArray jsonAr = null;
-		try {
-			jsonAr = (JSONArray) new JSONParser().parse(test);
-		} catch (ParseException e) {
-			e.printStackTrace();
+	@Column(name = "PRIORITAIRE", columnDefinition = "smallint")
+	private Integer contactPrioritaire;
+
+	@Transient
+	private String prioritaire;
+	public String getPrioritaire() {
+		if (this.contactPrioritaire.toString().equals("1")) {
+			return "oui";
+		} else {
+			return "non";
 		}
-		for (int i = 0; i < jsonAr.size(); i++) {
-			JSONObject json = (JSONObject) jsonAr.get(i);
-			json = enleveTousChamps(json);
-			json.put("diffusable", json.get("diffusable").toString()
-					.equals("1") ? "oui" : "non");
-			json.put("prioritaire",
-					json.get("prioritaire").toString().equals("1") ? "oui"
-							: "non");
-			// pour le type de contact on en veut que le libellé
-			JSONObject typCon = (JSONObject) json.get("typeContact");
-			typCon.remove("idTypeContact");
-			typCon.remove("version");
-			// TODO
-			// bidouille pour le moment
-			String libTypeContact = (String) typCon.get("libelle");
-			typCon.remove("libelle");
-			json.put("typeContact", libTypeContact);
-			jsonAr.remove(i);
-			jsonAr.add(i, json);
-		}
-		return jsonAr.toJSONString();
+	}
+
+	public static JSONSerializer getSerializerForAgentContacts() {
+
+		JSONSerializer serializer = new JSONSerializer().include("diffusable").include("prioritaire").include("typeContact").include("description")
+				.transform(new NullableIntegerTransformer(), Integer.class).transform(new TypeContactTransformer(), TypeContact.class)
+				.transform(new StringTrimTransformer(), String.class).exclude("*");
+
+		return serializer;
 	}
 }

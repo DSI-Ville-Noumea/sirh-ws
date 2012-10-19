@@ -32,19 +32,19 @@ privileged aspect Contact_Roo_JavaBean {
         this.description = description;
     }
     
-    public String Contact.getDiffusable() {
-        return this.diffusable;
-    }
-    
     public void Contact.setDiffusable(String diffusable) {
         this.diffusable = diffusable;
     }
     
-    public Integer Contact.getPrioritaire() {
-        return this.prioritaire;
+    public Integer Contact.getContactPrioritaire() {
+        return this.contactPrioritaire;
     }
     
-    public void Contact.setPrioritaire(Integer prioritaire) {
+    public void Contact.setContactPrioritaire(Integer contactPrioritaire) {
+        this.contactPrioritaire = contactPrioritaire;
+    }
+    
+    public void Contact.setPrioritaire(String prioritaire) {
         this.prioritaire = prioritaire;
     }
     

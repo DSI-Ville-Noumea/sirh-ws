@@ -17,10 +17,6 @@ import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.enums.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.tools.transformer.EaeEvaluateurToAgentTransformer;
-import nc.noumea.mairie.tools.transformer.EaeFichePosteToEaeListTransformer;
-import nc.noumea.mairie.tools.transformer.SimpleAgentTransformer;
-import nc.noumea.mairie.tools.transformer.ValueEnumTransformer;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
@@ -31,16 +27,9 @@ import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE",sequenceName="EAE_S_EAE")
+@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE", sequenceName = "EAE_S_EAE")
 @RooJson
 public class Eae {
-
-	/*
-	 * Mapped properties
-	 */
-	@NotNull
-	@Column(name = "ID_AGENT")
-	private int idAgent;
 
 	@NotNull
 	@Column(name = "ETAT")
@@ -72,17 +61,8 @@ public class Eae {
 
 	public static JSONSerializer getSerializerForEaeList() {
 
-		JSONSerializer serializer = new JSONSerializer()
-				.include("idEae")
-				.include("eaeEvaluateurs")
-				.include("agentDelegataire")
-				.include("eaeFichePoste")
-				.transform(new SimpleAgentTransformer(), Agent.class)
-				.transform(new EaeFichePosteToEaeListTransformer(),
-						EaeFichePoste.class)
-				.transform(new ValueEnumTransformer(), Enum.class)
-				.transform(new EaeEvaluateurToAgentTransformer(),
-						EaeEvaluateur.class).exclude("*");
+		JSONSerializer serializer = new JSONSerializer().include("idEae")
+				.exclude("*");
 
 		return serializer;
 	}

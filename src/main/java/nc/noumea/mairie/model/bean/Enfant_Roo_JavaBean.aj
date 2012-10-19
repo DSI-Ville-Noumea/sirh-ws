@@ -6,8 +6,17 @@ package nc.noumea.mairie.model.bean;
 import java.util.Date;
 import nc.noumea.mairie.model.bean.Enfant;
 import nc.noumea.mairie.model.bean.Sicomm;
+import nc.noumea.mairie.model.service.ISivietService;
 
 privileged aspect Enfant_Roo_JavaBean {
+    
+    public ISivietService Enfant.getSivietSrv() {
+        return this.sivietSrv;
+    }
+    
+    public void Enfant.setSivietSrv(ISivietService sivietSrv) {
+        this.sivietSrv = sivietSrv;
+    }
     
     public String Enfant.getNom() {
         return this.nom;
@@ -63,6 +72,14 @@ privileged aspect Enfant_Roo_JavaBean {
     
     public void Enfant.setCodePaysNaissEt(Integer codePaysNaissEt) {
         this.codePaysNaissEt = codePaysNaissEt;
+    }
+    
+    public void Enfant.setACharge(String aCharge) {
+        this.aCharge = aCharge;
+    }
+    
+    public void Enfant.setLieuNaissance(String lieuNaissance) {
+        this.lieuNaissance = lieuNaissance;
     }
     
 }

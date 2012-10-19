@@ -15,12 +15,12 @@ privileged aspect SpcongId_Roo_JavaBean {
         this.nomatr = nomatr;
     }
     
-    public Integer SpcongId.getDatDeb() {
-        return this.datDeb;
+    public Integer SpcongId.getDateDeb() {
+        return this.dateDeb;
     }
     
-    public void SpcongId.setDatDeb(Integer datDeb) {
-        this.datDeb = datDeb;
+    public void SpcongId.setDateDeb(Integer dateDeb) {
+        this.dateDeb = dateDeb;
     }
     
 }

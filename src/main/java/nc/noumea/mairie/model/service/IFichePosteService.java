@@ -12,4 +12,7 @@ public interface IFichePosteService {
 
 	public List<FichePoste> getFichePosteAgentService(String servi,
 			Integer idAgent);
+
+	public List<FichePoste> listerFichePosteAgentResp(Integer idAgentResp,
+			Integer idFichePosteResp);
 }
