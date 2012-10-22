@@ -26,10 +26,7 @@ public class EaeService implements IEaeService {
 	public List<Eae> listEaesByCampagne(int idCampagne) {
 
 		// the list of EAEs to display
-		TypedQuery<Eae> eaeQuery = eaeEntityManager
-				.createQuery(
-						"select e from Eae e where e.eaeCampagne.idCampagneEae = :idCampagne",
-						Eae.class);
+		TypedQuery<Eae> eaeQuery = eaeEntityManager.createQuery("select e from Eae e where e.eaeCampagne.idCampagneEae = :idCampagne", Eae.class);
 		eaeQuery.setParameter("idCampagne", idCampagne);
 		List<Eae> result = eaeQuery.getResultList();
 
@@ -44,13 +41,9 @@ public class EaeService implements IEaeService {
 	}
 
 	@Override
-	public List<Eae> listerEaeDelegataire(Integer idAgentDelegataire,
-			Integer idCampagneEae) {
-		Query query = eaeEntityManager
-				.createQuery(
-						"select e from Eae e "
-								+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentDelegataire=:idAgentDelegataire)",
-						Eae.class);
+	public List<Eae> listerEaeDelegataire(Integer idAgentDelegataire, Integer idCampagneEae) {
+		Query query = eaeEntityManager.createQuery("select e from Eae e "
+				+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentDelegataire=:idAgentDelegataire)", Eae.class);
 		query.setParameter("idCampagneEae", idCampagneEae);
 		query.setParameter("idAgentDelegataire", idAgentDelegataire);
 		List<Eae> leae = query.getResultList();
@@ -60,16 +53,35 @@ public class EaeService implements IEaeService {
 
 	@Override
 	public List<Eae> listerEaeSHD(Integer idAgentSHD, Integer idCampagneEae) {
-		Query query = eaeEntityManager
-				.createQuery(
-						"select e from Eae e "
-								+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)",
-						Eae.class);
+		Query query = eaeEntityManager.createQuery("select e from Eae e "
+				+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)", Eae.class);
 		query.setParameter("idCampagneEae", idCampagneEae);
 		query.setParameter("idAgentShd", idAgentSHD);
 		List<Eae> leae = query.getResultList();
 
 		return leae;
+	}
+
+	@Override
+	public Long compterEaeDelegataire(Integer idAgentDelegataire, Integer idCampagneEae) {
+		Query query = eaeEntityManager.createQuery("select count(e) from Eae e "
+				+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentDelegataire=:idAgentDelegataire)");
+		query.setParameter("idCampagneEae", idCampagneEae);
+		query.setParameter("idAgentDelegataire", idAgentDelegataire);
+		Long nbEae = (Long) query.getSingleResult();
+
+		return nbEae;
+	}
+
+	@Override
+	public Long compterEaeSHD(Integer idAgentSHD, Integer idCampagneEae) {
+		Query query = eaeEntityManager.createQuery("select e from Eae e "
+				+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)");
+		query.setParameter("idCampagneEae", idCampagneEae);
+		query.setParameter("idAgentShd", idAgentSHD);
+		Long nbEae = (Long) query.getSingleResult();
+
+		return nbEae;
 	}
 
 }

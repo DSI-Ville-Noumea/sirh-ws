@@ -111,33 +111,33 @@ public class EaeController {
 				.getEaeCampagneOuverte();
 
 		// si evaluateur
-		List<EaeEvaluateur> listEval = eaeEvaluateurService
-				.listerEaeEvaluateurAgent(Integer.valueOf(newIdAgent),
+		Long nbEval = eaeEvaluateurService
+				.compterEaeEvaluateurAgent(Integer.valueOf(newIdAgent),
 						campagneEnCours.getIdCampagneEae());
 
-		if (listEval.size() > 0) {
+		if (nbEval > 0) {
 			jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
 			return new ResponseEntity<String>(
 					jsonAgentHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
 		}
 
 		// si delegataire
-		List<Eae> listEeaDelegataire = eaeService
-				.listerEaeDelegataire(Integer.valueOf(newIdAgent),
+		Long nbEaeDelegataire = eaeService
+				.compterEaeDelegataire(Integer.valueOf(newIdAgent),
 						campagneEnCours.getIdCampagneEae());
 
-		if (listEeaDelegataire.size() > 0) {
+		if (nbEaeDelegataire > 0) {
 			jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
 			return new ResponseEntity<String>(
 					jsonAgentHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
 		}
 
 		// si SHD
-		List<Eae> listEeaSHD = eaeService
-				.listerEaeSHD(Integer.valueOf(newIdAgent),
+		Long nbEeaSHD = eaeService
+				.compterEaeSHD(Integer.valueOf(newIdAgent),
 						campagneEnCours.getIdCampagneEae());
 
-		if (listEeaSHD.size() > 0) {
+		if (nbEeaSHD > 0) {
 			jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
 			return new ResponseEntity<String>(
 					jsonAgentHabiliteEAE.toJSONString(), headers, HttpStatus.OK);

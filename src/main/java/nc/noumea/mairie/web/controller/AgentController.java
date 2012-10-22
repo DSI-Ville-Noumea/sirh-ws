@@ -367,7 +367,7 @@ public class AgentController {
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		// si la personne est chef alors on affiche aussi les FDP de l'équipe
-		boolean estAgentChef = getAgentChef(idAgent);
+		boolean estAgentChef = getAgentChef(newIdAgent);
 
 		FichePoste fpAgent = fpSrv.getFichePosteAgentAffectationEnCours(Integer.valueOf(newIdAgent));
 
@@ -426,18 +426,16 @@ public class AgentController {
 				.replace("}\"", "}"), headers, HttpStatus.OK);
 	}
 
-	public boolean getAgentChef(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
+	public boolean getAgentChef(String idAgent) throws ParseException {
 
-		FichePoste fpAgent = fpSrv.getFichePosteAgentAffectationEnCours(Integer.valueOf(newIdAgent));
+		FichePoste fpAgent = fpSrv.getFichePosteAgentAffectationEnCours(Integer.valueOf(idAgent));
 
 		if (fpAgent == null) {
 			return false;
 		}
 		Integer idFichePosteAgent = fpAgent.getIdFichePoste();
 
-		List<FichePoste> lfpAgentService = fpSrv.getFichePosteAgentService(fpAgent.getService().getServi(), Integer.valueOf(newIdAgent));
+		List<FichePoste> lfpAgentService = fpSrv.getFichePosteAgentService(fpAgent.getService().getServi(), Integer.valueOf(idAgent));
 
 		if (lfpAgentService == null) {
 			return false;

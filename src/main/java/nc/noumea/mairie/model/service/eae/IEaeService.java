@@ -9,7 +9,12 @@ public interface IEaeService {
 	List<Eae> listerEaeDelegataire(Integer idAgentDelegataire,
 			Integer idCampagneEae);
 
+	Long compterEaeDelegataire(Integer idAgentDelegataire,
+			Integer idCampagneEae);
+
 	List<Eae> listerEaeSHD(Integer idAgentSHD, Integer idCampagneEae);
+
+	Long compterEaeSHD(Integer idAgentSHD, Integer idCampagneEae);
 
 	List<Eae> listEaesByCampagne(int idCampagne);
 }
