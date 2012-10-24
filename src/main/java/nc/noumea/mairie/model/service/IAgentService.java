@@ -3,8 +3,6 @@ package nc.noumea.mairie.model.service;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
 
 import org.json.simple.JSONObject;
 
@@ -19,14 +17,8 @@ public interface IAgentService {
 	 */
 	public Agent getAgent(Integer id);
 
-	public List<Agent> getAgentService(String servi, Integer idAgent,
-			Integer idResponsable);
-
-	public List<Agent> getAgentService(String servi, Integer idAgent);
+	public List<Agent> getAgentService(String servi, Integer idAgent, Integer idResponsable);
 
 	public JSONObject removeAll(JSONObject json);
-	
-	Eae fillEaeWithAgents(Eae eaeToFill);
-	
-	EaeEvaluateur fillEaeEvaluateurWithAgent(EaeEvaluateur eaeEvaluateurToFill);
+
 }

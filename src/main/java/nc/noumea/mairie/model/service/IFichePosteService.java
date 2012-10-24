@@ -10,9 +10,7 @@ public interface IFichePosteService {
 
 	public FichePoste getFichePoste(Integer integer);
 
-	public List<FichePoste> getFichePosteAgentService(String servi,
-			Integer idAgent);
+	public List<FichePoste> getFichePosteAgentService(String servi, Integer idAgent);
 
-	public List<FichePoste> listerFichePosteAgentResp(Integer idAgentResp,
-			Integer idFichePosteResp);
+	public boolean estResponsable(Integer idAgent);
 }

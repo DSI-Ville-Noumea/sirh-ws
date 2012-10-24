@@ -3,7 +3,6 @@
 
 package nc.noumea.mairie.model.bean.eae;
 
-import java.util.Date;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
@@ -16,38 +15,6 @@ privileged aspect EaeEvaluateur_Roo_JavaBean {
     
     public void EaeEvaluateur.setIdAgent(int idAgent) {
         this.idAgent = idAgent;
-    }
-    
-    public String EaeEvaluateur.getFonction() {
-        return this.fonction;
-    }
-    
-    public void EaeEvaluateur.setFonction(String fonction) {
-        this.fonction = fonction;
-    }
-    
-    public Date EaeEvaluateur.getDateEntreeService() {
-        return this.dateEntreeService;
-    }
-    
-    public void EaeEvaluateur.setDateEntreeService(Date dateEntreeService) {
-        this.dateEntreeService = dateEntreeService;
-    }
-    
-    public Date EaeEvaluateur.getDateEntreeCollectivite() {
-        return this.dateEntreeCollectivite;
-    }
-    
-    public void EaeEvaluateur.setDateEntreeCollectivite(Date dateEntreeCollectivite) {
-        this.dateEntreeCollectivite = dateEntreeCollectivite;
-    }
-    
-    public Date EaeEvaluateur.getDateEntreeFonction() {
-        return this.dateEntreeFonction;
-    }
-    
-    public void EaeEvaluateur.setDateEntreeFonction(Date dateEntreeFonction) {
-        this.dateEntreeFonction = dateEntreeFonction;
     }
     
     public Eae EaeEvaluateur.getEae() {

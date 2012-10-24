@@ -4,7 +4,6 @@
 package nc.noumea.mairie.model.bean.eae;
 
 import java.util.Set;
-import nc.noumea.mairie.enums.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
@@ -12,14 +11,6 @@ import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
 import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 
 privileged aspect Eae_Roo_JavaBean {
-    
-    public EaeEtatEnum Eae.getEtat() {
-        return this.etat;
-    }
-    
-    public void Eae.setEtat(EaeEtatEnum etat) {
-        this.etat = etat;
-    }
     
     public EaeCampagne Eae.getEaeCampagne() {
         return this.eaeCampagne;

@@ -5,12 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.service.IAgentService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,69 +14,18 @@ public class EaeService implements IEaeService {
 	@PersistenceContext(unitName = "eaePersistenceUnit")
 	private EntityManager eaeEntityManager;
 
-	@Autowired
-	private IAgentService agentService;
-
 	@Override
-	public List<Eae> listEaesByCampagne(int idCampagne) {
-
-		// the list of EAEs to display
-		TypedQuery<Eae> eaeQuery = eaeEntityManager.createQuery("select e from Eae e where e.eaeCampagne.idCampagneEae = :idCampagne", Eae.class);
-		eaeQuery.setParameter("idCampagne", idCampagne);
-		List<Eae> result = eaeQuery.getResultList();
-
-		// For each EAE result, retrieve the Agent, SHD and Delegataire
-		// informations from the Agent (other persistenceUnit)
-		// retrieve also the Evaluateurs of the current EAE
-		for (Eae eae : result) {
-			agentService.fillEaeWithAgents(eae);
+	public List<Integer> listIdEaeByCampagneAndAgent(Integer idCampagneEae, Integer idAgent, List<String> listeCodeService) {
+		String reqService = "";
+		if (listeCodeService != null) {
+			reqService = " union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE =:idCampagne and fp.CODE_SERVICE in (:listeCodeService)";
 		}
-
-		return result;
+		String sql = "select e.ID_EAE from EAE e where ID_CAMPAGNE_EAE =:idCampagne and ID_DELEGATAIRE =:idAgent union select e.ID_EAE from EAE e inner join EAE_EVALUATEUR ev on e.ID_EAE = ev.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and ev.ID_AGENT = :idAgent union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and fp.ID_SHD = :idAgent ";
+		Query query = eaeEntityManager.createNativeQuery(sql + reqService);
+		query.setParameter("idCampagne", idCampagneEae);
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("listeCodeService", listeCodeService);
+		List<Integer> lIdEae = query.getResultList();
+		return lIdEae;
 	}
-
-	@Override
-	public List<Eae> listerEaeDelegataire(Integer idAgentDelegataire, Integer idCampagneEae) {
-		Query query = eaeEntityManager.createQuery("select e from Eae e "
-				+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentDelegataire=:idAgentDelegataire)", Eae.class);
-		query.setParameter("idCampagneEae", idCampagneEae);
-		query.setParameter("idAgentDelegataire", idAgentDelegataire);
-		List<Eae> leae = query.getResultList();
-
-		return leae;
-	}
-
-	@Override
-	public List<Eae> listerEaeSHD(Integer idAgentSHD, Integer idCampagneEae) {
-		Query query = eaeEntityManager.createQuery("select e from Eae e "
-				+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)", Eae.class);
-		query.setParameter("idCampagneEae", idCampagneEae);
-		query.setParameter("idAgentShd", idAgentSHD);
-		List<Eae> leae = query.getResultList();
-
-		return leae;
-	}
-
-	@Override
-	public Long compterEaeDelegataire(Integer idAgentDelegataire, Integer idCampagneEae) {
-		Query query = eaeEntityManager.createQuery("select count(e) from Eae e "
-				+ "where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.idAgentDelegataire=:idAgentDelegataire)");
-		query.setParameter("idCampagneEae", idCampagneEae);
-		query.setParameter("idAgentDelegataire", idAgentDelegataire);
-		Long nbEae = (Long) query.getSingleResult();
-
-		return nbEae;
-	}
-
-	@Override
-	public Long compterEaeSHD(Integer idAgentSHD, Integer idCampagneEae) {
-		Query query = eaeEntityManager.createQuery("select e from Eae e "
-				+ " where  e.eaeCampagne.idCampagneEae =:idCampagneEae and e.eaeFichePoste.idAgentShd=:idAgentShd)");
-		query.setParameter("idCampagneEae", idCampagneEae);
-		query.setParameter("idAgentShd", idAgentSHD);
-		Long nbEae = (Long) query.getSingleResult();
-
-		return nbEae;
-	}
-
 }

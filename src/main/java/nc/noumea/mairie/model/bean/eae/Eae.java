@@ -5,8 +5,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,7 +13,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import nc.noumea.mairie.enums.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -23,18 +20,11 @@ import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import flexjson.JSONSerializer;
-
 @RooJavaBean
 @RooToString
 @RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE", sequenceName = "EAE_S_EAE")
 @RooJson
 public class Eae {
-
-	@NotNull
-	@Column(name = "ETAT")
-	@Enumerated(EnumType.STRING)
-	private EaeEtatEnum etat;
 
 	@NotNull
 	@ManyToOne
@@ -58,12 +48,4 @@ public class Eae {
 
 	@Transient
 	private Agent agentDelegataire;
-
-	public static JSONSerializer getSerializerForEaeList() {
-
-		JSONSerializer serializer = new JSONSerializer().include("idEae")
-				.exclude("*");
-
-		return serializer;
-	}
 }
