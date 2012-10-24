@@ -24,7 +24,8 @@ public class EaeService implements IEaeService {
 		Query query = eaeEntityManager.createNativeQuery(sql + reqService);
 		query.setParameter("idCampagne", idCampagneEae);
 		query.setParameter("idAgent", idAgent);
-		query.setParameter("listeCodeService", listeCodeService);
+		if (listeCodeService != null)
+			query.setParameter("listeCodeService", listeCodeService);
 		List<Integer> lIdEae = query.getResultList();
 		return lIdEae;
 	}
