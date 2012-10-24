@@ -139,7 +139,6 @@ public class EaeController {
 		if (estChef) {
 			// alors on regarde les sousService
 			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
-
 		}
 
 		List<Integer> listIdEaeCampagne = eaeService.listIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
