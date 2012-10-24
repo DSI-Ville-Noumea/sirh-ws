@@ -37,6 +37,7 @@
         </menu>
 		<menu name="Conception">
         	<item name="Agent" href="conception/agent.html"/>
+        	<item name="EAE" href="conception/eae.html"/>
         </menu>
 		<menu name="FAQ">
         	<item name="SIE" href="sie.html"/>

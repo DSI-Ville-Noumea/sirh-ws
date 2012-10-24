@@ -1,0 +1,44 @@
+ -----
+ SIRH WS
+ -----
+ Noémie NICOLAS
+ -----
+  26/03/2012
+  
+Web Services des EAEs
+
+* Json
+
+** Savoir si la saisie des EAEs est ouverte sur le kiosque
+
+ URL : /eaes/estKiosqueOuvert
+ 
++------------------------------------------+
+{
+  "estKiosqueOuvert": true
+}
++------------------------------------------+	
+
+** Savoir si l'agent à le droit de voir la liste des EAEs dans le kiosque
+
+ URL : /eaes/estHabiliteEAE?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "estHabiliteEAE": true
+}
++------------------------------------------+		
+
+** Connaitre la liste des EAEs que l'agent à droit de voir
+
+ URL : /eaes/listEaesByCampagne?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+  1,
+  194,
+  195,
+  25942
+]
++------------------------------------------+	
+ 
