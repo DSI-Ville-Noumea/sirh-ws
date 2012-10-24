@@ -7,26 +7,21 @@ import javax.persistence.EmbeddedId;
 
 import nc.noumea.mairie.model.pk.SiguicId;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import flexjson.JSONSerializer;
-
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SIGUIC",versionField="")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SIGUIC", versionField = "")
 public class Siguic implements Serializable {
 
 	@EmbeddedId
 	private SiguicId id;
 
-	@Column(name = "LIGUIC",columnDefinition="char")
+	@Column(name = "LIGUIC", columnDefinition = "char")
 	private String liGuic;
 
 	public Siguic() {

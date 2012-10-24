@@ -23,4 +23,28 @@ privileged aspect Siserv_Roo_JavaBean {
         this.liServ = liServ;
     }
     
+    public String Siserv.getCodeActif() {
+        return this.codeActif;
+    }
+    
+    public void Siserv.setCodeActif(String codeActif) {
+        this.codeActif = codeActif;
+    }
+    
+    public String Siserv.getSigle() {
+        return this.sigle;
+    }
+    
+    public void Siserv.setSigle(String sigle) {
+        this.sigle = sigle;
+    }
+    
+    public String Siserv.getParentSigle() {
+        return this.parentSigle;
+    }
+    
+    public void Siserv.setParentSigle(String parentSigle) {
+        this.parentSigle = parentSigle;
+    }
+    
 }

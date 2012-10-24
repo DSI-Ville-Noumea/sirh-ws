@@ -23,4 +23,19 @@ public class Siserv {
 	@NotNull
 	@Column(name = "LISERV", columnDefinition = "char")
 	private String liServ;
+	
+
+	@NotNull
+	@Column(name = "CODACT", columnDefinition = "char")
+	private String codeActif;
+	
+
+	@NotNull
+	@Column(name = "SIGLE", columnDefinition = "char")
+	private String sigle;
+	
+
+	@NotNull
+	@Column(name = "DEPEND", columnDefinition = "char")
+	private String parentSigle;
 }
