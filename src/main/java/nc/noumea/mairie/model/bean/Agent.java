@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import nc.noumea.mairie.tools.transformer.AgentDelegataireTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
 import nc.noumea.mairie.tools.transformer.EnfantTransformer;
@@ -227,6 +228,23 @@ public class Agent {
 		JSONSerializer serializer = new JSONSerializer().transform(new EnfantTransformer(), Enfant.class)
 				.transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
+		return serializer;
+	}
+
+	public static JSONSerializer getSerializerForAgentDelegataire() {
+
+		/*
+		 * JSONSerializer serializer = new
+		 * JSONSerializer().include("nomPatronymique"
+		 * ).include("nomMarital").include("nomUsage").include("prenom")
+		 * .include("nomatr").include("idAgent").transform(new
+		 * NullableIntegerTransformer(), Integer.class) .transform(new
+		 * StringTrimTransformer(), String.class).exclude("*");
+		 */
+
+		JSONSerializer serializer = new JSONSerializer().transform(new AgentDelegataireTransformer(), Agent.class)
+				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class);
+
 		return serializer;
 	}
 }

@@ -104,4 +104,19 @@ public class AgentService implements IAgentService {
 		return json;
 	}
 
+	@Override
+	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent) {
+
+		Query query = sirhEntityManager.createQuery("select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+				+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent "
+				+ " and aff.dateDebutAff<=:dateJour and " + "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+				Agent.class);
+		query.setParameter("codeServ", servi );
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("dateJour", new Date());
+		List<Agent> lag = query.getResultList();
+
+		return lag;
+	}
+
 }

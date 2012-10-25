@@ -17,4 +17,6 @@ public interface ISiservService {
 	public List<String> getListServiceAgent(Integer idAgent);
 
 	public List<Siserv> getListServiceActif();
+
+	public Siserv getServiceAgent(Integer idAgent);
 }

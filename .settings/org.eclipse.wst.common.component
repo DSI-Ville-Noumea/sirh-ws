@@ -5,6 +5,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <property name="java-output-path" value="/SIRH_Kiosque/target/classes"/>
-        <property name="context-root" value="sirhws##${maven.build.timestamp}-0.2.0"/>
+        <property name="context-root" value="sirhws##${maven.build.timestamp}-0.2.1"/>
     </wb-module>
 </project-modules>
