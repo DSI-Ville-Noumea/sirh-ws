@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.controller;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.model.service.IAgentService;
@@ -33,9 +34,6 @@ public class EaeController {
 
 	@Autowired
 	private IEaeService eaeService;
-
-	@Autowired
-	private IFichePosteService fdpService;
 
 	@Autowired
 	private IEaeCampagneService eaeCampagneService;
@@ -147,6 +145,37 @@ public class EaeController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
 		String jsonResult = new JSONSerializer().serialize(listIdEaeCampagne);
+
+		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping("/listDelegataire")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> listDelegataireByAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		}
+
+		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		if (campagneEnCours == null)
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+
+		
+		//on veut la liste des agents du service
+		Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
+		if (serviceAgent == null)
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		
+		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getServi(), ag.getIdAgent());
+		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(listAgentService);
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
