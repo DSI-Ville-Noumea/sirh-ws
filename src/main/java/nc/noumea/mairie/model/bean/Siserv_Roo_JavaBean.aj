@@ -4,8 +4,17 @@
 package nc.noumea.mairie.model.bean;
 
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.service.ISiservService;
 
 privileged aspect Siserv_Roo_JavaBean {
+    
+    public ISiservService Siserv.getSiservSrv() {
+        return this.siservSrv;
+    }
+    
+    public void Siserv.setSiservSrv(ISiservService siservSrv) {
+        this.siservSrv = siservSrv;
+    }
     
     public String Siserv.getServi() {
         return this.servi;
@@ -45,6 +54,18 @@ privileged aspect Siserv_Roo_JavaBean {
     
     public void Siserv.setParentSigle(String parentSigle) {
         this.parentSigle = parentSigle;
+    }
+    
+    public void Siserv.setDivision(String division) {
+        this.division = division;
+    }
+    
+    public void Siserv.setDirection(String direction) {
+        this.direction = direction;
+    }
+    
+    public void Siserv.setSection(String section) {
+        this.section = section;
     }
     
 }
