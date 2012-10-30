@@ -40,5 +40,32 @@ Web Services des EAEs
   195,
   25942
 ]
++------------------------------------------+		
+
+** Connaitre la liste des délégataires que l'agent à le droit de choisir pour délégataire
+
+ URL : /eaes/listDelegataire?idAgent=90xxxx
+ 
++------------------------------------------+
+[
+    {
+        "nom": "DEPLANQUE",
+        "prenom": "RICHARD",
+        "idAgent": 9002990,
+        "nomatr": 2990
+    },  
+    {   
+        "nom": "BOURDIL",
+        "prenom": "LUC",
+        "idAgent": 9004117,
+        "nomatr": 4117
+    },  
+    {   
+        "nom": "FONTENEAU",
+        "prenom": "OLIVIER",
+        "idAgent": 9004932,
+        "nomatr": 4932
+    }
+]
 +------------------------------------------+	
  
