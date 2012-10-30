@@ -17,10 +17,13 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import nc.noumea.mairie.tools.transformer.ActiviteTransformer;
 import nc.noumea.mairie.tools.transformer.AgentDelegataireTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
+import nc.noumea.mairie.tools.transformer.AgentToEquipeTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
 import nc.noumea.mairie.tools.transformer.EnfantTransformer;
+import nc.noumea.mairie.tools.transformer.FichePosteTransformer;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
 import nc.noumea.mairie.tools.transformer.SituationFamilialeTransformer;
@@ -182,15 +185,16 @@ public class Agent {
 	@Transient
 	private String position;
 
-	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
+	@Transient
+	private FichePoste fichePoste;
 
+	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToHierarchiqueTransformer(), Agent.class).transform(
 				new StringTrimTransformer(), String.class);
 		return serializer;
 	}
 
 	public static JSONSerializer getSerializerForAgentEtatCivil() {
-
 		JSONSerializer serializer = new JSONSerializer().include("nomPatronymique").include("nomMarital").include("nomUsage").include("prenom")
 				.include("sexe").include("situationFamiliale").include("dateNaissance").include("situationFamiliale").include("titre")
 				.include("lieuNaissance").transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
@@ -201,7 +205,6 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentCouvertureSociale() {
-
 		JSONSerializer serializer = new JSONSerializer().include("numCafat").include("numRuamm").include("numMutuelle").include("numCre")
 				.include("numIrcafex").include("numClr").transform(new StringTrimTransformer(), String.class).exclude("*");
 
@@ -209,7 +212,6 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentBanque() {
-
 		JSONSerializer serializer = new JSONSerializer().include("intituleCompte").include("rib").include("numCompte").include("banque")
 				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class).exclude("*");
 
@@ -217,14 +219,12 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentAdresse() {
-
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToAdresseTransformer(), Agent.class).transform(
 				new StringTrimTransformer(), String.class);
 		return serializer;
 	}
 
 	public static JSONSerializer getSerializerForEnfantAgent() {
-
 		JSONSerializer serializer = new JSONSerializer().transform(new EnfantTransformer(), Enfant.class)
 				.transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
@@ -232,17 +232,15 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentDelegataire() {
-
-		/*
-		 * JSONSerializer serializer = new
-		 * JSONSerializer().include("nomPatronymique"
-		 * ).include("nomMarital").include("nomUsage").include("prenom")
-		 * .include("nomatr").include("idAgent").transform(new
-		 * NullableIntegerTransformer(), Integer.class) .transform(new
-		 * StringTrimTransformer(), String.class).exclude("*");
-		 */
-
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentDelegataireTransformer(), Agent.class)
+				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class);
+
+		return serializer;
+	}
+
+	public static JSONSerializer getSerializerForAgentEquipeFichePoste() {
+		JSONSerializer serializer = new JSONSerializer().transform(new AgentToEquipeTransformer(), Agent.class)
+				.transform(new FichePosteTransformer(), FichePoste.class).transform(new ActiviteTransformer(), Activite.class)
 				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class);
 
 		return serializer;
