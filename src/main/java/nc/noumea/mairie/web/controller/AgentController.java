@@ -1,8 +1,11 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Contact;
 import nc.noumea.mairie.model.bean.FichePoste;
@@ -16,6 +19,7 @@ import nc.noumea.mairie.model.service.ISiguicService;
 import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.model.service.ISivietService;
 import nc.noumea.mairie.model.service.ISoldeService;
+import nc.noumea.mairie.model.service.ISpadmnService;
 import nc.noumea.mairie.model.service.ISpcongService;
 
 import org.json.simple.JSONObject;
@@ -58,6 +62,9 @@ public class AgentController {
 
 	@Autowired
 	ISiservService siservSrv;
+
+	@Autowired
+	ISpadmnService spadmnSrv;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -272,7 +279,26 @@ public class AgentController {
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
-		FichePoste fp = fpSrv.getFichePosteAgentAffectationEnCours(Integer.valueOf(newIdAgent));
+		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent));
+
+		if (fp == null) {
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		}
+
+		String jsonResult = FichePoste.getSerializerForFichePoste().serialize(fp);
+
+		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/fichePosteSecondaire", headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> getFichePosteSecondaireAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent));
 
 		if (fp == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -303,7 +329,7 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePosteAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent());
+		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent());
 
 		if (fichePosteSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -353,7 +379,7 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 		for (Agent agentService : listAgentService) {
-			FichePoste fpAgentService = fpSrv.getFichePosteAgentAffectationEnCours(agentService.getIdAgent());
+			FichePoste fpAgentService = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent());
 			agentService.setPosition(fpAgentService.getTitrePoste().getLibTitrePoste());
 			if (estChef) {
 				agentService.setFichePoste(fpAgentService);
@@ -361,7 +387,6 @@ public class AgentController {
 		}
 
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
-
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
 
@@ -385,5 +410,23 @@ public class AgentController {
 		jsonChef.put("estResponsable", estChef);
 
 		return new ResponseEntity<String>(jsonChef.toJSONString(), headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/estHabiliteKiosqueRH", headers = "Accept=application/json")
+	@ResponseBody
+	public ResponseEntity<String> getAgentHabilitePortail(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		// on remanie l'idAgent
+		String newNomatrAgent = remanieNoMatrAgent(idAgent);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+		Integer dateJour = Integer.valueOf(sdf.format(new Date()));
+
+		boolean estHabilite = spadmnSrv.estPAActive(Integer.valueOf(newNomatrAgent),dateJour);
+
+		JSONObject jsonHabiliteKiosque = new JSONObject();
+		jsonHabiliteKiosque.put("estHabiliteKiosqueRH", estHabilite);
+
+		return new ResponseEntity<String>(jsonHabiliteKiosque.toJSONString(), headers, HttpStatus.OK);
 	}
 }
