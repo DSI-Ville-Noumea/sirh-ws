@@ -4,8 +4,6 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
 
-import org.json.simple.JSONObject;
-
 public interface IAgentService {
 
 	/**
@@ -17,10 +15,10 @@ public interface IAgentService {
 	 */
 	public Agent getAgent(Integer id);
 
-	public List<Agent> getAgentService(String servi, Integer idAgent, Integer idResponsable);
-
 	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent);
 
-	public JSONObject removeAll(JSONObject json);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent,Integer idAgentResponsable, List<String> listeCodeService);
+
+	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
 }

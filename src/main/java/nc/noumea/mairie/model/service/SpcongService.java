@@ -55,7 +55,7 @@ public class SpcongService implements ISpcongService {
 								+ "where spcong.id.nomatr=:nomatr and spcong.dateFin<:dateFin order by spcong.id.dateDeb desc",
 						Spcong.class);
 		query.setParameter("nomatr", nomatr.intValue());
-		query.setParameter("datFin", Integer.valueOf(datFinMax));
+		query.setParameter("dateFin", Integer.valueOf(datFinMax));
 		List<Spcong> lcong = query.getResultList();
 
 		return lcong;

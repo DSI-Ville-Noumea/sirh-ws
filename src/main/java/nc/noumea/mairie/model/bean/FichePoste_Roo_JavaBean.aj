@@ -127,27 +127,27 @@ privileged aspect FichePoste_Roo_JavaBean {
         this.activites = activites;
     }
     
-    public Set<Competence> FichePoste.getCompetences() {
-        return this.competences;
+    public Set<Competence> FichePoste.getCompetencesFDP() {
+        return this.competencesFDP;
     }
     
-    public void FichePoste.setCompetences(Set<Competence> competences) {
-        this.competences = competences;
+    public void FichePoste.setCompetencesFDP(Set<Competence> competencesFDP) {
+        this.competencesFDP = competencesFDP;
     }
     
-    public Set<CadreEmploi> FichePoste.getCardresEmploi() {
-        return this.cardresEmploi;
+    public CadreEmploi FichePoste.getCadreEmploi() {
+        return this.cadreEmploi;
     }
     
-    public void FichePoste.setCardresEmploi(Set<CadreEmploi> cardresEmploi) {
-        this.cardresEmploi = cardresEmploi;
+    public void FichePoste.setCadreEmploi(CadreEmploi cadreEmploi) {
+        this.cadreEmploi = cadreEmploi;
     }
     
-    public Set<NiveauEtude> FichePoste.getNiveauEtude() {
+    public NiveauEtude FichePoste.getNiveauEtude() {
         return this.niveauEtude;
     }
     
-    public void FichePoste.setNiveauEtude(Set<NiveauEtude> niveauEtude) {
+    public void FichePoste.setNiveauEtude(NiveauEtude niveauEtude) {
         this.niveauEtude = niveauEtude;
     }
     
