@@ -50,4 +50,12 @@ privileged aspect Affectation_Roo_JavaBean {
         this.tempsTravail = tempsTravail;
     }
     
+    public FichePoste Affectation.getFichePosteSecondaire() {
+        return this.fichePosteSecondaire;
+    }
+    
+    public void Affectation.setFichePosteSecondaire(FichePoste fichePosteSecondaire) {
+        this.fichePosteSecondaire = fichePosteSecondaire;
+    }
+    
 }
