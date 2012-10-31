@@ -21,14 +21,15 @@ Web Services de l'agent
  
 +------------------------------------------+
 {
-  "nomPatronymique": "SALES",
-  "nomUsage": "SALES",
-  "titre": "Monsieur",
-  "prenom": "ADRIEN",
-  "situationFamiliale": "Célibataire",
-  "nomMarital": "",
-  "dateNaissance": "/Date(157035600000)/",
-  "lieuNaissance": "A renseigner"
+  "dateNaissance": "/Date(95173200000)/",
+  "lieuNaissance": "Nice",
+  "nomMarital": "CHARVET",
+  "nomPatronymique": "CHARVET",
+  "nomUsage": "CHARVET",
+  "prenom": "TATIANA",
+  "sexe": "F",
+  "situationFamiliale": "PACS",
+  "titre": "Madame"
 }
 +------------------------------------------+	
 
@@ -116,10 +117,12 @@ Web Services de l'agent
  
 +------------------------------------------+
 {
-  "intituleCompte": "MME CHRISTINE FRANCHETTE",
-  "rib": 78,
-  "numCompte": "10729702016",
-  "banque": "B.C.I AGENCE MAIRIE"
+    "intituleCompte": "MME TATIANA CHARVET",
+    "rib": 23,
+    "numCompte": "21362202013",
+    "banque": "B.C.I",
+    "codeBanque": 17499,
+    "codeGuichet": 18
 }
 +------------------------------------------+	
 
@@ -212,6 +215,34 @@ Web Services de l'agent
 }
 +------------------------------------------+	
 
+** Fiche poste secondaire de l'agent
+
+ URL : /agents/fichePosteSecondaire?idAgent=90xxxx
+ 
++------------------------------------------+
+{      
+   "budget": "BP budget primitif",
+   "lieuPoste": "HOTEL DE VILLE",
+   "titrePoste": "GESTIONNAIRE RESSOURCES HUMAINES",
+   "opi": null,
+   "direction": "Direction des Ressources Humaines",
+   "missions": "Travail en cours Le chargé du recrutement analyse le besoin de personnel sur un poste, conseille sur la procédure la plus adaptée (mobilité interne, recrutement externe), recherche des candidats et conseille le recruteur sur le choix des personnes à recruter.",
+   "competences": "[{"typeCompetence":"Comportement professionnel","nomCompetence":["Goût pour les contacts humains","Sens de l'écoute","Autonomie","Sens de l'organisation et réactivité","Sens du conseil","Sens de la communication","Sens de la discipline"]},{"typeCompetence":"Savoir-faire","nomCompetence":["Maîtriser des techniques d'entretien professionnel","Écouter et conseiller, voire coacher","Élaborer des notes d'aide à la décision","Déterminer les essences à porter","Utiliser des méthodes d'analyse du comportement en milieu professionnel","Rédiger un compte-rendu d'entretien","Organiser et encadrer une césarisassion","Utiliser les référentiels métiers"]}]",
+   "numFP": "2009/156",
+   "niveauEtude": "IV",
+   "section": "DRH SEFP Section Emploi et Formation",
+   "annee": 2009,
+   "cadreEmploi": "REDACTEUR",
+   "activites": "[{"nomActivite":"Participation à la détection de candidats potentiels (suivi des étudiants boursiers, des dispositifs Cadre avenir\u0085)"},{"nomActivite":"Participation aux commissions de recrutement et conduite d'entretiens de recrutement"},{"nomActivite":"Analyse des demandes de recrutement et définition des profils et des avis de vacance de poste"},{"nomActivite":"Préparation de l'intégration des nouveaux recrutés"},{"nomActivite":"Organisation de la communication des offres d'emploi"},{"nomActivite":"Gestion des candidatures spontanées et des demandes de stage"},{"nomActivite":"Constitution d'un vivier de candidatures internes et externes"}]",
+   "statutFP": "Validée",
+   "budgete": "Temps complet",
+   "gradePoste": "REDACTEUR",
+   "service": "DRH Service Emploi, Formation et Prévention",
+   "reglementaire": "Temps complet",
+   "nfa": "020"    
+}
++------------------------------------------+	
+
 ** Supérieur hiérarchique de l'agent
 
  URL : /agents/superieurHierarchique?idAgent=90xxxx
@@ -259,6 +290,16 @@ Web Services de l'agent
 +------------------------------------------+
 {
   "estResponsable": true
+}
++------------------------------------------+
+
+** L'agent est-il habilité à aller sur le kisoque RH ?
+
+ URL : /agents/estHabiliteKiosqueRH?idAgent=90xxxx
+ 
++------------------------------------------+
+{
+  "estHabiliteKiosqueRH": true
 }
 +------------------------------------------+
 
