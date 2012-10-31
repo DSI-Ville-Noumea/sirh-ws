@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import nc.noumea.mairie.tools.transformer.ActiviteTransformer;
 import nc.noumea.mairie.tools.transformer.AgentDelegataireTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
+import nc.noumea.mairie.tools.transformer.AgentToBanqueTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToEquipeTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
 import nc.noumea.mairie.tools.transformer.EnfantTransformer;
@@ -200,7 +201,6 @@ public class Agent {
 				.include("lieuNaissance").transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new SituationFamilialeTransformer(), SituationFamiliale.class).transform(new StringTrimTransformer(), String.class)
 				.exclude("*");
-
 		return serializer;
 	}
 
@@ -212,8 +212,13 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentBanque() {
-		JSONSerializer serializer = new JSONSerializer().include("intituleCompte").include("rib").include("numCompte").include("banque")
-				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class).exclude("*");
+		JSONSerializer serializer = new JSONSerializer()
+		/*
+		 * .include("intituleCompte").include("rib").include("numCompte").include
+		 * ("banque") .include("codeBanque").include("codeGuichet")
+		 */
+		.transform(new AgentToBanqueTransformer(), Agent.class).transform(new NullableIntegerTransformer(), Integer.class)
+				.transform(new StringTrimTransformer(), String.class).exclude("*");
 
 		return serializer;
 	}

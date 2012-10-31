@@ -8,8 +8,9 @@ public class TypeContactTransformer extends AbstractTransformer {
 	@Override
 	public void transform(Object object) {
 		TypeContact typeContact = (TypeContact) object;
-
-		getContext().transform(typeContact.getLibelle());
+		String libelleTypeContact = typeContact.getLibelle().substring(0, 1).toUpperCase();
+		libelleTypeContact += typeContact.getLibelle().substring(1, typeContact.getLibelle().length()).toLowerCase();
+		getContext().transform(libelleTypeContact);
 
 	}
 
