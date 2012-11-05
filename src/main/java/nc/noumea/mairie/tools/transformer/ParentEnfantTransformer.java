@@ -1,38 +1,38 @@
 package nc.noumea.mairie.tools.transformer;
 
-import nc.noumea.mairie.model.bean.Enfant;
+import nc.noumea.mairie.model.bean.ParentEnfant;
 import flexjson.transformer.AbstractTransformer;
 
-public class EnfantTransformer extends AbstractTransformer {
+public class ParentEnfantTransformer extends AbstractTransformer {
 
 	@Override
 	public void transform(Object arg0) {
-		Enfant enfant = (Enfant) arg0;
+		ParentEnfant enfant = (ParentEnfant) arg0;
 
 		getContext().writeOpenObject();
 
 		getContext().writeName("dateNaissance");
-		getContext().transform(enfant.getDateNaissance());
+		getContext().transform(enfant.getEnfant().getDateNaissance());
 
 		getContext().writeComma();
 		getContext().writeName("aCharge");
-		getContext().transform(enfant.getACharge());
+		getContext().transform(enfant.getEnfantACharge());
 
 		getContext().writeComma();
 		getContext().writeName("nom");
-		getContext().transform(enfant.getNom());
+		getContext().transform(enfant.getEnfant().getNom());
 
 		getContext().writeComma();
 		getContext().writeName("prenom");
-		getContext().transform(enfant.getPrenom());
+		getContext().transform(enfant.getEnfant().getPrenom());
 
 		getContext().writeComma();
 		getContext().writeName("sexe");
-		getContext().transform(enfant.getSexe());
+		getContext().transform(enfant.getEnfant().getSexe());
 
 		getContext().writeComma();
 		getContext().writeName("lieuNaissance");
-		getContext().transform(enfant.getLieuNaissance());
+		getContext().transform(enfant.getEnfant().getLieuNaissance());
 
 		getContext().writeCloseObject();
 

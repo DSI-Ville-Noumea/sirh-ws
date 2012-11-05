@@ -8,9 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,10 +22,10 @@ import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToBanqueTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToEquipeTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
-import nc.noumea.mairie.tools.transformer.EnfantTransformer;
 import nc.noumea.mairie.tools.transformer.FichePosteTransformer;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
+import nc.noumea.mairie.tools.transformer.ParentEnfantTransformer;
 import nc.noumea.mairie.tools.transformer.SituationFamilialeTransformer;
 import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
 
@@ -45,9 +44,8 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(schema = "SIRH", name = "PARENT_ENFANT", joinColumns = { @javax.persistence.JoinColumn(name = "ID_AGENT") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ENFANT"))
-	private Set<Enfant> enfants = new HashSet<Enfant>();
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ParentEnfant> parentEnfants = new HashSet<ParentEnfant>();
 
 	@NotNull
 	@Column(name = "NOMATR")
@@ -212,13 +210,8 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentBanque() {
-		JSONSerializer serializer = new JSONSerializer()
-		/*
-		 * .include("intituleCompte").include("rib").include("numCompte").include
-		 * ("banque") .include("codeBanque").include("codeGuichet")
-		 */
-		.transform(new AgentToBanqueTransformer(), Agent.class).transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class).exclude("*");
+		JSONSerializer serializer = new JSONSerializer().transform(new AgentToBanqueTransformer(), Agent.class)
+				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class).exclude("*");
 
 		return serializer;
 	}
@@ -230,7 +223,7 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForEnfantAgent() {
-		JSONSerializer serializer = new JSONSerializer().transform(new EnfantTransformer(), Enfant.class)
+		JSONSerializer serializer = new JSONSerializer().transform(new ParentEnfantTransformer(), ParentEnfant.class)
 				.transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
 		return serializer;

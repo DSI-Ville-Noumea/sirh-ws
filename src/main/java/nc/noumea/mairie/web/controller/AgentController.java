@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Contact;
 import nc.noumea.mairie.model.bean.FichePoste;
@@ -128,7 +127,7 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getEnfants());
+		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getParentEnfants());
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
@@ -273,13 +272,18 @@ public class AgentController {
 
 	@RequestMapping(value = "/fichePoste", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
+			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
-		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+
+		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
 
 		if (fp == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -292,13 +296,18 @@ public class AgentController {
 
 	@RequestMapping(value = "/fichePosteSecondaire", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getFichePosteSecondaireAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getFichePosteSecondaireAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
+			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
-		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+
+		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
 
 		if (fp == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -311,7 +320,8 @@ public class AgentController {
 
 	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getSuperieurHierarchiqueAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getSuperieurHierarchiqueAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException, java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -329,7 +339,11 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent(),
+				dateJour);
 
 		if (fichePosteSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
@@ -344,7 +358,8 @@ public class AgentController {
 
 	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
+			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -357,6 +372,7 @@ public class AgentController {
 		}
 
 		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
+
 		List<String> listService = null;
 		if (estChef) {
 			// alors on regarde les sousService
@@ -378,12 +394,19 @@ public class AgentController {
 		if (listAgentService == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
 		for (Agent agentService : listAgentService) {
-			FichePoste fpAgentService = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent());
-			agentService.setPosition(fpAgentService.getTitrePoste().getLibTitrePoste());
+			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
+			agentService.setPosition(titrePoste);
+
 			if (estChef) {
+				FichePoste fpAgentService = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(), dateJour);
 				agentService.setFichePoste(fpAgentService);
 			}
+
 		}
 
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
@@ -419,10 +442,10 @@ public class AgentController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newNomatrAgent = remanieNoMatrAgent(idAgent);
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Integer dateJour = Integer.valueOf(sdf.format(new Date()));
 
-		boolean estHabilite = spadmnSrv.estPAActive(Integer.valueOf(newNomatrAgent),dateJour);
+		boolean estHabilite = spadmnSrv.estPAActive(Integer.valueOf(newNomatrAgent), dateJour);
 
 		JSONObject jsonHabiliteKiosque = new JSONObject();
 		jsonHabiliteKiosque.put("estHabiliteKiosqueRH", estHabilite);

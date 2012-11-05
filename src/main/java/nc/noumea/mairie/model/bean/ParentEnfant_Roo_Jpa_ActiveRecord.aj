@@ -29,9 +29,9 @@ privileged aspect ParentEnfant_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM ParentEnfant o", ParentEnfant.class).getResultList();
     }
     
-    public static ParentEnfant ParentEnfant.findParentEnfant(ParentEnfantPK id) {
-        if (id == null) return null;
-        return entityManager().find(ParentEnfant.class, id);
+    public static ParentEnfant ParentEnfant.findParentEnfant(ParentEnfantPK parentEnfantPK) {
+        if (parentEnfantPK == null) return null;
+        return entityManager().find(ParentEnfant.class, parentEnfantPK);
     }
     
     public static List<ParentEnfant> ParentEnfant.findParentEnfantEntries(int firstResult, int maxResults) {
@@ -50,7 +50,7 @@ privileged aspect ParentEnfant_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            ParentEnfant attached = ParentEnfant.findParentEnfant(this.id);
+            ParentEnfant attached = ParentEnfant.findParentEnfant(this.parentEnfantPK);
             this.entityManager.remove(attached);
         }
     }
