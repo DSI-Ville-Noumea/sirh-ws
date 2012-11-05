@@ -1,6 +1,8 @@
 package nc.noumea.mairie.model.pk;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.jpa.identifier.RooIdentifier;
 import org.springframework.roo.addon.json.RooJson;
@@ -10,11 +12,12 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooEquals
 @RooIdentifier
 @RooJson
+@Embeddable
 public final class ParentEnfantPK {
 
-    @Column(name = "ID_AGENT")
-    private Integer idAgent;
+	@Column(name = "ID_AGENT")
+	private Integer idAgent;
 
-    @Column(name = "ID_ENFANT")
-    private Integer idEnfant;
+	@Column(name = "ID_ENFANT")
+	private Integer idEnfant;
 }

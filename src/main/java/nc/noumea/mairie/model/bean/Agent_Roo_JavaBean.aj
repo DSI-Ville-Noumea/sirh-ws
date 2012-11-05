@@ -6,20 +6,20 @@ package nc.noumea.mairie.model.bean;
 import java.util.Date;
 import java.util.Set;
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.Enfant;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.ParentEnfant;
 import nc.noumea.mairie.model.bean.Sicomm;
 import nc.noumea.mairie.model.bean.SituationFamiliale;
 import nc.noumea.mairie.model.bean.Sivoie;
 
 privileged aspect Agent_Roo_JavaBean {
     
-    public Set<Enfant> Agent.getEnfants() {
-        return this.enfants;
+    public Set<ParentEnfant> Agent.getParentEnfants() {
+        return this.parentEnfants;
     }
     
-    public void Agent.setEnfants(Set<Enfant> enfants) {
-        this.enfants = enfants;
+    public void Agent.setParentEnfants(Set<ParentEnfant> parentEnfants) {
+        this.parentEnfants = parentEnfants;
     }
     
     public Integer Agent.getNomatr() {
