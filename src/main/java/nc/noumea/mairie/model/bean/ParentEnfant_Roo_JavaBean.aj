@@ -3,12 +3,35 @@
 
 package nc.noumea.mairie.model.bean;
 
+import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.Enfant;
 import nc.noumea.mairie.model.bean.ParentEnfant;
+import nc.noumea.mairie.model.pk.ParentEnfantPK;
 
 privileged aspect ParentEnfant_Roo_JavaBean {
     
-    public Boolean ParentEnfant.getEnfantACharge() {
-        return this.enfantACharge;
+    public ParentEnfantPK ParentEnfant.getParentEnfantPK() {
+        return this.parentEnfantPK;
+    }
+    
+    public void ParentEnfant.setParentEnfantPK(ParentEnfantPK parentEnfantPK) {
+        this.parentEnfantPK = parentEnfantPK;
+    }
+    
+    public Agent ParentEnfant.getParent() {
+        return this.parent;
+    }
+    
+    public void ParentEnfant.setParent(Agent parent) {
+        this.parent = parent;
+    }
+    
+    public Enfant ParentEnfant.getEnfant() {
+        return this.enfant;
+    }
+    
+    public void ParentEnfant.setEnfant(Enfant enfant) {
+        this.enfant = enfant;
     }
     
     public void ParentEnfant.setEnfantACharge(Boolean enfantACharge) {
