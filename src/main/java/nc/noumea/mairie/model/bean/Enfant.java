@@ -57,13 +57,6 @@ public class Enfant {
 	private Integer codePaysNaissEt;
 
 	@Transient
-	private String aCharge;
-
-	public String getACharge() {
-		return "";
-	}
-
-	@Transient
 	private String lieuNaissance;
 
 	public String getLieuNaissance() {

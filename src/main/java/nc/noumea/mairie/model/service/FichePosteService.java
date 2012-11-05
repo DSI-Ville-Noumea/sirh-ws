@@ -1,7 +1,5 @@
 package nc.noumea.mairie.model.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.FichePoste;
 
 import org.springframework.stereotype.Service;
@@ -21,15 +18,8 @@ public class FichePosteService implements IFichePosteService {
 	transient EntityManager sirhEntityManager;
 
 	@Override
-	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = null;
-		try {
-			dateJour = sdf.parse(dateTemp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour) {
+
 		FichePoste res = null;
 		Query query = sirhEntityManager.createQuery("select fp from FichePoste fp, Affectation aff "
 				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
@@ -37,8 +27,9 @@ public class FichePosteService implements IFichePosteService {
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfp = query.getResultList();
-		for (FichePoste fp : lfp)
-			res = fp;
+		if (lfp != null && lfp.size() > 0) {
+			res = lfp.get(0);
+		}
 
 		return res;
 	}
@@ -54,24 +45,35 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public FichePoste getFichePosteSecondaireAgentAffectationEnCours(Integer idAgent) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = null;
-		try {
-			dateJour = sdf.parse(dateTemp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public FichePoste getFichePosteSecondaireAgentAffectationEnCours(Integer idAgent, Date dateJour) {
 		FichePoste res = null;
 		Query query = sirhEntityManager.createQuery("select fp from FichePoste fp, Affectation aff "
-				+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+				+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
+				+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
 				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfp = query.getResultList();
-		for (FichePoste fp : lfp)
-			res = fp;
+		if (lfp != null && lfp.size() > 0) {
+			res = lfp.get(0);
+		}
+
+		return res;
+	}
+
+	@Override
+	public String getTitrePosteAgent(Integer idAgent, Date dateJour) {
+
+		String res = null;
+		Query query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", String.class);
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("dateJour", dateJour);
+		List<String> lfp = query.getResultList();
+		if (lfp != null && lfp.size() > 0) {
+			res = lfp.get(0);
+		}
 
 		return res;
 	}

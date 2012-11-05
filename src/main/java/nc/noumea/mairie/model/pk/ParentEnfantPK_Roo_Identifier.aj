@@ -3,12 +3,9 @@
 
 package nc.noumea.mairie.model.pk;
 
-import javax.persistence.Embeddable;
 import nc.noumea.mairie.model.pk.ParentEnfantPK;
 
 privileged aspect ParentEnfantPK_Roo_Identifier {
-    
-    declare @type: ParentEnfantPK: @Embeddable;
     
     public ParentEnfantPK.new(Integer idAgent, Integer idEnfant) {
         super();

@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -36,15 +35,15 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE", versionField = "")
 public class FichePoste {
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
 	private TitrePoste titrePoste;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_ENTITE_GEO", referencedColumnName = "CDLIEU")
 	private Silieu lieuPoste;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_BUDGET", referencedColumnName = "ID_BUDGET")
 	private Budget budget;
 
@@ -74,23 +73,23 @@ public class FichePoste {
 	@Column(name = "MISSIONS")
 	private String missions;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
 	private StatutFichePoste statutFP;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
 	private Spbhor budgete;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
 	private Spbhor reglementaire;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_SERVI", referencedColumnName = "SERVI")
 	private Siserv service;
 
-	@ManyToOne
+	@OneToOne(optional=true)
 	@JoinColumn(name = "CODE_GRADE_GENERIQUE", referencedColumnName = "CDGENG")
 	private Spgeng gradePoste;
 
@@ -102,15 +101,15 @@ public class FichePoste {
 	@JoinTable(schema = "SIRH", name = "COMPETENCE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_COMPETENCE"))
 	private Set<Competence> competencesFDP = new HashSet<Competence>();
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "CADRE_EMPLOI_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_CADRE_EMPLOI"))
 	private CadreEmploi cadreEmploi;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
 
-	@ManyToOne
+	@OneToOne(optional = true)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste responsable;
 

@@ -94,11 +94,11 @@ public class Spcong implements Serializable {
 	public String getStatut() {
 		if (this.statut != null) {
 			if (this.statut.trim().equals("")) {
-				return "saisi";
+				return "Saisi";
 			} else if (this.statut.trim().equals("E")) {
-				return "édité";
+				return "Edité";
 			} else if (this.statut.trim().equals("P")) {
-				return "pré-reception sans edition";
+				return "Pré-réception sans édition";
 			} else if (this.statut.trim().equals("V")) {
 				return "Validé";
 			} else {

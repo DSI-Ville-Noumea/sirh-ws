@@ -74,10 +74,6 @@ privileged aspect Enfant_Roo_JavaBean {
         this.codePaysNaissEt = codePaysNaissEt;
     }
     
-    public void Enfant.setACharge(String aCharge) {
-        this.aCharge = aCharge;
-    }
-    
     public void Enfant.setLieuNaissance(String lieuNaissance) {
         this.lieuNaissance = lieuNaissance;
     }
