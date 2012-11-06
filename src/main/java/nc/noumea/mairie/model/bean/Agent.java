@@ -16,13 +16,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import nc.noumea.mairie.tools.transformer.ActiviteTransformer;
 import nc.noumea.mairie.tools.transformer.AgentDelegataireTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToBanqueTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToEquipeTransformer;
 import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
-import nc.noumea.mairie.tools.transformer.FichePosteTransformer;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
 import nc.noumea.mairie.tools.transformer.ParentEnfantTransformer;
@@ -43,6 +41,7 @@ import flexjson.JSONSerializer;
 @RooSerializable
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
+	
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ParentEnfant> parentEnfants = new HashSet<ParentEnfant>();
@@ -184,9 +183,6 @@ public class Agent {
 	@Transient
 	private String position;
 
-	@Transient
-	private FichePoste fichePoste;
-
 	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToHierarchiqueTransformer(), Agent.class).transform(
 				new StringTrimTransformer(), String.class);
@@ -238,7 +234,6 @@ public class Agent {
 
 	public static JSONSerializer getSerializerForAgentEquipeFichePoste() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToEquipeTransformer(), Agent.class)
-				.transform(new FichePosteTransformer(), FichePoste.class).transform(new ActiviteTransformer(), Activite.class)
 				.transform(new NullableIntegerTransformer(), Integer.class).transform(new StringTrimTransformer(), String.class);
 
 		return serializer;

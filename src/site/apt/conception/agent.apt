@@ -262,24 +262,27 @@ Web Services de l'agent
  
 +------------------------------------------+
 [
- {
-   "position": "DEVELOPPEUR",
-   "titre": "Monsieur",
-   "prenom": "FREDERIC",
-   "nom": "DOS SANTOS"
- },
- {
-   "position": "CHEF DE PROJET INFORMATIQUE",
-   "titre": "Monsieur",
-   "prenom": "LUC",
-   "nom": "BOURDIL"
- },
- {
-   "position": "CHEF DE DEPARTEMENT",
-   "titre": "Monsieur",
-   "prenom": "ADRIEN",
-   "nom": "SALES"
- }
+	{
+       "nom": "BOURDIL",
+       "prenom": "LUC",
+       "position": "CHEF DE PROJET",
+       "titre": "Monsieur",
+       "idAgent": 9004117
+	},
+    {
+       "nom": "CHARVET",
+       "prenom": "TATIANA",
+       "position": "CHEF DE PROJET",
+       "titre": "Madame",
+       "idAgent": 9005138
+    },
+    {
+       "nom": "FONTENEAU",
+       "prenom": "OLIVIER",
+       "position": "CHEF DE PROJET",
+       "titre": "Monsieur",
+       "idAgent": 9004932
+    }
 ] 
 +------------------------------------------+	
 
