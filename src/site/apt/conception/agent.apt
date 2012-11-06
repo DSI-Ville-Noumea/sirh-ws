@@ -89,7 +89,7 @@ Web Services de l'agent
       "dateNaissance": "/Date(736261200000)/",
       "lieuNaissance": "Nouméa",
       "sexe": "M",
-      "aCharge": "",
+      "aCharge": "oui",
       "nom": "QUINQUIS"
   },
   {
@@ -97,7 +97,7 @@ Web Services de l'agent
       "dateNaissance": "/Date(1036501200000)/",
       "lieuNaissance": "Nouméa",
       "sexe": "M",
-      "aCharge": "",
+      "aCharge": "oui",
       "nom": "QUINQUIS"
   },
   {
@@ -105,7 +105,7 @@ Web Services de l'agent
       "dateNaissance": "/Date(661957200000)/",
       "lieuNaissance": "Nouméa",
       "sexe": "F",
-      "aCharge": "",
+      "aCharge": "non",
       "nom": "QUINQUIS"
   }
 ]
