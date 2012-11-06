@@ -401,12 +401,6 @@ public class AgentController {
 		for (Agent agentService : listAgentService) {
 			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
 			agentService.setPosition(titrePoste);
-
-			if (estChef) {
-				FichePoste fpAgentService = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(), dateJour);
-				agentService.setFichePoste(fpAgentService);
-			}
-
 		}
 
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
