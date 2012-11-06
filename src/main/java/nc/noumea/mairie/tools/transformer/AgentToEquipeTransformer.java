@@ -25,12 +25,10 @@ public class AgentToEquipeTransformer extends AbstractTransformer {
 		getContext().writeComma();
 		getContext().writeName("titre");
 		getContext().transform(agent.getTitre());
-		
-		if(agent.getFichePoste()!=null){
-			getContext().writeComma();
-			getContext().writeName("fichePoste");
-			getContext().transform(agent.getFichePoste());
-		}
+
+		getContext().writeComma();
+		getContext().writeName("idAgent");
+		getContext().transform(agent.getIdAgent());
 
 		getContext().writeCloseObject();
 	}

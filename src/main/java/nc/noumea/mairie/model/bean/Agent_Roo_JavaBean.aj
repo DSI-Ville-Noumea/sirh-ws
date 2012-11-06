@@ -6,7 +6,6 @@ package nc.noumea.mairie.model.bean;
 import java.util.Date;
 import java.util.Set;
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.ParentEnfant;
 import nc.noumea.mairie.model.bean.Sicomm;
 import nc.noumea.mairie.model.bean.SituationFamiliale;
@@ -320,14 +319,6 @@ privileged aspect Agent_Roo_JavaBean {
     
     public void Agent.setPosition(String position) {
         this.position = position;
-    }
-    
-    public FichePoste Agent.getFichePoste() {
-        return this.fichePoste;
-    }
-    
-    public void Agent.setFichePoste(FichePoste fichePoste) {
-        this.fichePoste = fichePoste;
     }
     
 }
