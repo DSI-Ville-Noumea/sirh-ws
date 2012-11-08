@@ -32,7 +32,7 @@ public class ParentEnfantTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("lieuNaissance");
-		getContext().transform(enfant.getEnfant().getLieuNaissance());
+		getContext().transform(enfant.getEnfant().getLieuNaissance()==null ? "" : enfant.getEnfant().getLieuNaissance());
 
 		getContext().writeCloseObject();
 
