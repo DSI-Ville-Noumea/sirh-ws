@@ -3,6 +3,7 @@
 
 package nc.noumea.mairie.model.pk;
 
+import nc.noumea.mairie.model.bean.Sptyco;
 import nc.noumea.mairie.model.pk.SpcongId;
 
 privileged aspect SpcongId_Roo_JavaBean {
@@ -21,6 +22,22 @@ privileged aspect SpcongId_Roo_JavaBean {
     
     public void SpcongId.setDateDeb(Integer dateDeb) {
         this.dateDeb = dateDeb;
+    }
+    
+    public Integer SpcongId.getRang() {
+        return this.rang;
+    }
+    
+    public void SpcongId.setRang(Integer rang) {
+        this.rang = rang;
+    }
+    
+    public Sptyco SpcongId.getTypConge() {
+        return this.typConge;
+    }
+    
+    public void SpcongId.setTypConge(Sptyco typConge) {
+        this.typConge = typConge;
     }
     
 }
