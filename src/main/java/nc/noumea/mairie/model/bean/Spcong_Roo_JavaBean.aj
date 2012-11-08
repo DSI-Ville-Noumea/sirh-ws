@@ -18,10 +18,6 @@ privileged aspect Spcong_Roo_JavaBean {
         this.id = id;
     }
     
-    public Sptyco Spcong.getTypeConge() {
-        return this.typeConge;
-    }
-    
     public void Spcong.setTypeConge(Sptyco typeConge) {
         this.typeConge = typeConge;
     }
