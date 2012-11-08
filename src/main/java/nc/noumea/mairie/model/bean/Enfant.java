@@ -63,7 +63,11 @@ public class Enfant {
 		if (this.codeCommuneNaissFr != null) {
 			setLieuNaissance(this.codeCommuneNaissFr.getLibVil());
 		} else {
-			setLieuNaissance(sivietSrv.getLieuNaissEtr(this.codePaysNaissEt.intValue(), this.codeCommuneNaissEt.intValue()).getLibCop());
+			if (this.codePaysNaissEt != null && this.codeCommuneNaissEt!=null) {
+				setLieuNaissance(sivietSrv.getLieuNaissEtr(this.codePaysNaissEt.intValue(), this.codeCommuneNaissEt.intValue()).getLibCop());
+			} else {
+				setLieuNaissance(null);
+			}
 		}
 		return this.lieuNaissance;
 	}
