@@ -52,7 +52,7 @@ public class AgentService implements IAgentService {
 				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
 						+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
 						+ " and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", Agent.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) order by ag.nomUsage ", Agent.class);
 		query.setParameter("listeCodeService", listeCodeService);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("idAgentResp", idAgentResponsable);
