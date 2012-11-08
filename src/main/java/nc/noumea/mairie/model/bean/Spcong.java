@@ -6,8 +6,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -33,9 +31,19 @@ public class Spcong implements Serializable {
 	@EmbeddedId
 	private SpcongId id;
 
-	@OneToOne
-	@JoinColumn(name = "TYPE2", referencedColumnName = "TYPE2")
-	private Sptyco typeConge;
+	/*
+	 * @OneToOne
+	 * 
+	 * @JoinColumn(name = "TYPE2", referencedColumnName = "TYPE2") private
+	 * Sptyco typeConge;
+	 */
+
+	@Transient
+	Sptyco typeConge;
+
+	public Sptyco getTypeConge() {
+		return this.id.getTypConge();
+	}
 
 	@NotNull
 	@Column(name = "DATFIN", columnDefinition = "numeric")
@@ -114,8 +122,7 @@ public class Spcong implements Serializable {
 	private String samediDecompte;
 
 	public String getSamediDecompte() {
-		if (this.samediDecompte != null
-				&& this.samediDecompte.trim().equals("N")) {
+		if (this.samediDecompte != null && this.samediDecompte.trim().equals("N")) {
 			return "non";
 		} else {
 			return "";
@@ -125,20 +132,16 @@ public class Spcong implements Serializable {
 	public Spcong() {
 	}
 
-	public Spcong(Integer nomatr, Integer datDeb) {
-		this.id = new SpcongId(nomatr, datDeb);
+	public Spcong(Integer nomatr, Integer dateDeb, Integer rang, Sptyco typConge) {
+		this.id = new SpcongId(nomatr, dateDeb, rang, typConge);
 	}
 
 	public static JSONSerializer getSerializerForAgentHistoConge() {
 
-		JSONSerializer serializer = new JSONSerializer()
-				.include("samediDecompte").include("statut").include("datDeb")
-				.include("typeConge").include("nbJours").include("datFin")
-				.transform(new MSDateTransformer(), Date.class)
-				.transform(new TypeCongeTransformer(), Sptyco.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class)
-				.exclude("*");
+		JSONSerializer serializer = new JSONSerializer().include("samediDecompte").include("statut").include("datDeb").include("typeConge")
+				.include("nbJours").include("datFin").transform(new MSDateTransformer(), Date.class)
+				.transform(new TypeCongeTransformer(), Sptyco.class).transform(new NullableIntegerTransformer(), Integer.class)
+				.transform(new StringTrimTransformer(), String.class).exclude("*");
 
 		return serializer;
 	}
