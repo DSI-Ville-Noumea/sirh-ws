@@ -16,11 +16,23 @@ public class AgentToBanqueTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("rib");
-		getContext().transform(agent.getRib() == null ? 0 : agent.getRib());
+		String rib = "";
+		if (agent.getRib() != null) {
+			String vide = "00";
+			String res = agent.getRib().toString();
+			rib = vide.substring(0, vide.length() - res.length()) + res;
+		}
+		getContext().transform(rib);
 
 		getContext().writeComma();
 		getContext().writeName("numCompte");
-		getContext().transform(agent.getNumCompte() == null ? "" : agent.getNumCompte());
+		String numcompte = "";
+		if (agent.getNumCompte() != null) {
+			String vide = "00000000000";
+			String res = agent.getNumCompte();
+			numcompte = vide.substring(0, vide.length() - res.length()) + res;
+		}
+		getContext().transform(numcompte);
 
 		getContext().writeComma();
 		getContext().writeName("banque");
@@ -28,11 +40,23 @@ public class AgentToBanqueTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("codeBanque");
-		getContext().transform(agent.getCodeBanque() == null ? 0 : agent.getCodeBanque());
+		String codeBanque = "";
+		if (agent.getCodeBanque() != null) {
+			String vide = "00000";
+			String res = agent.getCodeBanque().toString();
+			codeBanque = vide.substring(0, vide.length() - res.length()) + res;
+		}
+		getContext().transform(codeBanque);
 
 		getContext().writeComma();
 		getContext().writeName("codeGuichet");
-		getContext().transform(agent.getCodeGuichet() == null ? 0 : agent.getCodeGuichet());
+		String codeGuichet = "";
+		if (agent.getCodeGuichet() != null) {
+			String vide = "00000";
+			String res = agent.getCodeGuichet().toString();
+			codeGuichet = vide.substring(0, vide.length() - res.length()) + res;
+		}
+		getContext().transform(codeGuichet);
 
 		getContext().writeCloseObject();
 

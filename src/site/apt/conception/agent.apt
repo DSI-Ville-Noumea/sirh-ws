@@ -118,11 +118,11 @@ Web Services de l'agent
 +------------------------------------------+
 {
     "intituleCompte": "MME TATIANA CHARVET",
-    "rib": 23,
+    "rib": "23",
     "numCompte": "21362202013",
     "banque": "B.C.I",
-    "codeBanque": 17499,
-    "codeGuichet": 18
+    "codeBanque": "17499",
+    "codeGuichet": "00018"
 }
 +------------------------------------------+	
 
