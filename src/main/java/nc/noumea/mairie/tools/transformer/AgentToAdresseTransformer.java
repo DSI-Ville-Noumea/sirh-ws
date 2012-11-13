@@ -28,32 +28,24 @@ public class AgentToAdresseTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("rue");
-		getContext().transform(agent.getRue());
+		getContext().transform(agent.getRue() == null ? "" : agent.getRue());
 
 		getContext().writeComma();
 		getContext().writeName("codeCommuneVilleDom");
-		getContext().transform(
-				agent.getCodeCommuneVilleDom() == null ? "" : agent
-						.getCodeCommuneVilleDom().getLibVil().trim());
+		getContext().transform(agent.getCodeCommuneVilleDom() == null ? "" : agent.getCodeCommuneVilleDom().getLibVil().trim());
 
 		getContext().writeComma();
 		getContext().writeName("codeCommuneVilleBP");
-		getContext().transform(
-				agent.getCodeCommuneVilleBP() == null ? "" : agent
-						.getCodeCommuneVilleBP().getLibVil().trim());
+		getContext().transform(agent.getCodeCommuneVilleBP() == null ? "" : agent.getCodeCommuneVilleBP().getLibVil().trim());
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleDom");
-		getContext().transform(
-				agent.getCodePostalVilleDom() == null ? 0 : agent
-						.getCodePostalVilleDom());
+		getContext().transform(agent.getCodePostalVilleDom() == null ? 0 : agent.getCodePostalVilleDom());
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleBP");
-		getContext().transform(
-				agent.getCodePostalVilleBP() == null ? 0 : agent
-						.getCodePostalVilleBP());
-		
+		getContext().transform(agent.getCodePostalVilleBP() == null ? 0 : agent.getCodePostalVilleBP());
+
 		getContext().writeCloseObject();
 
 	}
