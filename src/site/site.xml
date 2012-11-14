@@ -23,7 +23,7 @@
 
         <breadcrumbs>	
 			<item name="Accueil" href="home.html" /> 
-			<item href="http://qual.portail.ville-noumea.nc/sites/test_sirh/Pages/Accueil.aspx" name="Portail Recette" />
+			<item href="http://svq-sp/" name="Portail Recette" />
 		</breadcrumbs>
 		
 		<menu name="Exploitation">
