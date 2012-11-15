@@ -126,8 +126,12 @@ public class EaeController {
 		if (ag == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
-
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		EaeCampagne campagneEnCours = null;
+		try {
+			campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		} catch (Exception e) {
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		}
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
@@ -168,12 +172,11 @@ public class EaeController {
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
-		
-		//on veut la liste des agents du service
+		// on veut la liste des agents du service
 		Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
 		if (serviceAgent == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
-		
+
 		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getServi(), ag.getIdAgent());
 		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(listAgentService);
 
