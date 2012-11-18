@@ -24,6 +24,9 @@
         <breadcrumbs>	
 			<item name="Accueil" href="home.html" /> 
 			<item href="http://svq-sp/" name="Portail Recette" />
+			<item href="http://svpsp/" name="Portail Prod" />
+			<item href="http://ws-qual.sirh.site-mairie.noumea.nc" name="URL WS Recette" />
+			<item href="http://ws.sirh.site-mairie.noumea.nc" name="URL WS Prod" />
 		</breadcrumbs>
 		
 		<menu name="Exploitation">

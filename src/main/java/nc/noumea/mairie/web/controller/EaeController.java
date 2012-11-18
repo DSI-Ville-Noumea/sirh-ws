@@ -60,22 +60,6 @@ public class EaeController {
 		return newIdAgent;
 	}
 
-	@ResponseBody
-	@RequestMapping("/estKiosqueOuvert")
-	public ResponseEntity<String> getKiosqueOuvert() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		JSONObject jsonKiosqueOuvert = new JSONObject();
-		jsonKiosqueOuvert.put("estKiosqueOuvert", false);
-
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
-
-		if (campagneEnCours != null)
-			jsonKiosqueOuvert.put("estKiosqueOuvert", true);
-
-		return new ResponseEntity<String>(jsonKiosqueOuvert.toJSONString(), headers, HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/estHabiliteEAE", headers = "Accept=application/json")
 	@ResponseBody
 	public ResponseEntity<String> getAgentHabilite(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
@@ -87,14 +71,12 @@ public class EaeController {
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
-		JSONObject jsonAgentHabiliteEAE = new JSONObject();
-		jsonAgentHabiliteEAE.put("estHabiliteEAE", false);
 
 		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
 		if (campagneEnCours == null)
-			return new ResponseEntity<String>(jsonAgentHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
 		// on regarde si la personne connectée est chef
 		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
@@ -104,12 +86,14 @@ public class EaeController {
 			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
 		}
 
-		List<Integer> listIdEaeCampagne = eaeService.listIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
+		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
 
-		if (!listIdEaeCampagne.isEmpty()) {
-			jsonAgentHabiliteEAE.put("estHabiliteEAE", true);
+		if (nbEae == 0) {
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<String>(jsonAgentHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
+
+		JSONObject jsonHabiliteEAE = new JSONObject();
+		return new ResponseEntity<String>(jsonHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
 	}
 
 	@ResponseBody
