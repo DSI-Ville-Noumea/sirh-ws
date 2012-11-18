@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.service.eae;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,5 +29,23 @@ public class EaeService implements IEaeService {
 			query.setParameter("listeCodeService", listeCodeService);
 		List<Integer> lIdEae = query.getResultList();
 		return lIdEae;
+	}
+
+	@Override
+	public Integer compterlistIdEaeByCampagneAndAgent(Integer idCampagneEae, Integer idAgent, List<String> listService) {
+		String reqService = "";
+		if (listService != null) {
+			reqService = " union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE =:idCampagne and fp.CODE_SERVICE in (:listeCodeService)";
+		}
+		String sql = "select count(e.id_eae) from EAE e where e.id_EAE in ( select e.ID_EAE from EAE e where ID_CAMPAGNE_EAE =:idCampagne and ID_DELEGATAIRE =:idAgent union select e.ID_EAE from EAE e inner join EAE_EVALUATEUR ev on e.ID_EAE = ev.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and ev.ID_AGENT = :idAgent union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and fp.ID_SHD = :idAgent "
+				+ reqService + " )";
+		Query query = eaeEntityManager.createNativeQuery(sql);
+		query.setParameter("idCampagne", idCampagneEae);
+		query.setParameter("idAgent", idAgent);
+		if (listService != null)
+			query.setParameter("listeCodeService", listService);
+
+		BigDecimal nbRes = (BigDecimal) query.getSingleResult();
+		return nbRes.intValue();
 	}
 }
