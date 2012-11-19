@@ -9,23 +9,13 @@ Web Services des EAEs
 
 * Json
 
-** Savoir si la saisie des EAEs est ouverte sur le kiosque
-
- URL : /eaes/estKiosqueOuvert
- 
-+------------------------------------------+
-{
-  "estKiosqueOuvert": true
-}
-+------------------------------------------+	
-
 ** Savoir si l'agent à le droit de voir la liste des EAEs dans le kiosque
 
  URL : /eaes/estHabiliteEAE?idAgent=90xxxx
  
 +------------------------------------------+
 {
-  "estHabiliteEAE": true
+  200 si ok, 401 si pas ok
 }
 +------------------------------------------+		
 
