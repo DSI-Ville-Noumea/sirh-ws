@@ -40,11 +40,14 @@ public class AgentToAdresseTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleDom");
-		getContext().transform(agent.getCodePostalVilleDom() == null ? 0 : agent.getCodePostalVilleDom());
+		getContext().transform(
+				agent.getCodePostalVilleDom() == null || agent.getCodePostalVilleDom().toString().equals("0")
+						|| agent.getCodePostalVilleDom().toString().equals("") ? "" : agent.getCodePostalVilleDom().toString());
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleBP");
-		getContext().transform(agent.getCodePostalVilleBP() == null ? 0 : agent.getCodePostalVilleBP());
+		getContext().transform(agent.getCodePostalVilleBP() == null || agent.getCodePostalVilleBP().toString().equals("0")
+				|| agent.getCodePostalVilleBP().toString().equals("") ? "" : agent.getCodePostalVilleBP());
 
 		getContext().writeCloseObject();
 
