@@ -345,6 +345,15 @@
 						<resource>
 							<directory>src/main/java</directory>
 						</resource>
+						<resource>
+							<directory>src/main/webapp</directory>
+							<targetPath></targetPath>
+							<filtering>true</filtering>
+							<includes>
+								<include>*.jsp</include>
+								<!-- include any other file types you want to filter -->
+							</includes>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
