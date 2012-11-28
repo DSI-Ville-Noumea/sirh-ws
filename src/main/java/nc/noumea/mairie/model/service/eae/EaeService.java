@@ -19,7 +19,7 @@ public class EaeService implements IEaeService {
 	public List<Integer> listIdEaeByCampagneAndAgent(Integer idCampagneEae, Integer idAgent, List<String> listeCodeService) {
 		String reqService = "";
 		if (listeCodeService != null) {
-			reqService = " union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE =:idCampagne and fp.CODE_SERVICE in (:listeCodeService)";
+			reqService = " union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE inner join EAE_EVALUE evalue on e.ID_EAE = evalue.ID_EAE where e.ID_CAMPAGNE_EAE =:idCampagne and fp.CODE_SERVICE in (:listeCodeService) and evalue.ID_AGENT!=:idAgent ";
 		}
 		String sql = "select e.ID_EAE from EAE e where ID_CAMPAGNE_EAE =:idCampagne and ID_DELEGATAIRE =:idAgent union select e.ID_EAE from EAE e inner join EAE_EVALUATEUR ev on e.ID_EAE = ev.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and ev.ID_AGENT = :idAgent union select e.ID_EAE from EAE e inner join EAE_FICHE_POSTE fp on e.ID_EAE = fp.ID_EAE where e.ID_CAMPAGNE_EAE = :idCampagne and fp.ID_SHD = :idAgent ";
 		Query query = eaeEntityManager.createNativeQuery(sql + reqService);
