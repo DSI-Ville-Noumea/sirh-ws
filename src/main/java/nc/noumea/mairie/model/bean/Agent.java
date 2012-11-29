@@ -1,7 +1,13 @@
 package nc.noumea.mairie.model.bean;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -41,10 +48,27 @@ import flexjson.JSONSerializer;
 @RooSerializable
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
-	
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ParentEnfant> parentEnfants = new HashSet<ParentEnfant>();
+
+	@Transient
+	public List<ParentEnfant> getParentEnfantsOrderByDateNaiss() {
+		List<ParentEnfant> res = new ArrayList<ParentEnfant>();
+		res.addAll(getParentEnfants());
+		
+		Comparator<ParentEnfant> comp = new Comparator<ParentEnfant>() {
+			@Override
+			public int compare(ParentEnfant o1, ParentEnfant o2) {
+				return o1.getEnfant().getDateNaissance().compareTo(o2.getEnfant().getDateNaissance());
+			}
+			
+		};
+		
+		Collections.sort(res, comp);
+		
+		return res;
+	}
 
 	@NotNull
 	@Column(name = "NOMATR")
@@ -190,11 +214,11 @@ public class Agent {
 	}
 
 	public static JSONSerializer getSerializerForAgentEtatCivil() {
-		JSONSerializer serializer = new JSONSerializer().include("nomPatronymique").include("nomMarital").include("nomUsage").include("prenom")
-				.include("sexe").include("situationFamiliale").include("dateNaissance").include("situationFamiliale").include("titre")
-				.include("lieuNaissance").transform(new MSDateTransformer(), Date.class).transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new SituationFamilialeTransformer(), SituationFamiliale.class).transform(new StringTrimTransformer(), String.class)
-				.exclude("*");
+		JSONSerializer serializer = new JSONSerializer().include("nomatr").include("nomPatronymique").include("nomMarital").include("nomUsage")
+				.include("prenom").include("sexe").include("situationFamiliale").include("dateNaissance").include("situationFamiliale")
+				.include("titre").include("lieuNaissance").transform(new MSDateTransformer(), Date.class)
+				.transform(new NullableIntegerTransformer(), Integer.class).transform(new SituationFamilialeTransformer(), SituationFamiliale.class)
+				.transform(new StringTrimTransformer(), String.class).exclude("*");
 		return serializer;
 	}
 
