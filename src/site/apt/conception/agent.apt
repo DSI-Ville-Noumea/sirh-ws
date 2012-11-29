@@ -21,15 +21,16 @@ Web Services de l'agent
  
 +------------------------------------------+
 {
-  "dateNaissance": "/Date(95173200000)/",
-  "lieuNaissance": "Nice",
-  "nomMarital": "CHARVET",
-  "nomPatronymique": "CHARVET",
-  "nomUsage": "CHARVET",
-  "prenom": "TATIANA",
-  "sexe": "F",
-  "situationFamiliale": "PACS",
-  "titre": "Madame"
+    "dateNaissance": "/Date(-231159600000)/",
+    "lieuNaissance": "Bourail",
+    "nomMarital": "LEROUX",
+    "nomPatronymique": "GAILLOT",
+    "nomUsage": "LEROUX",
+    "nomatr": 2962,
+    "prenom": "JACQUELINE",
+	"sexe": "F",
+	"situationFamiliale": "Marié(e)",
+	"titre": "Madame"
 }
 +------------------------------------------+	
 
