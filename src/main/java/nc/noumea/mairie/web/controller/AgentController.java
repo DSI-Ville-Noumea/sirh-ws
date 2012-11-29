@@ -127,7 +127,7 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getParentEnfants());
+		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getParentEnfantsOrderByDateNaiss());
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
@@ -148,7 +148,7 @@ public class AgentController {
 
 		String jsonResult = Agent.getSerializerForAgentCouvertureSociale().serialize(ag);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);		
 	}
 
 	@RequestMapping(value = "/banque", headers = "Accept=application/json")
