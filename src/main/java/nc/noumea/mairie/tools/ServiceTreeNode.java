@@ -6,6 +6,7 @@ import java.util.List;
 public class ServiceTreeNode {
 
 	private String service;
+	private String serviceLibelle;
 	private String sigle;
 	private String sigleParent;
 	private List<ServiceTreeNode> servicesEnfant;
@@ -31,6 +32,14 @@ public class ServiceTreeNode {
 
 	public void setService(String service) {
 		this.service = service;
+	}
+
+	public String getServiceLibelle() {
+		return serviceLibelle;
+	}
+
+	public void setServiceLibelle(String serviceLibelle) {
+		this.serviceLibelle = serviceLibelle;
 	}
 
 	public String getSigle() {
