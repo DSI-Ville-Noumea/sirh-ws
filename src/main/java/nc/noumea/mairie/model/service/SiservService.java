@@ -20,7 +20,7 @@ public class SiservService implements ISiservService {
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
 
-	private static Hashtable<String, ServiceTreeNode> hTree;
+	private Hashtable<String, ServiceTreeNode> hTree;
 
 	@Override
 	public Siserv getDirection(String servi) {
@@ -96,17 +96,32 @@ public class SiservService implements ISiservService {
 
 	@Override
 	public List<String> getListServiceAgent(Integer idAgent) {
-		// on construit l'arbre si il existe pas
-		if (hTree == null)
-			construitArbre();
-
-		// on recupere le service de l'agent
-		Siserv agentService = getServiceAgent(idAgent);
-
-		// on recupere les sous-services du service de l'agent
+		return getListServiceAgent(idAgent,	null);
+	}
+	
+	@Override
+	public List<String> getListServiceAgent(Integer idAgent, String sigleServiceParent) {
+		
 		List<String> services = new ArrayList<String>();
-
-		listSousServices(hTree.get(agentService.getSigle()), services);
+		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
+		
+		// On récupère les sous services de l'agent
+		listSousServices(getServiceTree().get(agentServiceSigle), services);
+		
+		// Si aucun sigle ne nous a été donné en paramètre, on renvoie la liste entière
+		if (sigleServiceParent == null || sigleServiceParent.equals(""))
+			return services;
+	
+		// Sinon, un service a été précisé comme filtre
+		// on vérifie qu'il appartient bien aux services de l'agent
+		// sinon, on retourne une liste vide
+		if (getServiceTree().get(sigleServiceParent) == null 
+			|| !services.contains((getServiceTree().get(sigleServiceParent).getService())))
+			return new ArrayList<String>();
+		
+		// et ensuite on récupère les services et sous services du sigleParent
+		services = new ArrayList<String>();
+		listSousServices(getServiceTree().get(sigleServiceParent), services);
 
 		return services;
 	}
@@ -138,16 +153,60 @@ public class SiservService implements ISiservService {
 		}
 	}
 
-	private void construitArbre() {
+	@Override
+	public List<Siserv> getListServiceActif() {
+		Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  codeActif<>'I')", Siserv.class);
+		List<Siserv> lserv = query.getResultList();
 
-		hTree = new Hashtable<String, ServiceTreeNode>();
+		return lserv;
+	}
+
+	@Override
+	public ServiceTreeNode getAgentServiceTree(Integer idAgent) {
+		
+		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
+		ServiceTreeNode result = getServiceTree().get(agentServiceSigle);
+		
+		return result;
+	}
+	
+	/**
+	 * Returns the only instance of the tree and builds it thread safely if not yet existing
+	 * Retourne l'instance de l'arbre des services
+	 * Le construit de manière thread-safe s'il n'existe pas
+	 * @return L'arbre des services
+	 */
+	private Hashtable<String, ServiceTreeNode> getServiceTree() {
+		
+		if (hTree != null)
+			return hTree;
+		
+		synchronized(this) {
+			
+			if (hTree != null)
+				return hTree;
+			
+			hTree = construitArbre();
+		}
+		
+		return hTree;
+	}
+	
+	/**
+	 * Construit un arbre hiérarchique des services de la mairie
+	 * @return l'arbre des services de SIRH
+	 */
+	private Hashtable<String, ServiceTreeNode> construitArbre() {
+
+		Hashtable<String, ServiceTreeNode> hTree = new Hashtable<String, ServiceTreeNode>();
 
 		for (Siserv serv : getListServiceActif()) {
 
 			ServiceTreeNode node = new ServiceTreeNode();
 			node.setService(serv.getServi());
-			node.setSigle(serv.getSigle());
-			node.setSigleParent(serv.getParentSigle());
+			node.setServiceLibelle(serv.getLiServ().trim());
+			node.setSigle(serv.getSigle().trim());
+			node.setSigleParent(serv.getParentSigle().trim());
 
 			hTree.put(node.getSigle(), node);
 		}
@@ -158,13 +217,7 @@ public class SiservService implements ISiservService {
 			parent.getServicesEnfant().add(node);
 			node.setServiceParent(parent);
 		}
-	}
-
-	@Override
-	public List<Siserv> getListServiceActif() {
-		Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  codeActif<>'I')", Siserv.class);
-		List<Siserv> lserv = query.getResultList();
-
-		return lserv;
+		
+		return hTree;
 	}
 }

@@ -20,6 +20,7 @@ import nc.noumea.mairie.model.service.ISivietService;
 import nc.noumea.mairie.model.service.ISoldeService;
 import nc.noumea.mairie.model.service.ISpadmnService;
 import nc.noumea.mairie.model.service.ISpcongService;
+import nc.noumea.mairie.tools.ServiceTreeNode;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -32,6 +33,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import flexjson.JSONSerializer;
 
 @RooWebJson(jsonObject = Agent.class)
 @Controller
@@ -358,7 +361,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
 	@ResponseBody
-	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
+	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent, @RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
 			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -376,12 +379,17 @@ public class AgentController {
 		List<String> listService = null;
 		if (estChef) {
 			// alors on regarde les sousService
-			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
+			listService = siservSrv.getListServiceAgent(ag.getIdAgent(), sigleService);
 		} else {
 			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
 			listService = new ArrayList<String>();
 			listService.add(serviceAgent.getServi());
 		}
+		
+		if (listService.size() == 0) {
+			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+		}
+		
 		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
 
 		Integer idAgentResp = 0;
@@ -405,6 +413,32 @@ public class AgentController {
 
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public ResponseEntity<String> getServiceArbre(@RequestParam(value = "idAgent", required = true) Long idAgent) {
+		
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		// Si l'agent n'existe pas ou n'est pas chef, on ne retourne rien
+		if (ag == null || !fpSrv.estResponsable(ag.getIdAgent()))
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		// On récupère le noeud parent des services de la personne
+		ServiceTreeNode treeHead = siservSrv.getAgentServiceTree(ag.getIdAgent());
+		List<ServiceTreeNode> treeHeadList = new ArrayList<ServiceTreeNode>();
+		treeHeadList.add(treeHead);
+		
+		JSONSerializer serializer = new JSONSerializer()
+			.exclude("*.class")	
+			.exclude("*.serviceParent")
+			.exclude("*.sigleParent");
+
+		return new ResponseEntity<String>(serializer.deepSerialize(treeHeadList), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
