@@ -287,6 +287,33 @@ Web Services de l'agent
 ] 
 +------------------------------------------+	
 
+** Arbre des services pour mon equipe des chefs
+
+ URL : /agents/serviceArbre?idAgent=90xxxx
+
++------------------------------------------+
+
+    [
+       {
+           "service": "DCCA",
+           "serviceLibelle": "DSI Service Etudes et Développement",
+           "servicesEnfant":
+           [
+               {
+                   "service": "DCCB",
+                   "serviceLibelle": "SED Département Maintenance et Développement",
+                   "servicesEnfant":
+                   [
+                   ],
+                   "sigle": "SED-DMD"
+               }
+           ],
+           "sigle": "SED"
+       }
+    ]
+	
++------------------------------------------+	
+
 ** L'agent est-il un chef ?
 
  URL : /agents/estChef?idAgent=90xxxx
