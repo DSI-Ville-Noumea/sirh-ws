@@ -124,6 +124,9 @@ public class SiservService implements ISiservService {
 	}
 
 	private void listSousServices(ServiceTreeNode serviceTreeNode, List<String> services) {
+		if(services.contains(serviceTreeNode.getService())){
+			return;
+		}
 
 		services.add(serviceTreeNode.getService());
 
