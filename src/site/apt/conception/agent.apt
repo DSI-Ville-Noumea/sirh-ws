@@ -259,7 +259,7 @@ Web Services de l'agent
 
 ** Equipe de l'agent
 
- URL : /agents/equipe?idAgent=90xxxx
+ URL : /agents/equipe?idAgent=90xxxx&sigleService=xxxx(optionel le sigleService)
  
 +------------------------------------------+
 [
