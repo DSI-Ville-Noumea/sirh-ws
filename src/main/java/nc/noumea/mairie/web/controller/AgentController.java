@@ -378,8 +378,12 @@ public class AgentController {
 
 		List<String> listService = null;
 		if (estChef) {
+			//TODO
 			// alors on regarde les sousService
-			listService = siservSrv.getListServiceAgent(ag.getIdAgent(), sigleService);
+			//listService = siservSrv.getListServiceAgent(ag.getIdAgent(), sigleService);
+			Siserv service = siservSrv.getServiceBySigle(sigleService);
+			listService = new ArrayList<String>();
+			listService.add(service.getServi());
 		} else {
 			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
 			listService = new ArrayList<String>();
