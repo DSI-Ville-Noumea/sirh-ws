@@ -27,7 +27,7 @@ public class SiservService implements ISiservService {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(1, 2).equals("A")) {
 			String codeDirection = servi.substring(0, 2) + "AA";
-			Query query = sirhEntityManager.createQuery("select serv from Siserv serv " + "where  servi=:codeDirection)", Siserv.class);
+			Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeDirection", Siserv.class);
 			query.setParameter("codeDirection", codeDirection);
 			List<Siserv> lserv = query.getResultList();
 
@@ -56,7 +56,7 @@ public class SiservService implements ISiservService {
 	public Siserv getSection(String servi) {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(3, 4).equals("A")) {
-			Query query = sirhEntityManager.createQuery("select serv from Siserv serv " + "where  servi=:codeSection)", Siserv.class);
+			Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeSection", Siserv.class);
 			query.setParameter("codeSection", servi);
 			List<Siserv> lserv = query.getResultList();
 
@@ -72,7 +72,7 @@ public class SiservService implements ISiservService {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(2, 3).equals("A")) {
 			String codeDivision = servi.substring(0, 3) + "A";
-			Query query = sirhEntityManager.createQuery("select serv from Siserv serv " + "where  servi=:codeDivision)", Siserv.class);
+			Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeDivision", Siserv.class);
 			query.setParameter("codeDivision", codeDivision);
 			List<Siserv> lserv = query.getResultList();
 
@@ -85,7 +85,7 @@ public class SiservService implements ISiservService {
 	@Override
 	public Siserv getService(String servi) {
 		Siserv res = null;
-		Query query = sirhEntityManager.createQuery("select serv from Siserv serv " + "where  servi=:service)", Siserv.class);
+		Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:service", Siserv.class);
 		query.setParameter("service", servi);
 		List<Siserv> lserv = query.getResultList();
 
@@ -219,5 +219,17 @@ public class SiservService implements ISiservService {
 		}
 		
 		return hTree;
+	}
+
+	@Override
+	public Siserv getServiceBySigle(String sigleService) {
+		Siserv res = null;
+		Query query = sirhEntityManager.createQuery("select serv from Siserv serv where  sigle=:sigle and codeActif<>'I' ", Siserv.class);
+		query.setParameter("sigle", sigleService);
+		List<Siserv> lserv = query.getResultList();
+
+		for (Siserv serv : lserv)
+			res = serv;
+		return res;
 	}
 }
