@@ -90,8 +90,8 @@ public class FichePoste {
 	private Siserv service;
 
 	@OneToOne(optional=true)
-	@JoinColumn(name = "CODE_GRADE_GENERIQUE", referencedColumnName = "CDGENG")
-	private Spgeng gradePoste;
+	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
+	private Spgradn gradePoste;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "ACTIVITE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ACTIVITE"))
