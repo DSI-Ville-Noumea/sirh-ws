@@ -14,18 +14,22 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPGENG",versionField="")
-public class Spgeng {
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPGRADN",versionField="")
+public class Spgradn {
 	
 	@Id
-	@Column(name = "CDGENG", columnDefinition = "char")
-	private String cdgeng;
+	@Column(name = "CDGRAD", columnDefinition = "char")
+	private String cdgrad;
 
 	@NotNull
 	@Column(name = "LIGRAD", columnDefinition = "char")
 	private String liGrad;
 
+	@NotNull
+	@Column(name = "GRADE", columnDefinition = "char")
+	private String gradeInitial;
+
 	@OneToOne(optional=true)
-	@JoinColumn(name = "IDCADREEMPLOI", referencedColumnName = "ID_CADRE_EMPLOI")
-	private CadreEmploi cadreEmploiGrade;
+	@JoinColumn(name = "CODGRG", referencedColumnName = "CDGENG")
+	private Spgeng gradeGenerique;
 }

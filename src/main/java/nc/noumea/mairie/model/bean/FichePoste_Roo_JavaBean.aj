@@ -12,7 +12,7 @@ import nc.noumea.mairie.model.bean.NiveauEtude;
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
-import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.StatutFichePoste;
 import nc.noumea.mairie.model.bean.TitrePoste;
 
@@ -110,11 +110,11 @@ privileged aspect FichePoste_Roo_JavaBean {
         this.service = service;
     }
     
-    public Spgeng FichePoste.getGradePoste() {
+    public Spgradn FichePoste.getGradePoste() {
         return this.gradePoste;
     }
     
-    public void FichePoste.setGradePoste(Spgeng gradePoste) {
+    public void FichePoste.setGradePoste(Spgradn gradePoste) {
         this.gradePoste = gradePoste;
     }
     

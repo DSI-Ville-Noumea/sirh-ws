@@ -17,43 +17,43 @@ public class FichePosteTransformer extends AbstractTransformer {
 
 		getContext().writeName("activites");
 		getContext().transform(fp.getActivites());
-		
-		
+
 		getContext().writeComma();
 		getContext().writeName("competences");
 		getContext().writeOpenArray();
-		
+
 		boolean isFirst = true;
-		
+
 		for (Entry<String, List<String>> entry : fp.getCompetences().entrySet()) {
-		    String key = entry.getKey();
-		    List<String> value = entry.getValue();
-		    if (!isFirst)
+			String key = entry.getKey();
+			List<String> value = entry.getValue();
+			if (!isFirst)
 				getContext().writeComma();
 			getContext().writeOpenObject();
-		    getContext().writeName("typeCompetence");
-		    getContext().writeQuoted(key);
+			getContext().writeName("typeCompetence");
+			getContext().writeQuoted(key);
 			getContext().writeComma();
-		    getContext().writeName("nomCompetence");
-		    getContext().writeOpenArray();
+			getContext().writeName("nomCompetence");
+			getContext().writeOpenArray();
 			boolean isFirstNomComp = true;
-		    for(String res : value){
-			    if (!isFirstNomComp)
+			for (String res : value) {
+				if (!isFirstNomComp)
 					getContext().writeComma();
-		    	getContext().writeQuoted(res);
-		    	isFirstNomComp=false;
-		    }
-		    getContext().writeCloseArray();
+				getContext().writeQuoted(res);
+				isFirstNomComp = false;
+			}
+			getContext().writeCloseArray();
 			getContext().writeCloseObject();
 			isFirst = false;
 		}
-		
+
 		getContext().writeCloseArray();
-		getContext().writeComma();	
-		
-		
+		getContext().writeComma();
+
 		getContext().writeName("cadreEmploi");
-		getContext().transform( "");
+		getContext().transform(
+				fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi() == null ? "" : fp.getGradePoste()
+						.getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi());
 		getContext().writeComma();
 		getContext().writeName("niveauEtude");
 		getContext().transform(fp.getNiveauEtude() != null ? fp.getNiveauEtude().getLibelleNiveauEtude() : "");
@@ -69,7 +69,7 @@ public class FichePosteTransformer extends AbstractTransformer {
 		getContext().transform(fp.getService().getSection());
 		getContext().writeComma();
 		getContext().writeName("gradePoste");
-		getContext().transform(fp.getGradePoste().getLiGrad());
+		getContext().transform(fp.getGradePoste().getGradeInitial());
 		getContext().writeComma();
 		getContext().writeName("reglementaire");
 		getContext().transform(fp.getReglementaire().getLibHor());
