@@ -102,10 +102,6 @@ public class FichePoste {
 	private Set<Competence> competencesFDP = new HashSet<Competence>();
 
 	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(schema = "SIRH", name = "CADRE_EMPLOI_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_CADRE_EMPLOI"))
-	private CadreEmploi cadreEmploi;
-
-	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
 
