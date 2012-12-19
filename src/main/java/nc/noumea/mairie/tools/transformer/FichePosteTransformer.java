@@ -53,7 +53,7 @@ public class FichePosteTransformer extends AbstractTransformer {
 		
 		
 		getContext().writeName("cadreEmploi");
-		getContext().transform(fp.getCadreEmploi() != null ? fp.getCadreEmploi().getLibelleCadreEmploi() : "");
+		getContext().transform( "");
 		getContext().writeComma();
 		getContext().writeName("niveauEtude");
 		getContext().transform(fp.getNiveauEtude() != null ? fp.getNiveauEtude().getLibelleNiveauEtude() : "");
