@@ -6,7 +6,6 @@ package nc.noumea.mairie.model.bean;
 import java.util.Set;
 import nc.noumea.mairie.model.bean.Activite;
 import nc.noumea.mairie.model.bean.Budget;
-import nc.noumea.mairie.model.bean.CadreEmploi;
 import nc.noumea.mairie.model.bean.Competence;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.NiveauEtude;
@@ -133,14 +132,6 @@ privileged aspect FichePoste_Roo_JavaBean {
     
     public void FichePoste.setCompetencesFDP(Set<Competence> competencesFDP) {
         this.competencesFDP = competencesFDP;
-    }
-    
-    public CadreEmploi FichePoste.getCadreEmploi() {
-        return this.cadreEmploi;
-    }
-    
-    public void FichePoste.setCadreEmploi(CadreEmploi cadreEmploi) {
-        this.cadreEmploi = cadreEmploi;
     }
     
     public NiveauEtude FichePoste.getNiveauEtude() {
