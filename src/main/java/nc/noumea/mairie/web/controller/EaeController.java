@@ -122,10 +122,11 @@ public class EaeController {
 		// on regarde si la personne connectée est chef
 		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
 		List<String> listService = null;
-		if (estChef) {
+		//Pour le moment suppression de cette partie en attendant l'arbre des fiche de poste
+		/*if (estChef) {
 			// alors on regarde les sousService
 			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
-		}
+		}*/
 
 		List<Integer> listIdEaeCampagne = eaeService.listIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
 
