@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -95,10 +96,12 @@ public class FichePoste {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "ACTIVITE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ACTIVITE"))
+	@OrderBy
 	private Set<Activite> activites = new HashSet<Activite>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(schema = "SIRH", name = "COMPETENCE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_COMPETENCE"))
+	@OrderBy
 	private Set<Competence> competencesFDP = new HashSet<Competence>();
 
 	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
