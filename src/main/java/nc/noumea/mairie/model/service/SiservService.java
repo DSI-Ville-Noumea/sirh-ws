@@ -96,29 +96,29 @@ public class SiservService implements ISiservService {
 
 	@Override
 	public List<String> getListServiceAgent(Integer idAgent) {
-		return getListServiceAgent(idAgent,	null);
+		return getListServiceAgent(idAgent, null);
 	}
-	
+
 	@Override
 	public List<String> getListServiceAgent(Integer idAgent, String sigleServiceParent) {
-		
+
 		List<String> services = new ArrayList<String>();
 		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
-		
+
 		// On récupère les sous services de l'agent
 		listSousServices(getServiceTree().get(agentServiceSigle), services);
-		
-		// Si aucun sigle ne nous a été donné en paramètre, on renvoie la liste entière
+
+		// Si aucun sigle ne nous a été donné en paramètre, on renvoie la liste
+		// entière
 		if (sigleServiceParent == null || sigleServiceParent.equals(""))
 			return services;
-	
+
 		// Sinon, un service a été précisé comme filtre
 		// on vérifie qu'il appartient bien aux services de l'agent
 		// sinon, on retourne une liste vide
-		if (getServiceTree().get(sigleServiceParent) == null 
-			|| !services.contains((getServiceTree().get(sigleServiceParent).getService())))
+		if (getServiceTree().get(sigleServiceParent) == null || !services.contains((getServiceTree().get(sigleServiceParent).getService())))
 			return new ArrayList<String>();
-		
+
 		// et ensuite on récupère les services et sous services du sigleParent
 		services = new ArrayList<String>();
 		listSousServices(getServiceTree().get(sigleServiceParent), services);
@@ -139,7 +139,7 @@ public class SiservService implements ISiservService {
 	}
 
 	private void listSousServices(ServiceTreeNode serviceTreeNode, List<String> services) {
-		if(services.contains(serviceTreeNode.getService())){
+		if (services.contains(serviceTreeNode.getService())) {
 			return;
 		}
 
@@ -163,37 +163,39 @@ public class SiservService implements ISiservService {
 
 	@Override
 	public ServiceTreeNode getAgentServiceTree(Integer idAgent) {
-		
+
 		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
 		ServiceTreeNode result = getServiceTree().get(agentServiceSigle);
-		
+
 		return result;
 	}
-	
+
 	/**
-	 * Returns the only instance of the tree and builds it thread safely if not yet existing
-	 * Retourne l'instance de l'arbre des services
-	 * Le construit de manière thread-safe s'il n'existe pas
+	 * Returns the only instance of the tree and builds it thread safely if not
+	 * yet existing Retourne l'instance de l'arbre des services Le construit de
+	 * manière thread-safe s'il n'existe pas
+	 * 
 	 * @return L'arbre des services
 	 */
 	private Hashtable<String, ServiceTreeNode> getServiceTree() {
-		
+
 		if (hTree != null)
 			return hTree;
-		
-		synchronized(this) {
-			
+
+		synchronized (this) {
+
 			if (hTree != null)
 				return hTree;
-			
+
 			hTree = construitArbre();
 		}
-		
+
 		return hTree;
 	}
-	
+
 	/**
 	 * Construit un arbre hiérarchique des services de la mairie
+	 * 
 	 * @return l'arbre des services de SIRH
 	 */
 	private Hashtable<String, ServiceTreeNode> construitArbre() {
@@ -214,10 +216,12 @@ public class SiservService implements ISiservService {
 		for (ServiceTreeNode node : hTree.values()) {
 
 			ServiceTreeNode parent = hTree.get(node.getSigleParent());
-			parent.getServicesEnfant().add(node);
-			node.setServiceParent(parent);
+			if (parent != node) {
+				parent.getServicesEnfant().add(node);
+				node.setServiceParent(parent);
+			}
 		}
-		
+
 		return hTree;
 	}
 
