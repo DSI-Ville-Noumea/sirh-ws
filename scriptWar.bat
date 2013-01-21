@@ -3,4 +3,4 @@ cd ../../
 cd workspaceSTS
 cd sirh-ws
 call mvn clean
-call mvn install -DcreateChecksum=true
+call mvn install 
