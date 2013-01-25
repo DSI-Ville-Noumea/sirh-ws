@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -275,6 +276,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/fichePoste", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
@@ -299,6 +301,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/fichePosteSecondaire", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteSecondaireAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
@@ -323,6 +326,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSuperieurHierarchiqueAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException, java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
@@ -361,6 +365,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent, @RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
 			java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
@@ -421,6 +426,7 @@ public class AgentController {
 	
 	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getServiceArbre(@RequestParam(value = "idAgent", required = true) Long idAgent) {
 		
 		// on remanie l'idAgent
@@ -447,6 +453,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentChefPortail(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -469,6 +476,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/estHabiliteKiosqueRH", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentHabilitePortail(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
