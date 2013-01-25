@@ -1,0 +1,48 @@
+package nc.noumea.mairie.tools;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class FichePosteTreeNode {
+
+	private Integer idFichePoste;
+	private Integer idFichePosteParent;
+	private List<FichePosteTreeNode> fichePostesEnfant;
+	private FichePosteTreeNode fichePosteParent;
+
+	public FichePosteTreeNode() {
+		fichePostesEnfant = new ArrayList<FichePosteTreeNode>();
+	}
+	
+	public Integer getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(Integer idFichePoste) {
+		this.idFichePoste = idFichePoste;
+	}
+
+	public Integer getIdFichePosteParent() {
+		return idFichePosteParent;
+	}
+
+	public void setIdFichePosteParent(Integer idFichePosteParent) {
+		this.idFichePosteParent = idFichePosteParent;
+	}
+
+	public List<FichePosteTreeNode> getFichePostesEnfant() {
+		return fichePostesEnfant;
+	}
+
+	public void setFichePostesEnfant(List<FichePosteTreeNode> fichePostesEnfant) {
+		this.fichePostesEnfant = fichePostesEnfant;
+	}
+
+	public FichePosteTreeNode getFichePosteParent() {
+		return fichePosteParent;
+	}
+
+	public void setFichePosteParent(FichePosteTreeNode fichePosteParent) {
+		this.fichePosteParent = fichePosteParent;
+	}
+}
