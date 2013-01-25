@@ -36,15 +36,15 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", schema = "SIRH", table = "FICHE_POSTE", versionField = "")
 public class FichePoste {
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
 	private TitrePoste titrePoste;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_ENTITE_GEO", referencedColumnName = "CDLIEU")
 	private Silieu lieuPoste;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_BUDGET", referencedColumnName = "ID_BUDGET")
 	private Budget budget;
 
@@ -74,41 +74,41 @@ public class FichePoste {
 	@Column(name = "MISSIONS")
 	private String missions;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
 	private StatutFichePoste statutFP;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
 	private Spbhor budgete;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
 	private Spbhor reglementaire;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_SERVI", referencedColumnName = "SERVI")
 	private Siserv service;
 
-	@OneToOne(optional=true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
 	private Spgradn gradePoste;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(schema = "SIRH", name = "ACTIVITE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ACTIVITE"))
 	@OrderBy
 	private Set<Activite> activites = new HashSet<Activite>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(schema = "SIRH", name = "COMPETENCE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_COMPETENCE"))
 	@OrderBy
 	private Set<Competence> competencesFDP = new HashSet<Competence>();
 
-	@OneToOne(optional=true,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(schema = "SIRH", name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste responsable;
 
@@ -116,18 +116,22 @@ public class FichePoste {
 	public HashMap<String, List<String>> getCompetences() {
 		HashMap<String, List<String>> res = new HashMap<String, List<String>>();
 		for (Competence comp : getCompetencesFDP()) {
-			if (!res.containsKey(comp.getTypeCompetence().getLibTypeCompetence())) {
+			if (!res.containsKey(comp.getTypeCompetence()
+					.getLibTypeCompetence())) {
 				List<String> list = new ArrayList<String>();
 				res.put(comp.getTypeCompetence().getLibTypeCompetence(), list);
 			}
-			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(comp.getNomCompetence());
+			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(
+					comp.getNomCompetence());
 		}
 		return res;
 	}
 
 	public static JSONSerializer getSerializerForFichePoste() {
-		JSONSerializer serializer = new JSONSerializer().transform(new FichePosteTransformer(), FichePoste.class)
-				.transform(new ActiviteTransformer(), Activite.class).transform(new NullableIntegerTransformer(), Integer.class)
+		JSONSerializer serializer = new JSONSerializer()
+				.transform(new FichePosteTransformer(), FichePoste.class)
+				.transform(new ActiviteTransformer(), Activite.class)
+				.transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
 
 		return serializer;
