@@ -15,11 +15,15 @@ public interface IFichePosteService {
 
 	public String getTitrePosteAgent(Integer idAgent, Date dateJour);
 	
-	public List<Integer> getFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth);
-	
 	public void construitArbreFichePostes();
 	
 	public Integer getIdFichePostePrimaireAgentAffectationEnCours(int idAgent, Date date);
-
+	
 	public List<Integer> getListSubFichePoste(int idAgent, int maxDepth);
+
+	public List<Integer> getListSubAgents(int idAgent, int maxDepth);
+	
+	public List<Integer> getSubFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth);
+	
+	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth);
 }
