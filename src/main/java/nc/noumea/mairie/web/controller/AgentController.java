@@ -11,6 +11,7 @@ import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.SpSold;
 import nc.noumea.mairie.model.bean.Spcong;
+import nc.noumea.mairie.model.service.IAgentMatriculeConverterService;
 import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.IContactService;
 import nc.noumea.mairie.model.service.IFichePosteService;
@@ -43,32 +44,35 @@ import flexjson.JSONSerializer;
 public class AgentController {
 
 	@Autowired
-	IAgentService agentSrv;
+	private IAgentService agentSrv;
 
 	@Autowired
-	ISivietService sivietSrv;
+	private ISivietService sivietSrv;
 
 	@Autowired
-	ISiguicService siguicSrv;
+	private ISiguicService siguicSrv;
 
 	@Autowired
-	IContactService contactSrv;
+	private IContactService contactSrv;
 
 	@Autowired
-	ISoldeService soldeSrv;
+	private ISoldeService soldeSrv;
 
 	@Autowired
-	ISpcongService congSrv;
+	private ISpcongService congSrv;
 
 	@Autowired
-	IFichePosteService fpSrv;
+	private IFichePosteService fpSrv;
 
 	@Autowired
-	ISiservService siservSrv;
+	private ISiservService siservSrv;
 
 	@Autowired
-	ISpadmnService spadmnSrv;
+	private ISpadmnService spadmnSrv;
 
+	@Autowired
+	private IAgentMatriculeConverterService agentMatriculeConverterService;
+	
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
 		if (idAgent.toString().length() == 6) {
@@ -491,5 +495,25 @@ public class AgentController {
 		jsonHabiliteKiosque.put("estHabiliteKiosqueRH", estHabilite);
 
 		return new ResponseEntity<String>(jsonHabiliteKiosque.toJSONString(), headers, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/sousAgents", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+
+		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
+		
+		Agent ag = Agent.findAgent(newIdAgent);		
+		
+		if (ag == null)
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		
+		List<Integer> agentIds = fpSrv.getListSubAgents(idAgent, maxDepth);
+		
+		if (agentIds.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
+		
+		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
 }

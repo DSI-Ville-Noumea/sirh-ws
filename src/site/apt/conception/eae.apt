@@ -17,7 +17,7 @@ Web Services des EAEs
 {
   200 si ok, 401 si pas ok
 }
-+------------------------------------------+		
++------------------------------------------+
 
 ** Connaitre la liste des EAEs que l'agent à droit de voir
 
@@ -30,9 +30,9 @@ Web Services des EAEs
   195,
   25942
 ]
-+------------------------------------------+		
++------------------------------------------+
 
-** Connaitre la liste des délégataires que l'agent à le droit de choisir pour délégataire
+** Connaitre la liste des délégataires que l'agent à le droit de choisir 
 
  URL : /eaes/listDelegataire?idAgent=90xxxx
  
@@ -57,5 +57,5 @@ Web Services des EAEs
         "nomatr": 4932
     }
 ]
-+------------------------------------------+	
++------------------------------------------+
  

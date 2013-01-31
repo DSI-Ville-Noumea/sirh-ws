@@ -32,7 +32,7 @@ Web Services de l'agent
 	"situationFamiliale": "Marié(e)",
 	"titre": "Madame"
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Adresse
 
@@ -50,7 +50,7 @@ Web Services de l'agent
   "codePostalVilleDom": 98890,
   "numRue": "299"
 }
-+------------------------------------------+		
++------------------------------------------+
 
 ** Contacts
 
@@ -77,7 +77,7 @@ Web Services de l'agent
       "diffusable": "non"
   }
 ]
-+------------------------------------------+		
++------------------------------------------+
 
 ** Enfants
 
@@ -110,7 +110,7 @@ Web Services de l'agent
       "nom": "QUINQUIS"
   }
 ]
-+------------------------------------------+	
++------------------------------------------+
 
 ** Banque
 
@@ -125,7 +125,7 @@ Web Services de l'agent
     "codeBanque": "17499",
     "codeGuichet": "00018"
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Couverture Sociale
 
@@ -140,7 +140,7 @@ Web Services de l'agent
   "numClr": "",
   "numRuamm": "403664"
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Solde Conge
 
@@ -151,7 +151,7 @@ Web Services de l'agent
   "soldeAnneePrec": 0,
   "soldeAnneeEnCours": 12
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Historique Conge
 
@@ -186,7 +186,7 @@ Web Services de l'agent
    "samediDecompte": ""
  }
 ]
-+------------------------------------------+	
++------------------------------------------+
 
 ** Fiche poste agent
 
@@ -214,7 +214,7 @@ Web Services de l'agent
    "reglementaire": "Temps complet",
    "nfa": "020"    
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Fiche poste secondaire de l'agent
 
@@ -242,7 +242,7 @@ Web Services de l'agent
    "reglementaire": "Temps complet",
    "nfa": "020"    
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Supérieur hiérarchique de l'agent
 
@@ -255,7 +255,7 @@ Web Services de l'agent
   "prenom": "CORINNE",
   "nom": "AUBERT"
 }
-+------------------------------------------+	
++------------------------------------------+
 
 ** Equipe de l'agent
 
@@ -285,7 +285,7 @@ Web Services de l'agent
        "idAgent": 9004932
     }
 ] 
-+------------------------------------------+	
++------------------------------------------+
 
 ** Arbre des services pour mon equipe des chefs
 
@@ -312,7 +312,7 @@ Web Services de l'agent
        }
     ]
 	
-+------------------------------------------+	
++------------------------------------------+
 
 ** L'agent est-il un chef ?
 
@@ -334,4 +334,20 @@ Web Services de l'agent
 }
 +------------------------------------------+
 
+** Voir la liste des agents affectés à des fiches de poste dont l'agent paramètre est le responsable
+
+ URL : /agents/sousAgents?idAgent=90xxxx&maxDepth=[1-9]
  
+ idAgent: l'agent dont on veut avoir les agents subordonnés
+ maxDepth: le niveau de profondeur dans lequel rechercher ces agents (paramètre optionel, par défaut à 3)
+ 
+ note: ce service s'appuie sur l'arbre des fiches de postes (qui peut être reconstruit via /fichePostes/rebuildFichePosteTree)
+ 
++------------------------------------------+
+[
+   9003623,
+   9003353,
+   9002990,
+   9005131
+]
++------------------------------------------+

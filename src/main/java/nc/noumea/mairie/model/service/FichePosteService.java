@@ -9,17 +9,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 
+import nc.noumea.mairie.dao.IFichePosteDao;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +26,9 @@ public class FichePosteService implements IFichePosteService {
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
 
+	@Autowired
+	private IFichePosteDao fichePosteDao;
+	
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
 	
@@ -96,7 +97,13 @@ public class FichePosteService implements IFichePosteService {
 	@Override
 	public List<Integer> getListSubFichePoste(int idAgent, int maxDepth) {
 		Integer fpId = getIdFichePostePrimaireAgentAffectationEnCours(idAgent, new DateTime().toDate());
-		return getFichePosteIdsForResponsable(fpId, maxDepth);
+		return getSubFichePosteIdsForResponsable(fpId, maxDepth);
+	}
+	
+	@Override
+	public List<Integer> getListSubAgents(int idAgent, int maxDepth) {
+		Integer fpId = getIdFichePostePrimaireAgentAffectationEnCours(idAgent, new DateTime().toDate());
+		return getSubAgentIdsForFichePoste(fpId, maxDepth);
 	}
 	
 	@Override
@@ -122,7 +129,7 @@ public class FichePosteService implements IFichePosteService {
 	 * @return
 	 */
 	@Override
-	public List<Integer> getFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth) {
+	public List<Integer> getSubFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth) {
 		
 		List<Integer> fichePostes = new ArrayList<Integer>();
 		
@@ -145,6 +152,39 @@ public class FichePosteService implements IFichePosteService {
 		}
 		
 		return fichePostes;
+	}
+	
+	/**
+	 * Liste les agents dont la fiche poste en paramètre est la responsable sur
+	 * une profondeur de maxDepth niveaux au maximum
+	 * @param idFichePosteResponsable
+	 * @return
+	 */
+	@Override
+	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth) {
+		
+		List<Integer> agents = new ArrayList<Integer>();
+		
+		if (!getFichePosteTree().containsKey(idFichePosteResponsable))
+			return agents;
+				
+		listSubAgents(getFichePosteTree().get(idFichePosteResponsable), agents, maxDepth);
+		
+		return agents;
+	}
+	
+	private List<Integer> listSubAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth) {
+
+		if (maxDepth == 0)
+			return agents;
+		
+		for (FichePosteTreeNode node : fichePosteTreeNode.getFichePostesEnfant()) {
+			if (node.getIdAgent() != null)
+				agents.add(node.getIdAgent());
+			listSubAgents(node, agents, maxDepth - 1);
+		}
+		
+		return agents;
 	}
 
 	@Override
@@ -189,27 +229,27 @@ public class FichePosteService implements IFichePosteService {
 	 */
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
-		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
+		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.GetAllFichePosteAndAffectedAgents(new Date());
 		
-		CriteriaBuilder cb = sirhEntityManager.getCriteriaBuilder();
-		CriteriaQuery<FichePoste> q = cb.createQuery(FichePoste.class);
-		Root<FichePoste> from = q.from(FichePoste.class);
-		Path<Integer> path = from.join("statutFP").get("idStatutFp");
-		
-		CriteriaQuery<FichePoste> select = q.select(from);
-		select.where(cb.equal(path, 2));
-		
-		List<FichePoste> result = sirhEntityManager.createQuery(q).getResultList();
-		
-		for (FichePoste fp : result) {
-			FichePosteTreeNode node = new FichePosteTreeNode();
-			node.setIdFichePoste(fp.getIdFichePoste());
-			
-			if (fp.getResponsable() != null)
-				node.setIdFichePosteParent(fp.getResponsable().getIdFichePoste());
-			
-			hTree.put(node.getIdFichePoste(),  node);
-		}
+//		CriteriaBuilder cb = sirhEntityManager.getCriteriaBuilder();
+//		CriteriaQuery<FichePoste> q = cb.createQuery(FichePoste.class);
+//		Root<FichePoste> from = q.from(FichePoste.class);
+//		Path<Integer> path = from.join("statutFP").get("idStatutFp");
+//		
+//		CriteriaQuery<FichePoste> select = q.select(from);
+//		select.where(cb.equal(path, 2));
+//		
+//		List<FichePoste> result = sirhEntityManager.createQuery(q).getResultList();
+//		
+//		for (FichePoste fp : result) {
+//			FichePosteTreeNode node = new FichePosteTreeNode();
+//			node.setIdFichePoste(fp.getIdFichePoste());
+//
+//			if (fp.getResponsable() != null)
+//				node.setIdFichePosteParent(fp.getResponsable().getIdFichePoste());
+//			
+//			hTree.put(node.getIdFichePoste(),  node);
+//		}
 		
 		int nbNodes = 0, nbNotOrphanNodes = 0;
 		
