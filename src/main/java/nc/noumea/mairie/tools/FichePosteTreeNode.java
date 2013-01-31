@@ -7,9 +7,17 @@ public class FichePosteTreeNode {
 
 	private Integer idFichePoste;
 	private Integer idFichePosteParent;
+	private Integer idAgent;
 	private List<FichePosteTreeNode> fichePostesEnfant;
 	private FichePosteTreeNode fichePosteParent;
-
+	
+	public FichePosteTreeNode(Integer _idFichePoste, Integer _idFichePosteParent, Integer _idAgent) {
+		this();
+		idFichePoste = _idFichePoste;
+		idFichePosteParent = _idFichePosteParent;
+		idAgent = _idAgent;
+	}
+	
 	public FichePosteTreeNode() {
 		fichePostesEnfant = new ArrayList<FichePosteTreeNode>();
 	}
@@ -28,6 +36,14 @@ public class FichePosteTreeNode {
 
 	public void setIdFichePosteParent(Integer idFichePosteParent) {
 		this.idFichePosteParent = idFichePosteParent;
+	}
+
+	public Integer getIdAgent() {
+		return idAgent;
+	}
+
+	public void setIdAgent(Integer idAgent) {
+		this.idAgent = idAgent;
 	}
 
 	public List<FichePosteTreeNode> getFichePostesEnfant() {
