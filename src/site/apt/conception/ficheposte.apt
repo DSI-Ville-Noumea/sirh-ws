@@ -1,0 +1,40 @@
+ -----
+ SIRH WS
+ -----
+ Noémie NICOLAS
+ -----
+  31/01/2013
+  
+Web Services des fiches de postes
+
+* Spécifications
+
+ Il s'agit des spécifications concernant les web services des fiches de poste.
+
+* Json
+
+** Voir la liste des fiches de postes dont la fiche de poste de l''agent paramètre est la responsable
+
+ URL : /fichePostes/getSubFichePostes?idAgent=90xxxx&maxDepth=[1-9]
+ 
+ idAgent: l'agent dont on veut avoir les fiches de poste subordonnées
+ maxDepth: le niveau de profondeur dans lequel rechercher ces agents (paramètre optionel, par défaut à 3)
+ 
++------------------------------------------+
+[
+   2258,
+   4905,
+   4384
+]
++------------------------------------------+
+
+** Reconstruire l'arbre des fiches de postes (qui est gardé en mémoire)
+
+ URL : /fichePostes/rebuildFichePosteTree
+ 
++------------------------------------------+
+[
+   HTTP: 200 si ok
+   HTTP: 500 si erreur durant la création
+]
++------------------------------------------+
