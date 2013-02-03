@@ -119,7 +119,7 @@ public class EaeController {
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
-		// on regarde si la personne connectÃ©e est chef
+		// on regarde si la personne connectée est chef
 		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
 		List<String> listService = null;
 		//Pour le moment suppression de cette partie en attendant l'arbre des fiche de poste
