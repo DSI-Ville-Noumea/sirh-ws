@@ -4,7 +4,5 @@ import java.util.List;
 
 public interface IEaeService {
 
-	List<Integer> listIdEaeByCampagneAndAgent(Integer idCampagneEae, Integer idAgent, List<String> listService);
-
-	Integer compterlistIdEaeByCampagneAndAgent(Integer idCampagneEae, Integer idAgent, List<String> listService);
+	Integer compterlistIdEaeByCampagneAndAgent(Integer idCampagneEae, List<Integer> idAgents, Integer idAgent);
 }
