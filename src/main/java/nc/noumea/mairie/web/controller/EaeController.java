@@ -78,15 +78,15 @@ public class EaeController {
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
-		// on regarde si la personne connectÃ©e est chef
-		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
-		List<String> listService = null;
+		// on regarde si la personne connectée est chef
+//		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
+//		List<String> listService = null;
 		/*if (estChef) {
 			// alors on regarde les sousService
 			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
 		}*/
-
-		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
+		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3);
+		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), listAgentsId, ag.getIdAgent());
 
 		if (nbEae == 0) {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
@@ -94,48 +94,6 @@ public class EaeController {
 
 		JSONObject jsonHabiliteEAE = new JSONObject();
 		return new ResponseEntity<String>(jsonHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
-	}
-
-	@ResponseBody
-	@RequestMapping("/listEaesByCampagne")
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> listEaesByCampagne(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
-		}
-		EaeCampagne campagneEnCours = null;
-		try {
-			campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
-		} catch (Exception e) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
-		}
-		if (campagneEnCours == null)
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
-
-		// on regarde si la personne connectée est chef
-		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
-		List<String> listService = null;
-		//Pour le moment suppression de cette partie en attendant l'arbre des fiche de poste
-		/*if (estChef) {
-			// alors on regarde les sousService
-			listService = siservSrv.getListServiceAgent(ag.getIdAgent());
-		}*/
-
-		List<Integer> listIdEaeCampagne = eaeService.listIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), ag.getIdAgent(), listService);
-
-		if (listIdEaeCampagne.isEmpty())
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
-
-		String jsonResult = new JSONSerializer().serialize(listIdEaeCampagne);
-
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
 
 	@ResponseBody
