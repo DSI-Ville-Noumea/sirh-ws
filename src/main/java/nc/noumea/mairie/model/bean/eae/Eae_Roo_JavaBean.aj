@@ -8,6 +8,7 @@ import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.model.bean.eae.EaeEvaluateur;
+import nc.noumea.mairie.model.bean.eae.EaeEvalue;
 import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 
 privileged aspect Eae_Roo_JavaBean {
@@ -42,6 +43,14 @@ privileged aspect Eae_Roo_JavaBean {
     
     public void Eae.setEaeFichePoste(EaeFichePoste eaeFichePoste) {
         this.eaeFichePoste = eaeFichePoste;
+    }
+    
+    public EaeEvalue Eae.getEaeEvalue() {
+        return this.eaeEvalue;
+    }
+    
+    public void Eae.setEaeEvalue(EaeEvalue eaeEvalue) {
+        this.eaeEvalue = eaeEvalue;
     }
     
     public Agent Eae.getAgentEvalue() {
