@@ -40,6 +40,9 @@ public class Eae {
 	@OneToOne(optional = false, mappedBy = "eae", fetch = FetchType.LAZY)
 	private EaeFichePoste eaeFichePoste;
 
+	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
+    private EaeEvalue eaeEvalue;
+	
 	/*
 	 * Transient properties (will be populated by AS400 entity manager)
 	 */

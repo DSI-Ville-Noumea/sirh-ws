@@ -19,19 +19,6 @@ Web Services des EAEs
 }
 +------------------------------------------+
 
-** Connaitre la liste des EAEs que l'agent à droit de voir
-
- URL : /eaes/listEaesByCampagne?idAgent=90xxxx
- 
-+------------------------------------------+
-[
-  1,
-  194,
-  195,
-  25942
-]
-+------------------------------------------+
-
 ** Connaitre la liste des délégataires que l'agent à le droit de choisir 
 
  URL : /eaes/listDelegataire?idAgent=90xxxx
