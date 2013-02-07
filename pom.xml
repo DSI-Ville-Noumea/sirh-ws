@@ -331,6 +331,11 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>sirhws##${maven.build.timestamp}-${project.version}</finalName>
