@@ -38,3 +38,38 @@ Web Services des fiches de postes
    HTTP: 500 si erreur durant la création
 ]
 +------------------------------------------+
+
+** Afficher une fiche de poste au format XML
+
+ URL : /fichePostes/xml/getFichePoste?idFichePoste=xxx
+ 
+ idFichePoste: l'ID technique de la fiche de poste à afficher
+ 
++------------------------------------------+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fichePosteDto>
+	<activites>Animation et pilotage d'équipe</activites>
+	<activites>Contrôle de l'application des règles et procédures administratives</activites>
+	<budget>BP budget primitif</budget>
+	<budgete>Temps complet </budgete>
+	<cadreEmploi>ADMINISTRATION GENERALE</cadreEmploi>
+	<comportementsProfessionnels>Aisance rédactionnelle, esprit de synthèse</comportementsProfessionnels>
+	<comportementsProfessionnels>Sens de l'anticipation</comportementsProfessionnels>
+	<direction>DIRECTION</direction>
+	<gradePoste>ATTACHE NORMAL </gradePoste>
+	<lieu>POLE JULES FERRY </lieu>
+	<missions>En charge d'une équipe, ...</missions>
+	<niveauEtudes>III</niveauEtudes>
+	<numero>1998/219</numero>
+	<reglementaire>Temps complet </reglementaire>
+	<savoirs>Comptabilité publique</savoirs>
+	<savoirs>Maîtrise des procédures administratives</savoirs>
+	<savoirsFaire>Animer des réunions</savoirsFaire>
+	<savoirsFaire>Encadrer et animer une équipe</savoirsFaire>
+	<savoirsFaire>Évaluer les risques lors de choix et de prise de décisions</savoirsFaire>
+	<section>SECTION</section>
+	<service>DGST Service Coordination Administration Finances </service>
+	<superieur>DIRECTEUR GENERAL DES SERVICES TECHNIQUES</superieur>
+	<titre>CHEF DE SERVICE</titre>
+</fichePosteDto>
++------------------------------------------+
