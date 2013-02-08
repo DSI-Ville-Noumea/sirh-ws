@@ -1,7 +1,6 @@
 package nc.noumea.mairie.web.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,49 +9,54 @@ import nc.noumea.mairie.model.bean.Activite;
 import nc.noumea.mairie.model.bean.Competence;
 import nc.noumea.mairie.model.bean.FichePoste;
 
-import org.joda.time.DateTime;
-
 @XmlRootElement
 public class FichePosteDto {
 
-	private String directionService;
+	private String numero;
+	private String titre;
+	private String direction;
+	private String budget;
+	private String budgete;
+	private String reglementaire;
+	private String cadreEmploi;
+	private String niveauEtudes;
+	private String service;
 	private String section;
-	private String filiereCadre;
-	private String corpsGrade;
-	private String categorie;
-	private String fEPrimaire;
-	private String fESecondaire;
-	private Date derniereModification;
-	private String intitulePoste;
+	private String lieu;
+	private String gradePoste;
 	private String superieur;
+
 	private String missions;
 	
 	private List<String> activites;
 	private List<String> savoirs;
 	private List<String> savoirsFaire;
-	private List<String> aptitudes;
+	private List<String> comportementsProfessionnels;
 	
 	public FichePosteDto() {
 		activites = new ArrayList<String>();
 		savoirs = new ArrayList<String>();
 		savoirsFaire = new ArrayList<String>();
-		aptitudes = new ArrayList<String>();
+		comportementsProfessionnels = new ArrayList<String>();
 	}
 	
 	public FichePosteDto(FichePoste fichePoste) {
 		this();
 		
-		directionService = String.format("%s - %s", fichePoste.getService().getDirection(), fichePoste.getService().getSigle());
-
-		section = "emploi formation";
-		filiereCadre = "pompiers / SIS";
-		corpsGrade = "Corps / Grade";
-		categorie = "A";
-		fEPrimaire = "ABC100";
-		fESecondaire = "DEF200";
-		derniereModification = new DateTime(2047, 11, 1, 0, 0, 0).toDate();
+		numero = fichePoste.getNumFP();
+		direction = fichePoste.getService().getDirection();
+		titre = fichePoste.getTitrePoste().getLibTitrePoste();
 		
-		intitulePoste = fichePoste.getTitrePoste().getLibTitrePoste();
+		budget = fichePoste.getBudget().getLibelleBudget();
+		budgete = fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste.getBudgete().getLibHor().trim();
+		reglementaire = fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire().getLibHor().trim();
+		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
+		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
+		service = fichePoste.getService().getDivision() == null ? "" : fichePoste.getService().getDivision().trim();
+		section = fichePoste.getService().getSection() == null ? "" : fichePoste.getService().getSection().trim();
+		lieu = fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu().trim();
+		gradePoste = fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste().getGradeInitial().trim();
+		
 		superieur = fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
 		
 		missions = fichePoste.getMissions();
@@ -61,6 +65,7 @@ public class FichePosteDto {
 			activites.add(act.getNomActivite());
 		
 		for(Competence cp : fichePoste.getCompetencesFDP()) {
+			
 			// 1 = Savoir
 			if(cp.getTypeCompetence().getIdTypeCompetence().equals(1))
 				savoirs.add(cp.getNomCompetence());
@@ -69,73 +74,119 @@ public class FichePosteDto {
 				savoirsFaire.add(cp.getNomCompetence());
 			// 3 = comportement professionnel
 			if(cp.getTypeCompetence().getIdTypeCompetence().equals(3))
-				aptitudes.add(cp.getNomCompetence());
+				comportementsProfessionnels.add(cp.getNomCompetence());
 		}
 	}
 	
-	public String getDirectionService() {
-		return directionService;
+	
+	public String getNumero() {
+		return numero;
 	}
-	public void setDirectionService(String directionService) {
-		this.directionService = directionService;
+
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public String getBudget() {
+		return budget;
+	}
+
+	public void setBudget(String budget) {
+		this.budget = budget;
+	}
+
+	public String getBudgete() {
+		return budgete;
+	}
+
+	public void setBudgete(String budgete) {
+		this.budgete = budgete;
+	}
+
+	public String getReglementaire() {
+		return reglementaire;
+	}
+
+	public void setReglementaire(String reglementaire) {
+		this.reglementaire = reglementaire;
+	}
+
+	public String getCadreEmploi() {
+		return cadreEmploi;
+	}
+
+	public void setCadreEmploi(String cadreEmploi) {
+		this.cadreEmploi = cadreEmploi;
+	}
+
+	public String getNiveauEtudes() {
+		return niveauEtudes;
+	}
+
+	public void setNiveauEtudes(String niveauEtudes) {
+		this.niveauEtudes = niveauEtudes;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
 	public String getSection() {
 		return section;
 	}
+
 	public void setSection(String section) {
 		this.section = section;
 	}
-	public String getFiliereCadre() {
-		return filiereCadre;
+
+	public String getLieu() {
+		return lieu;
 	}
-	public void setFiliereCadre(String filiereCadre) {
-		this.filiereCadre = filiereCadre;
+
+	public void setLieu(String lieu) {
+		this.lieu = lieu;
 	}
-	public String getCorpsGrade() {
-		return corpsGrade;
+
+	public String getGradePoste() {
+		return gradePoste;
 	}
-	public void setCorpsGrade(String corpsGrade) {
-		this.corpsGrade = corpsGrade;
+
+	public void setGradePoste(String gradePoste) {
+		this.gradePoste = gradePoste;
 	}
-	public String getCategorie() {
-		return categorie;
-	}
-	public void setCategorie(String categorie) {
-		this.categorie = categorie;
-	}
-	public String getfEPrimaire() {
-		return fEPrimaire;
-	}
-	public void setfEPrimaire(String fEPrimaire) {
-		this.fEPrimaire = fEPrimaire;
-	}
-	public String getfESecondaire() {
-		return fESecondaire;
-	}
-	public void setfESecondaire(String fESecondaire) {
-		this.fESecondaire = fESecondaire;
-	}
-	public Date getDerniereModification() {
-		return derniereModification;
-	}
-	public void setDerniereModification(Date derniereModification) {
-		this.derniereModification = derniereModification;
-	}
-	public String getIntitulePoste() {
-		return intitulePoste;
-	}
-	public void setIntitulePoste(String intitulePoste) {
-		this.intitulePoste = intitulePoste;
-	}
+
 	public String getSuperieur() {
 		return superieur;
 	}
+
 	public void setSuperieur(String superieur) {
 		this.superieur = superieur;
 	}
+
 	public String getMissions() {
 		return missions;
 	}
+
 	public void setMissions(String missions) {
 		this.missions = missions;
 	}
@@ -143,25 +194,33 @@ public class FichePosteDto {
 	public List<String> getActivites() {
 		return activites;
 	}
+	
 	public void setActivites(List<String> activites) {
 		this.activites = activites;
 	}
+	
 	public List<String> getSavoirs() {
 		return savoirs;
 	}
+	
 	public void setSavoirs(List<String> savoirs) {
 		this.savoirs = savoirs;
 	}
+	
 	public List<String> getSavoirsFaire() {
 		return savoirsFaire;
 	}
+	
 	public void setSavoirsFaire(List<String> savoirsFaire) {
 		this.savoirsFaire = savoirsFaire;
 	}
-	public List<String> getAptitudes() {
-		return aptitudes;
+
+	public List<String> getComportementsProfessionnels() {
+		return comportementsProfessionnels;
 	}
-	public void setAptitudes(List<String> aptitudes) {
-		this.aptitudes = aptitudes;
+
+	public void setComportementsProfessionnels(
+			List<String> comportementsProfessionnels) {
+		this.comportementsProfessionnels = comportementsProfessionnels;
 	}
 }
