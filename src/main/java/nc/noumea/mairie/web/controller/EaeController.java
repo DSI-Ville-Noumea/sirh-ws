@@ -78,7 +78,7 @@ public class EaeController {
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
-		// on regarde si la personne connectée est chef
+		// on regarde si la personne connectÃ©e est chef
 //		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
 //		List<String> listService = null;
 		/*if (estChef) {
