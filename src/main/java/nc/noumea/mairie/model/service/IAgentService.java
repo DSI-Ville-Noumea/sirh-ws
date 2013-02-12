@@ -11,7 +11,7 @@ public interface IAgentService {
 	 * 
 	 * @param id
 	 *            : id de l'agent concerné
-	 * @return
+	 * @return Agent
 	 */
 	public Agent getAgent(Integer id);
 

@@ -283,6 +283,7 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent

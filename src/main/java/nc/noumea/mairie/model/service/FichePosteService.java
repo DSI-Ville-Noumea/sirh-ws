@@ -158,7 +158,7 @@ public class FichePosteService implements IFichePosteService {
 	 * Liste les agents dont la fiche poste en paramètre est la responsable sur
 	 * une profondeur de maxDepth niveaux au maximum
 	 * @param idFichePosteResponsable
-	 * @return
+	 * @return List<Integer>
 	 */
 	@Override
 	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth) {
