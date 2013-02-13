@@ -36,7 +36,7 @@ public class FichePosteService implements IFichePosteService {
 	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour) {
 
 		FichePoste res = null;
-		Query query = sirhEntityManager.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
 				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", FichePoste.class);
 		query.setParameter("idAgent", idAgent);
@@ -63,7 +63,7 @@ public class FichePosteService implements IFichePosteService {
 	@Override
 	public FichePoste getFichePosteSecondaireAgentAffectationEnCours(Integer idAgent, Date dateJour) {
 		FichePoste res = null;
-		Query query = sirhEntityManager.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 				+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
 				+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
 				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", FichePoste.class);
@@ -81,7 +81,7 @@ public class FichePosteService implements IFichePosteService {
 	public String getTitrePosteAgent(Integer idAgent, Date dateJour) {
 
 		String res = null;
-		Query query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
+		TypedQuery<String> query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
 				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
 				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", String.class);
 		query.setParameter("idAgent", idAgent);

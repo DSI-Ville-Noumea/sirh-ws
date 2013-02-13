@@ -79,7 +79,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<roo.version>1.2.3.RELEASE</roo.version>
 		<slf4j.version>1.7.2</slf4j.version>
-		<spring.version>3.1.1.RELEASE</spring.version>
+		<spring.version>3.2.1.RELEASE</spring.version>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 	</properties>
 	<repositories>
@@ -163,7 +163,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>3.0-alpha-1</version>
+			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -234,12 +234,12 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>4.2.0.CR1</version>
+			<version>4.1.9.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.2.0.CR1</version>
+			<version>4.1.9.Final</version>
 			<exclusions>
 				<exclusion>
 					<groupId>cglib</groupId>
@@ -264,7 +264,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.0.0.Beta1</version>
+			<version>4.3.1.Final</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.xml.bind</groupId>
@@ -279,7 +279,7 @@
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>1.1.0.Beta3</version>
+			<version>1.0.0.GA</version>
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
@@ -301,6 +301,12 @@
 			<artifactId>spring-orm</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-pool</groupId>
 			<artifactId>commons-pool</artifactId>
@@ -339,7 +345,7 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>1.14</version>
+			<version>1.17</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -630,7 +636,7 @@
 						<configuration>
 							<tasks>
 								<copy todir="src/site/resources/war/${project.version}"
-									file="target/sirhws##${maven.build.timestamp}-${project.version}.war">		
+									file="target/sirhws##${maven.build.timestamp}-${project.version}.war">
 								</copy>
 								<checksum algorithm="md5">
 									<fileset dir="src/site/resources/war/${project.version}">

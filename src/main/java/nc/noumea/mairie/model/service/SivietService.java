@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.SIVIET;
 
@@ -21,10 +21,8 @@ public class SivietService implements ISivietService {
 
 		SIVIET res = null;
 
-		Query query = sirhEntityManager
-				.createQuery(
-						"select si from SIVIET si where si.id.codePays = :codePays and si.id.sousCodePays = :sousCodePays",
-						SIVIET.class);
+		TypedQuery<SIVIET> query = sirhEntityManager.createQuery(
+				"select si from SIVIET si where si.id.codePays = :codePays and si.id.sousCodePays = :sousCodePays", SIVIET.class);
 
 		query.setParameter("codePays", codePays);
 		query.setParameter("sousCodePays", codeCommune);

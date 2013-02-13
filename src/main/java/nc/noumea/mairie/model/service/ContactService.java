@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Contact;
 
@@ -18,9 +18,8 @@ public class ContactService implements IContactService {
 
 	@Override
 	public List<Contact> getContactsAgent(Long id) {
-		Query query = sirhEntityManager.createQuery(
-				"select contact from Contact contact "
-						+ "where contact.idAgent=:idAgent", Contact.class);
+		TypedQuery<Contact> query = sirhEntityManager.createQuery("select contact from Contact contact " + "where contact.idAgent=:idAgent",
+				Contact.class);
 		query.setParameter("idAgent", id.intValue());
 		List<Contact> lc = query.getResultList();
 
