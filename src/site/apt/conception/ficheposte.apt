@@ -39,6 +39,18 @@ Web Services des fiches de postes
 ]
 +------------------------------------------+
 
+** Télécharger le PDF d'une fiche de poste
+
+ URL : /fichePostes/downloadFichePoste?idFichePoste=xxx
+ 
++------------------------------------------+
+[
+   HTTP: 200 et le document au format PDF
+   HTTP: 404 si la fiche de poste n'existe pas
+   HTTP: 500 si erreur durant la création
+]
++------------------------------------------+
+
 ** Afficher une fiche de poste au format XML
 
  URL : /fichePostes/xml/getFichePoste?idFichePoste=xxx
