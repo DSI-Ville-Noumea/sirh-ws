@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Agent;
 
@@ -21,7 +22,7 @@ public class AgentService implements IAgentService {
 	public Agent getAgent(Integer id) {
 		Agent res = null;
 
-		Query query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent", Agent.class);
 
 		query.setParameter("idAgent", id);
 		List<Agent> lfp = query.getResultList();
@@ -34,7 +35,7 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent) {
-		Query query = sirhEntityManager.createQuery(
+		TypedQuery<Agent> query = sirhEntityManager.createQuery(
 				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
 						+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent " + " and aff.dateDebutAff<=:dateJour and "
 						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", Agent.class);
@@ -48,7 +49,7 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<String> listeCodeService) {
-		Query query = sirhEntityManager.createQuery(
+		TypedQuery<Agent> query = sirhEntityManager.createQuery(
 				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
 						+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
 						+ " and aff.dateDebutAff<=:dateJour and "

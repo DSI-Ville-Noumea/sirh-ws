@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.SpSold;
 
@@ -20,9 +20,7 @@ public class SoldeService implements ISoldeService {
 	public SpSold getSoldeConge(Integer nomatr) {
 		SpSold res = null;
 
-		Query query = sirhEntityManager.createQuery(
-				"select ag from SpSold ag where ag.nomatr = :nomatr",
-				SpSold.class);
+		TypedQuery<SpSold> query = sirhEntityManager.createQuery("select ag from SpSold ag where ag.nomatr = :nomatr", SpSold.class);
 
 		query.setParameter("nomatr", nomatr);
 		List<SpSold> ls = query.getResultList();
