@@ -6,10 +6,14 @@ import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.service.IAgentMatriculeConverterService;
 import nc.noumea.mairie.model.service.IFichePosteService;
+import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,11 +30,16 @@ import flexjson.JSONSerializer;
 @RequestMapping("/fichePostes")
 public class FichePosteController {
 
+	private Logger logger = LoggerFactory.getLogger(FichePosteController.class);
+	
 	@Autowired
 	private IFichePosteService fpSrv;
 	
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
+	
+	@Autowired
+	private IReportingService reportingService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/rebuildFichePosteTree")
@@ -64,6 +73,32 @@ public class FichePosteController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
 		
 		return new ResponseEntity<String>(new JSONSerializer().serialize(fichePosteIds), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/downloadFichePoste", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadFichePoste(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
+		
+		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
+		
+		if (fp == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+		
+		byte[] responseData = null;
+		
+		try {
+			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte []>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.pdf\"", fp.getNumFP().replace('/', '_')));
+		
+		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
 	}
 	
 	@ResponseBody
