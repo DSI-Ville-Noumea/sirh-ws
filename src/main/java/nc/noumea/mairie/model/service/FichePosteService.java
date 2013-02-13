@@ -126,7 +126,7 @@ public class FichePosteService implements IFichePosteService {
 	 * Liste les fiches postes dont la fiche poste en paramètre est la responsable sur
 	 * une profondeur de maxDepth niveaux au maximum
 	 * @param idFichePosteResponsable
-	 * @return
+	 * @return List<Integer>
 	 */
 	@Override
 	public List<Integer> getSubFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth) {
@@ -201,7 +201,7 @@ public class FichePosteService implements IFichePosteService {
 	 * Retourne l'instance de l'arbre des fiches de poste. Le construit de
 	 * manière thread-safe s'il n'existe pas
 	 * 
-	 * @return L'arbre des fiches de postes
+	 * @return Hashtable L'arbre des fiches de postes
 	 */
 	private Hashtable<Integer, FichePosteTreeNode> getFichePosteTree() {
 		return getFichePosteTree(false);
@@ -225,7 +225,7 @@ public class FichePosteService implements IFichePosteService {
 	/**
 	 * Construit un arbre hiérarchique des fiches de postes actives
 	 * 
-	 * @return l'arbre des fiches de postes
+	 * @return  Hashtablel'arbre des fiches de postes
 	 */
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
