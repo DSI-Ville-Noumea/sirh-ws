@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siguic;
 
@@ -21,10 +21,8 @@ public class SiguicService implements ISiguicService {
 
 		Siguic res = null;
 
-		Query query = sirhEntityManager
-				.createQuery(
-						"select si from Siguic si where si.id.codeBanque = :codeBanque and si.id.codeGuichet = :codeGuichet",
-						Siguic.class);
+		TypedQuery<Siguic> query = sirhEntityManager.createQuery(
+				"select si from Siguic si where si.id.codeBanque = :codeBanque and si.id.codeGuichet = :codeGuichet", Siguic.class);
 
 		query.setParameter("codeBanque", codeBanque);
 		query.setParameter("codeGuichet", codeGuichet);
