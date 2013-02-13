@@ -37,4 +37,13 @@
 		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual" 
 		maxWait="10000" initialSize="1" username="eae" password="eae" driverClassName="oracle.jdbc.driver.OracleDriver" 
 		url="jdbc:oracle:thin:@DVLP:1521:ORADEV" poolPreparedStatements="true" />
+		
+	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String"
+		description="SIRH reports path on Birt"
+		value="report/sirh-reports/" override="false" />
+
+	<Environment name="REPORTING_BASE_URL" type="java.lang.String"
+		description="BIRT report viewer base URL for SIRH reporting"
+		value="http://localhost:8085/birt/" override="false" />
+		
 </Context>
