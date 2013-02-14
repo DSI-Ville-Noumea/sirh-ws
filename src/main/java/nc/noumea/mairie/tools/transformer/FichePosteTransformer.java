@@ -103,6 +103,9 @@ public class FichePosteTransformer extends AbstractTransformer {
 		getContext().writeComma();
 		getContext().writeName("annee");
 		getContext().transform(fp.getAnnee());
+		getContext().writeComma();
+		getContext().writeName("ifFichePoste");
+		getContext().transform(fp.getIdFichePoste());
 
 		getContext().writeCloseObject();
 	}
