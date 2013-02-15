@@ -64,6 +64,7 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent) {
 		String sql = "select a.* from sirh.Affectation aff, sirh.Agent a "
 				+ "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
