@@ -29,6 +29,7 @@ public class AvancementsController {
 	@Transactional(readOnly = true)
 	public ModelAndView getTableauAvancements(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi) throws ParseException {
 		
+		avancementsService.getAgentsForCommission(0, 0);
 		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(0, 0);
 		
 		return new ModelAndView("xmlView", "object", dto);
