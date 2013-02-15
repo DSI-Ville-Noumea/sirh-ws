@@ -4,6 +4,7 @@
 package nc.noumea.mairie.model.bean;
 
 import nc.noumea.mairie.model.bean.CadreEmploi;
+import nc.noumea.mairie.model.bean.Spfili;
 import nc.noumea.mairie.model.bean.Spgeng;
 
 privileged aspect Spgeng_Roo_JavaBean {
@@ -30,6 +31,14 @@ privileged aspect Spgeng_Roo_JavaBean {
     
     public void Spgeng.setCadreEmploiGrade(CadreEmploi cadreEmploiGrade) {
         this.cadreEmploiGrade = cadreEmploiGrade;
+    }
+    
+    public Spfili Spgeng.getSpfili() {
+        return this.Spfili;
+    }
+    
+    public void Spgeng.setSpfili(Spfili Spfili) {
+        this.Spfili = Spfili;
     }
     
 }

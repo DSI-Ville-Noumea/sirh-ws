@@ -7,7 +7,10 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>nc.noumea.mairie.model.bean.Activite</class>
 		<class>nc.noumea.mairie.model.bean.ActiviteFP</class>
+		<class>nc.noumea.mairie.model.bean.AvancementFonctionnaire</class>
+		<class>nc.noumea.mairie.model.bean.AvisCap</class>
 		<class>nc.noumea.mairie.model.bean.CadreEmploi</class>
+		<class>nc.noumea.mairie.model.bean.Cap</class>
 		<class>nc.noumea.mairie.model.bean.Budget</class>
 		<class>nc.noumea.mairie.model.bean.Agent</class>
 		<class>nc.noumea.mairie.model.bean.Affectation</class>
@@ -30,6 +33,7 @@
 		<class>nc.noumea.mairie.model.bean.Spcong</class>
 		<class>nc.noumea.mairie.model.bean.Spgradn</class>
 		<class>nc.noumea.mairie.model.bean.Spgeng</class>
+		<class>nc.noumea.mairie.model.bean.Spfili</class>
 		<class>nc.noumea.mairie.model.bean.SpSold</class>
 		<class>nc.noumea.mairie.model.bean.StatutFichePoste</class>
 		<class>nc.noumea.mairie.model.bean.Sptyco</class>

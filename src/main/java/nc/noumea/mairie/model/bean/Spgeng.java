@@ -28,4 +28,8 @@ public class Spgeng {
 	@OneToOne(optional=true)
 	@JoinColumn(name = "IDCADREEMPLOI", referencedColumnName = "ID_CADRE_EMPLOI")
 	private CadreEmploi cadreEmploiGrade;
+	
+	@OneToOne(optional=true)
+	@JoinColumn(name = "CDFILI", referencedColumnName = "CDFILI")
+	private Spfili Spfili;
 }
