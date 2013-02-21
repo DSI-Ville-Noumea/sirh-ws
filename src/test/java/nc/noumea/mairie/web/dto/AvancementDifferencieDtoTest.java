@@ -102,8 +102,8 @@ public class AvancementDifferencieDtoTest {
 
 		// Then
 		assertEquals(2, dto.getEmployeurs().size());
-		assertTrue(dto.getEmployeurs().contains("libelle \n titre"));
-		assertTrue(dto.getEmployeurs().contains("libelle2 \n titre2"));
+		assertTrue(dto.getEmployeurs().contains("libelle\ntitre"));
+		assertTrue(dto.getEmployeurs().contains("libelle2\ntitre2"));
 	}
 	
 	@Test
