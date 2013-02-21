@@ -2,6 +2,8 @@ package nc.noumea.mairie.model.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,33 +33,51 @@ public class ReportingService implements IReportingService {
 	@Override
 	public byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception {
 		
-		ClientResponse response = createAndFireRequest(idFichePoste);
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("idFichePoste", idFichePoste);
 		
-		return readResponseAsByteArray(response, idFichePoste);
+		ClientResponse response = createAndFireRequest(map, "fichePoste.rptdesign");
+		
+		return readResponseAsByteArray(response, map);
 	}
 	
-	public ClientResponse createAndFireRequest(int id) {
+	@Override
+	public byte[] getTableauAvancementsReportAsByteArray(int idCap, int idCadreEmploi) throws Exception {
+
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("idCap", idCap);
+		map.put("idCadreEmploi", idCadreEmploi);
+		
+		ClientResponse response = createAndFireRequest(map, "avctFonctCap.rptdesign");
+		
+		return readResponseAsByteArray(response, map);
+	}
+	
+	public ClientResponse createAndFireRequest(Map<String, Integer> reportParameters, String reportName) {
 		
 		Client client = Client.create();
 
 		WebResource webResource = client
 				.resource(reportingBaseUrl + REPORT_PAGE)
-				.queryParam(PARAM_REPORT, reportServerPath + "fichePoste.rptdesign")
-				.queryParam(PARAM_FORMAT, "PDF")
-				.queryParam("idFichePoste", String.valueOf(id));
-
+				.queryParam(PARAM_REPORT, reportServerPath + reportName)
+				.queryParam(PARAM_FORMAT, "PDF");
+		
+		for(String key : reportParameters.keySet()) {
+			webResource = webResource.queryParam(key, String.valueOf(reportParameters.get(key)));
+		}
+		
 		ClientResponse response = webResource.get(ClientResponse.class);
 		
 		return response;
 	}
 
-	public byte[] readResponseAsByteArray(ClientResponse response, int id) throws Exception {
+	public byte[] readResponseAsByteArray(ClientResponse response, Map<String, Integer> reportParameters) throws Exception {
 		
 		if (response.getStatus() != HttpStatus.OK.value()) {
 			throw new Exception(
 					String.format(
-							"An error occured while querying the reporting server '%s' with id '%s'. HTTP Status code is : %s.",
-							reportingBaseUrl, id, response.getStatus()));
+							"An error occured while querying the reporting server '%s' with ids '%s'. HTTP Status code is : %s.",
+							reportingBaseUrl, getListOfParamsFromMap(reportParameters), response.getStatus()));
 		}
 		
 		byte[] reponseData = null;
@@ -75,5 +95,15 @@ public class ReportingService implements IReportingService {
 		
 		return reponseData;
 	}
-
+	
+	private String getListOfParamsFromMap(Map<String, Integer> reportParameters) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(String key : reportParameters.keySet()) {
+			sb.append(String.format("[%s: %s] ", key, String.valueOf(reportParameters.get(key))));
+		}
+		
+		return sb.toString();
+	}
 }
