@@ -1,6 +1,5 @@
 package nc.noumea.mairie.web.controller;
 
-import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.service.IAvancementsService;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
@@ -37,6 +36,9 @@ public class AvancementsController {
 	@Transactional(readOnly = true)
 	public ModelAndView getTableauAvancements(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi) throws ParseException {
 		
+		if (avancementsService.getCap(idCap) == null)
+			return new ModelAndView("xmlView", "object", new CommissionAvancementDto());
+		
 		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi);
 		
 		return new ModelAndView("xmlView", "object", dto);
@@ -47,9 +49,7 @@ public class AvancementsController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<byte[]> downloadTableauAvancements(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi) throws ParseException {
 		
-		Cap cap = Cap.findCap(idCap);
-		
-		if (cap == null)
+		if (avancementsService.getCap(idCap) == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 		
 		byte[] responseData = null;

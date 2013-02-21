@@ -5,8 +5,8 @@ import nc.noumea.mairie.model.bean.Spgeng;
 public class CommissionAvancementCorpsDto {
 
 	private String corps;
-	private AvancementDifferencieDto avancementsDifferencies;
-	private ChangementClasseDto changementClasses;
+	private AvancementsDto avancementsDifferencies;
+	private AvancementsDto changementClasses;
 
 	public CommissionAvancementCorpsDto() {
 		
@@ -24,20 +24,20 @@ public class CommissionAvancementCorpsDto {
 		this.corps = corps;
 	}
 
-	public AvancementDifferencieDto getAvancementsDifferencies() {
+	public AvancementsDto getAvancementsDifferencies() {
 		return avancementsDifferencies;
 	}
 
 	public void setAvancementsDifferencies(
-			AvancementDifferencieDto avancementsDifferencies) {
+			AvancementsDto avancementsDifferencies) {
 		this.avancementsDifferencies = avancementsDifferencies;
 	}
 
-	public ChangementClasseDto getChangementClasses() {
+	public AvancementsDto getChangementClasses() {
 		return changementClasses;
 	}
 
-	public void setChangementClasses(ChangementClasseDto changementClasses) {
+	public void setChangementClasses(AvancementsDto changementClasses) {
 		this.changementClasses = changementClasses;
 	}
 }

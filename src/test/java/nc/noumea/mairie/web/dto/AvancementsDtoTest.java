@@ -10,12 +10,12 @@ import nc.noumea.mairie.model.bean.Employeur;
 import nc.noumea.mairie.model.bean.Representant;
 import nc.noumea.mairie.model.bean.Spfili;
 import nc.noumea.mairie.model.bean.Spgeng;
-import nc.noumea.mairie.web.dto.avancements.AvancementDifferencieDto;
-import nc.noumea.mairie.web.dto.avancements.AvancementDifferencieItemDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 
 import org.junit.Test;
 
-public class AvancementDifferencieDtoTest {
+public class AvancementsDtoTest {
 
 	@Test
 	public void testAvancementDifferencieDto_COMMUNAL() {
@@ -34,7 +34,7 @@ public class AvancementDifferencieDtoTest {
 		int annee = 2014;
 		
 		// When
-		AvancementDifferencieDto dto = new AvancementDifferencieDto(cap, spgeng, annee);
+		AvancementsDto dto = new AvancementsDto(cap, spgeng, annee);
 
 		// Then
 		assertEquals("Texte CAP", dto.getDeliberationLibelle());
@@ -63,7 +63,7 @@ public class AvancementDifferencieDtoTest {
 		int annee = 2014;
 		
 		// When
-		AvancementDifferencieDto dto = new AvancementDifferencieDto(cap, spgeng, annee);
+		AvancementsDto dto = new AvancementsDto(cap, spgeng, annee);
 
 		// Then
 		assertEquals("Texte CAP", dto.getDeliberationLibelle());
@@ -98,7 +98,7 @@ public class AvancementDifferencieDtoTest {
 		cap.getEmployeurs().add(cE);
 		
 		// When
-		AvancementDifferencieDto dto = new AvancementDifferencieDto(cap, spgeng, annee);
+		AvancementsDto dto = new AvancementsDto(cap, spgeng, annee);
 
 		// Then
 		assertEquals(2, dto.getEmployeurs().size());
@@ -129,7 +129,7 @@ public class AvancementDifferencieDtoTest {
 		cap.getRepresentants().add(cR);
 		
 		// When
-		AvancementDifferencieDto dto = new AvancementDifferencieDto(cap, spgeng, annee);
+		AvancementsDto dto = new AvancementsDto(cap, spgeng, annee);
 
 		// Then
 		assertEquals(2, dto.getRepresentants().size());
@@ -140,10 +140,10 @@ public class AvancementDifferencieDtoTest {
 	@Test
 	public void testupdateNbAgents_3Agents() {
 		// Given 
-		AvancementDifferencieDto dto = new AvancementDifferencieDto();
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
+		AvancementsDto dto = new AvancementsDto();
+		dto.getAvancementsItems().add(new AvancementItemDto());
+		dto.getAvancementsItems().add(new AvancementItemDto());
+		dto.getAvancementsItems().add(new AvancementItemDto());
 		
 		// When
 		dto.updateNbAgents();
@@ -156,11 +156,11 @@ public class AvancementDifferencieDtoTest {
 	@Test
 	public void testupdateNbAgents_4Agents() {
 		// Given 
-		AvancementDifferencieDto dto = new AvancementDifferencieDto();
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
-		dto.getAvancementDifferencieItems().add(new AvancementDifferencieItemDto());
+		AvancementsDto dto = new AvancementsDto();
+		dto.getAvancementsItems().add(new AvancementItemDto());
+		dto.getAvancementsItems().add(new AvancementItemDto());
+		dto.getAvancementsItems().add(new AvancementItemDto());
+		dto.getAvancementsItems().add(new AvancementItemDto());
 		
 		// When
 		dto.updateNbAgents();
