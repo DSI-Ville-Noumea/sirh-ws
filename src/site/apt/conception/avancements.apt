@@ -66,3 +66,20 @@ Web Services des avancements
 	</commissionAvancementDto>
 ]
 +------------------------------------------+
+
+* PDF
+
+** Télécharger le tableau des avancements d'une Cap pour un CadreEmploi au format PDF
+
+ URL : /avancements/BdownloadTableauAvancements?idCap=A&idCadreEmploi=B
+ 
+ idCap: l'id de la CAP dont on souhaite les données pour impression
+ idCadreEmploi: l'id du CadreEmploi pour la cap dont on souhaite les données pour impression
+ 
++------------------------------------------+
+[
+   HTTP: 200 et le document au format PDF
+   HTTP: 404 si la CAP n'existe pas
+   HTTP: 500 si erreur durant la création
+]
++------------------------------------------+

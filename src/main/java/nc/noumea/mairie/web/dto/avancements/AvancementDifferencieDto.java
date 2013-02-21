@@ -53,7 +53,7 @@ public class AvancementDifferencieDto {
 		this.employeur = "Ville de Nouméa";
 		
 		for (CapEmployeur cE : cap.getEmployeurs()) {
-			getEmployeurs().add(String.format("%s \n %s", cE.getEmployeur().getLibelle(), cE.getEmployeur().getTitre()));
+			getEmployeurs().add(String.format("%s\n%s", cE.getEmployeur().getLibelle(), cE.getEmployeur().getTitre()));
 		}
 		
 		for (CapRepresentant cR : cap.getRepresentants()) {
