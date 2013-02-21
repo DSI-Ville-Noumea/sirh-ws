@@ -7,15 +7,15 @@ import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.AvisCap;
 import nc.noumea.mairie.model.bean.Spgradn;
-import nc.noumea.mairie.web.dto.avancements.AvancementDifferencieItemDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-public class AvancementDifferencieItemDtoTest {
+public class AvancementItemDtoTest {
 
 	@Test
-	public void testAvancementDifferencieItemDto_Max() {
+	public void testAvancementItemDto_Max() {
 		
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
@@ -30,7 +30,7 @@ public class AvancementDifferencieItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementDifferencieItemDto dto = new AvancementDifferencieItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct);
 		
 		// Then
 		assertEquals("Bob", dto.getPrenom());
@@ -40,11 +40,12 @@ public class AvancementDifferencieItemDtoTest {
 		assertFalse(dto.isDureeMin());
 		assertFalse(dto.isDureeMoy());
 		assertTrue(dto.isDureeMax());
+		assertFalse(dto.isFavorable());
 		assertEquals("UNO", dto.getClassement());
 	}
 	
 	@Test
-	public void testAvancementDifferencieItemDto_Moy() {
+	public void testAvancementItemDto_Moy() {
 		
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
@@ -59,15 +60,16 @@ public class AvancementDifferencieItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementDifferencieItemDto dto = new AvancementDifferencieItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct);
 		
 		assertFalse(dto.isDureeMin());
 		assertTrue(dto.isDureeMoy());
 		assertFalse(dto.isDureeMax());
+		assertFalse(dto.isFavorable());
 	}
 	
 	@Test
-	public void testAvancementDifferencieItemDto_Min() {
+	public void testAvancementItemDto_Min() {
 		
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
@@ -82,10 +84,59 @@ public class AvancementDifferencieItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementDifferencieItemDto dto = new AvancementDifferencieItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct);
 		
 		assertTrue(dto.isDureeMin());
 		assertFalse(dto.isDureeMoy());
 		assertFalse(dto.isDureeMax());
+		assertFalse(dto.isFavorable());
+	}
+	
+	@Test
+	public void testAvancementItemDto_Favorable() {
+		
+		// Given
+		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgent(new Agent());
+		avct.getAgent().setNomUsage("LEPONGE");
+		avct.getAgent().setPrenomUsage("Bob");
+		avct.setGrade(new Spgradn());
+		avct.getGrade().setGradeInitial("EPONGE");
+		avct.setDateAvctMoy(new DateTime(2013, 02,  25, 0, 0, 0).toDate());
+		avct.setAvisCap(new AvisCap());
+		avct.getAvisCap().setIdAvisCap(4);
+		avct.setOrdreMerite("UNO");
+		
+		// When
+		AvancementItemDto dto = new AvancementItemDto(avct);
+		
+		assertFalse(dto.isDureeMin());
+		assertFalse(dto.isDureeMoy());
+		assertFalse(dto.isDureeMax());
+		assertTrue(dto.isFavorable());
+	}
+	
+	@Test
+	public void testAvancementItemDto_Defavorable() {
+		
+		// Given
+		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgent(new Agent());
+		avct.getAgent().setNomUsage("LEPONGE");
+		avct.getAgent().setPrenomUsage("Bob");
+		avct.setGrade(new Spgradn());
+		avct.getGrade().setGradeInitial("EPONGE");
+		avct.setDateAvctMoy(new DateTime(2013, 02,  25, 0, 0, 0).toDate());
+		avct.setAvisCap(new AvisCap());
+		avct.getAvisCap().setIdAvisCap(5);
+		avct.setOrdreMerite("UNO");
+		
+		// When
+		AvancementItemDto dto = new AvancementItemDto(avct);
+		
+		assertFalse(dto.isDureeMin());
+		assertFalse(dto.isDureeMoy());
+		assertFalse(dto.isDureeMax());
+		assertFalse(dto.isFavorable());
 	}
 }

@@ -21,50 +21,86 @@ Web Services des avancements
  idCadreEmploi: l'id du CadreEmploi pour la cap dont on souhaite les données pour impression
  
 +------------------------------------------+
-[
 	<?xml version="1.0" encoding="UTF-8"?>
 	<commissionAvancementDto>
 	  <commissionsParCorps>
 		<avancementsDifferencies>
 		  <annee>2013</annee>
-		  <avancementDifferencieItems>
+		  <avancementsItems>
 			<datePrevisionnelleAvancement>2013-07-20T00:00:00+11:00</datePrevisionnelleAvancement>
 			<dureeMax>false</dureeMax>
 			<dureeMin>false</dureeMin>
 			<dureeMoy>true</dureeMoy>
+			<favorable>false</favorable>
 			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
 			<nom>MOLEANA</nom>
 			<prenom>GIOVANNA</prenom>
-		  </avancementDifferencieItems>
-		  <avancementDifferencieItems>
+		  </avancementsItems>
+		  <avancementsItems>
 			<datePrevisionnelleAvancement>2013-06-05T00:00:00+11:00</datePrevisionnelleAvancement>
 			<dureeMax>false</dureeMax>
 			<dureeMin>false</dureeMin>
 			<dureeMoy>true</dureeMoy>
+			<favorable>false</favorable>
 			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
 			<nom>WIROTAROENO</nom>
 			<prenom>SANDRINE</prenom>
-		  </avancementDifferencieItems>
+		  </avancementsItems>
 		  <cadreEmploiLibelle>beau texte cap ! nah</cadreEmploiLibelle>
 		  <cap>BLA</cap>
 		  <categorie>A</categorie>
 		  <deliberationLibelle>statut particulier du cadre des postes et télécommunications de la  Nouvelle calédonie</deliberationLibelle>
 		  <employeur>Ville de Nouméa</employeur>
-		  <employeurs>M.Jean LEQUES 
-	 Mairie de la ville de Nouméa ou son représentant</employeurs>
-		  <employeurs>MM. Georges NATUREL ou Jean-Luc CHEVALIER 
-	 Représentant de l'association française des maires de Nouvelle-Calédonie</employeurs>
+		  <employeurs>M.Jean LEQUES
+	Mairie de la ville de Nouméa ou son représentant</employeurs>
+		  <employeurs>MM. Georges NATUREL ou Jean-Luc CHEVALIER
+	Représentant de l'association française des maires de Nouvelle-Calédonie</employeurs>
 		  <filiere>A</filiere>
 		  <nbAgents>2</nbAgents>
 		  <quotaAvancementDureeMinimale>0</quotaAvancementDureeMinimale>
 		  <representants>PITOUT CÉDRIC</representants>
 		  <representants>HOFFSCHIR HORTENSIA</representants>
 		</avancementsDifferencies>
-		<changementClasses />
+		<changementClasses>
+		  <annee>2013</annee>
+		  <avancementsItems>
+			<datePrevisionnelleAvancement>2013-07-20T00:00:00+11:00</datePrevisionnelleAvancement>
+			<dureeMax>false</dureeMax>
+			<dureeMin>false</dureeMin>
+			<dureeMoy>false</dureeMoy>
+			<favorable>true</favorable>
+			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
+			<nom>MOLEANA</nom>
+			<prenom>GIOVANNA</prenom>
+		  </avancementsItems>
+		  <avancementsItems>
+			<datePrevisionnelleAvancement>2013-06-05T00:00:00+11:00</datePrevisionnelleAvancement>
+			<dureeMax>false</dureeMax>
+			<dureeMin>false</dureeMin>
+			<dureeMoy>false</dureeMoy>
+			<favorable>false</favorable>
+			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
+			<nom>WIROTAROENO</nom>
+			<prenom>SANDRINE</prenom>
+		  </avancementsItems>
+		  <cadreEmploiLibelle>beau texte cap ! nah</cadreEmploiLibelle>
+		  <cap>BLA</cap>
+		  <categorie>A</categorie>
+		  <deliberationLibelle>statut particulier du cadre des postes et télécommunications de la  Nouvelle calédonie</deliberationLibelle>
+		  <employeur>Ville de Nouméa</employeur>
+		  <employeurs>M.Jean LEQUES
+	Mairie de la ville de Nouméa ou son représentant</employeurs>
+		  <employeurs>MM. Georges NATUREL ou Jean-Luc CHEVALIER
+	Représentant de l'association française des maires de Nouvelle-Calédonie</employeurs>
+		  <filiere>A</filiere>
+		  <nbAgents>2</nbAgents>
+		  <quotaAvancementDureeMinimale>0</quotaAvancementDureeMinimale>
+		  <representants>PITOUT CÉDRIC</representants>
+		  <representants>HOFFSCHIR HORTENSIA</representants>
+		</changementClasses>
 		<corps>ADJA</corps>
 	  </commissionsParCorps>
 	</commissionAvancementDto>
-]
 +------------------------------------------+
 
 * PDF
