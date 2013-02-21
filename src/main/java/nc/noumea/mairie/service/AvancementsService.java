@@ -42,6 +42,10 @@ public class AvancementsService implements IAvancementsService {
 		
 		for (Spgeng corp : corps) {
 			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
+			
+			if (avcts.size() == 0)
+				continue;
+			
 			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts);
 			result.getCommissionsParCorps().add(comCorps);
 		}
