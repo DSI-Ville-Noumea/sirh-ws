@@ -43,6 +43,7 @@
         	<item name="Agent" href="conception/agent.html"/>
         	<item name="EAE" href="conception/eae.html"/>
 			<item name="FichePoste" href="conception/ficheposte.html"/>
+			<item name="Avancements" href="conception/avancements.html"/>
         </menu>
 		<menu name="FAQ">
         	<item name="SIE" href="sie.html"/>

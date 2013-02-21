@@ -60,6 +60,7 @@ public class EaeController {
 
 	@RequestMapping(value = "/estHabiliteEAE", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentHabilite(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");

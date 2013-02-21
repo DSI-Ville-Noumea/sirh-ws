@@ -3,6 +3,11 @@ package nc.noumea.mairie.web.dto.avancements;
 import java.util.ArrayList;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Cap;
+import nc.noumea.mairie.model.bean.CapEmployeur;
+import nc.noumea.mairie.model.bean.CapRepresentant;
+import nc.noumea.mairie.model.bean.Spgeng;
+
 public class AvancementDifferencieDto {
 
 	private int annee;
@@ -27,7 +32,40 @@ public class AvancementDifferencieDto {
 		employeurs = new ArrayList<String>();
 		representants = new ArrayList<String>();
 	}
+	
+	public AvancementDifferencieDto(Cap cap, Spgeng spgeng, int annee) {
+		this();
+		
+		if (cap.getTypeCap() != null) {
+			if (cap.getTypeCap().equals("TERRITORIAL") && spgeng.getDeliberationTerritoriale() != null)
+				this.deliberationLibelle = spgeng.getDeliberationTerritoriale().getTexteCap();
+			else if (cap.getTypeCap().equals("COMMUNAL") && spgeng.getDeliberationCommunale() != null)
+				this.deliberationLibelle = spgeng.getDeliberationCommunale().getTexteCap();
+		}
+		
+		if (spgeng.getSpfili() != null)
+			this.filiere = spgeng.getSpfili().getCdfili();
+		
+		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi().trim();
+		this.cap = cap.getRefCap();
+		this.annee = annee;
+		this.categorie = spgeng.getCdcadr() == null ? null : spgeng.getCdcadr().trim();
+		this.employeur = "Ville de Nouméa";
+		
+		for (CapEmployeur cE : cap.getEmployeurs()) {
+			getEmployeurs().add(String.format("%s \n %s", cE.getEmployeur().getLibelle(), cE.getEmployeur().getTitre()));
+		}
+		
+		for (CapRepresentant cR : cap.getRepresentants()) {
+			getRepresentants().add(String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
+		}
+	}
 
+	public void updateNbAgents() {
+		this.nbAgents = avancementDifferencieItems.size();
+		this.quotaAvancementDureeMinimale = (int)(this.nbAgents * 0.33);
+	}
+	
 	public int getAnnee() {
 		return annee;
 	}
