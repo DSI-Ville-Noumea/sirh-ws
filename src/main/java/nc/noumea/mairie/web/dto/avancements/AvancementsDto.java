@@ -8,7 +8,7 @@ import nc.noumea.mairie.model.bean.CapEmployeur;
 import nc.noumea.mairie.model.bean.CapRepresentant;
 import nc.noumea.mairie.model.bean.Spgeng;
 
-public class AvancementDifferencieDto {
+public class AvancementsDto {
 
 	private int annee;
 	private String deliberationLibelle;
@@ -20,52 +20,56 @@ public class AvancementDifferencieDto {
 	private int nbAgents;
 	private int quotaAvancementDureeMinimale;
 
-	private List<AvancementDifferencieItemDto> avancementDifferencieItems;
+	private List<AvancementItemDto> avancementsItems;
 
 	private String president;
 
 	private List<String> employeurs;
 	private List<String> representants;
 
-	public AvancementDifferencieDto() {
-		avancementDifferencieItems = new ArrayList<AvancementDifferencieItemDto>();
+	public AvancementsDto() {
+		avancementsItems = new ArrayList<AvancementItemDto>();
 		employeurs = new ArrayList<String>();
 		representants = new ArrayList<String>();
 	}
-	
-	public AvancementDifferencieDto(Cap cap, Spgeng spgeng, int annee) {
+
+	public AvancementsDto(Cap cap, Spgeng spgeng, int annee) {
 		this();
-		
+
 		if (cap.getTypeCap() != null) {
 			if (cap.getTypeCap().equals("TERRITORIAL") && spgeng.getDeliberationTerritoriale() != null)
 				this.deliberationLibelle = spgeng.getDeliberationTerritoriale().getTexteCap();
 			else if (cap.getTypeCap().equals("COMMUNAL") && spgeng.getDeliberationCommunale() != null)
 				this.deliberationLibelle = spgeng.getDeliberationCommunale().getTexteCap();
 		}
-		
+
 		if (spgeng.getSpfili() != null)
 			this.filiere = spgeng.getSpfili().getCdfili();
-		
+
 		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi().trim();
 		this.cap = cap.getRefCap();
 		this.annee = annee;
 		this.categorie = spgeng.getCdcadr() == null ? null : spgeng.getCdcadr().trim();
 		this.employeur = "Ville de Nouméa";
-		
+
 		for (CapEmployeur cE : cap.getEmployeurs()) {
-			getEmployeurs().add(String.format("%s\n%s", cE.getEmployeur().getLibelle(), cE.getEmployeur().getTitre()));
+			getEmployeurs().add(
+					String.format("%s\n%s", cE.getEmployeur().getLibelle(), cE
+							.getEmployeur().getTitre()));
 		}
-		
+
 		for (CapRepresentant cR : cap.getRepresentants()) {
-			getRepresentants().add(String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
+			getRepresentants().add(
+					String.format("%s %s", cR.getRepresentant().getNom(), cR
+							.getRepresentant().getPrenom()));
 		}
 	}
 
 	public void updateNbAgents() {
-		this.nbAgents = avancementDifferencieItems.size();
-		this.quotaAvancementDureeMinimale = (int)(this.nbAgents * 0.33);
+		this.nbAgents = avancementsItems.size();
+		this.quotaAvancementDureeMinimale = (int) (this.nbAgents * 0.33);
 	}
-	
+
 	public int getAnnee() {
 		return annee;
 	}
@@ -138,13 +142,12 @@ public class AvancementDifferencieDto {
 		this.quotaAvancementDureeMinimale = quotaAvancementDureeMinimale;
 	}
 
-	public List<AvancementDifferencieItemDto> getAvancementDifferencieItems() {
-		return avancementDifferencieItems;
+	public List<AvancementItemDto> getAvancementsItems() {
+		return avancementsItems;
 	}
 
-	public void setAvancementDifferencieItems(
-			List<AvancementDifferencieItemDto> avancementDifferencieItems) {
-		this.avancementDifferencieItems = avancementDifferencieItems;
+	public void setAvancementsItems(List<AvancementItemDto> avancementsItems) {
+		this.avancementsItems = avancementsItems;
 	}
 
 	public String getPresident() {

@@ -91,8 +91,8 @@ public class AvancementsServiceTest {
 		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list);
 		
 		// Then
-		assertEquals(2, dto.getAvancementsDifferencies().getAvancementDifferencieItems().size());
-		assertEquals(0, dto.getChangementClasses().getChangementClasseItems().size());
+		assertEquals(2, dto.getAvancementsDifferencies().getAvancementsItems().size());
+		assertEquals(0, dto.getChangementClasses().getAvancementsItems().size());
 	}
 	
 	@Test
@@ -112,8 +112,8 @@ public class AvancementsServiceTest {
 		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list);
 		
 		// Then
-		assertEquals(0, dto.getAvancementsDifferencies().getAvancementDifferencieItems().size());
-		assertEquals(2, dto.getChangementClasses().getChangementClasseItems().size());
+		assertEquals(0, dto.getAvancementsDifferencies().getAvancementsItems().size());
+		assertEquals(2, dto.getChangementClasses().getAvancementsItems().size());
 	}
 	
 	@Test
