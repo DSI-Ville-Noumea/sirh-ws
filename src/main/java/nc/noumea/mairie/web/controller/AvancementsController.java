@@ -4,8 +4,6 @@ import nc.noumea.mairie.service.IAvancementsService;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/avancements/xml")
 public class AvancementsController {
 
-	private Logger logger = LoggerFactory.getLogger(AvancementsController.class);
-	
 	@Autowired
 	private IAvancementsService avancementsService;
 	
@@ -29,8 +25,7 @@ public class AvancementsController {
 	@Transactional(readOnly = true)
 	public ModelAndView getTableauAvancements(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi) throws ParseException {
 		
-		avancementsService.getAgentsForCommission(0, 0);
-		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(0, 0);
+		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi);
 		
 		return new ModelAndView("xmlView", "object", dto);
 	}

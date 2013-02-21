@@ -5,6 +5,8 @@ package nc.noumea.mairie.model.bean;
 
 import java.util.Set;
 import nc.noumea.mairie.model.bean.Cap;
+import nc.noumea.mairie.model.bean.CapEmployeur;
+import nc.noumea.mairie.model.bean.CapRepresentant;
 import nc.noumea.mairie.model.bean.Spgeng;
 
 privileged aspect Cap_Roo_JavaBean {
@@ -47,6 +49,22 @@ privileged aspect Cap_Roo_JavaBean {
     
     public void Cap.setCorps(Set<Spgeng> corps) {
         this.corps = corps;
+    }
+    
+    public Set<CapEmployeur> Cap.getEmployeurs() {
+        return this.employeurs;
+    }
+    
+    public void Cap.setEmployeurs(Set<CapEmployeur> employeurs) {
+        this.employeurs = employeurs;
+    }
+    
+    public Set<CapRepresentant> Cap.getRepresentants() {
+        return this.representants;
+    }
+    
+    public void Cap.setRepresentants(Set<CapRepresentant> representants) {
+        this.representants = representants;
     }
     
 }
