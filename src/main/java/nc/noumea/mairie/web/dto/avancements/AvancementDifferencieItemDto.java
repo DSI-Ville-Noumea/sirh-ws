@@ -2,6 +2,8 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import java.util.Date;
 
+import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
+
 public class AvancementDifferencieItemDto {
 
 	private String nom;
@@ -11,7 +13,39 @@ public class AvancementDifferencieItemDto {
 	private boolean dureeMin;
 	private boolean dureeMoy;
 	private boolean dureeMax;
-	private int classement;
+	private String classement;
+	
+	public AvancementDifferencieItemDto() {
+		
+	}
+	
+	public AvancementDifferencieItemDto (AvancementFonctionnaire avct) {
+		
+		if (avct.getAgent() != null) {
+			this.nom = avct.getAgent().getDisplayNom();
+			this.prenom = avct.getAgent().getDisplayPrenom();
+		}
+		
+		if (avct.getGrade() != null)
+			this.grade = avct.getGrade().getGradeInitial().trim();
+		
+		this.datePrevisionnelleAvancement = avct.getDateAvctMoy();
+		this.classement = avct.getOrdreMerite();
+		
+		if (avct.getAvisCap() != null) {
+			switch(avct.getAvisCap().getIdAvisCap()) {
+				case 1:
+					this.dureeMin = true;
+					break;
+				case 2:
+					this.dureeMoy = true;
+					break;
+				case 3:
+					this.dureeMax = true;
+					break;
+			}
+		}
+	}
 	
 	public String getNom() {
 		return nom;
@@ -55,10 +89,10 @@ public class AvancementDifferencieItemDto {
 	public void setDureeMax(boolean dureeMax) {
 		this.dureeMax = dureeMax;
 	}
-	public int getClassement() {
+	public String getClassement() {
 		return classement;
 	}
-	public void setClassement(int classement) {
+	public void setClassement(String classement) {
 		this.classement = classement;
 	}
 }

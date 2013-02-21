@@ -25,7 +25,7 @@ public class AvancementFonctionnaire {
 	private AvisCap avisCap;
 	
 	@Column(name = "ID_MOTIF_AVCT")
-	private int idModifAvancement;
+	private Integer idModifAvancement;
 	
 	@Column(name = "ETAT", columnDefinition = "char")
 	private String etat;
@@ -36,8 +36,9 @@ public class AvancementFonctionnaire {
 	@Column(name = "FILIERE")
 	private String filiere;
 	
-	@Column(name = "GRADE")
-	private String grade;
+	@ManyToOne
+	@JoinColumn(name = "GRADE")
+	private Spgradn grade;
 	
 	@Column(name = "LIB_GRADE")
 	private String gradeLibelle;
@@ -67,4 +68,7 @@ public class AvancementFonctionnaire {
 
 	@Column(name = "ANNEE")
 	private int anneeAvancement;
+	
+	@Column(name = "ORDRE_MERITE")
+	private String ordreMerite;
 }

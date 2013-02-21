@@ -46,7 +46,7 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
 
-	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ParentEnfant> parentEnfants = new HashSet<ParentEnfant>();
 
 	@Transient
@@ -112,7 +112,7 @@ public class Agent {
 	@Temporal(TemporalType.DATE)
 	private Date dateNaissance;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_SITUATION_FAMILIALE", referencedColumnName = "ID_SITUATION")
 	private SituationFamiliale situationFamiliale;
 
@@ -134,7 +134,7 @@ public class Agent {
 	@Column(name = "NUM_CLR")
 	private String numClr;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODE_COMMUNE_NAISS_FR", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneNaissFr;
 
@@ -165,7 +165,7 @@ public class Agent {
 	@Transient
 	private String banque;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_VOIE", referencedColumnName = "CDVOIE")
 	private Sivoie voie;
 
@@ -184,11 +184,11 @@ public class Agent {
 	@Column(name = "NUM_RUE_BIS_TER")
 	private String bisTer;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CCOM_VILLE_DOM", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneVilleDom;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CCOM_VILLE_BP", referencedColumnName = "CODCOM")
 	private Sicomm codeCommuneVilleBP;
 
@@ -204,6 +204,22 @@ public class Agent {
 	@Transient
 	private String position;
 
+	public String getDisplayPrenom() {
+    	if (getPrenomUsage() != null && !getPrenomUsage().isEmpty())
+    		return getPrenomUsage();
+    	else
+    		return getPrenom();
+    }
+    
+    public String getDisplayNom() {
+    	if (getNomMarital() != null && !getNomMarital().isEmpty())
+    		return getNomMarital();
+    	else if (getNomUsage() != null && !getNomUsage().isEmpty())
+    		return getNomUsage();
+    	else
+    		return getNomPatronymique();
+    }
+    
 	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToHierarchiqueTransformer(), Agent.class).transform(
 				new StringTrimTransformer(), String.class);

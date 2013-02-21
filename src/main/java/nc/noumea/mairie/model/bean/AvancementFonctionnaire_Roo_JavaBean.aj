@@ -7,6 +7,7 @@ import java.util.Date;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.AvisCap;
+import nc.noumea.mairie.model.bean.Spgradn;
 
 privileged aspect AvancementFonctionnaire_Roo_JavaBean {
     
@@ -26,11 +27,11 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.avisCap = avisCap;
     }
     
-    public int AvancementFonctionnaire.getIdModifAvancement() {
+    public Integer AvancementFonctionnaire.getIdModifAvancement() {
         return this.idModifAvancement;
     }
     
-    public void AvancementFonctionnaire.setIdModifAvancement(int idModifAvancement) {
+    public void AvancementFonctionnaire.setIdModifAvancement(Integer idModifAvancement) {
         this.idModifAvancement = idModifAvancement;
     }
     
@@ -58,11 +59,11 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.filiere = filiere;
     }
     
-    public String AvancementFonctionnaire.getGrade() {
+    public Spgradn AvancementFonctionnaire.getGrade() {
         return this.grade;
     }
     
-    public void AvancementFonctionnaire.setGrade(String grade) {
+    public void AvancementFonctionnaire.setGrade(Spgradn grade) {
         this.grade = grade;
     }
     
@@ -136,6 +137,14 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
     
     public void AvancementFonctionnaire.setAnneeAvancement(int anneeAvancement) {
         this.anneeAvancement = anneeAvancement;
+    }
+    
+    public String AvancementFonctionnaire.getOrdreMerite() {
+        return this.ordreMerite;
+    }
+    
+    public void AvancementFonctionnaire.setOrdreMerite(String ordreMerite) {
+        this.ordreMerite = ordreMerite;
     }
     
 }

@@ -1,0 +1,68 @@
+ -----
+ SIRH WS
+ -----
+ Nicolas RAYNAUD
+ -----
+  21/02/2013
+  
+Web Services des avancements
+
+* Spécifications
+
+ Il s'agit des spécifications concernant les web services des avancements.
+
+* Xml
+
+** Retourner les données nécessaires à l'établissement du document de préparation d'une commission d'avancement (CAP)
+
+ URL : /avancements/xml/getTableauAvancements?idCap=A&idCadreEmploi=B
+ 
+ idCap: l'id de la CAP dont on souhaite les données pour impression
+ idCadreEmploi: l'id du CadreEmploi pour la cap dont on souhaite les données pour impression
+ 
++------------------------------------------+
+[
+	<?xml version="1.0" encoding="UTF-8"?>
+	<commissionAvancementDto>
+	  <commissionsParCorps>
+		<avancementsDifferencies>
+		  <annee>2013</annee>
+		  <avancementDifferencieItems>
+			<datePrevisionnelleAvancement>2013-07-20T00:00:00+11:00</datePrevisionnelleAvancement>
+			<dureeMax>false</dureeMax>
+			<dureeMin>false</dureeMin>
+			<dureeMoy>true</dureeMoy>
+			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
+			<nom>MOLEANA</nom>
+			<prenom>GIOVANNA</prenom>
+		  </avancementDifferencieItems>
+		  <avancementDifferencieItems>
+			<datePrevisionnelleAvancement>2013-06-05T00:00:00+11:00</datePrevisionnelleAvancement>
+			<dureeMax>false</dureeMax>
+			<dureeMin>false</dureeMin>
+			<dureeMoy>true</dureeMoy>
+			<grade>ADJOINT ADMINISTRATIF NORMAL</grade>
+			<nom>WIROTAROENO</nom>
+			<prenom>SANDRINE</prenom>
+		  </avancementDifferencieItems>
+		  <cadreEmploiLibelle>beau texte cap ! nah</cadreEmploiLibelle>
+		  <cap>BLA</cap>
+		  <categorie>A</categorie>
+		  <deliberationLibelle>statut particulier du cadre des postes et télécommunications de la  Nouvelle calédonie</deliberationLibelle>
+		  <employeur>Ville de Nouméa</employeur>
+		  <employeurs>M.Jean LEQUES 
+	 Mairie de la ville de Nouméa ou son représentant</employeurs>
+		  <employeurs>MM. Georges NATUREL ou Jean-Luc CHEVALIER 
+	 Représentant de l'association française des maires de Nouvelle-Calédonie</employeurs>
+		  <filiere>A</filiere>
+		  <nbAgents>2</nbAgents>
+		  <quotaAvancementDureeMinimale>0</quotaAvancementDureeMinimale>
+		  <representants>PITOUT CÉDRIC</representants>
+		  <representants>HOFFSCHIR HORTENSIA</representants>
+		</avancementsDifferencies>
+		<changementClasses />
+		<corps>ADJA</corps>
+	  </commissionsParCorps>
+	</commissionAvancementDto>
+]
++------------------------------------------+
