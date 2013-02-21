@@ -10,10 +10,8 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
-import nc.noumea.mairie.web.dto.avancements.AvancementDifferencieDto;
-import nc.noumea.mairie.web.dto.avancements.AvancementDifferencieItemDto;
-import nc.noumea.mairie.web.dto.avancements.ChangementClasseDto;
-import nc.noumea.mairie.web.dto.avancements.ChangementClasseItemDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
@@ -103,27 +101,27 @@ public class AvancementsService implements IAvancementsService {
 	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements) {
 		
 		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(spgeng);
-		result.setAvancementsDifferencies(new AvancementDifferencieDto(cap, spgeng, getAnnee()));
-		result.setChangementClasses(new ChangementClasseDto());
+		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng, getAnnee()));
+		result.setChangementClasses(new AvancementsDto(cap, spgeng, getAnnee()));
 		
 		for (AvancementFonctionnaire avct : avancements) {
+			
+			AvancementItemDto aItem = new AvancementItemDto(avct);
 			
 			switch(avct.getIdModifAvancement()) {
 			
 				case 7:
-					AvancementDifferencieItemDto aditem = new AvancementDifferencieItemDto(avct);
-					result.getAvancementsDifferencies().getAvancementDifferencieItems().add(aditem);
+					result.getAvancementsDifferencies().getAvancementsItems().add(aItem);
 					break;
 				
 				case 5:
-					ChangementClasseItemDto ccitem = new ChangementClasseItemDto();
-					result.getChangementClasses().getChangementClasseItems().add(ccitem);
+					result.getChangementClasses().getAvancementsItems().add(aItem);
 					break;
 			}
 		}
 		
 		result.getAvancementsDifferencies().updateNbAgents();
-//		result.getChangementClasses().updateNbAgents();
+		result.getChangementClasses().updateNbAgents();
 		
 		return result;
 	}
