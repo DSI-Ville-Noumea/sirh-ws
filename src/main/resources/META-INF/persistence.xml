@@ -11,6 +11,11 @@
 		<class>nc.noumea.mairie.model.bean.AvisCap</class>
 		<class>nc.noumea.mairie.model.bean.CadreEmploi</class>
 		<class>nc.noumea.mairie.model.bean.Cap</class>
+		<class>nc.noumea.mairie.model.bean.CapEmployeur</class>
+		<class>nc.noumea.mairie.model.bean.CapRepresentant</class>
+		<class>nc.noumea.mairie.model.bean.Employeur</class>
+		<class>nc.noumea.mairie.model.bean.Representant</class>
+		<class>nc.noumea.mairie.model.bean.Deliberation</class>
 		<class>nc.noumea.mairie.model.bean.Budget</class>
 		<class>nc.noumea.mairie.model.bean.Agent</class>
 		<class>nc.noumea.mairie.model.bean.Affectation</class>
@@ -50,7 +55,7 @@
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
 			<property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
 			<property name="hibernate.connection.charSet" value="UTF-8" />
-<!-- 			<property name="hibernate.show_sql" value="true" /> -->
+			<property name="hibernate.show_sql" value="true" />
 			<!-- Uncomment the following two properties for JBoss only -->
 			<!-- property name="hibernate.validator.apply_to_ddl" value="false" / -->
 			<!-- property name="hibernate.validator.autoregister_listeners" value="false" 

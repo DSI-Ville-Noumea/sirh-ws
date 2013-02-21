@@ -99,6 +99,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/etatCivil", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEtatCivil(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -123,6 +124,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/enfants", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEnfants(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -142,6 +144,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/couvertureSociale", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getCouvertureSociale(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -161,6 +164,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/banque", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBanque(@RequestParam(value = "idAgent", required = true) Long idAgent) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -181,6 +185,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/adresse", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAdresse(@RequestParam(value = "idAgent", required = true) Long idAgent) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -205,6 +210,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/contacts", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getContacts(@RequestParam(value = "idAgent", required = true) Long idAgent) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -224,6 +230,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/soldeConge", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSoldeConge(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -242,6 +249,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/histoCongeAll", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getToutHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
@@ -261,6 +269,7 @@ public class AgentController {
 
 	@RequestMapping(value = "/histoConge", headers = "Accept=application/json")
 	@ResponseBody
+	@Transactional(readOnly = true)
 	public ResponseEntity<String> getHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");

@@ -1,11 +1,21 @@
 package nc.noumea.mairie.web.dto.avancements;
 
+import nc.noumea.mairie.model.bean.Spgeng;
+
 public class CommissionAvancementCorpsDto {
 
 	private String corps;
 	private AvancementDifferencieDto avancementsDifferencies;
 	private ChangementClasseDto changementClasses;
 
+	public CommissionAvancementCorpsDto() {
+		
+	}
+	
+	public CommissionAvancementCorpsDto(Spgeng spgeng) {
+		this.corps = spgeng.getCdgeng();
+	}
+	
 	public String getCorps() {
 		return corps;
 	}
