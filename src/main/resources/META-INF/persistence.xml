@@ -70,6 +70,7 @@
 		<class>nc.noumea.mairie.model.bean.eae.EaeEvaluateur</class>
 		<class>nc.noumea.mairie.model.bean.eae.EaeEvalue</class>
 		<class>nc.noumea.mairie.model.bean.eae.EaeFichePoste</class>
+		<class>nc.noumea.mairie.model.bean.eae.EaeFinalisation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />

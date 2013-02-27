@@ -1,5 +1,7 @@
 package nc.noumea.mairie.web.controller;
 
+import java.util.List;
+
 import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.service.IAvancementsService;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import flexjson.JSONSerializer;
 
 @Controller
 @RequestMapping("/avancements")
@@ -66,5 +70,15 @@ public class AvancementsController {
 		headers.add("Content-Disposition", String.format("attachment; filename=\"%s-%s.pdf\"", idCap, idCadreEmploi));
 		
 		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getEaesGedIds", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getEaesGedIds(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi) {
+		
+		List<String> eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
+		
+		return new ResponseEntity<String>(new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
 	}
 }
