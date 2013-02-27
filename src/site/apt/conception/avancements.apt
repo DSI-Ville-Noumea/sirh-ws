@@ -119,3 +119,17 @@ Web Services des avancements
    HTTP: 500 si erreur durant la création
 ]
 +------------------------------------------+
+
+** Récupérer la liste des IDs GED des EAEs pour les agents dans une commission d'avancement (cap et cadremploi donnés)
+
+ URL : /avancements/getEaesGedIds?idCap=A&idCadreEmploi=B
+
+ idCap: l'id de la CAP dont on souhaite les données pour impression
+ idCadreEmploi: l'id du CadreEmploi pour la cap dont on souhaite les données pour impression
+ 
++------------------------------------------+
+[
+   "doc1",
+   "doc2"
+]
++------------------------------------------+
