@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +28,9 @@ public class AvancementsService implements IAvancementsService {
 	
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
+	
+	@Autowired
+	private IEaesService eaesService;
 	
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
@@ -52,6 +57,28 @@ public class AvancementsService implements IAvancementsService {
 	}
 	
 	@Override
+	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
+
+		List<String> result = null;
+		Cap cap = getCap(idCap);
+		
+		if (cap == null)
+			return new ArrayList<String>();
+		
+		List<Spgeng> corps = getCorpsForCadreEmploi(idCadreEmploi);
+		List<Integer> agentsIds = new ArrayList<Integer>();
+		
+		for (Spgeng corp : corps) {
+			List<Integer> agents = getAgentsIdsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
+			agentsIds.addAll(agents);
+		}
+		
+		result = eaesService.getEaesGedIdsForAgents(agentsIds, getAnnee());
+		
+		return result;
+	}
+	
+	@Override
 	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories) {
 		
 		List<AvancementFonctionnaire> result = null;
@@ -72,6 +99,33 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and spgeng.cdgeng = :cdgeng");
 		
 		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(), AvancementFonctionnaire.class);
+		qA.setParameter("codesCategories", codesCategories);
+		qA.setParameter("annee", annee);
+		qA.setParameter("idCap", idCap);
+		qA.setParameter("cdgeng", corps);
+		
+		result = qA.getResultList();
+		
+		return result;
+	}
+	
+	public List<Integer> getAgentsIdsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories) {
+		
+		List<Integer> result = null;
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT avct.agent.idAgent FROM AvancementFonctionnaire avct ");
+		sb.append("INNER JOIN avct.grade AS spgradn ");
+		sb.append("INNER JOIN spgradn.gradeGenerique AS spgeng ");
+		sb.append("INNER JOIN spgeng.caps AS ca ");
+		sb.append("where (avct.etat = 'C' or avct.etat = 'F') ");
+		sb.append("and avct.codeCategporie IN (:codesCategories) ");
+		sb.append("and avct.idModifAvancement IN (5, 7) ");
+		sb.append("and avct.anneeAvancement = :annee ");
+		sb.append("and ca.idCap = :idCap ");
+		sb.append("and spgeng.cdgeng = :cdgeng");
+		
+		TypedQuery<Integer> qA = sirhEntityManager.createQuery(sb.toString(), Integer.class);
 		qA.setParameter("codesCategories", codesCategories);
 		qA.setParameter("annee", annee);
 		qA.setParameter("idCap", idCap);

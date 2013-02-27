@@ -192,4 +192,27 @@ public class AvancementsServiceTest {
 		
 		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
 	}
+	
+	@Test
+	public void testgetAvancementsEaesForCapAndCadreEmploi_CapDoesNotExist_returnEmptyList() {
+		// Given
+		int idCap = 99;
+		
+		TypedQuery<Cap> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Cap>());
+		
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(mockQuery);
+		
+		AvancementsService service = new AvancementsService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+		
+		// When
+		List<String> result = service.getAvancementsEaesForCapAndCadreEmploi(idCap, 0);
+		
+		// Then
+		assertEquals(0, result.size());
+		
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
+	}
 }
