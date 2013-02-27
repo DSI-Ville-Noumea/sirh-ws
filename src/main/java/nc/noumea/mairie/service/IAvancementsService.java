@@ -12,6 +12,7 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 public interface IAvancementsService {
 
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi);
+	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
 	
 	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories);
 	public List<Spgeng> getCorpsForCadreEmploi(int idCadreEmploi);
