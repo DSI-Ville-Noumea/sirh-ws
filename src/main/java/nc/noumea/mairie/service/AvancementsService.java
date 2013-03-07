@@ -11,6 +11,8 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.web.dto.avancements.ArreteDto;
+import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
@@ -199,6 +201,63 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 		
 		return qR.get(0);
+	}
+	
+	@Override
+	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse) {
+		
+		ArreteListDto arretes = new ArreteListDto();
+		
+		String[] agentIds = csvIdAgents.split(",");
+		int i = 1;
+		
+		for (String agentId : agentIds) {
+			ArreteDto dto = new ArreteDto();
+			dto.setNomComplet(String.valueOf(i++));
+			arretes.getArretes().add(dto);
+		}
+		
+//		ArreteDto dto = new ArreteDto();
+//		dto.setChangementClasse(isChangmentClasse);
+//		dto.setAnnee(getAnnee());
+//		dto.setNomComplet("Monsieur Pascal WOLF");
+//		dto.setRegularisation(true);
+//		dto.setDeliberationLabel("n°65/CP du 17 novembre 2008");
+//		dto.setDeliberationCapText("statut particulier des cadres d'emplois de la filière incendie des communes de Nouvelle-Calédonie et de leurs établissement publics");
+//		dto.setNumeroArrete("2011/1843");
+//		dto.setDateArrete(new DateTime(2011, 05, 31, 0, 0, 0).toDate());
+//		dto.setDateCap(new DateTime(2012, 06, 7, 0, 0, 0).toDate());
+//		dto.setDateAvct(new DateTime(2012, 2, 20, 0, 0, 0).toDate());
+//		dto.setDureeAvct("moyenne");
+//		dto.setGradeLabel("sergent 2ème échélon de la filière incendie");
+//		dto.setIna("281");
+//		dto.setIb("342");
+//		dto.setAcc("épuisé");
+//		dto.setDirectionAgent("DSIS");
+//		dto.setFeminin(false);
+//		arretes.getArretes().add(dto);
+//		
+//		dto = new ArreteDto();
+//		dto.setChangementClasse(isChangmentClasse);
+//		dto.setAnnee(getAnnee());
+//		dto.setNomComplet("Madame Henriette BULOT épouse TATA");
+//		dto.setRegularisation(false);
+//		dto.setDeliberationLabel("n°65/CP du 17 novembre 2008");
+//		dto.setDeliberationCapText("statut particulier des cadres d'emplois de la filière incendie des communes de Nouvelle-Calédonie et de leurs établissement publics");
+//		dto.setNumeroArrete("2011/1843");
+//		dto.setDateArrete(null);
+//		dto.setDateCap(new DateTime(2012, 06, 7, 0, 0, 0).toDate());
+//		dto.setDateAvct(new DateTime(2012, 2, 20, 0, 0, 0).toDate());
+//		dto.setDureeAvct("maximum");
+//		dto.setGradeLabel("sergent 2ème échélon de la filière incendie");
+//		dto.setIna("281");
+//		dto.setIb("342");
+//		dto.setAcc("épuisé");
+//		dto.setDirectionAgent("DSIS");
+//		dto.setFeminin(true);
+//		arretes.getArretes().add(dto);
+		
+		return arretes;
 	}
 	
 	public static int getAnnee() {

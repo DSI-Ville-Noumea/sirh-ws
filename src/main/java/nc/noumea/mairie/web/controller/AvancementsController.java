@@ -4,6 +4,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.service.IAvancementsService;
+import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 import org.json.simple.parser.ParseException;
@@ -80,5 +81,36 @@ public class AvancementsController {
 		List<String> eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
 		
 		return new ResponseEntity<String>(new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/xml/getArretes",  produces = "application/xml", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ModelAndView getTableauAvancements(@RequestParam("csvIdAgents") String csvIdAgents, @RequestParam("isChangementClasse") boolean isChangementClasse) throws ParseException {
+		
+		ArreteListDto arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse);
+		
+		return new ModelAndView("xmlView", "object", arretes);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/downloadArretes", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadArretes(@RequestParam("csvIdAgents") String csvIdAgents, @RequestParam("isChangementClasse") boolean isChangementClasse) throws ParseException {
+		
+		byte[] responseData = null;
+		
+		try {
+			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte []>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/pdf");
+//		headers.add("Content-Disposition", String.format("attachment; filename=\"%s-%s.pdf\"", idCap, idCadreEmploi));
+		
+		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
 	}
 }
