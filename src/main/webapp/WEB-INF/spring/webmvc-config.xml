@@ -18,6 +18,8 @@
 				<value>nc.noumea.mairie.web.dto.avancements.AvancementsDto</value>
 				<value>nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto</value>
 				<value>nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto</value>
+				<value>nc.noumea.mairie.web.dto.avancements.ArreteDto</value>
+				<value>nc.noumea.mairie.web.dto.avancements.ArreteListDto</value>
 			</list>
 		</property>
 	</bean>

@@ -33,8 +33,8 @@ public class ReportingService implements IReportingService {
 	@Override
 	public byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception {
 		
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put("idFichePoste", idFichePoste);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("idFichePoste", String.valueOf(idFichePoste));
 		
 		ClientResponse response = createAndFireRequest(map, "fichePoste.rptdesign");
 		
@@ -44,16 +44,27 @@ public class ReportingService implements IReportingService {
 	@Override
 	public byte[] getTableauAvancementsReportAsByteArray(int idCap, int idCadreEmploi) throws Exception {
 
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put("idCap", idCap);
-		map.put("idCadreEmploi", idCadreEmploi);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("idCap", String.valueOf(idCap));
+		map.put("idCadreEmploi", String.valueOf(idCadreEmploi));
 		
 		ClientResponse response = createAndFireRequest(map, "avctFonctCap.rptdesign");
 		
 		return readResponseAsByteArray(response, map);
 	}
 	
-	public ClientResponse createAndFireRequest(Map<String, Integer> reportParameters, String reportName) {
+	@Override
+	public byte[] getArretesReportAsByteArray(String csvIdAgents) throws Exception {
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("csvIdAgents", csvIdAgents);
+		
+		ClientResponse response = createAndFireRequest(map, "avctDiffArrete.rptdesign");
+		
+		return readResponseAsByteArray(response, map);
+	}
+	
+	public ClientResponse createAndFireRequest(Map<String, String> reportParameters, String reportName) {
 		
 		Client client = Client.create();
 
@@ -63,7 +74,7 @@ public class ReportingService implements IReportingService {
 				.queryParam(PARAM_FORMAT, "PDF");
 		
 		for(String key : reportParameters.keySet()) {
-			webResource = webResource.queryParam(key, String.valueOf(reportParameters.get(key)));
+			webResource = webResource.queryParam(key, reportParameters.get(key));
 		}
 		
 		ClientResponse response = webResource.get(ClientResponse.class);
@@ -71,7 +82,7 @@ public class ReportingService implements IReportingService {
 		return response;
 	}
 
-	public byte[] readResponseAsByteArray(ClientResponse response, Map<String, Integer> reportParameters) throws Exception {
+	public byte[] readResponseAsByteArray(ClientResponse response, Map<String, String> reportParameters) throws Exception {
 		
 		if (response.getStatus() != HttpStatus.OK.value()) {
 			throw new Exception(
@@ -96,12 +107,12 @@ public class ReportingService implements IReportingService {
 		return reponseData;
 	}
 	
-	private String getListOfParamsFromMap(Map<String, Integer> reportParameters) {
+	private String getListOfParamsFromMap(Map<String, String> reportParameters) {
 		
 		StringBuilder sb = new StringBuilder();
 		
 		for(String key : reportParameters.keySet()) {
-			sb.append(String.format("[%s: %s] ", key, String.valueOf(reportParameters.get(key))));
+			sb.append(String.format("[%s: %s] ", key, reportParameters.get(key)));
 		}
 		
 		return sb.toString();
