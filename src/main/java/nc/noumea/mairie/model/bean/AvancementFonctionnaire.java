@@ -40,22 +40,25 @@ public class AvancementFonctionnaire {
 	@JoinColumn(name = "GRADE")
 	private Spgradn grade;
 	
-	@Column(name = "LIB_GRADE")
-	private String gradeLibelle;
-	
 	@Column(name = "DATE_GRADE")
 	@Temporal(TemporalType.DATE)
 	private Date gradeDate;
 
-	@Column(name = "ID_NOUV_GRADE", columnDefinition = "char")
-	private String gradeNouveau;
+	@ManyToOne
+	@JoinColumn(name = "ID_NOUV_GRADE")
+	private Spgradn gradeNouveau;
 	
-	@Column(name = "LIB_NOUV_GRADE")
-	private String gradeNouveauLibelle;
+	@Column(name = "DATE_AVCT_MINI")
+	@Temporal(TemporalType.DATE)
+	private Date dateAvctMini;
 	
 	@Column(name = "DATE_AVCT_MOY")
 	@Temporal(TemporalType.DATE)
 	private Date dateAvctMoy;
+	
+	@Column(name = "DATE_AVCT_MAXI")
+	@Temporal(TemporalType.DATE)
+	private Date dateAvctMaxi;
 
 	@Column(name = "ACC_ANNEE")
 	private Integer accAnnee;
@@ -71,4 +74,15 @@ public class AvancementFonctionnaire {
 	
 	@Column(name = "ORDRE_MERITE")
 	private String ordreMerite;
+	
+	@Column(name = "REGULARISATION")
+	private boolean regularisation;
+	
+	@Column(name = "DATE_CAP")
+	@Temporal(TemporalType.DATE)
+	private Date dateCap;
+	
+	@OneToOne(optional=true)
+	@JoinColumn(name = "ID_AVIS_EMP")
+	private AvisCap avisCapEmployeur;
 }

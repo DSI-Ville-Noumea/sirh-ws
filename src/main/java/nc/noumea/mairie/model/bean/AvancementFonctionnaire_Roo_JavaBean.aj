@@ -67,14 +67,6 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.grade = grade;
     }
     
-    public String AvancementFonctionnaire.getGradeLibelle() {
-        return this.gradeLibelle;
-    }
-    
-    public void AvancementFonctionnaire.setGradeLibelle(String gradeLibelle) {
-        this.gradeLibelle = gradeLibelle;
-    }
-    
     public Date AvancementFonctionnaire.getGradeDate() {
         return this.gradeDate;
     }
@@ -83,20 +75,20 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.gradeDate = gradeDate;
     }
     
-    public String AvancementFonctionnaire.getGradeNouveau() {
+    public Spgradn AvancementFonctionnaire.getGradeNouveau() {
         return this.gradeNouveau;
     }
     
-    public void AvancementFonctionnaire.setGradeNouveau(String gradeNouveau) {
+    public void AvancementFonctionnaire.setGradeNouveau(Spgradn gradeNouveau) {
         this.gradeNouveau = gradeNouveau;
     }
     
-    public String AvancementFonctionnaire.getGradeNouveauLibelle() {
-        return this.gradeNouveauLibelle;
+    public Date AvancementFonctionnaire.getDateAvctMini() {
+        return this.dateAvctMini;
     }
     
-    public void AvancementFonctionnaire.setGradeNouveauLibelle(String gradeNouveauLibelle) {
-        this.gradeNouveauLibelle = gradeNouveauLibelle;
+    public void AvancementFonctionnaire.setDateAvctMini(Date dateAvctMini) {
+        this.dateAvctMini = dateAvctMini;
     }
     
     public Date AvancementFonctionnaire.getDateAvctMoy() {
@@ -105,6 +97,14 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
     
     public void AvancementFonctionnaire.setDateAvctMoy(Date dateAvctMoy) {
         this.dateAvctMoy = dateAvctMoy;
+    }
+    
+    public Date AvancementFonctionnaire.getDateAvctMaxi() {
+        return this.dateAvctMaxi;
+    }
+    
+    public void AvancementFonctionnaire.setDateAvctMaxi(Date dateAvctMaxi) {
+        this.dateAvctMaxi = dateAvctMaxi;
     }
     
     public Integer AvancementFonctionnaire.getAccAnnee() {
@@ -145,6 +145,30 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
     
     public void AvancementFonctionnaire.setOrdreMerite(String ordreMerite) {
         this.ordreMerite = ordreMerite;
+    }
+    
+    public boolean AvancementFonctionnaire.isRegularisation() {
+        return this.regularisation;
+    }
+    
+    public void AvancementFonctionnaire.setRegularisation(boolean regularisation) {
+        this.regularisation = regularisation;
+    }
+    
+    public Date AvancementFonctionnaire.getDateCap() {
+        return this.dateCap;
+    }
+    
+    public void AvancementFonctionnaire.setDateCap(Date dateCap) {
+        this.dateCap = dateCap;
+    }
+    
+    public AvisCap AvancementFonctionnaire.getAvisCapEmployeur() {
+        return this.avisCapEmployeur;
+    }
+    
+    public void AvancementFonctionnaire.setAvisCapEmployeur(AvisCap avisCapEmployeur) {
+        this.avisCapEmployeur = avisCapEmployeur;
     }
     
 }

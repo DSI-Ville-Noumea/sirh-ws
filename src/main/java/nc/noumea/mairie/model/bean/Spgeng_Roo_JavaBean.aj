@@ -52,12 +52,12 @@ privileged aspect Spgeng_Roo_JavaBean {
         this.cdcadr = cdcadr;
     }
     
-    public Spfili Spgeng.getSpfili() {
-        return this.Spfili;
+    public Spfili Spgeng.getFiliere() {
+        return this.filiere;
     }
     
-    public void Spgeng.setSpfili(Spfili Spfili) {
-        this.Spfili = Spfili;
+    public void Spgeng.setFiliere(Spfili filiere) {
+        this.filiere = filiere;
     }
     
     public Set<Cap> Spgeng.getCaps() {

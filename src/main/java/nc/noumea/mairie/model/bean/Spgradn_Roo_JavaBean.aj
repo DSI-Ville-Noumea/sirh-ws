@@ -3,6 +3,7 @@
 
 package nc.noumea.mairie.model.bean;
 
+import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
 
@@ -38,6 +39,14 @@ privileged aspect Spgradn_Roo_JavaBean {
     
     public void Spgradn.setGradeGenerique(Spgeng gradeGenerique) {
         this.gradeGenerique = gradeGenerique;
+    }
+    
+    public Spbarem Spgradn.getBarem() {
+        return this.barem;
+    }
+    
+    public void Spgradn.setBarem(Spbarem barem) {
+        this.barem = barem;
     }
     
 }
