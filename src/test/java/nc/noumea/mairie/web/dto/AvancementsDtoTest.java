@@ -25,8 +25,8 @@ public class AvancementsDtoTest {
 		cap.setTypeCap("COMMUNAL");
 		cap.setRefCap("c a p");
 		Spgeng spgeng = new Spgeng();
-		spgeng.setSpfili(new Spfili());
-		spgeng.getSpfili().setCdfili("filiere");
+		spgeng.setFiliere(new Spfili());
+		spgeng.getFiliere().setCdfili("filiere");
 		spgeng.setDeliberationCommunale(new Deliberation());
 		spgeng.getDeliberationCommunale().setTexteCap("Texte CAP");
 		spgeng.setTexteCapCadreEmploi("texte cap");
@@ -54,8 +54,8 @@ public class AvancementsDtoTest {
 		cap.setTypeCap("TERRITORIAL");
 		cap.setRefCap("c a p");
 		Spgeng spgeng = new Spgeng();
-		spgeng.setSpfili(new Spfili());
-		spgeng.getSpfili().setCdfili("filiere");
+		spgeng.setFiliere(new Spfili());
+		spgeng.getFiliere().setCdfili("filiere");
 		spgeng.setDeliberationTerritoriale(new Deliberation());
 		spgeng.getDeliberationTerritoriale().setTexteCap("Texte CAP");
 		spgeng.setTexteCapCadreEmploi("texte cap");
