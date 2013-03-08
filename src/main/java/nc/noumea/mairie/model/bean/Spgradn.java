@@ -32,4 +32,8 @@ public class Spgradn {
 	@OneToOne(optional=true)
 	@JoinColumn(name = "CODGRG", referencedColumnName = "CDGENG")
 	private Spgeng gradeGenerique;
+
+	@OneToOne(optional=true)
+	@JoinColumn(name = "IBAN", referencedColumnName = "IBAN")
+	private Spbarem barem;
 }

@@ -43,8 +43,8 @@ public class AvancementsDto {
 				this.deliberationLibelle = spgeng.getDeliberationCommunale().getTexteCap();
 		}
 
-		if (spgeng.getSpfili() != null)
-			this.filiere = spgeng.getSpfili().getCdfili();
+		if (spgeng.getFiliere() != null)
+			this.filiere = spgeng.getFiliere().getCdfili();
 
 		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi().trim();
 		this.cap = cap.getRefCap();

@@ -22,7 +22,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJson
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPGENG", versionField="")
-@NamedQuery(name = "getSpgengFromCadreEmploi", query = "select s from Spgeng s JOIN FETCH s.Spfili JOIN FETCH s.deliberationTerritoriale JOIN FETCH s.deliberationCommunale JOIN FETCH s.cadreEmploiGrade where s.cadreEmploiGrade.idCadreEmploi = :idCadreEmploi")
+@NamedQuery(name = "getSpgengFromCadreEmploi", query = "select s from Spgeng s JOIN FETCH s.filiere JOIN FETCH s.deliberationTerritoriale JOIN FETCH s.deliberationCommunale JOIN FETCH s.cadreEmploiGrade where s.cadreEmploiGrade.idCadreEmploi = :idCadreEmploi")
 public class Spgeng {
 	
 	@Id
@@ -45,7 +45,7 @@ public class Spgeng {
 	
 	@OneToOne(optional=true)
 	@JoinColumn(name = "CDFILI", referencedColumnName = "CDFILI")
-	private Spfili Spfili;
+	private Spfili filiere;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(schema = "SIRH", name = "CORPS_CAP", joinColumns = { @javax.persistence.JoinColumn(name = "CDGENG") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_CAP"))
