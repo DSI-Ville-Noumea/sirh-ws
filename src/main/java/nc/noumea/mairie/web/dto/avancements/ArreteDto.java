@@ -2,6 +2,9 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import java.util.Date;
 
+import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
+
 public class ArreteDto {
 
 	private boolean changementClasse;
@@ -16,11 +19,54 @@ public class ArreteDto {
 	private Date dateAvct;
 	private String dureeAvct;
 	private String gradeLabel;
-	private String ina;
+	private Integer ina;
 	private String ib;
 	private String acc;
 	private boolean feminin;
 	private String directionAgent;
+
+	public ArreteDto() {
+		
+	}
+	
+	public ArreteDto(AvancementFonctionnaire avct) {
+		this.annee = avct.getAnneeAvancement();
+		this.nomComplet = getNomCompletAgent(avct.getAgent());
+		this.changementClasse = avct.getIdModifAvancement() == 7 ? false : true;
+		this.regularisation = avct.isRegularisation();
+		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation();
+		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
+		this.dateCap = avct.getDateCap();
+		this.dateAvct = getDateAvancement(avct);
+		this.dureeAvct = avct.getAvisCapEmployeur().getLibLong().toLowerCase();
+		this.gradeLabel = avct.getGradeNouveau().getLiGrad();
+		this.ina = avct.getGradeNouveau().getBarem().getIna();
+		this.ib = avct.getGradeNouveau().getBarem().getIban();
+		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
+
+	}
+
+	private Date getDateAvancement(AvancementFonctionnaire avct) {
+		switch (avct.getAvisCapEmployeur().getIdAvisCap()) {
+		case 1:
+			return avct.getDateAvctMini();
+		case 3:
+			return avct.getDateAvctMaxi();
+		default:
+			return avct.getDateAvctMoy();
+		}
+	}
+
+	private String getNomCompletAgent(Agent agent) {
+		if (agent.getTitre().equals("Monsieur")) {
+			return "Monsieur " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage());
+		} else if (agent.getTitre().equals("Madame")) {
+			return "Madame " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage())
+					+ " épouse " + agent.getNomMarital();
+		} else {
+			return "Mademoiselle " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage());
+		}
+	}
 
 	public boolean isChangementClasse() {
 		return changementClasse;
@@ -118,11 +164,11 @@ public class ArreteDto {
 		this.gradeLabel = gradeLabel;
 	}
 
-	public String getIna() {
+	public Integer getIna() {
 		return ina;
 	}
 
-	public void setIna(String ina) {
+	public void setIna(Integer ina) {
 		this.ina = ina;
 	}
 
