@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
@@ -15,7 +16,7 @@ public interface IAvancementsService {
 
 	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
 
-	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year);
+	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year) throws ParseException;
 
 	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year);
 	

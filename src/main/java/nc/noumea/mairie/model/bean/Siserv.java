@@ -51,11 +51,11 @@ public class Siserv {
 		if (this.servi != null) {
 			Siserv divisionService = siservSrv.getDivision(this.servi);
 			if (divisionService != null) {
-				service = divisionService.getLiServ();
+				service = divisionService.getLiServ().trim();
 			} else {
 				Siserv servicePoste = siservSrv.getService(this.servi);
 				if (servicePoste != null) {
-					service = servicePoste.getLiServ();
+					service = servicePoste.getLiServ().trim();
 				}
 			}
 		}
@@ -70,7 +70,7 @@ public class Siserv {
 		if (this.servi != null) {
 			Siserv directionService = siservSrv.getDirection(this.servi);
 			if (directionService != null) {
-				direction = directionService.getLiServ();
+				direction = directionService.getLiServ().trim();
 			}
 		}
 		return direction;
@@ -84,7 +84,7 @@ public class Siserv {
 		if (this.servi != null) {
 			Siserv sectionService = siservSrv.getSection(this.servi);
 			if (sectionService != null) {
-				section = sectionService.getLiServ();
+				section = sectionService.getLiServ().trim();
 			}
 		}
 		return section;
