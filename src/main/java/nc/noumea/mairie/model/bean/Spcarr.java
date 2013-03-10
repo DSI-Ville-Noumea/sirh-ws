@@ -57,6 +57,6 @@ public class Spcarr {
 		if(this.accAnnee.intValue()==0 && this.accMois.intValue()==0 && this.accJour.intValue()==0){
 			return "néant";
 		}
-		return this.accAnnee.intValue() + " an(s), " + this.accMois.intValue() + " mois, " + this.accJour.intValue() + " jour(s).";
+		return this.accAnnee.intValue() + " an(s), " + this.accMois.intValue() + " mois, " + this.accJour.intValue() + " jour(s)";
 	}
 }
