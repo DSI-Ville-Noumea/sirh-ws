@@ -1,20 +1,21 @@
 package nc.noumea.mairie.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
@@ -37,6 +38,9 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private IEaesService eaesService;
+	
+	@Autowired
+	private IFichePosteService fichePosteService;
 
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
@@ -207,11 +211,11 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year) {
+	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year) throws ParseException {
 
 		List<Integer> agentIds = new ArrayList<Integer>();
-		
-		for (String id : csvIdAgents.split(",")){
+
+		for (String id : csvIdAgents.split(",")) {
 			agentIds.add(Integer.valueOf(id));
 		}
 
@@ -220,37 +224,41 @@ public class AvancementsService implements IAvancementsService {
 
 		ArreteListDto arretes = new ArreteListDto();
 
-		int i = 1;
-
 		for (AvancementFonctionnaire avct : avcts) {
-			
-			TypedQuery<FichePoste> qFp = sirhEntityManager.createNamedQuery("getCurrentAffectation", FichePoste.class);
-			qFp.setParameter("idAgent", avct.getAgent().getIdAgent());
-			qFp.setParameter("today", new DateTime().toDate());
-			FichePoste fp = qFp.getSingleResult();
-			
-			Spcarr ca;
-			ArreteDto dto = new ArreteDto(avct);
+
+			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent().getIdAgent(), new DateTime().toDate());			
+			FichePoste fp = fichePosteService.getFichePosteById(fpId);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
+			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
+			qCarr.setParameter("nomatr", avct.getAgent().getNomatr());
+			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
+			Spcarr carr = qCarr.getSingleResult();
+
+			ArreteDto dto = new ArreteDto(avct, fp, carr);
 			arretes.getArretes().add(dto);
 		}
-
 
 		return arretes;
 	}
 
 	@Override
 	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year) {
-		
+
 		List<AvancementFonctionnaire> result = null;
 
-		/*sb.append("INNER JOIN avct.agent AS agent ");
-		sb.append("INNER JOIN avct.grade AS spgradn ");
-		sb.append("INNER JOIN avct.gradeNouveau AS spgradnNew ");
-		sb.append("INNER JOIN spgradnNew.gradeGenerique AS spgengNew ");
-		sb.append("INNER JOIN spgengNew.filiere AS spfiliNew ");
-		sb.append("INNER JOIN spgengNew.deliberationCommunale AS deliberation ");*/
-		//TODO SPBAREM		
-		
+		/*
+		 * sb.append("INNER JOIN avct.agent AS agent ");
+		 * sb.append("INNER JOIN avct.grade AS spgradn ");
+		 * sb.append("INNER JOIN avct.gradeNouveau AS spgradnNew ");
+		 * sb.append("INNER JOIN spgradnNew.gradeGenerique AS spgengNew ");
+		 * sb.append("INNER JOIN spgengNew.filiere AS spfiliNew ");
+		 * sb.append("INNER JOIN spgengNew.deliberationCommunale AS deliberation "
+		 * );
+		 */
+		// TODO SPBAREM
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT avct FROM AvancementFonctionnaire avct ");
 		sb.append("JOIN FETCH avct.agent ag ");
@@ -261,7 +269,7 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("JOIN FETCH gr.barem ");
 		sb.append("where avct.anneeAvancement = :year ");
 		sb.append("and ag.idAgent IN (:agentIds) ");
-		
+
 		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("agentIds", agentIds);
 		qA.setParameter("year", year);
