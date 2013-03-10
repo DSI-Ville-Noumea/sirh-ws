@@ -40,4 +40,28 @@ privileged aspect Spcarr_Roo_JavaBean {
         this.referenceArrete = referenceArrete;
     }
     
+    public Double Spcarr.getAccJour() {
+        return this.accJour;
+    }
+    
+    public void Spcarr.setAccJour(Double accJour) {
+        this.accJour = accJour;
+    }
+    
+    public Double Spcarr.getAccMois() {
+        return this.accMois;
+    }
+    
+    public void Spcarr.setAccMois(Double accMois) {
+        this.accMois = accMois;
+    }
+    
+    public Double Spcarr.getAccAnnee() {
+        return this.accAnnee;
+    }
+    
+    public void Spcarr.setAccAnnee(Double accAnnee) {
+        this.accAnnee = accAnnee;
+    }
+    
 }

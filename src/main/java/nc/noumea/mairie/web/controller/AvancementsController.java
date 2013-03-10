@@ -89,7 +89,7 @@ public class AvancementsController {
 	@RequestMapping(value = "/xml/getArretes", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ModelAndView getTableauAvancements(@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year) throws ParseException {
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year) throws Exception {
 
 		ArreteListDto arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
 

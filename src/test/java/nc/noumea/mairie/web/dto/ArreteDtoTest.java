@@ -53,7 +53,7 @@ public class ArreteDtoTest {
 		AvisCap avis = new AvisCap();
 		avis.setIdAvisCap(2);
 		avis.setLibLong("Moyenne");
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		avct.setAnneeAvancement(2013);
@@ -68,7 +68,7 @@ public class ArreteDtoTest {
 		avct.setIdModifAvancement(7);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct);
+		ArreteDto dto = new ArreteDto(avct, null, null);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
