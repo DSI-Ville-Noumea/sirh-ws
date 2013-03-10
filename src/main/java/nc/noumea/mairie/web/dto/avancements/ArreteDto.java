@@ -35,28 +35,32 @@ public class ArreteDto {
 
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr) throws ParseException {
 		this.annee = avct.getAnneeAvancement();
-		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == 7 ? false : true;
+		this.nomComplet = avct.getAgent() == null ? "" : getNomCompletAgent(avct.getAgent());
+		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 ? false : true;
 		this.regularisation = avct.isRegularisation();
-		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation();
-		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
+		this.deliberationLabel = avct.getGradeNouveau() == null || avct.getGradeNouveau().getGradeGenerique() == null
+				|| avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique()
+				.getDeliberationCommunale().getLibDeliberation();
+		this.deliberationCapText = avct.getGradeNouveau() == null || avct.getGradeNouveau().getGradeGenerique() == null
+				|| avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique()
+				.getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
 		this.dateAvct = getDateAvancement(avct);
-		this.dureeAvct = avct.getAvisCapEmployeur()==null ? "" : avct.getAvisCapEmployeur().getLibLong().toLowerCase();
-		this.gradeLabel = avct.getGradeNouveau().getLiGrad().trim();
-		this.ina = avct.getGradeNouveau().getBarem().getIna();
-		this.ib = avct.getGradeNouveau().getBarem().getIban();
-		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
-		this.numeroArrete = carr.getReferenceArrete().toString();
+		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong().toLowerCase();
+		this.gradeLabel = avct.getGradeNouveau() == null ? "" : avct.getGradeNouveau().getLiGrad().trim();
+		this.ina = avct.getGradeNouveau() == null || avct.getGradeNouveau().getBarem() == null ? 0 : avct.getGradeNouveau().getBarem().getIna();
+		this.ib = avct.getGradeNouveau() == null || avct.getGradeNouveau().getBarem() == null ? "" : avct.getGradeNouveau().getBarem().getIban();
+		this.feminin = avct.getAgent() == null ? false : avct.getAgent().getTitre().equals("Monsieur") ? false : true;
+		this.numeroArrete = carr == null ? "" : carr.getReferenceArrete().toString();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
-		this.acc = carr.getAcc() ;
-		this.directionAgent = fp.getService().getDirection();
+		this.dateArrete = carr == null || carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
+		this.acc = carr == null ? "" : carr.getAcc();
+		this.directionAgent = fp == null ? "" : fp.getService().getDirection();
 
 	}
 
 	private Date getDateAvancement(AvancementFonctionnaire avct) {
-		if(avct!= null &&avct.getAvisCapEmployeur()!=null ){
+		if (avct != null && avct.getAvisCapEmployeur() != null) {
 			switch (avct.getAvisCapEmployeur().getIdAvisCap()) {
 			case 1:
 				return avct.getDateAvctMini();
@@ -65,7 +69,7 @@ public class ArreteDto {
 			default:
 				return avct.getDateAvctMoy();
 			}
-		}else{
+		} else {
 			return null;
 		}
 	}
