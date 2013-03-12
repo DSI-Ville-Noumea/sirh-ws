@@ -26,6 +26,10 @@ public interface IFichePosteService {
 	public List<Integer> getSubFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth);
 
 	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth);
+	
+	public List<Integer> getListShdAgents(int idAgent, int maxDepth);
+	
+	public List<Integer> getShdAgentIdsForFichePoste(int idFichePoste, int maxDepth);
 
 	public FichePoste getFichePosteById(Integer idFichePoste);
 }
