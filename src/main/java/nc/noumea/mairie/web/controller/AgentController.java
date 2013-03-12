@@ -510,7 +510,7 @@ public class AgentController {
 	@ResponseBody
 	@RequestMapping(value = "/sousAgents", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
 		
@@ -520,6 +520,26 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		
 		List<Integer> agentIds = fpSrv.getListSubAgents(idAgent, maxDepth);
+		
+		if (agentIds.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
+		
+		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/agentsShd", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+
+		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
+		
+		Agent ag = Agent.findAgent(newIdAgent);		
+		
+		if (ag == null)
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		
+		List<Integer> agentIds = fpSrv.getListShdAgents(idAgent, maxDepth);
 		
 		if (agentIds.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
