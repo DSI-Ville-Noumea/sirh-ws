@@ -110,6 +110,12 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
+	public List<Integer> getListShdAgents(int idAgent, int maxDepth) {
+		Integer fpId = getIdFichePostePrimaireAgentAffectationEnCours(idAgent, new DateTime().toDate());
+		return getShdAgentIdsForFichePoste(fpId, maxDepth);
+	}
+	
+	@Override
 	public Integer getIdFichePostePrimaireAgentAffectationEnCours(int idAgent, Date date) {
 
 		TypedQuery<Integer> q = sirhEntityManager.createNamedQuery("getCurrentAffectation", Integer.class);
@@ -193,6 +199,38 @@ public class FichePosteService implements IFichePosteService {
 
 		return agents;
 	}
+	
+	/**
+	 * Liste les agents responsables de la fiche poste en paramètre
+	 * sur une profondeur de maxDepth niveaux au maximum
+	 * 
+	 * @param idFichePoste
+	 * @return List<Integer>
+	 */
+	@Override
+	public List<Integer> getShdAgentIdsForFichePoste(int idFichePoste, int maxDepth) {
+
+		List<Integer> agents = new ArrayList<Integer>();
+
+		if (!getFichePosteTree().containsKey(idFichePoste))
+			return agents;
+
+		listShdAgents(getFichePosteTree().get(idFichePoste), agents, maxDepth);
+
+		return agents;
+	}
+
+	private List<Integer> listShdAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth) {
+
+		if (maxDepth == 0 || fichePosteTreeNode.getFichePosteParent() == null)
+			return agents;
+
+		agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
+		
+		listShdAgents(fichePosteTreeNode.getFichePosteParent(), agents, maxDepth - 1);
+
+		return agents;
+	}
 
 	@Override
 	public void construitArbreFichePostes() {
@@ -237,27 +275,6 @@ public class FichePosteService implements IFichePosteService {
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
 		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.GetAllFichePosteAndAffectedAgents(new Date());
-
-		// CriteriaBuilder cb = sirhEntityManager.getCriteriaBuilder();
-		// CriteriaQuery<FichePoste> q = cb.createQuery(FichePoste.class);
-		// Root<FichePoste> from = q.from(FichePoste.class);
-		// Path<Integer> path = from.join("statutFP").get("idStatutFp");
-		//
-		// CriteriaQuery<FichePoste> select = q.select(from);
-		// select.where(cb.equal(path, 2));
-		//
-		// List<FichePoste> result =
-		// sirhEntityManager.createQuery(q).getResultList();
-		//
-		// for (FichePoste fp : result) {
-		// FichePosteTreeNode node = new FichePosteTreeNode();
-		// node.setIdFichePoste(fp.getIdFichePoste());
-		//
-		// if (fp.getResponsable() != null)
-		// node.setIdFichePosteParent(fp.getResponsable().getIdFichePoste());
-		//
-		// hTree.put(node.getIdFichePoste(), node);
-		// }
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
 
