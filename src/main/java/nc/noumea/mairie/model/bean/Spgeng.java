@@ -22,7 +22,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooToString
 @RooJson
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPGENG", versionField="")
-@NamedQuery(name = "getSpgengFromCadreEmploi", query = "select s from Spgeng s JOIN FETCH s.filiere JOIN FETCH s.deliberationTerritoriale JOIN FETCH s.deliberationCommunale JOIN FETCH s.cadreEmploiGrade where s.cadreEmploiGrade.idCadreEmploi = :idCadreEmploi")
+@NamedQuery(name = "getSpgengFromCadreEmploi", query = "select s from Spgeng s JOIN FETCH s.filiere LEFT JOIN FETCH s.deliberationTerritoriale LEFT JOIN FETCH s.deliberationCommunale JOIN FETCH s.cadreEmploiGrade where s.cadreEmploiGrade.idCadreEmploi = :idCadreEmploi")
 public class Spgeng {
 	
 	@Id
