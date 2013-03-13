@@ -15,9 +15,12 @@ import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class ArreteDtoTest {
 
@@ -70,8 +73,31 @@ public class ArreteDtoTest {
 		avct.setAvisCapEmployeur(avis);
 		avct.setIdModifAvancement(7);
 
+		Spcarr carr = new Spcarr();
+		carr.setAccAnnee((double) 1);
+		carr.setAccMois((double) 0);
+		carr.setAccJour((double) 4);
+		carr.setDateArrete(0);
+		carr.setReferenceArrete(12125);
+
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, null, null);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -102,13 +128,50 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Max");
 		ag.setTitre("0");
 
+		Spbarem barem = new Spbarem();
+		barem.setIban("0000956");
+		barem.setIna(125);
+
+		Spgeng gradeGen = new Spgeng();
+		gradeGen.setCdgeng("TECH");
+
+		Spgradn gradeNouveau = new Spgradn();
+		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setLiGrad("Grade T123");
+		gradeNouveau.setGradeGenerique(gradeGen);
+		gradeNouveau.setBarem(barem);
+
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
 		avct.setIdModifAvancement(5);
 		avct.setRegularisation(false);
+		avct.setGradeNouveau(gradeNouveau);
 
+		Spcarr carr = new Spcarr();
+		carr.setAccAnnee((double) 1);
+		carr.setAccMois((double) 0);
+		carr.setAccJour((double) 4);
+		carr.setDateArrete(0);
+		carr.setReferenceArrete(12125);
+
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, null, null);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -161,30 +224,35 @@ public class ArreteDtoTest {
 		avct.setAvisCapEmployeur(avis);
 		avct.setIdModifAvancement(7);
 
+		Spcarr carr = new Spcarr();
+		carr.setAccAnnee((double) 1);
+		carr.setAccMois((double) 0);
+		carr.setAccJour((double) 4);
+		carr.setDateArrete(0);
+		carr.setReferenceArrete(12125);
+
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, null, null);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals("", dto.getDeliberationLabel());
 		assertEquals("", dto.getDeliberationCapText());
-	}
-
-	@Test
-	public void testArreteDto_ctor_SansGradeNouveau() throws ParseException {
-		// Given
-		AvancementFonctionnaire avct = new AvancementFonctionnaire();
-		avct.setAnneeAvancement(2013);
-
-		// When
-		ArreteDto dto = new ArreteDto(avct, null, null);
-
-		// Then
-		assertEquals(2013, dto.getAnnee());
-		assertEquals("", dto.getDeliberationLabel());
-		assertEquals("", dto.getDeliberationCapText());
-		assertEquals("", dto.getGradeLabel());
-		assertEquals(Integer.valueOf(0), dto.getIna());
-		assertEquals("", dto.getIb());
 	}
 
 	@Test
@@ -192,6 +260,28 @@ public class ArreteDtoTest {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
+		Agent ag = new Agent();
+		ag.setNomPatronymique("TOTO");
+		ag.setNomMarital("TITI");
+		ag.setNomUsage("TITIX");
+		ag.setPrenom("Nono");
+		ag.setPrenomUsage("Martine");
+		ag.setTitre("1");
+
+
+		Spbarem barem = new Spbarem();
+		barem.setIban("0000956");
+		barem.setIna(125);
+
+		Spgeng gradeGen = new Spgeng();
+		gradeGen.setCdgeng("TECH");
+
+		Spgradn gradeNouveau = new Spgradn();
+		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setLiGrad("Grade T123");
+		gradeNouveau.setGradeGenerique(gradeGen);
+		gradeNouveau.setBarem(barem);
+		
 		Spcarr carr = new Spcarr();
 		carr.setAccAnnee((double) 1);
 		carr.setAccMois((double) 0);
@@ -200,9 +290,27 @@ public class ArreteDtoTest {
 		carr.setReferenceArrete(12125);
 
 		avct.setAnneeAvancement(2013);
+		avct.setAgent(ag);
+		avct.setGradeNouveau(gradeNouveau);
 
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, null, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
@@ -215,6 +323,28 @@ public class ArreteDtoTest {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
+		Agent ag = new Agent();
+		ag.setNomPatronymique("TOTO");
+		ag.setNomMarital("TITI");
+		ag.setNomUsage("TITIX");
+		ag.setPrenom("Nono");
+		ag.setPrenomUsage("Martine");
+		ag.setTitre("1");
+
+
+		Spbarem barem = new Spbarem();
+		barem.setIban("0000956");
+		barem.setIna(125);
+
+		Spgeng gradeGen = new Spgeng();
+		gradeGen.setCdgeng("TECH");
+
+		Spgradn gradeNouveau = new Spgradn();
+		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setLiGrad("Grade T123");
+		gradeNouveau.setGradeGenerique(gradeGen);
+		gradeNouveau.setBarem(barem);
+		
 		Spcarr carr = new Spcarr();
 		carr.setAccAnnee((double) 0);
 		carr.setAccMois((double) 0);
@@ -223,9 +353,27 @@ public class ArreteDtoTest {
 		carr.setReferenceArrete(12125);
 
 		avct.setAnneeAvancement(2013);
+		avct.setAgent(ag);
+		avct.setGradeNouveau(gradeNouveau);
 
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, null, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
@@ -233,24 +381,65 @@ public class ArreteDtoTest {
 		assertEquals("néant", dto.getAcc());
 	}
 
-	/*@Test
+	@Test
 	public void testArreteDto_ctor_FichePoste() throws ParseException {
-		// TODO
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
+		Agent ag = new Agent();
+		ag.setNomPatronymique("TOTO");
+		ag.setNomMarital("TITI");
+		ag.setNomUsage("TITIX");
+		ag.setPrenom("Nono");
+		ag.setPrenomUsage("Martine");
+		ag.setTitre("1");
+
+		Spcarr carr = new Spcarr();
+		carr.setAccAnnee((double) 1);
+		carr.setAccMois((double) 0);
+		carr.setAccJour((double) 4);
+		carr.setDateArrete(0);
+		carr.setReferenceArrete(12125);
+
+		Spbarem barem = new Spbarem();
+		barem.setIban("0000956");
+		barem.setIna(125);
+
+		Spgeng gradeGen = new Spgeng();
+		gradeGen.setCdgeng("TECH");
+
+		Spgradn gradeNouveau = new Spgradn();
+		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setLiGrad("Grade T123");
+		gradeNouveau.setGradeGenerique(gradeGen);
+		gradeNouveau.setBarem(barem);
+
 		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 
 		avct.setAnneeAvancement(2013);
+		avct.setAgent(ag);
+		avct.setGradeNouveau(gradeNouveau);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, null);
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("DIRECTION NONO", dto.getDirectionAgent());
-	}*/
+		assertEquals("TEST", dto.getDirectionAgent());
+	}
 }
