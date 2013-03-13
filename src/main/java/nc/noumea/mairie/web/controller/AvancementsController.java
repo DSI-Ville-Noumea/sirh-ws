@@ -113,7 +113,6 @@ public class AvancementsController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
-		headers.add("Content-Disposition", String.format("attachment; filename=\"%s-%s-%s.pdf\"", csvIdAgents, isChangementClasse, year));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
