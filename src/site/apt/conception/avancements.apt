@@ -133,3 +133,43 @@ Web Services des avancements
    "doc2"
 ]
 +------------------------------------------+
+
+** Retourner les données nécessaires à l'établissement du document des arrêtés
+
+ URL : /avancements/xml/getArretes?csvIdAgents=9005138,9003041&isChangementClasse=false&annee=2013
+ 
+ csvIdAgents: une liste d'id d'agents
+ isChangementClasse: true ou false
+ annee : annee de l'avancement concerné
+ 
++------------------------------------------+
+	
+
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <arreteListDto>
+		<arretes>
+			<acc>néant</acc>
+			<annee>2013</annee>
+			<changementClasse>false</changementClasse>
+			<dateAvct>2014-01-01T00:00:00+11:00</dateAvct>
+			<deliberationCapText>Statut particulier des cadres d'emplois de la filière incendie des communes de Nouvelle-Calédonie et de leurs établissements publics</deliberationCapText>
+			<deliberationLabel> N° 65/CP DU 17 NOVEMBRE 2008</deliberationLabel>
+			<directionAgent>Direction des Systèmes d'Information</directionAgent>
+			<dureeAvct>maximum</dureeAvct>
+			<feminin>true</feminin>
+			<gradeLabel>INGENIEUR 2°GRADE 3°ECH</gradeLabel>
+			<ib>0000581</ib>
+			<ina>446</ina>
+			<nomComplet>Madame TATIANA CHARVET épouse CHARVET</nomComplet>
+			<numeroArrete>129974</numeroArrete>
+			<regularisation>false</regularisation>
+		</arretes>
+    </arreteListDto>
+
++------------------------------------------+
+[
+   HTTP: 200 et le document au format PDF
+   HTTP: 404 si la CAP n'existe pas
+   HTTP: 500 si erreur durant la création
+]
++------------------------------------------+
