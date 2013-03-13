@@ -100,7 +100,7 @@ public class AvancementsController {
 	@RequestMapping(value = "/downloadArretes", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<byte[]> downloadArretes(@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse) throws ParseException {
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year) throws ParseException {
 
 		byte[] responseData = null;
 
@@ -113,9 +113,7 @@ public class AvancementsController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
-		// headers.add("Content-Disposition",
-		// String.format("attachment; filename=\"%s-%s.pdf\"", idCap,
-		// idCadreEmploi));
+		headers.add("Content-Disposition", String.format("attachment; filename=\"%s-%s-%s.pdf\"", csvIdAgents, isChangementClasse, year));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
