@@ -5,7 +5,7 @@
 	<groupId>nc.noumea.mairie</groupId>
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.1</version>
 	<organization>
 		<name>Mairie de Nouméa</name>
 		<url>http://www.ville-noumea.nc</url>
@@ -15,6 +15,14 @@
 			<id>NICNO85</id>
 			<name>Noémie NICOLAS</name>
 			<email>nicno85@ville-noumea.nc</email>
+			<roles>
+				<role>Développeur</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>RAYNI84</id>
+			<name>Nicolas RAYNAUD</name>
+			<email>rayni84@ville-noumea.nc</email>
 			<roles>
 				<role>Développeur</role>
 			</roles>
