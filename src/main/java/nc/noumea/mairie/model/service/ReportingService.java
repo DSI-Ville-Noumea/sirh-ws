@@ -29,6 +29,7 @@ public class ReportingService implements IReportingService {
 	private static final String REPORT_PAGE = "frameset";
 	private static final String PARAM_REPORT = "__report";
 	private static final String PARAM_FORMAT = "__format";
+	private static final String PARAM_LOCALE = "__locale";
 	
 	@Override
 	public byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception {
@@ -36,7 +37,7 @@ public class ReportingService implements IReportingService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
 		
-		ClientResponse response = createAndFireRequest(map, "fichePoste.rptdesign");
+		ClientResponse response = createAndFireRequest(map, "fichePoste.rptdesign", "PDF");
 		
 		return readResponseAsByteArray(response, map);
 	}
@@ -48,30 +49,34 @@ public class ReportingService implements IReportingService {
 		map.put("idCap", String.valueOf(idCap));
 		map.put("idCadreEmploi", String.valueOf(idCadreEmploi));
 		
-		ClientResponse response = createAndFireRequest(map, "avctFonctCap.rptdesign");
+		ClientResponse response = createAndFireRequest(map, "avctFonctCap.rptdesign", "PDF");
 		
 		return readResponseAsByteArray(response, map);
 	}
 	
 	@Override
-	public byte[] getArretesReportAsByteArray(String csvIdAgents) throws Exception {
+	public byte[] getArretesReportAsByteArray(String csvIdAgents, boolean isChangementClasse, int year) throws Exception {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("csvIdAgents", csvIdAgents);
+		map.put("annee", String.valueOf(year));
 		
-		ClientResponse response = createAndFireRequest(map, "avctDiffArrete.rptdesign");
+		String reportName = isChangementClasse ? "avctChgtClasseArrete.rptdesign" : "avctDiffArrete.rptdesign";
+		
+		ClientResponse response = createAndFireRequest(map, reportName, "DOC");
 		
 		return readResponseAsByteArray(response, map);
 	}
 	
-	public ClientResponse createAndFireRequest(Map<String, String> reportParameters, String reportName) {
+	public ClientResponse createAndFireRequest(Map<String, String> reportParameters, String reportName, String format) {
 		
 		Client client = Client.create();
 
 		WebResource webResource = client
 				.resource(reportingBaseUrl + REPORT_PAGE)
 				.queryParam(PARAM_REPORT, reportServerPath + reportName)
-				.queryParam(PARAM_FORMAT, "PDF");
+				.queryParam(PARAM_FORMAT, format)
+				.queryParam(PARAM_LOCALE, "FR");
 		
 		for(String key : reportParameters.keySet()) {
 			webResource = webResource.queryParam(key, reportParameters.get(key));
