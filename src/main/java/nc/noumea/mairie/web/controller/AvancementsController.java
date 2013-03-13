@@ -88,7 +88,7 @@ public class AvancementsController {
 	@ResponseBody
 	@RequestMapping(value = "/xml/getArretes", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getTableauAvancements(@RequestParam("csvIdAgents") String csvIdAgents,
+	public ModelAndView getArretes(@RequestParam("csvIdAgents") String csvIdAgents,
 			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year) throws Exception {
 
 		ArreteListDto arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
@@ -105,14 +105,14 @@ public class AvancementsController {
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents);
+			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents, isChangementClasse, year);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Type", "application/msword");
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}

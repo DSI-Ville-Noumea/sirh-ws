@@ -4,5 +4,5 @@ public interface IReportingService {
 
 	byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception;
 	byte[] getTableauAvancementsReportAsByteArray(int idCap, int idCadreEmploi) throws Exception;
-	byte[] getArretesReportAsByteArray(String csvIdAgents) throws Exception;
+	byte[] getArretesReportAsByteArray(String csvIdAgents, boolean isChangementClasse, int year) throws Exception;
 }
