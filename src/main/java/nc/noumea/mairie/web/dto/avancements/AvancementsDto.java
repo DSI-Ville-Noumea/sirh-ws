@@ -44,7 +44,7 @@ public class AvancementsDto {
 		}
 
 		if (spgeng.getFiliere() != null)
-			this.filiere = spgeng.getFiliere().getCdfili();
+			this.filiere = spgeng.getFiliere().getLibelleFili();
 
 		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi().trim();
 		this.cap = cap.getRefCap();
