@@ -247,18 +247,6 @@ public class AvancementsService implements IAvancementsService {
 	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year) {
 
 		List<AvancementFonctionnaire> result = null;
-
-		/*
-		 * sb.append("INNER JOIN avct.agent AS agent ");
-		 * sb.append("INNER JOIN avct.grade AS spgradn ");
-		 * sb.append("INNER JOIN avct.gradeNouveau AS spgradnNew ");
-		 * sb.append("INNER JOIN spgradnNew.gradeGenerique AS spgengNew ");
-		 * sb.append("INNER JOIN spgengNew.filiere AS spfiliNew ");
-		 * sb.append("INNER JOIN spgengNew.deliberationCommunale AS deliberation "
-		 * );
-		 */
-		// TODO SPBAREM
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT avct FROM AvancementFonctionnaire avct ");
 		sb.append("JOIN FETCH avct.agent ag ");
