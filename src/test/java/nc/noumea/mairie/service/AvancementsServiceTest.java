@@ -101,9 +101,9 @@ public class AvancementsServiceTest {
 		Cap cap = new Cap();
 		Spgeng corps = new Spgeng();
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
-		avct1.setIdModifAvancement(new Integer(5));
+		avct1.setIdModifAvancement(new Integer(4));
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
-		avct2.setIdModifAvancement(new Integer(5));
+		avct2.setIdModifAvancement(new Integer(4));
 		List<AvancementFonctionnaire> list = Arrays.asList(avct1, avct2);
 		
 		AvancementsService service = new AvancementsService();
