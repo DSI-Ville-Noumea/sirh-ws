@@ -143,7 +143,6 @@ Web Services des avancements
  annee : annee de l'avancement concerné
  
 +------------------------------------------+
-	
 
     <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
     <arreteListDto>
@@ -165,6 +164,8 @@ Web Services des avancements
 			<regularisation>false</regularisation>
 		</arretes>
     </arreteListDto>
+
++------------------------------------------+
 
 +------------------------------------------+
 [
