@@ -36,7 +36,7 @@ public class ArreteDto {
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr) throws ParseException {
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 ? false : true;
+		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
 				.getGradeGenerique().getDeliberationCommunale().getLibDeliberation();
