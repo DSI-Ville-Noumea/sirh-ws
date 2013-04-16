@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -13,7 +14,6 @@ import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.model.service.eae.IEaeService;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
