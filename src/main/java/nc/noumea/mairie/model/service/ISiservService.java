@@ -26,4 +26,6 @@ public interface ISiservService {
 	public Siserv getServiceAgent(Integer idAgent);
 
 	public Siserv getServiceBySigle(String sigleService);
+	
+	public ServiceTreeNode getAgentDirection(Integer idAgent);
 }
