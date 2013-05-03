@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Agent;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,9 @@ public class AgentService implements IAgentService {
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
 
+	@Autowired
+	private SiservService siservService;
+	
 	@Override
 	public Agent getAgent(Integer id) {
 		Agent res = null;
@@ -84,4 +88,19 @@ public class AgentService implements IAgentService {
 		return res;
 	}
 
+	@Override
+	public List<Integer> listAgentIdsOfServices(List<String> servis) {
+	
+		TypedQuery<Integer> query = sirhEntityManager.createQuery(
+				"select ag.idAgent from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+						+ " and fp.service.servi in (:listeCodeService) "
+						+ " and aff.dateDebutAff<=:dateJour and "
+						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", Integer.class);
+		query.setParameter("listeCodeService", servis);
+		query.setParameter("dateJour", new Date());
+		
+		List<Integer> result = query.getResultList();
+		
+		return result;
+	}
 }
