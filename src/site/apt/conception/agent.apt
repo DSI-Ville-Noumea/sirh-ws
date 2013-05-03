@@ -314,6 +314,21 @@ Web Services de l'agent
 	
 +------------------------------------------+
 
+** La Direction (service avec un code finissant par AA) d'un agent
+
+ URL : /agents/direction?idAgent=90xxxx
+
++------------------------------------------+
+
+{
+   "service": "DCAA",
+   "serviceLibelle": "Direction des Systèmes d'Information",
+   "sigle": "DSI",
+   "sigleParent": "SG"
+}
+	
++------------------------------------------+
+
 ** L'agent est-il un chef ?
 
  URL : /agents/estChef?idAgent=90xxxx
