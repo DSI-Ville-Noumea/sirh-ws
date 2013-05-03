@@ -546,4 +546,29 @@ public class AgentController {
 		
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent) {
+		
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		// Si l'agent n'existe pas, on ne retourne rien
+		if (ag == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		// On récupère le noeud parent des services de la personne
+		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent());
+		
+		JSONSerializer serializer = new JSONSerializer()
+			.exclude("*.class")	
+			.exclude("*.servicesEnfant")
+			.exclude("*.serviceParent");
+
+		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
+	}
 }

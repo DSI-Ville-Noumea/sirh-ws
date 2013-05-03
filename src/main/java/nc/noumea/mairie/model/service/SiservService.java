@@ -238,4 +238,22 @@ public class SiservService implements ISiservService {
 			res = serv;
 		return res;
 	}
+
+	@Override
+	public ServiceTreeNode getAgentDirection(Integer idAgent) {
+
+		ServiceTreeNode agentService = getAgentServiceTree(idAgent);
+		
+		ServiceTreeNode directionAgent = agentService;
+		boolean directionFound = false;
+		
+		while (!directionFound && directionAgent != null) {
+			if (directionAgent.getService().endsWith("AA"))
+				directionFound = true;
+			else
+				directionAgent = directionAgent.getServiceParent();
+		}
+		
+		return directionAgent;
+	}
 }
