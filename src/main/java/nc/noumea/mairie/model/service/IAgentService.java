@@ -21,4 +21,6 @@ public interface IAgentService {
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
+	public List<Integer> listAgentIdsOfServices(List<String> servis);
+
 }
