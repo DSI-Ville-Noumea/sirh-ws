@@ -171,6 +171,31 @@ public class SiservService implements ISiservService {
 		return result;
 	}
 
+	@Override
+	public List<String> getListSubServicesCodes(String servi) {
+
+		List<String> result = new ArrayList<String>();
+		Siserv siserv = getService(servi);
+		
+		ServiceTreeNode rootNode = getServiceTree().get(siserv.getSigle().trim());
+		
+		result.add(siserv.getServi());
+		listSubServices(rootNode, result);
+		
+		return result;
+	}
+	
+	private void listSubServices(ServiceTreeNode servi, List<String> services) {
+		
+		if (servi == null)
+			return;
+		
+		services.add(servi.getService());
+
+		for (ServiceTreeNode child : servi.getServicesEnfant())
+			listSubServices(child, services);
+	}
+
 	/**
 	 * Returns the only instance of the tree and builds it thread safely if not
 	 * yet existing Retourne l'instance de l'arbre des services Le construit de
