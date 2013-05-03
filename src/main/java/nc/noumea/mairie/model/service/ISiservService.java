@@ -19,6 +19,8 @@ public interface ISiservService {
 	
 	public List<String> getListServiceAgent(Integer idAgent, String sigleServiceParent);
 	
+	public List<String> getListSubServicesCodes(String servi);
+	
 	public ServiceTreeNode getAgentServiceTree(Integer idAgent);
 
 	public List<Siserv> getListServiceActif();
