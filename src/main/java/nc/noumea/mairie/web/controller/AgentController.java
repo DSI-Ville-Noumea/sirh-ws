@@ -546,7 +546,7 @@ public class AgentController {
 		
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
@@ -570,26 +570,5 @@ public class AgentController {
 			.exclude("*.serviceParent");
 
 		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/serviceAgents", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getServiceAgents(@RequestParam(value = "codeService", required = true) String codeService) {
-		
-		Siserv service = Siserv.findSiserv(codeService);
-		
-		// Si le service n'existe pas, on ne retourne rien
-		if (service == null)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		List<String> services = siservSrv.getListSubServicesCodes(codeService);
-		
-		List<Integer> result = agentSrv.listAgentIdsOfServices(services);
-		
-		if (result.size() == 0)
-			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		
-		return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
 	}
 }
