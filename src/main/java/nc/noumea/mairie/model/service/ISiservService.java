@@ -19,7 +19,9 @@ public interface ISiservService {
 	
 	public List<String> getListServiceAgent(Integer idAgent, String sigleServiceParent);
 	
-	public List<String> getListSubServicesCodes(String servi);
+	public List<String> getListSubServicesSigles(String servi);
+	
+	public List<ServiceTreeNode> getListSubServices(String servi);
 	
 	public ServiceTreeNode getAgentServiceTree(Integer idAgent);
 
@@ -30,4 +32,5 @@ public interface ISiservService {
 	public Siserv getServiceBySigle(String sigleService);
 	
 	public ServiceTreeNode getAgentDirection(Integer idAgent);
+	
 }
