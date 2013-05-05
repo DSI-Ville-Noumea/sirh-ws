@@ -1,0 +1,50 @@
+ -----
+ SIRH WS
+ -----
+ Nicolas RAYNAUD
+ -----
+  06/05/2013
+  
+Web Services des services
+
+* Json
+
+
+** Voir la liste des agents d'un service (service et sous services)
+
+ URL : /services/agents?codeService=DCAA
+
++------------------------------------------+
+
+[
+   9005131,
+   9002990,
+   9003047
+]
+	
++------------------------------------------+
+
+
+** Voir la liste des services sous un service donné (services et sous services)
+
+ URL : /services/sousServices?codeService=DCAA
+
++------------------------------------------+
+
+[
+   {
+	   "service": "DCAA",
+	   "serviceLibelle": "Direction des Systèmes d'Information",
+	   "sigle": "DSI",
+	   "sigleParent": "SG"
+	},
+	{
+	   "service": "DCCA",
+	   "serviceLibelle": "DSI SED",
+	   "sigle": "SED",
+	   "sigleParent": "DSI"
+	},
+	...
+]
+
++------------------------------------------+

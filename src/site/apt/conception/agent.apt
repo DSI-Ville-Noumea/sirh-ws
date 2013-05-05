@@ -383,17 +383,3 @@ Web Services de l'agent
    9003047
 ]
 +------------------------------------------+
-
-** Voir la liste des agents d'un service (service et sous services)
-
- URL : /agents/serviceAgents?codeService=DCAA
-
-+------------------------------------------+
-
-[
-   9005131,
-   9002990,
-   9003047
-]
-	
-+------------------------------------------+
