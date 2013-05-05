@@ -172,7 +172,31 @@ public class SiservService implements ISiservService {
 	}
 
 	@Override
-	public List<String> getListSubServicesCodes(String servi) {
+	public List<ServiceTreeNode> getListSubServices(String servi) {
+
+		List<ServiceTreeNode> result = new ArrayList<ServiceTreeNode>();
+		Siserv siserv = getService(servi);
+		
+		ServiceTreeNode rootNode = getServiceTree().get(siserv.getSigle().trim());
+		
+		listSubServices(rootNode, result);
+		
+		return result;
+	}
+	
+	private void listSubServices(ServiceTreeNode servi, List<ServiceTreeNode> services) {
+		
+		if (servi == null)
+			return;
+		
+		services.add(servi);
+
+		for (ServiceTreeNode child : servi.getServicesEnfant())
+			listSubServices(child, services);
+	}
+
+	@Override
+	public List<String> getListSubServicesSigles(String servi) {
 
 		List<String> result = new ArrayList<String>();
 		Siserv siserv = getService(servi);
@@ -180,12 +204,12 @@ public class SiservService implements ISiservService {
 		ServiceTreeNode rootNode = getServiceTree().get(siserv.getSigle().trim());
 		
 		result.add(siserv.getServi());
-		listSubServices(rootNode, result);
+		listSubServicesSigles(rootNode, result);
 		
 		return result;
 	}
 	
-	private void listSubServices(ServiceTreeNode servi, List<String> services) {
+	private void listSubServicesSigles(ServiceTreeNode servi, List<String> services) {
 		
 		if (servi == null)
 			return;
@@ -193,7 +217,7 @@ public class SiservService implements ISiservService {
 		services.add(servi.getService());
 
 		for (ServiceTreeNode child : servi.getServicesEnfant())
-			listSubServices(child, services);
+			listSubServicesSigles(child, services);
 	}
 
 	/**
