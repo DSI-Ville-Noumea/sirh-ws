@@ -2,10 +2,12 @@ package nc.noumea.mairie.web.controller;
 
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
+import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,24 @@ public class ServiceController {
 	@Autowired
 	private ISiservService siservSrv;
 	
+	private String remanieIdAgent(Long idAgent) {
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2, idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		return newIdAgent;
+	}
+
+	/**
+	 * Returns the list of agents in a service and its sub services
+	 * @param codeService
+	 * @return
+	 */
 	@RequestMapping(value = "/agents", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
@@ -40,15 +60,48 @@ public class ServiceController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		List<String> services = siservSrv.getListSubServicesSigles(codeService);
-		
-		List<Integer> result = agentSrv.listAgentIdsOfServices(services);
+		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(services);
 		
 		if (result.size() == 0)
 			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		
-		return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+		
+		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 	
+	/**
+	 * Returns the list of services contained in the direction service of the given agent
+	 * @param idAgent
+	 * @return
+	 */
+	@RequestMapping(value = "/servicesDirectionAgent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAgentsDirectionServices(@RequestParam(value = "idAgent", required = true) Long idAgent) {
+		
+		String newIdAgent = remanieIdAgent(idAgent);
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+		
+		if (ag == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		
+		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent());
+		List<ServiceTreeNode> services = siservSrv.getListSubServices(direction.getService());
+		
+		String json = new JSONSerializer().exclude("*.class")
+				.exclude("*.serviceParent")
+				.exclude("*.sigleParent")
+				.serialize(services);
+		
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns the list of sub services for a given service
+	 * @param codeService
+	 * @return
+	 */
 	@RequestMapping(value = "/sousServices", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
@@ -65,7 +118,10 @@ public class ServiceController {
 		if (services.size() == 0)
 			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		
-		String json = new JSONSerializer().exclude("*.class").exclude("*.serviceParent").serialize(services);
+		String json = new JSONSerializer().exclude("*.class")
+				.exclude("*.serviceParent")
+				.exclude("*.sigleParent")
+				.serialize(services);
 		
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
