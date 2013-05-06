@@ -1,5 +1,7 @@
 package nc.noumea.mairie.web.controller;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -10,6 +12,7 @@ import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,12 +49,42 @@ public class ServiceController {
 	/**
 	 * Returns the list of agents in a service and its sub services
 	 * @param codeService
+	 * @param date (optional)
+	 * @return
+	 */
+	@RequestMapping(value = "/agent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAgentService(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent, 
+			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern="YYYYMMdd") Date date) {
+		
+		// Si la date n'est pas spécifiée, prendre la date du jour
+		if (date == null)
+			date = new Date();
+		
+		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(null, date, Arrays.asList(idAgent));
+		
+		if (result.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		
+		String json = new JSONSerializer().exclude("*.class").serialize(result.get(0));
+		
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns the list of agents in a service and its sub services
+	 * @param codeService
+	 * @param date (optional)
 	 * @return
 	 */
 	@RequestMapping(value = "/agents", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getServiceAgents(@RequestParam(value = "codeService", required = true) String codeService) {
+	public ResponseEntity<String> getServiceAgents(
+			@RequestParam(value = "codeService", required = true) String codeService, 
+			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern="YYYYMMdd") Date date) {
 		
 		Siserv service = Siserv.findSiserv(codeService);
 		
@@ -60,7 +93,12 @@ public class ServiceController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		List<String> services = siservSrv.getListSubServicesSigles(codeService);
-		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(services);
+		
+		// Si la date n'est pas spécifiée, prendre la date du jour
+		if (date == null)
+			date = new Date();
+		
+		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(services, date, null);
 		
 		if (result.size() == 0)
 			new ResponseEntity<String>(HttpStatus.NO_CONTENT);

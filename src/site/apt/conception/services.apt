@@ -9,11 +9,30 @@ Web Services des Services
 
 * Json
 
+** Voir le service d'un agent à une date donnée
 
-** Voir la liste des agents d'un service (service et sous services)
+ URL : /services/agent?idAgent=9005138&date=20130419
 
- URL : /services/agents?codeService=DCAA
+ Note: idAgent est obligatoire, date est optionnel et sous le format YYYYMMdd.
+ 
++------------------------------------------+
 
+{
+   "codeService": "DCBA",
+   "idAgent": 9005138,
+   "nom": "NOM1",
+   "prenom": "PRENOM1",
+   "service": "DSI Direction des Systèmes d'Information"
+}
+	
++------------------------------------------+
+
+** Voir la liste des agents d'un service (service et sous services) a une date donnée
+
+ URL : /services/agents?codeService=DCAA&date=20130419
+
+ Note: codeService est obligatoire, date est optionnel et sous le format YYYYMMdd.
+ 
 +------------------------------------------+
 
 [
