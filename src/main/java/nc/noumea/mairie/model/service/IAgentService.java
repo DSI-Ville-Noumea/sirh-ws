@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.service;
 
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -22,6 +23,13 @@ public interface IAgentService {
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
-	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis);
+	/**
+	 * Retourne une liste d'agents (avec leur service)
+	 * @param servis = liste services codes dans lesquels chercher
+	 * @param date = date à laquelle effectuer la recherche
+	 * @param idAgent = agents a restreindre
+	 * @return
+	 */
+	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis, Date date, List<Integer> idAgents);
 
 }
