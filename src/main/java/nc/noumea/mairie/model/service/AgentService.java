@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,17 +92,27 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Integer> listAgentIdsOfServices(List<String> servis) {
+	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis) {
 	
-		TypedQuery<Integer> query = sirhEntityManager.createQuery(
-				"select ag.idAgent from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-						+ " and fp.service.servi in (:listeCodeService) "
-						+ " and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", Integer.class);
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
+		sb.append("WHERE aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
+		sb.append("and fp.service.servi in (:listeCodeService) ");
+		sb.append("and aff.dateDebutAff<=:dateJour and ");
+		sb.append("(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)");
+
+		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("listeCodeService", servis);
 		query.setParameter("dateJour", new Date());
 		
-		List<Integer> result = query.getResultList();
+		for (Affectation aff : query.getResultList()) {
+			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
+			agDto.setService(aff.getFichePoste().getService().getLiServ().trim());
+			agDto.setCodeService(aff.getFichePoste().getService().getServi());
+			result.add(agDto);
+		}
 		
 		return result;
 	}

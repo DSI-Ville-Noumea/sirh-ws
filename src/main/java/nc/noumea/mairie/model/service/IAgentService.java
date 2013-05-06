@@ -3,6 +3,7 @@ package nc.noumea.mairie.model.service;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 public interface IAgentService {
 
@@ -21,6 +22,6 @@ public interface IAgentService {
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
-	public List<Integer> listAgentIdsOfServices(List<String> servis);
+	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis);
 
 }
