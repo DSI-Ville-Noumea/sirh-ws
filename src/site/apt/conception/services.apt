@@ -5,7 +5,7 @@
  -----
   06/05/2013
   
-Web Services des services
+Web Services des Services
 
 * Json
 
@@ -17,9 +17,43 @@ Web Services des services
 +------------------------------------------+
 
 [
-   9005131,
-   9002990,
-   9003047
+   {
+       "codeService": "DCAA",
+       "idAgent": 9003353,
+       "nom": "NOM1",
+       "prenom": "PRENOM1",
+       "service": "Direction des Systèmes d'Information"
+   },
+   {
+       "codeService": "DCAB",
+       "idAgent": 9003623,
+       "nom": "NOM2",
+       "prenom": "PRENOM2",
+       "service": "DSI Pôle Administratif et Budgétaire"
+   },
+   ...
+]
+	
++------------------------------------------+
+
+** Voir la liste des services et sous services de la direction d'un agent
+
+ URL : /services/agents?idAgent=9008765
+
++------------------------------------------+
+
+[
+   {
+	   "service": "DCAA",
+	   "serviceLibelle": "Direction des Systèmes d'Information",
+	   "sigle": "DSI"
+	},
+	{
+	   "service": "DCCA",
+	   "serviceLibelle": "DSI SED",
+	   "sigle": "SED"
+	},
+	...
 ]
 	
 +------------------------------------------+
@@ -35,14 +69,12 @@ Web Services des services
    {
 	   "service": "DCAA",
 	   "serviceLibelle": "Direction des Systèmes d'Information",
-	   "sigle": "DSI",
-	   "sigleParent": "SG"
+	   "sigle": "DSI"
 	},
 	{
 	   "service": "DCCA",
 	   "serviceLibelle": "DSI SED",
-	   "sigle": "SED",
-	   "sigleParent": "DSI"
+	   "sigle": "SED"
 	},
 	...
 ]
