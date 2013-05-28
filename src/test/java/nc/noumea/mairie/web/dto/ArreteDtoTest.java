@@ -101,7 +101,7 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("Madame Martine TITIX épouse TITI", dto.getNomComplet());
+		assertEquals("Madame Martine TOTO épouse TITI", dto.getNomComplet());
 		assertEquals(false, dto.isRegularisation());
 		assertEquals("n° 2009/1310", dto.getDeliberationLabel());
 		assertEquals("statut", dto.getDeliberationCapText());
@@ -123,7 +123,7 @@ public class ArreteDtoTest {
 		Agent ag = new Agent();
 		ag.setNomPatronymique("TOTO");
 		ag.setNomMarital("TITI");
-		ag.setNomUsage(null);
+		ag.setNomUsage("TYY");
 		ag.setPrenom("Nono");
 		ag.setPrenomUsage("Max");
 		ag.setTitre("0");
