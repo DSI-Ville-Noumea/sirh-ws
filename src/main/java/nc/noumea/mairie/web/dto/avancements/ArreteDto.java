@@ -36,7 +36,8 @@ public class ArreteDto {
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr) throws ParseException {
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
+		this.changementClasse = avct.getIdModifAvancement() == null ? false
+				: avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
 				.getGradeGenerique().getDeliberationCommunale().getLibDeliberation();
@@ -74,12 +75,11 @@ public class ArreteDto {
 
 	private String getNomCompletAgent(Agent agent) {
 		if (agent.getTitre().equals("Monsieur")) {
-			return "Monsieur " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage());
+			return "Monsieur " + agent.getPrenomUsage() + " " + agent.getNomPatronymique();
 		} else if (agent.getTitre().equals("Madame")) {
-			return "Madame " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage())
-					+ " épouse " + agent.getNomMarital();
+			return "Madame " + agent.getPrenomUsage() + " " + agent.getNomPatronymique() + " épouse " + agent.getNomMarital();
 		} else {
-			return "Mademoiselle " + agent.getPrenomUsage() + " " + (agent.getNomUsage() == null ? agent.getNomPatronymique() : agent.getNomUsage());
+			return "Mademoiselle " + agent.getPrenomUsage() + " " + agent.getNomPatronymique();
 		}
 	}
 
