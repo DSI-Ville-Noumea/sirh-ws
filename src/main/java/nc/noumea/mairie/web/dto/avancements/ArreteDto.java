@@ -75,11 +75,11 @@ public class ArreteDto {
 
 	private String getNomCompletAgent(Agent agent) {
 		if (agent.getTitre().equals("Monsieur")) {
-			return "Monsieur " + agent.getPrenomUsage() + " " + agent.getNomPatronymique();
+			return "Monsieur " + agent.getPrenomUsage() + " " + agent.getNomUsage();
 		} else if (agent.getTitre().equals("Madame")) {
-			return "Madame " + agent.getPrenomUsage() + " " + agent.getNomPatronymique() + " épouse " + agent.getNomMarital();
+			return "Madame " + agent.getPrenomUsage() + " " + agent.getNomUsage() ;
 		} else {
-			return "Mademoiselle " + agent.getPrenomUsage() + " " + agent.getNomPatronymique();
+			return "Mademoiselle " + agent.getPrenomUsage() + " " + agent.getNomUsage();
 		}
 	}
 
