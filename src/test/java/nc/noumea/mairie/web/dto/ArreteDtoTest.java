@@ -101,7 +101,7 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("Madame Martine TOTO épouse TITI", dto.getNomComplet());
+		assertEquals("Madame Martine TITIX", dto.getNomComplet());
 		assertEquals(false, dto.isRegularisation());
 		assertEquals("n° 2009/1310", dto.getDeliberationLabel());
 		assertEquals("statut", dto.getDeliberationCapText());
@@ -175,7 +175,7 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("Monsieur Max TOTO", dto.getNomComplet());
+		assertEquals("Monsieur Max TYY", dto.getNomComplet());
 		assertEquals(false, dto.isFeminin());
 		assertEquals(true, dto.isChangementClasse());
 		assertEquals(false, dto.isRegularisation());
