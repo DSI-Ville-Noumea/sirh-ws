@@ -20,7 +20,7 @@ public class AgentService implements IAgentService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
-	
+
 	@Override
 	public Agent getAgent(Integer id) {
 		Agent res = null;
@@ -74,7 +74,7 @@ public class AgentService implements IAgentService {
 				+ "( select fpAgent.id_responsable from sirh.Fiche_Poste fpAgent, sirh.Affectation aff "
 				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)) "
 				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)";
-		Query query = sirhEntityManager.createNativeQuery(sql,Agent.class);
+		Query query = sirhEntityManager.createNativeQuery(sql, Agent.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
 		List<Agent> lag = query.getResultList();
@@ -89,9 +89,9 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis, Date date, List<Integer> idAgents) {
-	
+
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
 		sb.append("WHERE aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
@@ -100,28 +100,45 @@ public class AgentService implements IAgentService {
 			sb.append("and fp.service.servi in (:listeCodeService) ");
 		// if we're restraining search with idAgents...
 		if (idAgents != null && idAgents.size() != 0)
-			sb.append("and aff.agent.idAgent in (:idAgents) ");	
+			sb.append("and aff.agent.idAgent in (:idAgents) ");
 		sb.append("and aff.dateDebutAff<=:dateJour and ");
 		sb.append("(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)");
 
 		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("dateJour", date);
-		
+
 		// if we're restraining search with service codes
 		if (servis != null && servis.size() != 0)
 			query.setParameter("listeCodeService", servis);
-		
+
 		// if we're restraining search with idAgent...
 		if (idAgents != null && idAgents.size() != 0)
 			query.setParameter("idAgents", idAgents);
-		
+
 		for (Affectation aff : query.getResultList()) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			agDto.setService(aff.getFichePoste().getService().getLiServ().trim());
 			agDto.setCodeService(aff.getFichePoste().getService().getServi());
 			result.add(agDto);
 		}
-		
+
 		return result;
+	}
+
+	@Override
+	public Agent findAgentWithName(Integer idAgent, String nom) {
+		Agent res = null;
+
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and ag.nomUsage like :nom",
+				Agent.class);
+
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("nom", nom + "%");
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+			// agent nom trouvé avec ce nom
+		}
+		return res;
 	}
 }
