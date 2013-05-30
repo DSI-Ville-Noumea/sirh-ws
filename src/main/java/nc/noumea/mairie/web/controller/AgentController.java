@@ -23,6 +23,7 @@ import nc.noumea.mairie.model.service.ISoldeService;
 import nc.noumea.mairie.model.service.ISpadmnService;
 import nc.noumea.mairie.model.service.ISpcongService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
+import nc.noumea.mairie.web.dto.AgentDto;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class AgentController {
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
-	
+
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
 		if (idAgent.toString().length() == 6) {
@@ -159,7 +160,7 @@ public class AgentController {
 
 		String jsonResult = Agent.getSerializerForAgentCouvertureSociale().serialize(ag);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);		
+		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/banque", headers = "Accept=application/json")
@@ -292,7 +293,7 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -380,8 +381,8 @@ public class AgentController {
 	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent, @RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
-			java.text.ParseException {
+	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException, java.text.ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -397,9 +398,10 @@ public class AgentController {
 
 		List<String> listService = null;
 		if (estChef) {
-			//TODO
+			// TODO
 			// alors on regarde les sousService
-			//listService = siservSrv.getListServiceAgent(ag.getIdAgent(), sigleService);
+			// listService = siservSrv.getListServiceAgent(ag.getIdAgent(),
+			// sigleService);
 			Siserv service = siservSrv.getServiceBySigle(sigleService);
 			listService = new ArrayList<String>();
 			listService.add(service.getServi());
@@ -408,11 +410,11 @@ public class AgentController {
 			listService = new ArrayList<String>();
 			listService.add(serviceAgent.getServi());
 		}
-		
+
 		if (listService.size() == 0) {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
-		
+
 		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
 
 		Integer idAgentResp = 0;
@@ -437,12 +439,12 @@ public class AgentController {
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getServiceArbre(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
@@ -456,11 +458,8 @@ public class AgentController {
 		ServiceTreeNode treeHead = siservSrv.getAgentServiceTree(ag.getIdAgent());
 		List<ServiceTreeNode> treeHeadList = new ArrayList<ServiceTreeNode>();
 		treeHeadList.add(treeHead);
-		
-		JSONSerializer serializer = new JSONSerializer()
-			.exclude("*.class")	
-			.exclude("*.serviceParent")
-			.exclude("*.sigleParent");
+
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.serviceParent").exclude("*.sigleParent");
 
 		return new ResponseEntity<String>(serializer.deepSerialize(treeHeadList), HttpStatus.OK);
 	}
@@ -506,44 +505,46 @@ public class AgentController {
 
 		return new ResponseEntity<String>(jsonHabiliteKiosque.toJSONString(), headers, HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/sousAgents", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
-		
-		Agent ag = Agent.findAgent(newIdAgent);		
-		
+
+		Agent ag = Agent.findAgent(newIdAgent);
+
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-		
-		List<Integer> agentIds = fpSrv.getListSubAgents(idAgent, maxDepth);
-		
+
+		List<Integer> agentIds = fpSrv.getListSubAgents(newIdAgent, maxDepth, null);
+
 		if (agentIds.size() == 0)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
-		
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/agentsShd", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
-		
-		Agent ag = Agent.findAgent(newIdAgent);		
-		
+
+		Agent ag = Agent.findAgent(newIdAgent);
+
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-		
-		List<Integer> agentIds = fpSrv.getListShdAgents(idAgent, maxDepth);
-		
+
+		List<Integer> agentIds = fpSrv.getListShdAgents(newIdAgent, maxDepth);
+
 		if (agentIds.size() == 0)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
-		
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
 
@@ -551,7 +552,7 @@ public class AgentController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
@@ -563,12 +564,39 @@ public class AgentController {
 
 		// On récupère le noeud parent des services de la personne
 		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent());
-		
-		JSONSerializer serializer = new JSONSerializer()
-			.exclude("*.class")	
-			.exclude("*.servicesEnfant")
-			.exclude("*.serviceParent");
+
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant").exclude("*.serviceParent");
 
 		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/agentsSubordonnes", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAgentsSubordonnes(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+
+		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
+
+		Agent ag = Agent.findAgent(newIdAgent);
+
+		if (ag == null)
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+
+		List<Integer> agentIds = fpSrv.getListSubAgents(newIdAgent, maxDepth, nom);
+
+		if (agentIds.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		List<AgentDto> listeAgentSub = new ArrayList<AgentDto>();
+		for (Integer idAgentSub : agentIds) {
+			Agent agSub = Agent.findAgent(idAgentSub);
+			AgentDto agDto = new AgentDto(agSub);
+			listeAgentSub.add(agDto);
+		}
+
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.service").exclude("*.codeService").exclude("*.class")
+				.serialize(listeAgentSub), HttpStatus.OK);
 	}
 }

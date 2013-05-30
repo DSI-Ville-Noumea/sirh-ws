@@ -29,6 +29,9 @@ public class FichePosteService implements IFichePosteService {
 	@Autowired
 	private IFichePosteDao fichePosteDao;
 
+	@Autowired
+	private IAgentService agentSrv;
+
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
 
@@ -104,9 +107,9 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public List<Integer> getListSubAgents(int idAgent, int maxDepth) {
+	public List<Integer> getListSubAgents(int idAgent, int maxDepth, String nom) {
 		Integer fpId = getIdFichePostePrimaireAgentAffectationEnCours(idAgent, new DateTime().toDate());
-		return getSubAgentIdsForFichePoste(fpId, maxDepth);
+		return getSubAgentIdsForFichePoste(fpId, maxDepth, nom);
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class FichePosteService implements IFichePosteService {
 		Integer fpId = getIdFichePostePrimaireAgentAffectationEnCours(idAgent, new DateTime().toDate());
 		return getShdAgentIdsForFichePoste(fpId, maxDepth);
 	}
-	
+
 	@Override
 	public Integer getIdFichePostePrimaireAgentAffectationEnCours(int idAgent, Date date) {
 
@@ -174,35 +177,42 @@ public class FichePosteService implements IFichePosteService {
 	 * @return List<Integer>
 	 */
 	@Override
-	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth) {
+	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth, String nom) {
 
 		List<Integer> agents = new ArrayList<Integer>();
 
 		if (!getFichePosteTree().containsKey(idFichePosteResponsable))
 			return agents;
 
-		listSubAgents(getFichePosteTree().get(idFichePosteResponsable), agents, maxDepth);
+		listSubAgents(getFichePosteTree().get(idFichePosteResponsable), agents, maxDepth, nom);
 
 		return agents;
 	}
 
-	private List<Integer> listSubAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth) {
+	private List<Integer> listSubAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth, String nom) {
 
 		if (maxDepth == 0)
 			return agents;
 
 		for (FichePosteTreeNode node : fichePosteTreeNode.getFichePostesEnfant()) {
-			if (node.getIdAgent() != null)
-				agents.add(node.getIdAgent());
-			listSubAgents(node, agents, maxDepth - 1);
+			if (node.getIdAgent() != null) {
+				if (nom != null) {
+					if (agentSrv.findAgentWithName(node.getIdAgent(), nom) != null) {
+						agents.add(node.getIdAgent());
+					}
+				} else {
+					agents.add(node.getIdAgent());
+				}
+			}
+			listSubAgents(node, agents, maxDepth - 1, nom);
 		}
 
 		return agents;
 	}
-	
+
 	/**
-	 * Liste les agents responsables de la fiche poste en paramètre
-	 * sur une profondeur de maxDepth niveaux au maximum
+	 * Liste les agents responsables de la fiche poste en paramètre sur une
+	 * profondeur de maxDepth niveaux au maximum
 	 * 
 	 * @param idFichePoste
 	 * @return List<Integer>
@@ -226,7 +236,7 @@ public class FichePosteService implements IFichePosteService {
 			return agents;
 
 		agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
-		
+
 		listShdAgents(fichePosteTreeNode.getFichePosteParent(), agents, maxDepth - 1);
 
 		return agents;
