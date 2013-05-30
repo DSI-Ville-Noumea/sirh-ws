@@ -53,17 +53,17 @@ public class Agent {
 	public List<ParentEnfant> getParentEnfantsOrderByDateNaiss() {
 		List<ParentEnfant> res = new ArrayList<ParentEnfant>();
 		res.addAll(getParentEnfants());
-		
+
 		Comparator<ParentEnfant> comp = new Comparator<ParentEnfant>() {
 			@Override
 			public int compare(ParentEnfant o1, ParentEnfant o2) {
 				return o1.getEnfant().getDateNaissance().compareTo(o2.getEnfant().getDateNaissance());
 			}
-			
+
 		};
-		
+
 		Collections.sort(res, comp);
-		
+
 		return res;
 	}
 
@@ -205,21 +205,13 @@ public class Agent {
 	private String position;
 
 	public String getDisplayPrenom() {
-    	if (getPrenomUsage() != null && !getPrenomUsage().isEmpty())
-    		return getPrenomUsage();
-    	else
-    		return getPrenom();
-    }
-    
-    public String getDisplayNom() {
-    	if (getNomMarital() != null && !getNomMarital().isEmpty())
-    		return getNomMarital();
-    	else if (getNomUsage() != null && !getNomUsage().isEmpty())
-    		return getNomUsage();
-    	else
-    		return getNomPatronymique();
-    }
-    
+		return getPrenomUsage();
+	}
+
+	public String getDisplayNom() {
+		return getNomUsage();
+	}
+
 	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentToHierarchiqueTransformer(), Agent.class).transform(
 				new StringTrimTransformer(), String.class);
