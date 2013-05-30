@@ -19,17 +19,23 @@ public interface IAgentService {
 
 	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent);
 
-	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent,Integer idAgentResponsable, List<String> listeCodeService);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<String> listeCodeService);
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
 	/**
 	 * Retourne une liste d'agents (avec leur service)
-	 * @param servis = liste services codes dans lesquels chercher
-	 * @param date = date à laquelle effectuer la recherche
-	 * @param idAgent = agents a restreindre
+	 * 
+	 * @param servis
+	 *            = liste services codes dans lesquels chercher
+	 * @param date
+	 *            = date à laquelle effectuer la recherche
+	 * @param idAgent
+	 *            = agents a restreindre
 	 * @return
 	 */
 	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis, Date date, List<Integer> idAgents);
+
+	public Agent findAgentWithName(Integer idAgent, String nom);
 
 }
