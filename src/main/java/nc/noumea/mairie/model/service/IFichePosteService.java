@@ -21,14 +21,14 @@ public interface IFichePosteService {
 
 	public List<Integer> getListSubFichePoste(int idAgent, int maxDepth);
 
-	public List<Integer> getListSubAgents(int idAgent, int maxDepth);
+	public List<Integer> getListSubAgents(int idAgent, int maxDepth, String nom);
 
 	public List<Integer> getSubFichePosteIdsForResponsable(int idFichePosteResponsable, int maxDepth);
 
-	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth);
-	
+	public List<Integer> getSubAgentIdsForFichePoste(int idFichePosteResponsable, int maxDepth, String nom);
+
 	public List<Integer> getListShdAgents(int idAgent, int maxDepth);
-	
+
 	public List<Integer> getShdAgentIdsForFichePoste(int idFichePoste, int maxDepth);
 
 	public FichePoste getFichePosteById(Integer idFichePoste);
