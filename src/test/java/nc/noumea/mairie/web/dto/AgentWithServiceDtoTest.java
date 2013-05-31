@@ -5,10 +5,10 @@ import nc.noumea.mairie.model.bean.Agent;
 
 import org.junit.Test;
 
-public class AgentDtoTest  {
+public class AgentWithServiceDtoTest extends AgentDto {
 
 	@Test
-	public void testAgentDto_cst() {
+	public void testAgentWithServiceDto_cst() {
 		// Given
 		Agent ag = new Agent();
 		ag.setIdAgent(9005138);
@@ -16,7 +16,7 @@ public class AgentDtoTest  {
 		ag.setPrenomUsage("Nono");
 
 		// When
-		AgentDto dto = new AgentDto(ag);
+		AgentWithServiceDto dto = new AgentWithServiceDto(ag);
 
 		// Then
 		assertEquals(ag.getDisplayNom(), dto.getNom());
