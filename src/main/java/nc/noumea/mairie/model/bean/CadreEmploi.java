@@ -14,6 +14,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooSerializable
 public class CadreEmploi {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@NotNull
 	@Column(name = "LIB_CADRE_EMPLOI")
 	private String libelleCadreEmploi;

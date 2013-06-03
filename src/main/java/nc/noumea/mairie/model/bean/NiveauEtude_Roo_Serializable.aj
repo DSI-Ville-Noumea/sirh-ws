@@ -10,6 +10,4 @@ privileged aspect NiveauEtude_Roo_Serializable {
     
     declare parents: NiveauEtude implements Serializable;
     
-    private static final long NiveauEtude.serialVersionUID = 1L;
-    
 }

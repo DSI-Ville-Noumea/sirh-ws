@@ -10,6 +10,4 @@ privileged aspect CompetenceFPPK_Roo_Serializable {
     
     declare parents: CompetenceFPPK implements Serializable;
     
-    private static final long CompetenceFPPK.serialVersionUID = 1L;
-    
 }

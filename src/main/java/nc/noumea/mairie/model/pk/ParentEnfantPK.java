@@ -15,6 +15,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @Embeddable
 public final class ParentEnfantPK {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "ID_AGENT")
 	private Integer idAgent;
 

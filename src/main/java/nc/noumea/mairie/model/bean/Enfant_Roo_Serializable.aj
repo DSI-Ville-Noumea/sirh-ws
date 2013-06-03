@@ -10,6 +10,4 @@ privileged aspect Enfant_Roo_Serializable {
     
     declare parents: Enfant implements Serializable;
     
-    private static final long Enfant.serialVersionUID = 1L;
-    
 }

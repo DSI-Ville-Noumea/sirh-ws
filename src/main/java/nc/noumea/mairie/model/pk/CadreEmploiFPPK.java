@@ -11,6 +11,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooIdentifier
 public final class CadreEmploiFPPK  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "ID_CADRE_EMPLOI")
 	private Integer idCadreEmploi;
 
