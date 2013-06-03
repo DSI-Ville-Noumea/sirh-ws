@@ -14,6 +14,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooSerializable
 public class Activite {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@NotNull
 	@Column(name = "NOM_ACTIVITE")
 	private String nomActivite;

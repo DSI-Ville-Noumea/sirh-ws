@@ -10,6 +10,4 @@ privileged aspect CadreEmploiFPPK_Roo_Serializable {
     
     declare parents: CadreEmploiFPPK implements Serializable;
     
-    private static final long CadreEmploiFPPK.serialVersionUID = 1L;
-    
 }

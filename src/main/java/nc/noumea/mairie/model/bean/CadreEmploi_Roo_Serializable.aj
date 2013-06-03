@@ -10,6 +10,4 @@ privileged aspect CadreEmploi_Roo_Serializable {
     
     declare parents: CadreEmploi implements Serializable;
     
-    private static final long CadreEmploi.serialVersionUID = 1L;
-    
 }
