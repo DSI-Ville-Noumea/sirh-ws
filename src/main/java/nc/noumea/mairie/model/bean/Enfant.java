@@ -26,6 +26,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJson
 public class Enfant {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Autowired
 	@Transient
 	ISivietService sivietSrv;

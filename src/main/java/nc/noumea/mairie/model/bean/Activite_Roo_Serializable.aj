@@ -10,6 +10,4 @@ privileged aspect Activite_Roo_Serializable {
     
     declare parents: Activite implements Serializable;
     
-    private static final long Activite.serialVersionUID = 1L;
-    
 }

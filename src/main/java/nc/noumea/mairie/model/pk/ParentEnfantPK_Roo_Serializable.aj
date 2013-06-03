@@ -10,6 +10,4 @@ privileged aspect ParentEnfantPK_Roo_Serializable {
     
     declare parents: ParentEnfantPK implements Serializable;
     
-    private static final long ParentEnfantPK.serialVersionUID = 1L;
-    
 }

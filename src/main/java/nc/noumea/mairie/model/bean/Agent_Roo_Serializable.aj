@@ -10,6 +10,4 @@ privileged aspect Agent_Roo_Serializable {
     
     declare parents: Agent implements Serializable;
     
-    private static final long Agent.serialVersionUID = 1L;
-    
 }

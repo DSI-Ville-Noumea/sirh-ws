@@ -10,6 +10,4 @@ privileged aspect ActiviteFPPK_Roo_Serializable {
     
     declare parents: ActiviteFPPK implements Serializable;
     
-    private static final long ActiviteFPPK.serialVersionUID = 1L;
-    
 }

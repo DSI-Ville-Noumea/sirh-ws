@@ -10,6 +10,4 @@ privileged aspect NiveauEtudeFPPK_Roo_Serializable {
     
     declare parents: NiveauEtudeFPPK implements Serializable;
     
-    private static final long NiveauEtudeFPPK.serialVersionUID = 1L;
-    
 }
