@@ -6,6 +6,7 @@ package nc.noumea.mairie.model.bean;
 import java.util.Date;
 import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AgentRecherche;
 import nc.noumea.mairie.model.bean.FichePoste;
 
 privileged aspect Affectation_Roo_JavaBean {
@@ -16,6 +17,14 @@ privileged aspect Affectation_Roo_JavaBean {
     
     public void Affectation.setAgent(Agent agent) {
         this.agent = agent;
+    }
+    
+    public AgentRecherche Affectation.getAgentrecherche() {
+        return this.agentrecherche;
+    }
+    
+    public void Affectation.setAgentrecherche(AgentRecherche agentrecherche) {
+        this.agentrecherche = agentrecherche;
     }
     
     public FichePoste Affectation.getFichePoste() {

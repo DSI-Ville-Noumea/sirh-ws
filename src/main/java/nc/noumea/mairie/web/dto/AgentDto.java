@@ -1,6 +1,7 @@
 package nc.noumea.mairie.web.dto;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AgentRecherche;
 
 public class AgentDto {
 
@@ -12,6 +13,12 @@ public class AgentDto {
 	}
 
 	public AgentDto(Agent agent) {
+		nom = agent.getDisplayNom();
+		prenom = agent.getDisplayPrenom();
+		idAgent = agent.getIdAgent();
+	}
+
+	public AgentDto(AgentRecherche agent) {
 		nom = agent.getDisplayNom();
 		prenom = agent.getDisplayPrenom();
 		idAgent = agent.getIdAgent();
