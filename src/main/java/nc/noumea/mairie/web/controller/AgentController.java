@@ -596,7 +596,17 @@ public class AgentController {
 			listeAgentSub.add(agDto);
 		}
 
-		return new ResponseEntity<String>(new JSONSerializer().exclude("*.service").exclude("*.codeService").exclude("*.class")
-				.serialize(listeAgentSub), HttpStatus.OK);
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentSub), HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/listeAgentsMairie", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListeAgentsMairie(@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
+			@RequestParam(value = "codeService", required = false, defaultValue = "") String codeService) throws ParseException {
+
+		List<AgentDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, codeService);
+
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
 	}
 }

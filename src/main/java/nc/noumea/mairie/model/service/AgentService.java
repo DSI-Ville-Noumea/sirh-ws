@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,8 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AgentRecherche;
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.stereotype.Service;
@@ -140,5 +143,50 @@ public class AgentService implements IAgentService {
 			// agent nom trouvé avec ce nom
 		}
 		return res;
+	}
+
+	@Override
+	public List<AgentDto> listAgentsEnActivite(String nom, String codeService) {
+
+		List<AgentDto> result = new ArrayList<AgentDto>();
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select ag from AgentRecherche ag , Affectation aff, FichePoste fp, Spadmn pa ");
+		sb.append("where  fp.idFichePoste = aff.fichePoste.idFichePoste ");
+		sb.append("and ag.nomatr=pa.id.nomatr ");
+		sb.append("and ag.idAgent=aff.agentrecherche.idAgent ");
+		sb.append("and pa.cdpadm in ('01', '02', '03', '04', '23', '24', '60', '61', '62', '63', '64', '65', '66') ");
+		sb.append("and pa.id.datdeb <= :dateJourMairie and (pa.datfin = 0 or pa.datfin >= :dateJourMairie) ");
+		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) ");
+
+		// if we're restraining search with service codes
+		if (!codeService.equals(""))
+			sb.append("and fp.service.servi= :codeService ");
+		// if we're restraining search with nomAgent...
+		if (!nom.equals(""))
+			sb.append("and ag.nomUsage like :nom ");
+
+		TypedQuery<AgentRecherche> query = sirhEntityManager.createQuery(sb.toString(), AgentRecherche.class);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		query.setParameter("dateJourMairie", Integer.valueOf(sdf.format(new Date())));
+		query.setParameter("dateJour", new Date());
+
+		// if we're restraining search with service codes
+		if (!codeService.equals(""))
+			query.setParameter("codeService", codeService);
+
+		// if we're restraining search with nomAgent...
+		if (!nom.equals(""))
+			query.setParameter("nom", nom + "%");
+
+		List<AgentRecherche> list = query.getResultList();
+		for (AgentRecherche ag : list) {
+			AgentDto agDto = new AgentDto(ag);
+			result.add(agDto);
+		}
+
+		return result;
 	}
 }
