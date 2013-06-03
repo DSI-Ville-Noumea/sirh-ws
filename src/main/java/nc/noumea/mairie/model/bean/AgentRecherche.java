@@ -16,6 +16,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", schema = "SIRH", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class AgentRecherche {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@NotNull
 	@Column(name = "NOMATR")
 	private Integer nomatr;

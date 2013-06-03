@@ -18,6 +18,11 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SIVIET", versionField = "")
 public class SIVIET implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@EmbeddedId
 	private SivietId id;
 

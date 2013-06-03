@@ -10,6 +10,4 @@ privileged aspect Competence_Roo_Serializable {
     
     declare parents: Competence implements Serializable;
     
-    private static final long Competence.serialVersionUID = 1L;
-    
 }

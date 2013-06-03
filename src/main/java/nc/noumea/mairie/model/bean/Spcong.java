@@ -28,6 +28,11 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SPCONG", versionField = "")
 public class Spcong implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@EmbeddedId
 	private SpcongId id;
 
