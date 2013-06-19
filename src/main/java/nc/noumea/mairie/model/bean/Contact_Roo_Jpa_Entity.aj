@@ -15,7 +15,7 @@ privileged aspect Contact_Roo_Jpa_Entity {
     
     declare @type: Contact: @Entity;
     
-    declare @type: Contact: @Table(schema = "SIRH", name = "CONTACT");
+    declare @type: Contact: @Table(name = "CONTACT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

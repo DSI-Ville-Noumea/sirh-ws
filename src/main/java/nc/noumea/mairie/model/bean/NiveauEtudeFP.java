@@ -8,6 +8,6 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = NiveauEtudeFPPK.class, table = "NIVEAU_ETUDE_FP", schema = "SIRH", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = NiveauEtudeFPPK.class, table = "NIVEAU_ETUDE_FP", versionField = "")
 public class NiveauEtudeFP {
 }

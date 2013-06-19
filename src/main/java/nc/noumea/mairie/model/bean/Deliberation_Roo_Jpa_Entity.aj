@@ -15,7 +15,7 @@ privileged aspect Deliberation_Roo_Jpa_Entity {
     
     declare @type: Deliberation: @Entity;
     
-    declare @type: Deliberation: @Table(schema = "SIRH", name = "P_DELIBERATION");
+    declare @type: Deliberation: @Table(name = "P_DELIBERATION");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

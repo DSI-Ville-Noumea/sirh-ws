@@ -8,7 +8,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_STATUT_FP", identifierField = "idStatutFp", schema = "SIRH", table = "R_STATUT_FP", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_STATUT_FP", identifierField = "idStatutFp", table = "R_STATUT_FP", versionField = "")
 public class StatutFichePoste {
 
 	@NotNull

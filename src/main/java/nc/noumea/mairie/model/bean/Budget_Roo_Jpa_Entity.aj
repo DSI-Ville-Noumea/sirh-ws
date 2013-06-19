@@ -15,7 +15,7 @@ privileged aspect Budget_Roo_Jpa_Entity {
     
     declare @type: Budget: @Entity;
     
-    declare @type: Budget: @Table(schema = "SIRH", name = "R_BUDGET");
+    declare @type: Budget: @Table(name = "R_BUDGET");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

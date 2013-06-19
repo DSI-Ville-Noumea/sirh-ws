@@ -72,9 +72,9 @@ public class AgentService implements IAgentService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent) {
-		String sql = "select a.* from sirh.Affectation aff, sirh.Agent a "
+		String sql = "select a.* from Affectation aff, Agent a "
 				+ "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
-				+ "( select fpAgent.id_responsable from sirh.Fiche_Poste fpAgent, sirh.Affectation aff "
+				+ "( select fpAgent.id_responsable from Fiche_Poste fpAgent, Affectation aff "
 				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)) "
 				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)";
 		Query query = sirhEntityManager.createNativeQuery(sql, Agent.class);

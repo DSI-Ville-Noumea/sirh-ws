@@ -13,7 +13,7 @@ privileged aspect NiveauEtudeFP_Roo_Jpa_Entity {
     
     declare @type: NiveauEtudeFP: @Entity;
     
-    declare @type: NiveauEtudeFP: @Table(schema = "SIRH", name = "NIVEAU_ETUDE_FP");
+    declare @type: NiveauEtudeFP: @Table(name = "NIVEAU_ETUDE_FP");
     
     @EmbeddedId
     private NiveauEtudeFPPK NiveauEtudeFP.id;

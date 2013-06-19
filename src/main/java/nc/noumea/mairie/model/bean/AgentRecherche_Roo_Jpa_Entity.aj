@@ -15,7 +15,7 @@ privileged aspect AgentRecherche_Roo_Jpa_Entity {
     
     declare @type: AgentRecherche: @Entity;
     
-    declare @type: AgentRecherche: @Table(schema = "SIRH", name = "AGENT");
+    declare @type: AgentRecherche: @Table(name = "AGENT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

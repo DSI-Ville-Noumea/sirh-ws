@@ -11,6 +11,6 @@ privileged aspect Sivoie_Roo_Jpa_Entity {
     
     declare @type: Sivoie: @Entity;
     
-    declare @type: Sivoie: @Table(schema = "MAIRIE", name = "SIVOIE");
+    declare @type: Sivoie: @Table(name = "SIVOIE");
     
 }

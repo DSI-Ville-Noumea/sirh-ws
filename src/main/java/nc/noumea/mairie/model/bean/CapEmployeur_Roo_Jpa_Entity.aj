@@ -11,6 +11,6 @@ privileged aspect CapEmployeur_Roo_Jpa_Entity {
     
     declare @type: CapEmployeur: @Entity;
     
-    declare @type: CapEmployeur: @Table(schema = "SIRH", name = "EMPLOYEUR_CAP");
+    declare @type: CapEmployeur: @Table(name = "EMPLOYEUR_CAP");
     
 }

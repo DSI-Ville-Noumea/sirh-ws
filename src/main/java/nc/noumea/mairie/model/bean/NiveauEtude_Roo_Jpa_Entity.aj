@@ -15,7 +15,7 @@ privileged aspect NiveauEtude_Roo_Jpa_Entity {
     
     declare @type: NiveauEtude: @Entity;
     
-    declare @type: NiveauEtude: @Table(schema = "SIRH", name = "R_NIVEAU_ETUDE");
+    declare @type: NiveauEtude: @Table(name = "R_NIVEAU_ETUDE");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

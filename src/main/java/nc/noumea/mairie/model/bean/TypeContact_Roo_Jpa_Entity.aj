@@ -15,7 +15,7 @@ privileged aspect TypeContact_Roo_Jpa_Entity {
     
     declare @type: TypeContact: @Entity;
     
-    declare @type: TypeContact: @Table(schema = "SIRH", name = "R_TYPE_CONTACT");
+    declare @type: TypeContact: @Table(name = "R_TYPE_CONTACT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
