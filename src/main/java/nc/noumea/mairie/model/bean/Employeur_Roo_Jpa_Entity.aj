@@ -15,7 +15,7 @@ privileged aspect Employeur_Roo_Jpa_Entity {
     
     declare @type: Employeur: @Entity;
     
-    declare @type: Employeur: @Table(schema = "SIRH", name = "P_EMPLOYEUR");
+    declare @type: Employeur: @Table(name = "P_EMPLOYEUR");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

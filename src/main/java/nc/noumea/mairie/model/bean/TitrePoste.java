@@ -10,7 +10,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_TITRE_POSTE", identifierField = "idTitrePoste", schema = "SIRH", table = "P_TITRE_POSTE", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_TITRE_POSTE", identifierField = "idTitrePoste", table = "P_TITRE_POSTE", versionField = "")
 public class TitrePoste {
 
 	@Column(name = "LIB_TITRE_POSTE")

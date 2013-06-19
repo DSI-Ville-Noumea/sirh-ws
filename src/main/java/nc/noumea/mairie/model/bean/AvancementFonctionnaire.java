@@ -13,7 +13,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 @RooJavaBean
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AVCT", schema = "SIRH", identifierField = "idAvct", identifierType = Integer.class, table = "AVCT_FONCT", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AVCT",  identifierField = "idAvct", identifierType = Integer.class, table = "AVCT_FONCT", versionField = "")
 public class AvancementFonctionnaire {
 
 	@ManyToOne(optional=true)

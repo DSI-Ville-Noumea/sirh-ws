@@ -15,7 +15,7 @@ privileged aspect Enfant_Roo_Jpa_Entity {
     
     declare @type: Enfant: @Entity;
     
-    declare @type: Enfant: @Table(schema = "SIRH", name = "ENFANT");
+    declare @type: Enfant: @Table(name = "ENFANT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

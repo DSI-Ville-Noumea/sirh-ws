@@ -15,7 +15,7 @@ privileged aspect TypeCompetence_Roo_Jpa_Entity {
     
     declare @type: TypeCompetence: @Entity;
     
-    declare @type: TypeCompetence: @Table(schema = "SIRH", name = "R_TYPE_COMPETENCE");
+    declare @type: TypeCompetence: @Table(name = "R_TYPE_COMPETENCE");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

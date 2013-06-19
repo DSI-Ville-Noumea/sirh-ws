@@ -16,7 +16,7 @@ privileged aspect Sicomm_Roo_Jpa_Entity {
     
     declare @type: Sicomm: @Entity;
     
-    declare @type: Sicomm: @Table(schema = "MAIRIE", name = "SICOMM");
+    declare @type: Sicomm: @Table(name = "SICOMM");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -15,7 +15,7 @@ privileged aspect StatutFichePoste_Roo_Jpa_Entity {
     
     declare @type: StatutFichePoste: @Entity;
     
-    declare @type: StatutFichePoste: @Table(schema = "SIRH", name = "R_STATUT_FP");
+    declare @type: StatutFichePoste: @Table(name = "R_STATUT_FP");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

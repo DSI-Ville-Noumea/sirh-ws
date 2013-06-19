@@ -15,7 +15,7 @@ privileged aspect AvancementFonctionnaire_Roo_Jpa_Entity {
     
     declare @type: AvancementFonctionnaire: @Entity;
     
-    declare @type: AvancementFonctionnaire: @Table(schema = "SIRH", name = "AVCT_FONCT");
+    declare @type: AvancementFonctionnaire: @Table(name = "AVCT_FONCT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

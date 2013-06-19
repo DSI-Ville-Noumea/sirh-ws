@@ -11,6 +11,6 @@ privileged aspect Sptyco_Roo_Jpa_Entity {
     
     declare @type: Sptyco: @Entity;
     
-    declare @type: Sptyco: @Table(schema = "MAIRIE", name = "SPTYCO");
+    declare @type: Sptyco: @Table(name = "SPTYCO");
     
 }

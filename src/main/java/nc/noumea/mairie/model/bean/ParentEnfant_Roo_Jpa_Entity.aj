@@ -11,6 +11,6 @@ privileged aspect ParentEnfant_Roo_Jpa_Entity {
     
     declare @type: ParentEnfant: @Entity;
     
-    declare @type: ParentEnfant: @Table(schema = "SIRH", name = "PARENT_ENFANT");
+    declare @type: ParentEnfant: @Table(name = "PARENT_ENFANT");
     
 }
