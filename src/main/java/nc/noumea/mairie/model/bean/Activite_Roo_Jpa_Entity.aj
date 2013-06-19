@@ -15,7 +15,7 @@ privileged aspect Activite_Roo_Jpa_Entity {
     
     declare @type: Activite: @Entity;
     
-    declare @type: Activite: @Table(schema = "SIRH", name = "ACTIVITE");
+    declare @type: Activite: @Table(name = "ACTIVITE");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

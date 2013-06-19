@@ -15,7 +15,7 @@ privileged aspect AvisCap_Roo_Jpa_Entity {
     
     declare @type: AvisCap: @Entity;
     
-    declare @type: AvisCap: @Table(schema = "SIRH", name = "R_AVIS_CAP");
+    declare @type: AvisCap: @Table(name = "R_AVIS_CAP");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

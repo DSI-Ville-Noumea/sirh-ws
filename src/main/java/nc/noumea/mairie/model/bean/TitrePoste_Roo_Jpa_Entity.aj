@@ -15,7 +15,7 @@ privileged aspect TitrePoste_Roo_Jpa_Entity {
     
     declare @type: TitrePoste: @Entity;
     
-    declare @type: TitrePoste: @Table(schema = "SIRH", name = "P_TITRE_POSTE");
+    declare @type: TitrePoste: @Table(name = "P_TITRE_POSTE");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

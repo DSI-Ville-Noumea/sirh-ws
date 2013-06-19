@@ -17,7 +17,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_CAP", schema = "SIRH", identifierField = "idCap", identifierType = Integer.class, table = "P_CAP", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_CAP", identifierField = "idCap", identifierType = Integer.class, table = "P_CAP", versionField = "")
 @NamedQuery(name = "getCapWithEmployeursAndRepresentants", query = "SELECT c FROM Cap c JOIN FETCH c.employeurs JOIN FETCH c.representants WHERE c.idCap = :idCap")
 public class Cap {
 
@@ -34,7 +34,7 @@ public class Cap {
 	private String typeCap;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(schema = "SIRH", name = "CORPS_CAP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_CAP") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "CDGENG"))
+	@JoinTable(name = "CORPS_CAP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_CAP") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "CDGENG"))
 	private Set<Spgeng> corps;
 
 	@OneToMany(mappedBy = "cap", fetch = FetchType.LAZY, orphanRemoval = true)

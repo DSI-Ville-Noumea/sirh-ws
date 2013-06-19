@@ -13,7 +13,7 @@ privileged aspect ActiviteFP_Roo_Jpa_Entity {
     
     declare @type: ActiviteFP: @Entity;
     
-    declare @type: ActiviteFP: @Table(schema = "SIRH", name = "ACTIVITE_FP");
+    declare @type: ActiviteFP: @Table(name = "ACTIVITE_FP");
     
     @EmbeddedId
     private ActiviteFPPK ActiviteFP.id;

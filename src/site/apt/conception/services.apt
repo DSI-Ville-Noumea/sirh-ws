@@ -57,7 +57,7 @@ Web Services des Services
 
 ** Voir la liste des services et sous services de la direction d'un agent
 
- URL : /services/agents?idAgent=9008765
+ URL : /services/agent?idAgent=9008765
 
 +------------------------------------------+
 

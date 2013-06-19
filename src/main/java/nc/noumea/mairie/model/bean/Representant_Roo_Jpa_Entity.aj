@@ -15,7 +15,7 @@ privileged aspect Representant_Roo_Jpa_Entity {
     
     declare @type: Representant: @Entity;
     
-    declare @type: Representant: @Table(schema = "SIRH", name = "P_REPRESENTANT");
+    declare @type: Representant: @Table(name = "P_REPRESENTANT");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

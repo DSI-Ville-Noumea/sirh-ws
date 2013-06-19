@@ -15,7 +15,7 @@ privileged aspect Cap_Roo_Jpa_Entity {
     
     declare @type: Cap: @Entity;
     
-    declare @type: Cap: @Table(schema = "SIRH", name = "P_CAP");
+    declare @type: Cap: @Table(name = "P_CAP");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

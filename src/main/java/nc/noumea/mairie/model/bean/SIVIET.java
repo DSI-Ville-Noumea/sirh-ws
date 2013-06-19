@@ -15,7 +15,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "MAIRIE", table = "SIVIET", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SIVIET", versionField = "")
 public class SIVIET implements Serializable {
 
 	/**
