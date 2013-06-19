@@ -15,7 +15,7 @@ privileged aspect CadreEmploi_Roo_Jpa_Entity {
     
     declare @type: CadreEmploi: @Entity;
     
-    declare @type: CadreEmploi: @Table(schema = "SIRH", name = "P_CADRE_EMPLOI");
+    declare @type: CadreEmploi: @Table(name = "P_CADRE_EMPLOI");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

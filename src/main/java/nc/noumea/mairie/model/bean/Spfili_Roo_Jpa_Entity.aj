@@ -11,6 +11,6 @@ privileged aspect Spfili_Roo_Jpa_Entity {
     
     declare @type: Spfili: @Entity;
     
-    declare @type: Spfili: @Table(schema = "MAIRIE", name = "SPFILI");
+    declare @type: Spfili: @Table(name = "SPFILI");
     
 }

@@ -11,6 +11,6 @@ privileged aspect CapRepresentant_Roo_Jpa_Entity {
     
     declare @type: CapRepresentant: @Entity;
     
-    declare @type: CapRepresentant: @Table(schema = "SIRH", name = "REPRESENTANT_CAP");
+    declare @type: CapRepresentant: @Table(name = "REPRESENTANT_CAP");
     
 }

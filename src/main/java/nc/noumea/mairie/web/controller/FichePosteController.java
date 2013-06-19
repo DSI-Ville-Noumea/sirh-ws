@@ -67,7 +67,7 @@ public class FichePosteController {
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
 		
-		List<Integer> fichePosteIds = fpSrv.getListSubFichePoste(idAgent, maxDepth);
+		List<Integer> fichePosteIds = fpSrv.getListSubFichePoste(newIdAgent, maxDepth);
 		
 		if (fichePosteIds.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 

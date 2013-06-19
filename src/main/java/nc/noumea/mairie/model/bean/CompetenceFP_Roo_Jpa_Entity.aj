@@ -13,7 +13,7 @@ privileged aspect CompetenceFP_Roo_Jpa_Entity {
     
     declare @type: CompetenceFP: @Entity;
     
-    declare @type: CompetenceFP: @Table(schema = "SIRH", name = "COMPETENCE_FP");
+    declare @type: CompetenceFP: @Table(name = "COMPETENCE_FP");
     
     @EmbeddedId
     private CompetenceFPPK CompetenceFP.id;

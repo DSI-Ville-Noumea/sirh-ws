@@ -11,6 +11,6 @@ privileged aspect SpSold_Roo_Jpa_Entity {
     
     declare @type: SpSold: @Entity;
     
-    declare @type: SpSold: @Table(schema = "MAIRIE", name = "SPSOLD");
+    declare @type: SpSold: @Table(name = "SPSOLD");
     
 }

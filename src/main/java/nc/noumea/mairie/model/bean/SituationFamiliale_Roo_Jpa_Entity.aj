@@ -15,7 +15,7 @@ privileged aspect SituationFamiliale_Roo_Jpa_Entity {
     
     declare @type: SituationFamiliale: @Entity;
     
-    declare @type: SituationFamiliale: @Table(schema = "SIRH", name = "R_SITUATION_FAMILIALE");
+    declare @type: SituationFamiliale: @Table(name = "R_SITUATION_FAMILIALE");
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

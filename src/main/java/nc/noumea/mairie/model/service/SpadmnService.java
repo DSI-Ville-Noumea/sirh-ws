@@ -14,7 +14,7 @@ public class SpadmnService implements ISpadmnService {
 
 	@Override
 	public boolean estPAActive(Integer nomatr, Integer dateDeb) {
-		String sql = "select count(pa.nomatr) from mairie.spadmn pa inner join mairie.spposa po on pa.cdpadm=po.cdpadm where pa.nomatr=:nomatr and pa.datdeb <=:dateJour and ( pa.datfin =0 or pa.datfin>=:dateJour) and po.posit!='FS'";
+		String sql = "select count(pa.nomatr) from spadmn pa inner join spposa po on pa.cdpadm=po.cdpadm where pa.nomatr=:nomatr and pa.datdeb <=:dateJour and ( pa.datfin =0 or pa.datfin>=:dateJour) and po.posit!='FS'";
 		Query query = sirhEntityManager.createNativeQuery(sql);
 		query.setParameter("nomatr", nomatr);
 		query.setParameter("dateJour", dateDeb);

@@ -10,7 +10,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 @RooJavaBean
 @RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_ACTIVITE", schema = "SIRH", identifierField = "idActivite", identifierType = Integer.class, table = "ACTIVITE", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_ACTIVITE", identifierField = "idActivite", identifierType = Integer.class, table = "ACTIVITE", versionField = "")
 @RooSerializable
 public class Activite {
 

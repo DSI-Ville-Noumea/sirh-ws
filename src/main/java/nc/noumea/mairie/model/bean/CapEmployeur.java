@@ -9,7 +9,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 @RooJavaBean
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "SIRH", table = "EMPLOYEUR_CAP", versionField="")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "EMPLOYEUR_CAP", versionField="")
 public class CapEmployeur {
 	
 	@EmbeddedId

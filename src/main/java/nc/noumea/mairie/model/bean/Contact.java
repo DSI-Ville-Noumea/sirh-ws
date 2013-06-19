@@ -19,7 +19,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_CONTACT", identifierField = "idContact", schema = "SIRH", table = "CONTACT", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_CONTACT", identifierField = "idContact", table = "CONTACT", versionField = "")
 public class Contact {
 
 	@OneToOne

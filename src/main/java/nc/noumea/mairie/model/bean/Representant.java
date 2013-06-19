@@ -6,7 +6,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 @RooJavaBean
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", schema = "SIRH", table = "P_REPRESENTANT", identifierColumn = "ID_REPRESENTANT", identifierField = "idRepresentant", identifierType = Integer.class, versionField="")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "P_REPRESENTANT", identifierColumn = "ID_REPRESENTANT", identifierField = "idRepresentant", identifierType = Integer.class, versionField="")
 //@Embeddable
 public class Representant {
 
