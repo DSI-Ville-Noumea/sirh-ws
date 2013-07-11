@@ -24,6 +24,7 @@ import nc.noumea.mairie.model.service.ISpadmnService;
 import nc.noumea.mairie.model.service.ISpcongService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -605,7 +606,7 @@ public class AgentController {
 	public ResponseEntity<String> getListeAgentsMairie(@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
 			@RequestParam(value = "codeService", required = false, defaultValue = "") String codeService) throws ParseException {
 
-		List<AgentDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, codeService);
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, codeService);
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
 	}
