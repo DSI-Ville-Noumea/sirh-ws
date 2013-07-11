@@ -13,9 +13,10 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AgentRecherche;
-import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,9 @@ public class AgentService implements IAgentService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
+
+	@Autowired
+	private ISiservService siservSrv;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -146,9 +150,9 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<AgentDto> listAgentsEnActivite(String nom, String codeService) {
+	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, String codeService) {
 
-		List<AgentDto> result = new ArrayList<AgentDto>();
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
 		StringBuilder sb = new StringBuilder();
 
@@ -183,7 +187,13 @@ public class AgentService implements IAgentService {
 
 		List<AgentRecherche> list = query.getResultList();
 		for (AgentRecherche ag : list) {
-			AgentDto agDto = new AgentDto(ag);
+			AgentWithServiceDto agDto = new AgentWithServiceDto(ag);
+			System.out.println("ici" + ag.getIdAgent());
+			Siserv service = siservSrv.getServiceAgent(ag.getIdAgent());
+
+			// on construit le dto de l'agent
+			agDto.setCodeService(service.getServi().trim());
+			agDto.setService(service.getLiServ().trim());
 			result.add(agDto);
 		}
 

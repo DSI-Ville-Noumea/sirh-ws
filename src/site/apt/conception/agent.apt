@@ -383,3 +383,61 @@ Web Services de l'agent
    9003047
 ]
 +------------------------------------------+
+
+** Connaitre la direction d'un agent donné en paramètre
+
+ URL : /agents/direction?idAgent=90xxxx
+ 
+ idAgent: l'agent dont on veut avoir la direction
+ 
+ note: ce service s'appuie sur l'arbre des fiches de postes (qui peut être reconstruit via /fichePostes/rebuildFichePosteTree)
+ 
++------------------------------------------+
+    {
+       "service": "DCAA",
+       "serviceLibelle": "Direction des Systèmes d'Information",
+       "sigle": "DSI",
+       "sigleParent": "SG"
+    }
++------------------------------------------+
+
+** Connaitre la direction d'un agent donné en paramètre
+
+ URL : /agents/agentsSubordonnes?idAgent=90xxxx&nom=&maxDepth=[1-9]
+ 
+ idAgent: l'agent dont on veut avoir la direction
+ nom: un nom ou debut de nom d'agent (paramètre optionel)
+ maxDepth: le niveau de profondeur dans lequel rechercher ces agents (paramètre optionel, par défaut à 3)
+ 
+ note: ce service s'appuie sur l'arbre des fiches de postes (qui peut être reconstruit via /fichePostes/rebuildFichePosteTree)
+ 
++------------------------------------------+
+[
+   {
+       "idAgent": 9005131,
+       "nom": "SALES",
+       "prenom": "ADRIEN"
+   },
+]
++------------------------------------------+
+
+** Connaitre la direction d'un agent donné en paramètre
+
+ URL : /agents/listeAgentsMairie?nom=&codeservice=
+ 
+ nom: un nom ou debut de nom d'agent (paramètre optionel)
+ codeservice: pour la recherche des agents sur un servcie donné (paramètre optionel)
+ 
+ note: ce service s'appuie sur l'arbre des fiches de postes (qui peut être reconstruit via /fichePostes/rebuildFichePosteTree)
+ 
++------------------------------------------+
+[
+   {
+       "codeService": "DEBA",
+       "idAgent": 9003294,
+       "nom": "SALAUN",
+       "prenom": "HORTENSE",
+       "service": "DASP Service des Elections"
+   },...
+]
++------------------------------------------+
