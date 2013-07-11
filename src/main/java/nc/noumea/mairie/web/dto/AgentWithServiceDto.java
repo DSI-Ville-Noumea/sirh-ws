@@ -1,6 +1,7 @@
 package nc.noumea.mairie.web.dto;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AgentRecherche;
 
 public class AgentWithServiceDto extends AgentDto {
 	private String service;
@@ -12,6 +13,10 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public AgentWithServiceDto(Agent agent) {
 		super(agent);
+	}
+
+	public AgentWithServiceDto(AgentRecherche ag) {
+		super(ag);
 	}
 
 	public String getService() {
