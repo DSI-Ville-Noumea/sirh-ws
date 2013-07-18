@@ -16,12 +16,20 @@ privileged aspect Siguic_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String Siguic.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static Siguic Siguic.fromJsonToSiguic(String json) {
         return new JSONDeserializer<Siguic>().use(null, Siguic.class).deserialize(json);
     }
     
     public static String Siguic.toJsonArray(Collection<Siguic> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String Siguic.toJsonArray(Collection<Siguic> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Siguic> Siguic.fromJsonArrayToSiguics(String json) {

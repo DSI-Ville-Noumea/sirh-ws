@@ -16,12 +16,20 @@ privileged aspect Budget_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String Budget.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static Budget Budget.fromJsonToBudget(String json) {
         return new JSONDeserializer<Budget>().use(null, Budget.class).deserialize(json);
     }
     
     public static String Budget.toJsonArray(Collection<Budget> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String Budget.toJsonArray(Collection<Budget> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Budget> Budget.fromJsonArrayToBudgets(String json) {
