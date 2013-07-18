@@ -16,12 +16,20 @@ privileged aspect Silieu_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String Silieu.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static Silieu Silieu.fromJsonToSilieu(String json) {
         return new JSONDeserializer<Silieu>().use(null, Silieu.class).deserialize(json);
     }
     
     public static String Silieu.toJsonArray(Collection<Silieu> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String Silieu.toJsonArray(Collection<Silieu> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Silieu> Silieu.fromJsonArrayToSilieus(String json) {

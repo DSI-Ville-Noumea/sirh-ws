@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect EaeController_Roo_Controller_Json {
     
-    @RequestMapping(value = "/{idEae}", headers = "Accept=application/json")
+    @RequestMapping(value = "/{idEae}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> EaeController.showJson(@PathVariable("idEae") Integer idEae) {
         Eae eae = Eae.findEae(idEae);
@@ -57,25 +57,13 @@ privileged aspect EaeController_Roo_Controller_Json {
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> EaeController.updateFromJson(@RequestBody String json) {
+    @RequestMapping(value = "/{idEae}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public ResponseEntity<String> EaeController.updateFromJson(@RequestBody String json, @PathVariable("idEae") Integer idEae) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         Eae eae = Eae.fromJsonToEae(json);
         if (eae.merge() == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
-    }
-    
-    @RequestMapping(value = "/jsonArray", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> EaeController.updateFromJsonArray(@RequestBody String json) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        for (Eae eae: Eae.fromJsonArrayToEaes(json)) {
-            if (eae.merge() == null) {
-                return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-            }
         }
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }

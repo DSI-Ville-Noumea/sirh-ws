@@ -48,7 +48,15 @@ public class ArreteDto {
 		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong().toLowerCase();
 		this.gradeLabel = avct.getGradeNouveau().getLiGrad().trim();
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
-		this.ib = avct.getGradeNouveau().getBarem().getIban();
+		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
+			String res = avct.getGradeNouveau().getBarem().getIban();
+			while (res.startsWith("0")) {
+				res = res.substring(1, res.length());
+			}
+			this.ib = res;
+		} else {
+			this.ib = avct.getGradeNouveau().getBarem().getIban();
+		}
 		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
 		this.numeroArrete = carr.getReferenceArrete().toString();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -74,13 +82,8 @@ public class ArreteDto {
 	}
 
 	private String getNomCompletAgent(Agent agent) {
-		if (agent.getTitre().equals("Monsieur")) {
-			return "Monsieur " + agent.getPrenomUsage() + " " + agent.getNomUsage();
-		} else if (agent.getTitre().equals("Madame")) {
-			return "Madame " + agent.getPrenomUsage() + " " + agent.getNomUsage() ;
-		} else {
-			return "Mademoiselle " + agent.getPrenomUsage() + " " + agent.getNomUsage();
-		}
+		return agent.getTitre() + " " + agent.getPrenomUsage().substring(0, 1).toUpperCase()
+				+ agent.getPrenomUsage().substring(1, agent.getPrenomUsage().length()).toLowerCase() + " " + agent.getNomUsage().toUpperCase();
 	}
 
 	public boolean isChangementClasse() {

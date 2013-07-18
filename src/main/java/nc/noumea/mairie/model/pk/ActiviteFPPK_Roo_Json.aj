@@ -16,12 +16,20 @@ privileged aspect ActiviteFPPK_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String ActiviteFPPK.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static ActiviteFPPK ActiviteFPPK.fromJsonToActiviteFPPK(String json) {
         return new JSONDeserializer<ActiviteFPPK>().use(null, ActiviteFPPK.class).deserialize(json);
     }
     
     public static String ActiviteFPPK.toJsonArray(Collection<ActiviteFPPK> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String ActiviteFPPK.toJsonArray(Collection<ActiviteFPPK> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<ActiviteFPPK> ActiviteFPPK.fromJsonArrayToActiviteFPPKs(String json) {

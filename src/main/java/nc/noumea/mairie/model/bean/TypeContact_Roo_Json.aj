@@ -16,12 +16,20 @@ privileged aspect TypeContact_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String TypeContact.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static TypeContact TypeContact.fromJsonToTypeContact(String json) {
         return new JSONDeserializer<TypeContact>().use(null, TypeContact.class).deserialize(json);
     }
     
     public static String TypeContact.toJsonArray(Collection<TypeContact> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String TypeContact.toJsonArray(Collection<TypeContact> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<TypeContact> TypeContact.fromJsonArrayToTypeContacts(String json) {
