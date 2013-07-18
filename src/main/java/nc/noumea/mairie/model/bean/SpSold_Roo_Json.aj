@@ -16,12 +16,20 @@ privileged aspect SpSold_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String SpSold.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static SpSold SpSold.fromJsonToSpSold(String json) {
         return new JSONDeserializer<SpSold>().use(null, SpSold.class).deserialize(json);
     }
     
     public static String SpSold.toJsonArray(Collection<SpSold> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String SpSold.toJsonArray(Collection<SpSold> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<SpSold> SpSold.fromJsonArrayToSpSolds(String json) {

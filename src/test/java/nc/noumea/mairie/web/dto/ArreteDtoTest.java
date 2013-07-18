@@ -110,7 +110,7 @@ public class ArreteDtoTest {
 		assertEquals("moyenne", dto.getDureeAvct());
 		assertEquals("Grade T123", dto.getGradeLabel());
 		assertEquals(Integer.valueOf(125), dto.getIna());
-		assertEquals("0000956", dto.getIb());
+		assertEquals("956", dto.getIb());
 		assertEquals(false, dto.isChangementClasse());
 		assertEquals(true, dto.isFeminin());
 	}

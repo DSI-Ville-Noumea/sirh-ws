@@ -16,12 +16,20 @@ privileged aspect TitrePoste_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String TitrePoste.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static TitrePoste TitrePoste.fromJsonToTitrePoste(String json) {
         return new JSONDeserializer<TitrePoste>().use(null, TitrePoste.class).deserialize(json);
     }
     
     public static String TitrePoste.toJsonArray(Collection<TitrePoste> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String TitrePoste.toJsonArray(Collection<TitrePoste> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<TitrePoste> TitrePoste.fromJsonArrayToTitrePostes(String json) {

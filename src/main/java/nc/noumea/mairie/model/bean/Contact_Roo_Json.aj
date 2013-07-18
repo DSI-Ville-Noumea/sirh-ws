@@ -16,12 +16,20 @@ privileged aspect Contact_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String Contact.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static Contact Contact.fromJsonToContact(String json) {
         return new JSONDeserializer<Contact>().use(null, Contact.class).deserialize(json);
     }
     
     public static String Contact.toJsonArray(Collection<Contact> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String Contact.toJsonArray(Collection<Contact> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Contact> Contact.fromJsonArrayToContacts(String json) {
