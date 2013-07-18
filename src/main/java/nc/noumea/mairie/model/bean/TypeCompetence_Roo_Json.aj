@@ -16,12 +16,20 @@ privileged aspect TypeCompetence_Roo_Json {
         return new JSONSerializer().exclude("*.class").serialize(this);
     }
     
+    public String TypeCompetence.toJson(String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+    }
+    
     public static TypeCompetence TypeCompetence.fromJsonToTypeCompetence(String json) {
         return new JSONDeserializer<TypeCompetence>().use(null, TypeCompetence.class).deserialize(json);
     }
     
     public static String TypeCompetence.toJsonArray(Collection<TypeCompetence> collection) {
         return new JSONSerializer().exclude("*.class").serialize(collection);
+    }
+    
+    public static String TypeCompetence.toJsonArray(Collection<TypeCompetence> collection, String[] fields) {
+        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<TypeCompetence> TypeCompetence.fromJsonArrayToTypeCompetences(String json) {

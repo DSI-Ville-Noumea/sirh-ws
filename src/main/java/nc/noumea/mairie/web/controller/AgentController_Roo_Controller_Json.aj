@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect AgentController_Roo_Controller_Json {
     
-    @RequestMapping(value = "/{idAgent}", headers = "Accept=application/json")
+    @RequestMapping(value = "/{idAgent}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<String> AgentController.showJson(@PathVariable("idAgent") Integer idAgent) {
         Agent agent = Agent.findAgent(idAgent);
@@ -57,25 +57,13 @@ privileged aspect AgentController_Roo_Controller_Json {
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
     
-    @RequestMapping(method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> AgentController.updateFromJson(@RequestBody String json) {
+    @RequestMapping(value = "/{idAgent}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    public ResponseEntity<String> AgentController.updateFromJson(@RequestBody String json, @PathVariable("idAgent") Integer idAgent) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         Agent agent = Agent.fromJsonToAgent(json);
         if (agent.merge() == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<String>(headers, HttpStatus.OK);
-    }
-    
-    @RequestMapping(value = "/jsonArray", method = RequestMethod.PUT, headers = "Accept=application/json")
-    public ResponseEntity<String> AgentController.updateFromJsonArray(@RequestBody String json) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        for (Agent agent: Agent.fromJsonArrayToAgents(json)) {
-            if (agent.merge() == null) {
-                return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
-            }
         }
         return new ResponseEntity<String>(headers, HttpStatus.OK);
     }
