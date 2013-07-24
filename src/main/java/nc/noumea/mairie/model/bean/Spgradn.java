@@ -36,4 +36,10 @@ public class Spgradn {
 	@OneToOne(optional=true)
 	@JoinColumn(name = "IBAN", referencedColumnName = "IBAN")
 	private Spbarem barem;
+
+	@Column(name = "CODCLA", columnDefinition = "char")
+	private String codcla;
+
+	@Column(name = "CODECH", columnDefinition = "char")
+	private String codech;
 }
