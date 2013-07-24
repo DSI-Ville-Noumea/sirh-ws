@@ -77,6 +77,20 @@ public class Siserv {
 	}
 
 	@Transient
+	private String directionSigle;
+
+	public String getDirectionSigle() {
+		String direction = "";
+		if (this.servi != null) {
+			Siserv directionService = siservSrv.getDirection(this.servi);
+			if (directionService != null) {
+				direction = directionService.getSigle().trim();
+			}
+		}
+		return direction;
+	}
+
+	@Transient
 	private String section;
 
 	public String getSection() {

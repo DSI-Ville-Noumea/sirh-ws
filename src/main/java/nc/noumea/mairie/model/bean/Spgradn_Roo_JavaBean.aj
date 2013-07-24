@@ -49,4 +49,20 @@ privileged aspect Spgradn_Roo_JavaBean {
         this.barem = barem;
     }
     
+    public String Spgradn.getCodcla() {
+        return this.codcla;
+    }
+    
+    public void Spgradn.setCodcla(String codcla) {
+        this.codcla = codcla;
+    }
+    
+    public String Spgradn.getCodech() {
+        return this.codech;
+    }
+    
+    public void Spgradn.setCodech(String codech) {
+        this.codech = codech;
+    }
+    
 }

@@ -8,6 +8,8 @@ import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.Spclas;
+import nc.noumea.mairie.model.bean.Speche;
 
 public class ArreteDto {
 
@@ -40,13 +42,21 @@ public class ArreteDto {
 				: avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
-				.getGradeGenerique().getDeliberationCommunale().getLibDeliberation();
+				.getGradeGenerique().getDeliberationCommunale().getLibDeliberation().toLowerCase();
 		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
 				.getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
 		this.dateAvct = getDateAvancement(avct);
 		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong().toLowerCase();
-		this.gradeLabel = avct.getGradeNouveau().getLiGrad().trim();
+		String classe = avct.getGradeNouveau().getCodcla() == null || avct.getGradeNouveau().getCodcla().trim().equals("") ? "" : " "
+				+ Spclas.findSpclas(avct.getGradeNouveau().getCodcla()).getLibCla().trim();
+		String echelon = avct.getGradeNouveau().getCodech() == null || avct.getGradeNouveau().getCodech().trim().equals("") ? "" : " "
+				+ Speche.findSpeche(avct.getGradeNouveau().getCodech()).getLibEch().trim();
+		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
+
+		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
+				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'" + libelleGrade.toLowerCase() : "de "
+				+ libelleGrade.toLowerCase();
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
 			String res = avct.getGradeNouveau().getBarem().getIban();
@@ -58,11 +68,12 @@ public class ArreteDto {
 			this.ib = avct.getGradeNouveau().getBarem().getIban();
 		}
 		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
-		this.numeroArrete = carr.getReferenceArrete().toString();
+		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20" + carr.getReferenceArrete().toString().substring(0, 2) + "/"
+				+ carr.getReferenceArrete().toString().substring(2, carr.getReferenceArrete().toString().length());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
 		this.acc = carr.getAcc();
-		this.directionAgent = fp.getService().getDirection();
+		this.directionAgent = fp.getService().getDirectionSigle() + " (" + fp.getService().getSigle().trim() + ")";
 
 	}
 
