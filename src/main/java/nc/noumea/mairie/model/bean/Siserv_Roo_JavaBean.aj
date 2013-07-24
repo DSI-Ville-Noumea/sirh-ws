@@ -64,6 +64,10 @@ privileged aspect Siserv_Roo_JavaBean {
         this.direction = direction;
     }
     
+    public void Siserv.setDirectionSigle(String directionSigle) {
+        this.directionSigle = directionSigle;
+    }
+    
     public void Siserv.setSection(String section) {
         this.section = section;
     }

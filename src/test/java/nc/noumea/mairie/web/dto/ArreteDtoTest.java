@@ -52,6 +52,7 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
@@ -82,13 +83,17 @@ public class ArreteDtoTest {
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
@@ -137,6 +142,7 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
@@ -156,13 +162,17 @@ public class ArreteDtoTest {
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
@@ -203,6 +213,7 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
@@ -233,13 +244,17 @@ public class ArreteDtoTest {
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
@@ -278,6 +293,7 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
@@ -295,13 +311,17 @@ public class ArreteDtoTest {
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
@@ -341,6 +361,7 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
@@ -358,13 +379,17 @@ public class ArreteDtoTest {
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
@@ -410,19 +435,24 @@ public class ArreteDtoTest {
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
+		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
 		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
 
 		Siserv serviceDirection = new Siserv();
 		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
 		serviceDirection.setLiServ("TEST");
 		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
 		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
