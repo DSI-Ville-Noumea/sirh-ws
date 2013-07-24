@@ -113,7 +113,6 @@ public class ArreteDtoTest {
 		assertEquals("15/01/2013", sdf.format(dto.getDateCap()));
 		assertEquals("15/02/2013", sdf.format(dto.getDateAvct()));
 		assertEquals("moyenne", dto.getDureeAvct());
-		assertEquals("Grade T123", dto.getGradeLabel());
 		assertEquals(Integer.valueOf(125), dto.getIna());
 		assertEquals("956", dto.getIb());
 		assertEquals(false, dto.isChangementClasse());
@@ -334,7 +333,7 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
-		assertEquals("12125", dto.getNumeroArrete());
+		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("1 an(s), 0 mois, 4 jour(s)", dto.getAcc());
 	}
 
@@ -402,7 +401,7 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
-		assertEquals("12125", dto.getNumeroArrete());
+		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("néant", dto.getAcc());
 	}
 
@@ -470,6 +469,6 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("TEST", dto.getDirectionAgent());
+		assertEquals("SN (S)", dto.getDirectionAgent());
 	}
 }
