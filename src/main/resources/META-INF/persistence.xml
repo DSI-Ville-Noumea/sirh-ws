@@ -39,7 +39,9 @@
 		<class>nc.noumea.mairie.model.bean.Spbhor</class>
 		<class>nc.noumea.mairie.model.bean.Spbarem</class>
 		<class>nc.noumea.mairie.model.bean.Spcarr</class>
+		<class>nc.noumea.mairie.model.bean.Spclas</class>
 		<class>nc.noumea.mairie.model.bean.Spcong</class>
+		<class>nc.noumea.mairie.model.bean.Speche</class>
 		<class>nc.noumea.mairie.model.bean.Spgradn</class>
 		<class>nc.noumea.mairie.model.bean.Spgeng</class>
 		<class>nc.noumea.mairie.model.bean.Spfili</class>
