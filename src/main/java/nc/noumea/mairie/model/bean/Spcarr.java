@@ -54,9 +54,17 @@ public class Spcarr {
 	private Double accAnnee;
 
 	public String getAcc() {
-		if(this.accAnnee.intValue()==0 && this.accMois.intValue()==0 && this.accJour.intValue()==0){
+		if (this.accAnnee.intValue() == 0 && this.accMois.intValue() == 0 && this.accJour.intValue() == 0) {
 			return "néant";
 		}
-		return this.accAnnee.intValue() + " an(s), " + this.accMois.intValue() + " mois, " + this.accJour.intValue() + " jour(s)";
+		String anneeAcc = this.accAnnee.intValue() == 0 ? "" : this.accAnnee.intValue() > 1 ? this.accAnnee.intValue() + " ans, " : this.accAnnee
+				.intValue() + " an, ";
+		String moisAcc = this.accMois.intValue() == 0 ? "" : this.accMois.intValue() + " mois, ";
+		String jourAcc = this.accJour.intValue() == 0 ? "" : this.accJour.intValue() > 1 ? this.accJour.intValue() + " jours " : this.accJour
+				.intValue() + " jour ";
+		String res = anneeAcc + moisAcc + jourAcc;
+		if (res.endsWith(", "))
+			res = res.substring(0, res.length() - 2);
+		return res;
 	}
 }
