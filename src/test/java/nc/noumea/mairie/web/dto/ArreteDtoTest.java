@@ -334,7 +334,7 @@ public class ArreteDtoTest {
 		// Then
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
-		assertEquals("1 an(s), 0 mois, 4 jour(s)", dto.getAcc());
+		assertEquals("1 an, 4 jours ", dto.getAcc());
 	}
 
 	@Test
@@ -469,6 +469,6 @@ public class ArreteDtoTest {
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
-		assertEquals("SN (S)", dto.getDirectionAgent());
+		assertEquals(" (SN)", dto.getDirectionAgent());
 	}
 }
