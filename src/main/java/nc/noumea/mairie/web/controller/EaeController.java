@@ -1,6 +1,7 @@
 package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
@@ -12,6 +13,7 @@ import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.model.service.eae.IEaeService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,11 @@ import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import flexjson.JSONSerializer;
 
 @RooWebJson(jsonObject = Eae.class)
 @Controller
@@ -121,6 +126,22 @@ public class EaeController {
 
 		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getServi(), ag.getIdAgent());
 		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(listAgentService);
+
+		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getCampagneEnCours", headers = "Accept=application/json", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(value = "eaeTransactionManager", readOnly = true)
+	public ResponseEntity<String> getAnneCampagne() throws ParseException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+
+		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		if (campagneEnCours == null)
+			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
+
+		String jsonResult = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(campagneEnCours);
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
