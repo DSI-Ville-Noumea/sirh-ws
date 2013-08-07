@@ -45,4 +45,31 @@ Web Services des EAEs
     }
 ]
 +------------------------------------------+
+
+** Connaitre la campagne en cours 
+
+ URL : /eaes/getCampagneEnCours
+ 
++------------------------------------------+
+[
+    {
+        "nom": "DEPLANQUE",
+        "prenom": "RICHARD",
+        "idAgent": 9002990,
+        "nomatr": 2990
+    },  
+    {   
+        "nom": "BOURDIL",
+        "prenom": "LUC",
+        "idAgent": 9004117,
+        "nomatr": 4117
+    },  
+    {   
+        "nom": "FONTENEAU",
+        "prenom": "OLIVIER",
+        "idAgent": 9004932,
+        "nomatr": 4932
+    }
+]
++------------------------------------------+
  
