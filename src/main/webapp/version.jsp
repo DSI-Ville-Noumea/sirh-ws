@@ -1,3 +1,4 @@
+<%@page contentType="text/plain"%>
 <%@page import="java.net.InetAddress"%>
 sirh.ws.version=${version}<br/>
 sirh.ws.hostaddress=<%=InetAddress.getLocalHost().getHostAddress() %><br/>
