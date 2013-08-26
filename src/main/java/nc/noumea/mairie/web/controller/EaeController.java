@@ -54,7 +54,8 @@ public class EaeController {
 		String newIdAgent;
 		if (idAgent.toString().length() == 6) {
 			// on remanie l'idAgent
-			String matr = idAgent.toString().substring(2, idAgent.toString().length());
+			String matr = idAgent.toString().substring(2,
+					idAgent.toString().length());
 			String prefixe = idAgent.toString().substring(0, 2);
 			newIdAgent = prefixe + "0" + matr;
 		} else {
@@ -66,7 +67,9 @@ public class EaeController {
 	@RequestMapping(value = "/estHabiliteEAE", headers = "Accept=application/json")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentHabilite(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getAgentHabilite(
+			@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -78,7 +81,8 @@ public class EaeController {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
 
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		EaeCampagne campagneEnCours = eaeCampagneService
+				.getEaeCampagneOuverte();
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
@@ -89,21 +93,27 @@ public class EaeController {
 		 * if (estChef) { // alors on regarde les sousService listService =
 		 * siservSrv.getListServiceAgent(ag.getIdAgent()); }
 		 */
-		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3, null);
-		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), listAgentsId, ag.getIdAgent());
+		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3,
+				null);
+		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(
+				campagneEnCours.getIdCampagneEae(), listAgentsId,
+				ag.getIdAgent());
 
 		if (nbEae == 0) {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
 
 		JSONObject jsonHabiliteEAE = new JSONObject();
-		return new ResponseEntity<String>(jsonHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonHabiliteEAE.toJSONString(),
+				headers, HttpStatus.OK);
 	}
 
 	@ResponseBody
 	@RequestMapping("/listDelegataire")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> listDelegataireByAgent(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> listDelegataireByAgent(
+			@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
@@ -115,7 +125,8 @@ public class EaeController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		EaeCampagne campagneEnCours = eaeCampagneService
+				.getEaeCampagneOuverte();
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
@@ -124,8 +135,10 @@ public class EaeController {
 		if (serviceAgent == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
-		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getServi(), ag.getIdAgent());
-		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(listAgentService);
+		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(
+				serviceAgent.getServi(), ag.getIdAgent());
+		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(
+				listAgentService);
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
@@ -137,11 +150,14 @@ public class EaeController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
+		EaeCampagne campagneEnCours = eaeCampagneService
+				.getEaeCampagneOuverte();
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
-		String jsonResult = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(campagneEnCours);
+		String jsonResult = new JSONSerializer().exclude("*.class")
+				.transform(new MSDateTransformer(), Date.class)
+				.serialize(campagneEnCours);
 
 		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
 	}
