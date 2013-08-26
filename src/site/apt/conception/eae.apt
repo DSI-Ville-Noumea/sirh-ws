@@ -1,4 +1,4 @@
- -----
+﻿ -----
  SIRH WS
  -----
  Noémie NICOLAS
@@ -51,25 +51,13 @@ Web Services des EAEs
  URL : /eaes/getCampagneEnCours
  
 +------------------------------------------+
-[
     {
-        "nom": "DEPLANQUE",
-        "prenom": "RICHARD",
-        "idAgent": 9002990,
-        "nomatr": 2990
-    },  
-    {   
-        "nom": "BOURDIL",
-        "prenom": "LUC",
-        "idAgent": 9004117,
-        "nomatr": 4117
-    },  
-    {   
-        "nom": "FONTENEAU",
-        "prenom": "OLIVIER",
-        "idAgent": 9004932,
-        "nomatr": 4932
+       "annee": 2014,
+       "dateDebut": "/Date(1375275600000+1100)/",
+       "dateFermetureKiosque": null,
+       "dateFin": null,
+       "dateOuvertureKiosque": "/Date(1375275600000+1100)/",
+       "idCampagneEae": 63
     }
-]
 +------------------------------------------+
  
