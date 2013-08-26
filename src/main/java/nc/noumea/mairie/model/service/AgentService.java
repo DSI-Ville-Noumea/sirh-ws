@@ -136,11 +136,11 @@ public class AgentService implements IAgentService {
 	public Agent findAgentWithName(Integer idAgent, String nom) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and ag.nomUsage like :nom",
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom",
 				Agent.class);
 
 		query.setParameter("idAgent", idAgent);
-		query.setParameter("nom", nom + "%");
+		query.setParameter("nom", nom.toUpperCase() + "%");
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
