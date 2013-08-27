@@ -30,7 +30,7 @@ public class AvancementItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementItemDto dto = new AvancementItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct,false,null);
 		
 		// Then
 		assertEquals("Bob", dto.getPrenom());
@@ -60,7 +60,7 @@ public class AvancementItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementItemDto dto = new AvancementItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct,false,null);
 		
 		assertFalse(dto.isDureeMin());
 		assertTrue(dto.isDureeMoy());
@@ -84,7 +84,7 @@ public class AvancementItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementItemDto dto = new AvancementItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct,false,null);
 		
 		assertTrue(dto.isDureeMin());
 		assertFalse(dto.isDureeMoy());
@@ -108,7 +108,7 @@ public class AvancementItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementItemDto dto = new AvancementItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct,false,null);
 		
 		assertFalse(dto.isDureeMin());
 		assertFalse(dto.isDureeMoy());
@@ -132,7 +132,7 @@ public class AvancementItemDtoTest {
 		avct.setOrdreMerite("UNO");
 		
 		// When
-		AvancementItemDto dto = new AvancementItemDto(avct);
+		AvancementItemDto dto = new AvancementItemDto(avct,false,null);
 		
 		assertFalse(dto.isDureeMin());
 		assertFalse(dto.isDureeMoy());
