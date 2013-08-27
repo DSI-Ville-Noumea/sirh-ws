@@ -15,6 +15,9 @@ import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.model.bean.eae.Eae;
+import nc.noumea.mairie.model.bean.eae.EaeCampagne;
+import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
@@ -38,12 +41,16 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private IEaesService eaesService;
-	
+
+	@Autowired
+	private IEaeCampagneService eaeCampagneService;
+
 	@Autowired
 	private IFichePosteService fichePosteService;
 
 	@Override
-	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
+	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(
+			int idCap, int idCadreEmploi, boolean avisEAE) {
 
 		CommissionAvancementDto result = new CommissionAvancementDto();
 		Cap cap = getCap(idCap);
@@ -54,12 +61,15 @@ public class AvancementsService implements IAvancementsService {
 		List<Spgeng> corps = getCorpsForCadreEmploi(idCadreEmploi);
 
 		for (Spgeng corp : corps) {
-			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
+			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(
+					getAnnee(), cap.getIdCap(), corp.getCdgeng(),
+					getStatutFromCap(cap));
 
 			if (avcts.size() == 0)
 				continue;
 
-			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts);
+			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap,
+					corp, avcts, avisEAE);
 			result.getCommissionsParCorps().add(comCorps);
 		}
 
@@ -67,7 +77,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
+	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap,
+			int idCadreEmploi) {
 
 		List<String> result = null;
 		Cap cap = getCap(idCap);
@@ -79,7 +90,8 @@ public class AvancementsService implements IAvancementsService {
 		List<Integer> agentsIds = new ArrayList<Integer>();
 
 		for (Spgeng corp : corps) {
-			List<Integer> agents = getAgentsIdsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
+			List<Integer> agents = getAgentsIdsForCommission(getAnnee(),
+					cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
 			agentsIds.addAll(agents);
 		}
 
@@ -89,7 +101,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories) {
+	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee,
+			int idCap, String corps, List<Integer> codesCategories) {
 
 		List<AvancementFonctionnaire> result = null;
 
@@ -108,7 +121,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and ca.idCap = :idCap ");
 		sb.append("and spgeng.cdgeng = :cdgeng");
 
-		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(), AvancementFonctionnaire.class);
+		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("codesCategories", codesCategories);
 		qA.setParameter("annee", annee);
 		qA.setParameter("idCap", idCap);
@@ -119,7 +133,8 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public List<Integer> getAgentsIdsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories) {
+	public List<Integer> getAgentsIdsForCommission(int annee, int idCap,
+			String corps, List<Integer> codesCategories) {
 
 		List<Integer> result = null;
 
@@ -135,7 +150,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and ca.idCap = :idCap ");
 		sb.append("and spgeng.cdgeng = :cdgeng");
 
-		TypedQuery<Integer> qA = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		TypedQuery<Integer> qA = sirhEntityManager.createQuery(sb.toString(),
+				Integer.class);
 		qA.setParameter("codesCategories", codesCategories);
 		qA.setParameter("annee", annee);
 		qA.setParameter("idCap", idCap);
@@ -151,7 +167,8 @@ public class AvancementsService implements IAvancementsService {
 
 		List<Spgeng> result = null;
 
-		TypedQuery<Spgeng> qCorps = sirhEntityManager.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class);
+		TypedQuery<Spgeng> qCorps = sirhEntityManager.createNamedQuery(
+				"getSpgengFromCadreEmploi", Spgeng.class);
 		qCorps.setParameter("idCadreEmploi", idCadreEmploi);
 		result = qCorps.getResultList();
 
@@ -161,24 +178,62 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements) {
+	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap,
+			Spgeng spgeng, List<AvancementFonctionnaire> avancements,
+			boolean avisEae) {
 
-		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(spgeng);
-		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng, getAnnee()));
+		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(
+				spgeng);
+		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng,
+				getAnnee()));
 		result.setChangementClasses(new AvancementsDto(cap, spgeng, getAnnee()));
 
 		for (AvancementFonctionnaire avct : avancements) {
+			Integer valeurAvisEAE = null;
+			if (avisEae) {
+				EaeCampagne campEnCours = eaeCampagneService
+						.getEaeCampagneOuverte();
 
-			AvancementItemDto aItem = new AvancementItemDto(avct);
+				Eae eaeAgent = eaesService.findEaeByAgentAndYear(avct
+						.getAgent().getIdAgent(), campEnCours.getAnnee()
+						.toString());
+				try {
+					String avisSHD = eaeAgent.getEaeEvaluation().getAvisShd();
+					switch (avisSHD) {
+					case "Durée minimale":
+						valeurAvisEAE = 1;
+						break;
+					case "Durée moyenne":
+						valeurAvisEAE = 2;
+						break;
+					case "Durée maximale":
+						valeurAvisEAE = 3;
+						break;
+					case "Favorable":
+						valeurAvisEAE = 4;
+						break;
+					case "Défavorable":
+						valeurAvisEAE = 5;
+						break;
+					}
+				} catch (Exception e) {
+					// aucune evaluation trouvé
+				}
+			}
+
+			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae,
+					valeurAvisEAE);
 
 			switch (avct.getIdModifAvancement()) {
 
 			case 7:
-				result.getAvancementsDifferencies().getAvancementsItems().add(aItem);
+				result.getAvancementsDifferencies().getAvancementsItems()
+						.add(aItem);
 				break;
 
 			case 6:
-				result.getAvancementsDifferencies().getAvancementsItems().add(aItem);
+				result.getAvancementsDifferencies().getAvancementsItems()
+						.add(aItem);
 				break;
 
 			case 4:
@@ -204,7 +259,8 @@ public class AvancementsService implements IAvancementsService {
 	@Override
 	public Cap getCap(int idCap) {
 
-		TypedQuery<Cap> qCap = sirhEntityManager.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class);
+		TypedQuery<Cap> qCap = sirhEntityManager.createNamedQuery(
+				"getCapWithEmployeursAndRepresentants", Cap.class);
 		qCap.setParameter("idCap", idCap);
 		List<Cap> qR = qCap.getResultList();
 
@@ -215,7 +271,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year) throws ParseException {
+	public ArreteListDto getArretesForUsers(String csvIdAgents,
+			boolean isChangmentClasse, int year) throws ParseException {
 
 		List<Integer> agentIds = new ArrayList<Integer>();
 
@@ -224,18 +281,23 @@ public class AvancementsService implements IAvancementsService {
 		}
 
 		// requete
-		List<AvancementFonctionnaire> avcts = getAvancementsForArretes(agentIds, year);
+		List<AvancementFonctionnaire> avcts = getAvancementsForArretes(
+				agentIds, year);
 
 		ArreteListDto arretes = new ArreteListDto();
 
 		for (AvancementFonctionnaire avct : avcts) {
 
-			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent().getIdAgent(), new DateTime().toDate());			
+			Integer fpId = fichePosteService
+					.getIdFichePostePrimaireAgentAffectationEnCours(avct
+							.getAgent().getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
-			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
+			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime()
+					.toDate()));
+			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery(
+					"getCurrentCarriere", Spcarr.class);
 			qCarr.setParameter("nomatr", avct.getAgent().getNomatr());
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
@@ -248,7 +310,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year) {
+	public List<AvancementFonctionnaire> getAvancementsForArretes(
+			List<Integer> agentIds, int year) {
 
 		List<AvancementFonctionnaire> result = null;
 		StringBuilder sb = new StringBuilder();
@@ -262,7 +325,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("where avct.anneeAvancement = :year ");
 		sb.append("and ag.idAgent IN (:agentIds) ");
 
-		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(), AvancementFonctionnaire.class);
+		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("agentIds", agentIds);
 		qA.setParameter("year", year);
 
