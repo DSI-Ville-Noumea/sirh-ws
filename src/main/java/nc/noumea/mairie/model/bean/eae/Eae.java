@@ -42,11 +42,15 @@ public class Eae {
 
 	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
     private EaeEvalue eaeEvalue;
+
+	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
+    private EaeEvaluation eaeEvaluation;	
+		
 	
 	/*
 	 * Transient properties (will be populated by AS400 entity manager)
 	 */
-	@Transient
+	@Transient	
 	private Agent agentEvalue;
 
 	@Transient

@@ -1,4 +1,4 @@
- -----
+﻿ -----
  SIRH WS
  -----
  Nicolas RAYNAUD
@@ -15,7 +15,7 @@ Web Services des avancements
 
 ** Retourner les données nécessaires à l'établissement du document de préparation d'une commission d'avancement (CAP)
 
- URL : /avancements/xml/getTableauAvancements?idCap=A&idCadreEmploi=B
+ URL : /avancements/xml/getTableauAvancements?idCap=A&idCadreEmploi=B&avisEAE=false
  
  idCap: l'id de la CAP dont on souhaite les données pour impression
  idCadreEmploi: l'id du CadreEmploi pour la cap dont on souhaite les données pour impression

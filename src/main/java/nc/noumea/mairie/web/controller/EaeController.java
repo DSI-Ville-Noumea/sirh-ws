@@ -12,7 +12,7 @@ import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.model.service.ISiservService;
-import nc.noumea.mairie.model.service.eae.IEaeService;
+import nc.noumea.mairie.service.IEaesService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 
 import org.json.simple.JSONObject;
@@ -36,7 +36,7 @@ import flexjson.JSONSerializer;
 public class EaeController {
 
 	@Autowired
-	private IEaeService eaeService;
+	private IEaesService eaeService;
 
 	@Autowired
 	private IEaeCampagneService eaeCampagneService;
