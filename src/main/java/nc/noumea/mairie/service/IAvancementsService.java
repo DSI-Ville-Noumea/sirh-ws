@@ -12,19 +12,26 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 public interface IAvancementsService {
 
-	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi);
+	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(
+			int idCap, int idCadreEmploi, boolean avisEAE);
 
-	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
+	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap,
+			int idCadreEmploi);
 
-	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year) throws ParseException;
+	public ArreteListDto getArretesForUsers(String csvIdAgents,
+			boolean isChangmentClasse, int year) throws ParseException;
 
-	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year);
-	
-	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories);
+	public List<AvancementFonctionnaire> getAvancementsForArretes(
+			List<Integer> agentIds, int year);
+
+	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee,
+			int idCap, String corps, List<Integer> codesCategories);
 
 	public List<Spgeng> getCorpsForCadreEmploi(int idCadreEmploi);
 
-	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements);
+	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap,
+			Spgeng spgeng, List<AvancementFonctionnaire> avancements,
+			boolean avisEAE);
 
 	public Cap getCap(int idCap);
 }

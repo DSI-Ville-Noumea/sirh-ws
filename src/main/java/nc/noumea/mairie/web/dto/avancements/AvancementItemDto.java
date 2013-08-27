@@ -3,6 +3,8 @@ package nc.noumea.mairie.web.dto.avancements;
 import java.util.Date;
 
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.eae.Eae;
+import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 
 public class AvancementItemDto {
 
@@ -16,12 +18,13 @@ public class AvancementItemDto {
 	private boolean dureeMin;
 	private boolean dureeMoy;
 	private boolean dureeMax;
-	
+
 	public AvancementItemDto() {
-		
+
 	}
-	
-	public AvancementItemDto(AvancementFonctionnaire avct) {
+
+	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE,
+			Integer valeurAvisEAE) {
 
 		if (avct.getAgent() != null) {
 			this.nom = avct.getAgent().getDisplayNom();
@@ -33,9 +36,9 @@ public class AvancementItemDto {
 
 		this.datePrevisionnelleAvancement = avct.getDateAvctMoy();
 		this.classement = avct.getOrdreMerite();
-
-		if (avct.getAvisCap() != null) {
-			switch(avct.getAvisCap().getIdAvisCap()) {
+		if (!avisEAE) {
+			if (avct.getAvisCap() != null) {
+				switch (avct.getAvisCap().getIdAvisCap()) {
 				case 1:
 					this.dureeMin = true;
 					break;
@@ -51,8 +54,30 @@ public class AvancementItemDto {
 				case 5:
 					this.favorable = false;
 					break;
+				}
+			}
+		} else {
+			if (valeurAvisEAE != null) {
+				switch (valeurAvisEAE) {
+				case 1:
+					this.dureeMin = true;
+					break;
+				case 2:
+					this.dureeMoy = true;
+					break;
+				case 3:
+					this.dureeMax = true;
+					break;
+				case 4:
+					this.favorable = true;
+					break;
+				case 5:
+					this.favorable = false;
+					break;
+				}
 			}
 		}
+
 	}
 
 	public String getNom() {
