@@ -43,11 +43,12 @@ public class ReportingService implements IReportingService {
 	}
 	
 	@Override
-	public byte[] getTableauAvancementsReportAsByteArray(int idCap, int idCadreEmploi) throws Exception {
+	public byte[] getTableauAvancementsReportAsByteArray(int idCap, int idCadreEmploi,boolean avisEAE) throws Exception {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idCap", String.valueOf(idCap));
 		map.put("idCadreEmploi", String.valueOf(idCadreEmploi));
+		map.put("avisEAE", String.valueOf(avisEAE));
 		
 		ClientResponse response = createAndFireRequest(map, "avctFonctCap.rptdesign", "PDF");
 		
