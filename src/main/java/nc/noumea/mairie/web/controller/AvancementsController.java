@@ -60,7 +60,8 @@ public class AvancementsController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<byte[]> downloadTableauAvancements(
 			@RequestParam("idCap") int idCap,
-			@RequestParam("idCadreEmploi") int idCadreEmploi)
+			@RequestParam("idCadreEmploi") int idCadreEmploi,
+			@RequestParam("avisEAE") boolean avisEAE)
 			throws ParseException {
 
 		if (avancementsService.getCap(idCap) == null)
@@ -71,7 +72,7 @@ public class AvancementsController {
 		try {
 			responseData = reportingService
 					.getTableauAvancementsReportAsByteArray(idCap,
-							idCadreEmploi);
+							idCadreEmploi,avisEAE);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
