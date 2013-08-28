@@ -45,10 +45,6 @@
 			<item name="FichePoste" href="conception/ficheposte.html"/>
 			<item name="Avancements" href="conception/avancements.html"/>
         </menu>
-		<menu name="FAQ">
-        	<item name="SIE" href="sie.html"/>
-        	<item name="SED" href="sed.html"/>
-        </menu>
         <menu ref="reports"/>
     </body>
 </project>
