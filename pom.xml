@@ -65,13 +65,13 @@
         WebServices pour le kiosque du portail. 
     </description>
 	<issueManagement>
-		<system>JIRA</system>
-		<url>http://dvlp:8181/browse/SIRHWS</url>
+		<system>REDMINE</system>
+		<url>https://redmine.ville-noumea.nc/projects/sirh-ws</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</connection>
-		<developerConnection>scm:svn:https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</developerConnection>
-		<url>https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</url>
+		<connection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</connection>
+		<developerConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</developerConnection>
+		<url>https://svn.ville-noumea.nc/sed/sirh-ws/trunk</url>
 	</scm>
 
 	<distributionManagement>
@@ -652,9 +652,9 @@
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<webAccessUrl>https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</webAccessUrl>
-					<anonymousConnection>scm:svn:https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</anonymousConnection>
-					<developerConnection>scm:svn:https://dvlp.site-mairie.noumea.nc:8080/svn/sirh-ws/trunk</developerConnection>
+					<webAccessUrl>https://svn.ville-noumea.nc/sed/sirh-ws/trunk</webAccessUrl>
+					<anonymousConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</anonymousConnection>
+					<developerConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</developerConnection>
 				</configuration>
 				<reportSets>
 					<reportSet>
