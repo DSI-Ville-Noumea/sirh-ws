@@ -99,3 +99,9 @@ Web Services des Services
 ]
 
 +------------------------------------------+
+
+
+** Construire l'arbre des services en cas de besoin.
+
+ URL : /services/rebuildServiceTree
+

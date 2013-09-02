@@ -11,8 +11,11 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.tools.ServiceTreeNode;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +25,8 @@ public class SiservService implements ISiservService {
 	transient EntityManager sirhEntityManager;
 
 	private Hashtable<String, ServiceTreeNode> hTree;
+
+	private Logger logger = LoggerFactory.getLogger(SiservService.class);
 
 	@Override
 	public Siserv getDirection(String servi) {
@@ -304,5 +309,13 @@ public class SiservService implements ISiservService {
 		}
 		
 		return directionAgent;
+	}
+
+	@Override
+	public void construitArbreServices() {
+		logger.info("started building service arbre...");
+		Hashtable<String, ServiceTreeNode> tree = construitArbre();
+		logger.info("finished building service arbre ...");
+		logger.info("service arbre has {} nodes: ", tree.size());
 	}
 }
