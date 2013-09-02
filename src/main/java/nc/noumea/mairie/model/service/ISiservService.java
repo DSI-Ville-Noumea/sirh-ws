@@ -32,5 +32,7 @@ public interface ISiservService {
 	public Siserv getServiceBySigle(String sigleService);
 	
 	public ServiceTreeNode getAgentDirection(Integer idAgent);
+
+	public void construitArbreServices();
 	
 }

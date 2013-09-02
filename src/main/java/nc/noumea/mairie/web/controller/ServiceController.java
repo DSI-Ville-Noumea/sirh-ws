@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -162,6 +163,20 @@ public class ServiceController {
 				.serialize(services);
 		
 		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/rebuildServiceTree")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> rebuildServiceTree() throws ParseException {
+
+		try {
+			siservSrv.construitArbreServices();
+		}
+		catch (Exception ex) {
+			return new ResponseEntity<String>(ex.toString(), HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
 }
