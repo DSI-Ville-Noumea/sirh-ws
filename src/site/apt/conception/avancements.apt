@@ -162,6 +162,8 @@ Web Services des avancements
 			<nomComplet>Madame TATIANA CHARVET épouse CHARVET</nomComplet>
 			<numeroArrete>129974</numeroArrete>
 			<regularisation>false</regularisation>
+			<matriculeAgent>5138</matriculeAgent>
+			<baseReglement>I</baseReglement>
 		</arretes>
     </arreteListDto>
 

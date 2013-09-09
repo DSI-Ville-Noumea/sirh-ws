@@ -84,6 +84,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("I");
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
@@ -121,6 +122,7 @@ public class ArreteDtoTest {
 		assertEquals("956", dto.getIb());
 		assertEquals(false, dto.isChangementClasse());
 		assertEquals(true, dto.isFeminin());
+		assertEquals("I", dto.getBaseReglement());
 	}
 
 	@Test
@@ -166,6 +168,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("I");
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
@@ -198,6 +201,7 @@ public class ArreteDtoTest {
 		assertEquals(false, dto.isRegularisation());
 		assertEquals("1 mois", dto.getAcc());
 		assertEquals("5138", dto.getMatriculeAgent());
+		assertEquals("I", dto.getBaseReglement());
 	}
 
 	@Test
@@ -254,6 +258,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("M");
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
@@ -282,6 +287,7 @@ public class ArreteDtoTest {
 		assertEquals("", dto.getDeliberationLabel());
 		assertEquals("", dto.getDeliberationCapText());
 		assertEquals("néant", dto.getAcc());
+		assertEquals("M", dto.getBaseReglement());
 	}
 
 	@Test
@@ -315,6 +321,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("M");
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -353,6 +360,7 @@ public class ArreteDtoTest {
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("épuisée", dto.getAcc());
+		assertEquals("M", dto.getBaseReglement());
 	}
 
 	@Test
@@ -386,6 +394,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("I");
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -424,6 +433,7 @@ public class ArreteDtoTest {
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("néant", dto.getAcc());
+		assertEquals("I", dto.getBaseReglement());
 	}
 
 	@Test
@@ -443,6 +453,7 @@ public class ArreteDtoTest {
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
+		carr.setModReg("I");
 
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
@@ -496,5 +507,6 @@ public class ArreteDtoTest {
 		assertEquals(2013, dto.getAnnee());
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
+		assertEquals("I", dto.getBaseReglement());
 	}
 }
