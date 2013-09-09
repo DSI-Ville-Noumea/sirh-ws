@@ -40,31 +40,4 @@ public class Spcarr {
 	@NotNull
 	@Column(name = "REFARR", columnDefinition = "numeric")
 	private Integer referenceArrete;
-
-	@NotNull
-	@Column(name = "ACCJOUR", columnDefinition = "decimal")
-	private Double accJour;
-
-	@NotNull
-	@Column(name = "ACCMOIS", columnDefinition = "decimal")
-	private Double accMois;
-
-	@NotNull
-	@Column(name = "ACCANNEE", columnDefinition = "decimal")
-	private Double accAnnee;
-
-	public String getAcc() {
-		if (this.accAnnee.intValue() == 0 && this.accMois.intValue() == 0 && this.accJour.intValue() == 0) {
-			return "néant";
-		}
-		String anneeAcc = this.accAnnee.intValue() == 0 ? "" : this.accAnnee.intValue() > 1 ? this.accAnnee.intValue() + " ans, " : this.accAnnee
-				.intValue() + " an, ";
-		String moisAcc = this.accMois.intValue() == 0 ? "" : this.accMois.intValue() + " mois, ";
-		String jourAcc = this.accJour.intValue() == 0 ? "" : this.accJour.intValue() > 1 ? this.accJour.intValue() + " jours " : this.accJour
-				.intValue() + " jour ";
-		String res = anneeAcc + moisAcc + jourAcc;
-		if (res.endsWith(", "))
-			res = res.substring(0, res.length() - 2);
-		return res;
-	}
 }

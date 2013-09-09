@@ -85,4 +85,31 @@ public class AvancementFonctionnaire {
 	@OneToOne(optional=true)
 	@JoinColumn(name = "ID_AVIS_EMP")
 	private AvisCap avisCapEmployeur;
+
+	@Column(name = "NOUV_ACC_ANNEE")
+	private Integer nouvAccAnnee;
+	
+	@Column(name = "NOUV_ACC_MOIS")
+	private Integer nouvAccMois;
+	
+	@Column(name = "NOUV_ACC_JOUR")
+	private Integer nouvAccJour;
+
+	public String getAccRestant() {
+		if (this.nouvAccAnnee.intValue() == 0 && this.nouvAccMois.intValue() == 0 && this.nouvAccJour.intValue() == 0) {
+			if (this.accAnnee.intValue() != 0 || this.accMois.intValue() != 0 || this.accJour.intValue() != 0) {
+				return "épuisée";
+			}
+			return "néant";
+		}
+		String anneeAcc = this.nouvAccAnnee.intValue() == 0 ? "" : this.nouvAccAnnee.intValue() > 1 ? this.nouvAccAnnee.intValue() + " ans, " : this.nouvAccAnnee
+				.intValue() + " an, ";
+		String moisAcc = this.nouvAccMois.intValue() == 0 ? "" : this.nouvAccMois.intValue() + " mois, ";
+		String jourAcc = this.nouvAccJour.intValue() == 0 ? "" : this.nouvAccJour.intValue() > 1 ? this.nouvAccJour.intValue() + " jours " : this.nouvAccJour
+				.intValue() + " jour ";
+		String res = anneeAcc + moisAcc + jourAcc;
+		if (res.endsWith(", "))
+			res = res.substring(0, res.length() - 2);
+		return res;
+	}
 }
