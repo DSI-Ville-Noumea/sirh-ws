@@ -40,4 +40,7 @@ public class Spcarr {
 	@NotNull
 	@Column(name = "REFARR", columnDefinition = "numeric")
 	private Integer referenceArrete;
+
+	@Column(name = "MODREG", columnDefinition = "char")
+	private String modReg;
 }
