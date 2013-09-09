@@ -30,6 +30,7 @@ public class ArreteDtoTest {
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
 		Agent ag = new Agent();
+		ag.setNomatr(5138);
 		ag.setNomPatronymique("TOTO");
 		ag.setNomMarital("TITI");
 		ag.setNomUsage("TITIX");
@@ -128,6 +129,7 @@ public class ArreteDtoTest {
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
 		Agent ag = new Agent();
+		ag.setNomatr(5138);
 		ag.setNomPatronymique("TOTO");
 		ag.setNomMarital("TITI");
 		ag.setNomUsage("TYY");
@@ -195,6 +197,7 @@ public class ArreteDtoTest {
 		assertEquals(true, dto.isChangementClasse());
 		assertEquals(false, dto.isRegularisation());
 		assertEquals("1 mois", dto.getAcc());
+		assertEquals("5138", dto.getMatriculeAgent());
 	}
 
 	@Test
@@ -209,6 +212,7 @@ public class ArreteDtoTest {
 		ag.setPrenom("Nono");
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
+		ag.setNomatr(5138);
 
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
@@ -292,6 +296,7 @@ public class ArreteDtoTest {
 		ag.setPrenom("Nono");
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
+		ag.setNomatr(5138);
 
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
@@ -356,6 +361,7 @@ public class ArreteDtoTest {
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
 
 		Agent ag = new Agent();
+		ag.setNomatr(5138);
 		ag.setNomPatronymique("TOTO");
 		ag.setNomMarital("TITI");
 		ag.setNomUsage("TITIX");
@@ -432,6 +438,7 @@ public class ArreteDtoTest {
 		ag.setPrenom("Nono");
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
+		ag.setNomatr(5138);
 
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
