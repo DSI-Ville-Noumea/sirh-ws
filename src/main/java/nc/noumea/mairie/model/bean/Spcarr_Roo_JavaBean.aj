@@ -40,4 +40,12 @@ privileged aspect Spcarr_Roo_JavaBean {
         this.referenceArrete = referenceArrete;
     }
     
+    public String Spcarr.getModReg() {
+        return this.modReg;
+    }
+    
+    public void Spcarr.setModReg(String modReg) {
+        this.modReg = modReg;
+    }
+    
 }
