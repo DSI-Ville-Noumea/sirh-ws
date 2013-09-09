@@ -31,12 +31,14 @@ public class ArreteDto {
 	private boolean feminin;
 	private String directionAgent;
 	private String matriculeAgent;
+	private String baseReglement;
 
 	public ArreteDto() {
 
 	}
 
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr) throws ParseException {
+		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
@@ -241,5 +243,13 @@ public class ArreteDto {
 
 	public void setMatriculeAgent(String matriculeAgent) {
 		this.matriculeAgent = matriculeAgent;
+	}
+
+	public String getBaseReglement() {
+		return baseReglement;
+	}
+
+	public void setBaseReglement(String baseReglement) {
+		this.baseReglement = baseReglement;
 	}
 }
