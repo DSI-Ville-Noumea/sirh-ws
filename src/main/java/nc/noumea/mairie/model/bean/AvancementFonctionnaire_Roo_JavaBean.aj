@@ -171,4 +171,28 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.avisCapEmployeur = avisCapEmployeur;
     }
     
+    public Integer AvancementFonctionnaire.getNouvAccAnnee() {
+        return this.nouvAccAnnee;
+    }
+    
+    public void AvancementFonctionnaire.setNouvAccAnnee(Integer nouvAccAnnee) {
+        this.nouvAccAnnee = nouvAccAnnee;
+    }
+    
+    public Integer AvancementFonctionnaire.getNouvAccMois() {
+        return this.nouvAccMois;
+    }
+    
+    public void AvancementFonctionnaire.setNouvAccMois(Integer nouvAccMois) {
+        this.nouvAccMois = nouvAccMois;
+    }
+    
+    public Integer AvancementFonctionnaire.getNouvAccJour() {
+        return this.nouvAccJour;
+    }
+    
+    public void AvancementFonctionnaire.setNouvAccJour(Integer nouvAccJour) {
+        this.nouvAccJour = nouvAccJour;
+    }
+    
 }

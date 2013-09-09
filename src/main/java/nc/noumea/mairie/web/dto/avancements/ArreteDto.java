@@ -72,7 +72,7 @@ public class ArreteDto {
 				+ carr.getReferenceArrete().toString().substring(2, carr.getReferenceArrete().toString().length());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
-		this.acc = carr.getAcc();
+		this.acc = avct.getAccRestant();
 		this.directionAgent = fp !=null && fp.getService()!=null ? " (" + fp.getService().getDirectionSigle() + ")" : "";
 
 	}

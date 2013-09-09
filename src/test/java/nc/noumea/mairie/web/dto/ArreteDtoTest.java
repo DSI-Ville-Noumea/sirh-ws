@@ -73,11 +73,14 @@ public class ArreteDtoTest {
 		avct.setDateAvctMaxi(sdf.parse("15/03/2013"));
 		avct.setAvisCapEmployeur(avis);
 		avct.setIdModifAvancement(7);
+		avct.setAccAnnee(1);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(0);
 
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 1);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 4);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
@@ -151,11 +154,14 @@ public class ArreteDtoTest {
 		avct.setIdModifAvancement(5);
 		avct.setRegularisation(false);
 		avct.setGradeNouveau(gradeNouveau);
+		avct.setAccAnnee(1);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(1);
+		avct.setNouvAccJour(0);
 
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 1);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 4);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
@@ -188,6 +194,7 @@ public class ArreteDtoTest {
 		assertEquals(false, dto.isFeminin());
 		assertEquals(true, dto.isChangementClasse());
 		assertEquals(false, dto.isRegularisation());
+		assertEquals("1 mois", dto.getAcc());
 	}
 
 	@Test
@@ -233,11 +240,14 @@ public class ArreteDtoTest {
 		avct.setDateAvctMaxi(sdf.parse("15/03/2013"));
 		avct.setAvisCapEmployeur(avis);
 		avct.setIdModifAvancement(7);
+		avct.setAccAnnee(0);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(0);
 
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 1);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 4);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
@@ -267,6 +277,7 @@ public class ArreteDtoTest {
 		// Then
 		assertEquals("", dto.getDeliberationLabel());
 		assertEquals("", dto.getDeliberationCapText());
+		assertEquals("néant", dto.getAcc());
 	}
 
 	@Test
@@ -282,7 +293,6 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
 
-
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
 		barem.setIna(125);
@@ -296,17 +306,20 @@ public class ArreteDtoTest {
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
-		
+
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 1);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 4);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
 		avct.setGradeNouveau(gradeNouveau);
+		avct.setAccAnnee(1);
+		avct.setAccMois(0);
+		avct.setAccJour(4);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(0);
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
@@ -334,7 +347,7 @@ public class ArreteDtoTest {
 		// Then
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
-		assertEquals("1 an, 4 jours ", dto.getAcc());
+		assertEquals("épuisée", dto.getAcc());
 	}
 
 	@Test
@@ -350,7 +363,6 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
 
-
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
 		barem.setIna(125);
@@ -364,17 +376,20 @@ public class ArreteDtoTest {
 		gradeNouveau.setLiGrad("Grade T123");
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
-		
+
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 0);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 0);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
 		avct.setGradeNouveau(gradeNouveau);
+		avct.setAccAnnee(0);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(0);
 
 		Siserv service = new Siserv();
 		service.setServi("TATA");
@@ -419,9 +434,6 @@ public class ArreteDtoTest {
 		ag.setTitre("1");
 
 		Spcarr carr = new Spcarr();
-		carr.setAccAnnee((double) 1);
-		carr.setAccMois((double) 0);
-		carr.setAccJour((double) 4);
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
 
@@ -463,6 +475,12 @@ public class ArreteDtoTest {
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
 		avct.setGradeNouveau(gradeNouveau);
+		avct.setAccAnnee(1);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(2);
 
 		// When
 		ArreteDto dto = new ArreteDto(avct, fp, carr);
@@ -470,5 +488,6 @@ public class ArreteDtoTest {
 		// Then
 		assertEquals(2013, dto.getAnnee());
 		assertEquals(" (SN)", dto.getDirectionAgent());
+		assertEquals("2 jours ", dto.getAcc());
 	}
 }
