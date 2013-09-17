@@ -195,4 +195,12 @@ privileged aspect AvancementFonctionnaire_Roo_JavaBean {
         this.nouvAccJour = nouvAccJour;
     }
     
+    public boolean AvancementFonctionnaire.isAgentVDN() {
+        return this.agentVDN;
+    }
+    
+    public void AvancementFonctionnaire.setAgentVDN(boolean agentVDN) {
+        this.agentVDN = agentVDN;
+    }
+    
 }

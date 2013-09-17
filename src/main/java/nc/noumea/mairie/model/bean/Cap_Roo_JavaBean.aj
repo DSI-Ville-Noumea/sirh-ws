@@ -67,4 +67,12 @@ privileged aspect Cap_Roo_JavaBean {
         this.representants = representants;
     }
     
+    public boolean Cap.isCapVDN() {
+        return this.capVDN;
+    }
+    
+    public void Cap.setCapVDN(boolean capVDN) {
+        this.capVDN = capVDN;
+    }
+    
 }
