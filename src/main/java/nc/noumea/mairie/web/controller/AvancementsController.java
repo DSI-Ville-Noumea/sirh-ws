@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.controller;
 import java.text.ParseException;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.service.IAvancementsService;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
@@ -28,8 +29,7 @@ import flexjson.JSONSerializer;
 @RequestMapping("/avancements")
 public class AvancementsController {
 
-	private Logger logger = LoggerFactory
-			.getLogger(AvancementsController.class);
+	private Logger logger = LoggerFactory.getLogger(AvancementsController.class);
 
 	@Autowired
 	private IAvancementsService avancementsService;
@@ -41,16 +41,20 @@ public class AvancementsController {
 	@RequestMapping(value = "/xml/getTableauAvancements", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ModelAndView getTableauAvancements(@RequestParam("idCap") int idCap,
-			@RequestParam("idCadreEmploi") int idCadreEmploi,
-			@RequestParam("avisEAE") boolean avisEAE) throws ParseException {
+			@RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE)
+			throws ParseException {
+
+		logger.debug(
+				"entered GET [avancements/xml/getTableauAvancements] => getTableauAvancements with parameter idCap = {} and idCadreEmploi = {} and avisEAE = {}",
+				idCap, idCadreEmploi, avisEAE);
 
 		if (avancementsService.getCap(idCap) == null)
-			return new ModelAndView("xmlView", "object",
-					new CommissionAvancementDto());
+			return new ModelAndView("xmlView", "object", new CommissionAvancementDto());
 
-		CommissionAvancementDto dto = avancementsService
-				.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi,
-						avisEAE);
+		Cap cap = avancementsService.getCap(idCap);
+
+		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi,
+				avisEAE, cap.isCapVDN());
 
 		return new ModelAndView("xmlView", "object", dto);
 	}
@@ -58,10 +62,8 @@ public class AvancementsController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadTableauAvancements", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadTableauAvancements(
-			@RequestParam("idCap") int idCap,
-			@RequestParam("idCadreEmploi") int idCadreEmploi,
-			@RequestParam("avisEAE") boolean avisEAE)
+	public ResponseEntity<byte[]> downloadTableauAvancements(@RequestParam("idCap") int idCap,
+			@RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE)
 			throws ParseException {
 
 		if (avancementsService.getCap(idCap) == null)
@@ -70,9 +72,7 @@ public class AvancementsController {
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService
-					.getTableauAvancementsReportAsByteArray(idCap,
-							idCadreEmploi,avisEAE);
+			responseData = reportingService.getTableauAvancementsReportAsByteArray(idCap, idCadreEmploi, avisEAE);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,8 +80,7 @@ public class AvancementsController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
-		headers.add("Content-Disposition", String.format(
-				"attachment; filename=\"%s-%s.pdf\"", idCap, idCadreEmploi));
+		headers.add("Content-Disposition", String.format("attachment; filename=\"%s-%s.pdf\"", idCap, idCadreEmploi));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
@@ -89,27 +88,22 @@ public class AvancementsController {
 	@ResponseBody
 	@RequestMapping(value = "/getEaesGedIds", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEaesGedIds(
-			@RequestParam("idCap") int idCap,
+	public ResponseEntity<String> getEaesGedIds(@RequestParam("idCap") int idCap,
 			@RequestParam("idCadreEmploi") int idCadreEmploi) {
 
-		List<String> eaeIds = avancementsService
-				.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
+		List<String> eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
 
-		return new ResponseEntity<String>(
-				new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
+		return new ResponseEntity<String>(new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/xml/getArretes", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getArretes(
-			@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse,
-			@RequestParam("annee") int year) throws Exception {
+	public ModelAndView getArretes(@RequestParam("csvIdAgents") String csvIdAgents,
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year)
+			throws Exception {
 
-		ArreteListDto arretes = avancementsService.getArretesForUsers(
-				csvIdAgents, isChangementClasse, year);
+		ArreteListDto arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
 
 		return new ModelAndView("xmlView", "object", arretes);
 	}
@@ -117,16 +111,14 @@ public class AvancementsController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadArretes", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadArretes(
-			@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse,
-			@RequestParam("annee") int year) throws ParseException {
+	public ResponseEntity<byte[]> downloadArretes(@RequestParam("csvIdAgents") String csvIdAgents,
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year)
+			throws ParseException {
 
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getArretesReportAsByteArray(
-					csvIdAgents, isChangementClasse, year);
+			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents, isChangementClasse, year);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);

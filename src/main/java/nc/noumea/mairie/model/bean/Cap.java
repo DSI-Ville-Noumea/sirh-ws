@@ -45,4 +45,7 @@ public class Cap {
     @OrderBy(value = "position")
 	private Set<CapRepresentant> representants = new HashSet<CapRepresentant>();
 
+	@Column(name = "CAP_VDN")
+	private boolean capVDN;
+
 }
