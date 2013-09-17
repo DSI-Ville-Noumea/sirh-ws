@@ -112,4 +112,7 @@ public class AvancementFonctionnaire {
 			res = res.substring(0, res.length() - 2);
 		return res;
 	}
+
+	@Column(name = "AGENT_VDN")
+	private boolean agentVDN;
 }
