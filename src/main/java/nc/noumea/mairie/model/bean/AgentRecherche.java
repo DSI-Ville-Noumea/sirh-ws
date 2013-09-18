@@ -41,7 +41,6 @@ public class AgentRecherche {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Nomatr=" + getNomatr() + ",Prenom=" + getPrenomUsage() + ",Nom=" + getNomUsage() + ",IdAgent=" + getIdAgent();
 	}
 }
