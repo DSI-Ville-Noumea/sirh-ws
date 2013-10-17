@@ -361,6 +361,7 @@ public class ArreteDtoTest {
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("épuisée", dto.getAcc());
 		assertEquals("M", dto.getBaseReglement());
+		assertEquals("SN (S)", dto.getServiceAgent());
 	}
 
 	@Test
