@@ -32,6 +32,7 @@ public class ArreteDto {
 	private String directionAgent;
 	private String matriculeAgent;
 	private String baseReglement;
+	private String serviceAgent;
 
 	public ArreteDto() {
 
@@ -42,25 +43,29 @@ public class ArreteDto {
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false
-				: avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
+		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7
+				|| avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
-		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
-				.getGradeGenerique().getDeliberationCommunale().getLibDeliberation().toLowerCase();
-		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau()
-				.getGradeGenerique().getDeliberationCommunale().getTexteCap();
+		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
+				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation()
+						.toLowerCase();
+		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
+				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
 		this.dateAvct = getDateAvancement(avct);
-		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong().toLowerCase();
-		String classe = avct.getGradeNouveau().getCodcla() == null || avct.getGradeNouveau().getCodcla().trim().equals("") ? "" : " "
+		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong()
+				.toLowerCase();
+		String classe = avct.getGradeNouveau().getCodcla() == null
+				|| avct.getGradeNouveau().getCodcla().trim().equals("") ? "" : " "
 				+ Spclas.findSpclas(avct.getGradeNouveau().getCodcla()).getLibCla().trim();
-		String echelon = avct.getGradeNouveau().getCodech() == null || avct.getGradeNouveau().getCodech().trim().equals("") ? "" : " "
+		String echelon = avct.getGradeNouveau().getCodech() == null
+				|| avct.getGradeNouveau().getCodech().trim().equals("") ? "" : " "
 				+ Speche.findSpeche(avct.getGradeNouveau().getCodech()).getLibEch().trim();
 		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
 
 		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
-				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'" + libelleGrade.toLowerCase() : "de "
-				+ libelleGrade.toLowerCase();
+				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'" + libelleGrade.toLowerCase()
+				: "de " + libelleGrade.toLowerCase();
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
 			String res = avct.getGradeNouveau().getBarem().getIban();
@@ -72,24 +77,28 @@ public class ArreteDto {
 			this.ib = avct.getGradeNouveau().getBarem().getIban();
 		}
 		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
-		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20" + carr.getReferenceArrete().toString().substring(0, 2) + "/"
+		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20"
+				+ carr.getReferenceArrete().toString().substring(0, 2) + "/"
 				+ carr.getReferenceArrete().toString().substring(2, carr.getReferenceArrete().toString().length());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
 		this.acc = avct.getAccRestant();
-		this.directionAgent = fp !=null && fp.getService()!=null ? " (" + fp.getService().getDirectionSigle() + ")" : "";
+		this.directionAgent = fp != null && fp.getService() != null ? " (" + fp.getService().getDirectionSigle() + ")"
+				: "";
+		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
+				+ fp.getService().getSigle().trim() + ")" : "";
 
 	}
 
 	private Date getDateAvancement(AvancementFonctionnaire avct) {
 		if (avct != null && avct.getAvisCapEmployeur() != null) {
 			switch (avct.getAvisCapEmployeur().getIdAvisCap()) {
-			case 1:
-				return avct.getDateAvctMini();
-			case 3:
-				return avct.getDateAvctMaxi();
-			default:
-				return avct.getDateAvctMoy();
+				case 1:
+					return avct.getDateAvctMini();
+				case 3:
+					return avct.getDateAvctMaxi();
+				default:
+					return avct.getDateAvctMoy();
 			}
 		} else {
 			return null;
@@ -98,7 +107,8 @@ public class ArreteDto {
 
 	private String getNomCompletAgent(Agent agent) {
 		return agent.getTitre() + " " + agent.getPrenomUsage().substring(0, 1).toUpperCase()
-				+ agent.getPrenomUsage().substring(1, agent.getPrenomUsage().length()).toLowerCase() + " " + agent.getNomUsage().toUpperCase();
+				+ agent.getPrenomUsage().substring(1, agent.getPrenomUsage().length()).toLowerCase() + " "
+				+ agent.getNomUsage().toUpperCase();
 	}
 
 	public boolean isChangementClasse() {
@@ -251,5 +261,13 @@ public class ArreteDto {
 
 	public void setBaseReglement(String baseReglement) {
 		this.baseReglement = baseReglement;
+	}
+
+	public String getServiceAgent() {
+		return serviceAgent;
+	}
+
+	public void setServiceAgent(String serviceAgent) {
+		this.serviceAgent = serviceAgent;
 	}
 }
