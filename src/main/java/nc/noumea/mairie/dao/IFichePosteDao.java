@@ -7,5 +7,5 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 
 public interface IFichePosteDao {
 
-	public Hashtable<Integer, FichePosteTreeNode> GetAllFichePosteAndAffectedAgents(Date today);
+	public Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today);
 }
