@@ -19,7 +19,7 @@ public class FichePosteDao implements IFichePosteDao {
 	private EntityManager sirhEntityManager;
 	
 	@SuppressWarnings("unchecked")
-	public Hashtable<Integer, FichePosteTreeNode> GetAllFichePosteAndAffectedAgents(Date today) {
+	public Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today) {
 		
 		Hashtable<Integer, FichePosteTreeNode> result = new Hashtable<Integer, FichePosteTreeNode>();
 		
