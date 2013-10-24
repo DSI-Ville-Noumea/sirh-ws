@@ -284,7 +284,7 @@ public class FichePosteService implements IFichePosteService {
 	 */
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
-		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.GetAllFichePosteAndAffectedAgents(new Date());
+		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePosteAndAffectedAgents(new Date());
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
 
