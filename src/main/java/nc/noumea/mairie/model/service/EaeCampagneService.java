@@ -27,7 +27,11 @@ public class EaeCampagneService implements IEaeCampagneService {
 						EaeCampagne.class);
 
 		query.setParameter("dateJour", new Date());
-		camp = (EaeCampagne) query.getSingleResult();
+		try {
+			camp = (EaeCampagne) query.getSingleResult();
+		} catch (Exception e) {
+			// aucune campagne trouvée
+		}
 
 		return camp;
 
