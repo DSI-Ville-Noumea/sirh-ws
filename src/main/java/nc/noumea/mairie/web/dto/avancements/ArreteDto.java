@@ -22,7 +22,7 @@ public class ArreteDto {
 	private String numeroArrete;
 	private Date dateArrete;
 	private Date dateCap;
-	private Date dateAvct;
+	private String dateAvct;
 	private String dureeAvct;
 	private String gradeLabel;
 	private Integer ina;
@@ -52,7 +52,17 @@ public class ArreteDto {
 		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
-		this.dateAvct = getDateAvancement(avct);
+		SimpleDateFormat dateMoisAnnee = new SimpleDateFormat("MMMM y");
+		SimpleDateFormat date = new SimpleDateFormat("d MMMM y");
+		SimpleDateFormat jourDate = new SimpleDateFormat("d");
+		if (getDateAvancement(avct) != null) {
+			if (jourDate.format(getDateAvancement(avct).getDay()).equals("1")) {
+				this.dateAvct = "1er " + dateMoisAnnee.format(getDateAvancement(avct));
+			} else {
+				this.dateAvct = date.format(getDateAvancement(avct));
+			}
+		}
+
 		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong()
 				.toLowerCase();
 		String classe = avct.getGradeNouveau().getCodcla() == null
@@ -183,11 +193,11 @@ public class ArreteDto {
 		this.dateCap = dateCap;
 	}
 
-	public Date getDateAvct() {
+	public String getDateAvct() {
 		return dateAvct;
 	}
 
-	public void setDateAvct(Date dateAvct) {
+	public void setDateAvct(String dateAvct) {
 		this.dateAvct = dateAvct;
 	}
 
