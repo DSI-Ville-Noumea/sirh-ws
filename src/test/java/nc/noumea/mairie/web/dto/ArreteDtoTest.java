@@ -69,9 +69,9 @@ public class ArreteDtoTest {
 		avct.setGradeNouveau(gradeNouveau);
 		avct.setRegularisation(false);
 		avct.setDateCap(sdf.parse("15/01/2013"));
-		avct.setDateAvctMini(sdf.parse("15/01/2013"));
-		avct.setDateAvctMoy(sdf.parse("15/02/2013"));
-		avct.setDateAvctMaxi(sdf.parse("15/03/2013"));
+		avct.setDateAvctMini(sdf.parse("01/01/2013"));
+		avct.setDateAvctMoy(sdf.parse("01/02/2013"));
+		avct.setDateAvctMaxi(sdf.parse("01/03/2013"));
 		avct.setAvisCapEmployeur(avis);
 		avct.setIdModifAvancement(7);
 		avct.setAccAnnee(1);
@@ -116,7 +116,7 @@ public class ArreteDtoTest {
 		assertEquals("n° 2009/1310", dto.getDeliberationLabel());
 		assertEquals("statut", dto.getDeliberationCapText());
 		assertEquals("15/01/2013", sdf.format(dto.getDateCap()));
-		assertEquals("15/02/2013", sdf.format(dto.getDateAvct()));
+		assertEquals("1er février 2013", dto.getDateAvct());
 		assertEquals("moyenne", dto.getDureeAvct());
 		assertEquals(Integer.valueOf(125), dto.getIna());
 		assertEquals("956", dto.getIb());
