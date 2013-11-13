@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.dto.avancements;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
@@ -52,9 +53,9 @@ public class ArreteDto {
 		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
-		SimpleDateFormat dateMoisAnnee = new SimpleDateFormat("MMMM y");
-		SimpleDateFormat date = new SimpleDateFormat("d MMMM y");
-		SimpleDateFormat jourDate = new SimpleDateFormat("d");
+		SimpleDateFormat dateMoisAnnee = new SimpleDateFormat("MMMM y", new Locale("fr", "FR"));
+		SimpleDateFormat date = new SimpleDateFormat("d MMMM y", new Locale("fr", "FR"));
+		SimpleDateFormat jourDate = new SimpleDateFormat("d", new Locale("fr", "FR"));
 		if (getDateAvancement(avct) != null) {
 			if (jourDate.format(getDateAvancement(avct).getDay()).equals("1")) {
 				this.dateAvct = "1er " + dateMoisAnnee.format(getDateAvancement(avct));
