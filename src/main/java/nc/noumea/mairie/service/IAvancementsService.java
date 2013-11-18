@@ -3,6 +3,7 @@ package nc.noumea.mairie.service;
 import java.text.ParseException;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
@@ -31,4 +32,9 @@ public interface IAvancementsService {
 			List<AvancementFonctionnaire> avancements, boolean avisEAE);
 
 	public Cap getCap(int idCap);
+
+	public ArreteListDto getArretesDetachesForUsers(String csvIdAgents, boolean isChangementClasse, int year)
+			throws ParseException;
+
+	public List<AvancementDetache> getAvancementsDetacheForArretes(List<Integer> agentIds, int year);
 }
