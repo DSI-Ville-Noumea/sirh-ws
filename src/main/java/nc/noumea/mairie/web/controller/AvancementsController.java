@@ -100,10 +100,14 @@ public class AvancementsController {
 	@RequestMapping(value = "/xml/getArretes", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ModelAndView getArretes(@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year)
-			throws Exception {
-
-		ArreteListDto arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year,
+			@RequestParam("isDetache") boolean isDetache) throws Exception {
+		ArreteListDto arretes = new ArreteListDto();
+		if (!isDetache) {
+			arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
+		} else {
+			arretes = avancementsService.getArretesDetachesForUsers(csvIdAgents, isChangementClasse, year);
+		}
 
 		return new ModelAndView("xmlView", "object", arretes);
 	}
@@ -112,13 +116,14 @@ public class AvancementsController {
 	@RequestMapping(value = "/downloadArretes", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<byte[]> downloadArretes(@RequestParam("csvIdAgents") String csvIdAgents,
-			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year)
-			throws ParseException {
+			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year,
+			@RequestParam("isDetache") boolean isDetache) throws ParseException {
 
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents, isChangementClasse, year);
+			responseData = reportingService.getArretesReportAsByteArray(csvIdAgents, isChangementClasse, year,
+					isDetache);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
