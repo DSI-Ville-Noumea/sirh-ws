@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import nc.noumea.mairie.model.bean.Agent;
+import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.AvisCap;
 import nc.noumea.mairie.model.bean.Deliberation;
@@ -509,5 +510,81 @@ public class ArreteDtoTest {
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
 		assertEquals("I", dto.getBaseReglement());
+	}
+
+	@Test
+	public void testArreteDto_ctor_AvctDetache() throws ParseException {
+		// Given
+		AvancementDetache avct = new AvancementDetache();
+
+		Agent ag = new Agent();
+		ag.setNomPatronymique("TOTO");
+		ag.setNomMarital("TITI");
+		ag.setNomUsage("TITIX");
+		ag.setPrenom("Nono");
+		ag.setPrenomUsage("Martine");
+		ag.setTitre("1");
+		ag.setNomatr(5138);
+
+		Spcarr carr = new Spcarr();
+		carr.setDateArrete(0);
+		carr.setReferenceArrete(12125);
+		carr.setModReg("I");
+
+		Spbarem barem = new Spbarem();
+		barem.setIban("0000956");
+		barem.setIna(125);
+
+		Spgeng gradeGen = new Spgeng();
+		gradeGen.setCdgeng("TECH");
+
+		Spgradn gradeNouveau = new Spgradn();
+		gradeNouveau.setCdgrad("T123");
+		gradeNouveau.setGradeInitial("TITI");
+		gradeNouveau.setLiGrad("Grade T123");
+		gradeNouveau.setGradeGenerique(gradeGen);
+		gradeNouveau.setBarem(barem);
+
+		Siserv service = new Siserv();
+		service.setServi("TATA");
+		service.setSigle("S");
+		service.setLiServ("TEST DIRECTION SERV");
+		service.setDirection("DIRECTION NONO");
+		service.setDirectionSigle("DIR");
+
+		Siserv serviceDirection = new Siserv();
+		serviceDirection.setServi("DIR");
+		serviceDirection.setSigle("SN");
+		serviceDirection.setLiServ("TEST");
+		serviceDirection.setDirection("DIRECTION");
+		serviceDirection.setDirectionSigle("DIRN");
+
+		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
+		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
+		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+
+		FichePoste fp = new FichePoste();
+		fp.setService(service);
+
+		avct.setAnneeAvancement(2013);
+		avct.setAgent(ag);
+		avct.setGradeNouveau(gradeNouveau);
+		avct.setAccAnnee(1);
+		avct.setAccMois(0);
+		avct.setAccJour(0);
+		avct.setNouvAccAnnee(0);
+		avct.setNouvAccMois(0);
+		avct.setNouvAccJour(2);
+
+		// When
+		ArreteDto dto = new ArreteDto(avct, fp, carr);
+
+		// Then
+		assertEquals(2013, dto.getAnnee());
+		assertEquals(" (SN)", dto.getDirectionAgent());
+		assertEquals("2 jours ", dto.getAcc());
+		assertEquals("I", dto.getBaseReglement());
+		assertEquals(null, dto.getDateCap());
+		assertEquals("", dto.getDureeAvct());
 	}
 }
