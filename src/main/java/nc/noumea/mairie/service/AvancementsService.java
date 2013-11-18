@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
@@ -319,5 +320,63 @@ public class AvancementsService implements IAvancementsService {
 
 	public static int getAnnee() {
 		return new DateTime().getYear();
+	}
+
+	@Override
+	public ArreteListDto getArretesDetachesForUsers(String csvIdAgents, boolean isChangementClasse, int year)
+			throws ParseException {
+
+		List<Integer> agentIds = new ArrayList<Integer>();
+
+		for (String id : csvIdAgents.split(",")) {
+			agentIds.add(Integer.valueOf(id));
+		}
+
+		// requete
+		List<AvancementDetache> avcts = getAvancementsDetacheForArretes(agentIds, year);
+
+		ArreteListDto arretes = new ArreteListDto();
+
+		for (AvancementDetache avct : avcts) {
+
+			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
+					.getIdAgent(), new DateTime().toDate());
+			FichePoste fp = fichePosteService.getFichePosteById(fpId);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
+			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
+			qCarr.setParameter("nomatr", avct.getAgent().getNomatr());
+			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
+			Spcarr carr = qCarr.getSingleResult();
+
+			ArreteDto dto = new ArreteDto(avct, fp, carr);
+			arretes.getArretes().add(dto);
+		}
+
+		return arretes;
+	}
+
+	@Override
+	public List<AvancementDetache> getAvancementsDetacheForArretes(List<Integer> agentIds, int year) {
+
+		List<AvancementDetache> result = null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT avct FROM AvancementDetache avct ");
+		sb.append("JOIN FETCH avct.agent ag ");
+		sb.append("JOIN FETCH avct.gradeNouveau gr ");
+		sb.append("JOIN FETCH gr.gradeGenerique gn ");
+		sb.append("JOIN FETCH gn.filiere ");
+		sb.append("JOIN FETCH gr.barem ");
+		sb.append("where avct.anneeAvancement = :year ");
+		sb.append("and ag.idAgent IN (:agentIds) ");
+
+		TypedQuery<AvancementDetache> qA = sirhEntityManager.createQuery(sb.toString(), AvancementDetache.class);
+		qA.setParameter("agentIds", agentIds);
+		qA.setParameter("year", year);
+
+		result = qA.getResultList();
+
+		return result;
 	}
 }
