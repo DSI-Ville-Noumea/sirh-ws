@@ -12,7 +12,10 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.dao.IFichePosteDao;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.PrimePointageFP;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
+import nc.noumea.mairie.ws.dto.RefPrimeDto;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -28,6 +31,9 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IFichePosteDao fichePosteDao;
+	
+	@Autowired
+	private ISirhPtgWSConsumer sirhPtgWSConsumer;
 
 	@Autowired
 	private IAgentService agentSrv;
@@ -334,5 +340,18 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		return res;
+	}
+	
+	@Override
+	public FichePoste getFichePosteDetailleSIRHByIdWithRefPrime(Integer idFichePoste) {
+		
+		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
+		
+		for(PrimePointageFP prime : fp.getPrimePointageFP()){
+			RefPrimeDto primeDto = sirhPtgWSConsumer.getPrime(prime.getId().getNumRubrique());
+			prime.setLibelle(primeDto.getLibelle());
+		}
+		
+		return fp;
 	}
 }

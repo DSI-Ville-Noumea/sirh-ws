@@ -32,4 +32,6 @@ public interface IFichePosteService {
 	public List<Integer> getShdAgentIdsForFichePoste(int idFichePoste, int maxDepth);
 
 	public FichePoste getFichePosteById(Integer idFichePoste);
+	
+	public FichePoste getFichePosteDetailleSIRHByIdWithRefPrime(Integer idFichePoste);
 }

@@ -8,6 +8,8 @@ public class AgentDto {
 	private String nom;
 	private String prenom;
 	private Integer idAgent;
+	
+	private FichePosteDto fichePoste;
 
 	public AgentDto() {
 	}
@@ -48,4 +50,12 @@ public class AgentDto {
 		this.idAgent = idAgent;
 	}
 
+	public FichePosteDto getFichePoste() {
+		return fichePoste;
+	}
+
+	public void setFichePoste(FichePosteDto fichePoste) {
+		this.fichePoste = fichePoste;
+	}
+	
 }
