@@ -5,10 +5,17 @@ package nc.noumea.mairie.model.bean;
 
 import java.util.Set;
 import nc.noumea.mairie.model.bean.Activite;
+import nc.noumea.mairie.model.bean.Affectation;
+import nc.noumea.mairie.model.bean.AvantageNature;
 import nc.noumea.mairie.model.bean.Budget;
 import nc.noumea.mairie.model.bean.Competence;
+import nc.noumea.mairie.model.bean.Delegation;
+import nc.noumea.mairie.model.bean.Diplome;
+import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.NiveauEtude;
+import nc.noumea.mairie.model.bean.PrimePointageFP;
+import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
@@ -142,12 +149,84 @@ privileged aspect FichePoste_Roo_JavaBean {
         this.niveauEtude = niveauEtude;
     }
     
-    public FichePoste FichePoste.getResponsable() {
-        return this.responsable;
+    public Set<AvantageNature> FichePoste.getAvantagesNature() {
+        return this.avantagesNature;
     }
     
-    public void FichePoste.setResponsable(FichePoste responsable) {
-        this.responsable = responsable;
+    public void FichePoste.setAvantagesNature(Set<AvantageNature> avantagesNature) {
+        this.avantagesNature = avantagesNature;
+    }
+    
+    public Set<Delegation> FichePoste.getDelegations() {
+        return this.delegations;
+    }
+    
+    public void FichePoste.setDelegations(Set<Delegation> delegations) {
+        this.delegations = delegations;
+    }
+    
+    public Set<RegimeIndemnitaire> FichePoste.getRegimesIndemnitaires() {
+        return this.regimesIndemnitaires;
+    }
+    
+    public void FichePoste.setRegimesIndemnitaires(Set<RegimeIndemnitaire> regimesIndemnitaires) {
+        this.regimesIndemnitaires = regimesIndemnitaires;
+    }
+    
+    public Set<PrimePointageFP> FichePoste.getPrimePointageFP() {
+        return this.primePointageFP;
+    }
+    
+    public void FichePoste.setPrimePointageFP(Set<PrimePointageFP> primePointageFP) {
+        this.primePointageFP = primePointageFP;
+    }
+    
+    public Set<Diplome> FichePoste.getDiplome() {
+        return this.diplome;
+    }
+    
+    public void FichePoste.setDiplome(Set<Diplome> diplome) {
+        this.diplome = diplome;
+    }
+    
+    public Set<FicheEmploi> FichePoste.getFicheEmploiPrimaire() {
+        return this.ficheEmploiPrimaire;
+    }
+    
+    public void FichePoste.setFicheEmploiPrimaire(Set<FicheEmploi> ficheEmploiPrimaire) {
+        this.ficheEmploiPrimaire = ficheEmploiPrimaire;
+    }
+    
+    public Set<FicheEmploi> FichePoste.getFicheEmploiSecondaire() {
+        return this.ficheEmploiSecondaire;
+    }
+    
+    public void FichePoste.setFicheEmploiSecondaire(Set<FicheEmploi> ficheEmploiSecondaire) {
+        this.ficheEmploiSecondaire = ficheEmploiSecondaire;
+    }
+    
+    public FichePoste FichePoste.getSuperieurHierarchique() {
+        return this.superieurHierarchique;
+    }
+    
+    public void FichePoste.setSuperieurHierarchique(FichePoste superieurHierarchique) {
+        this.superieurHierarchique = superieurHierarchique;
+    }
+    
+    public FichePoste FichePoste.getRemplace() {
+        return this.remplace;
+    }
+    
+    public void FichePoste.setRemplace(FichePoste remplace) {
+        this.remplace = remplace;
+    }
+    
+    public Set<Affectation> FichePoste.getAgent() {
+        return this.agent;
+    }
+    
+    public void FichePoste.setAgent(Set<Affectation> agent) {
+        this.agent = agent;
     }
     
 }

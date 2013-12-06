@@ -112,4 +112,42 @@ public class FichePosteController {
 		
 		return new ModelAndView("xmlView", "object", dto);
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/xml/getFichePosteSIRH",  produces = "application/xml", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ModelAndView getXmlFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
+		
+		FichePoste fp = fpSrv.getFichePosteDetailleSIRHByIdWithRefPrime(idFichePoste);
+				
+		FichePosteDto dto = new FichePosteDto(fp, true);
+		
+		return new ModelAndView("xmlView", "object", dto);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/downloadFichePosteSIRH", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
+		
+		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
+		
+		if (fp == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+		
+		byte[] responseData = null;
+		
+		try {
+			responseData = reportingService.getFichePosteSIRHReportAsByteArray(idFichePoste);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte []>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.doc\"", fp.getNumFP().replace('/', '_')));
+		
+		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
+	}
 }

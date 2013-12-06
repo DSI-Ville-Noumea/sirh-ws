@@ -9,6 +9,7 @@
 		<class>nc.noumea.mairie.model.bean.ActiviteFP</class>
 		<class>nc.noumea.mairie.model.bean.AvancementFonctionnaire</class>
 		<class>nc.noumea.mairie.model.bean.AvancementDetache</class>
+		<class>nc.noumea.mairie.model.bean.AvantageNature</class>
 		<class>nc.noumea.mairie.model.bean.AvisCap</class>
 		<class>nc.noumea.mairie.model.bean.CadreEmploi</class>
 		<class>nc.noumea.mairie.model.bean.Cap</class>
@@ -25,11 +26,17 @@
 		<class>nc.noumea.mairie.model.bean.Competence</class>
 		<class>nc.noumea.mairie.model.bean.CompetenceFP</class>
 		<class>nc.noumea.mairie.model.bean.Contact</class>
+		<class>nc.noumea.mairie.model.bean.Delegation</class>
+		<class>nc.noumea.mairie.model.bean.Diplome</class>
 		<class>nc.noumea.mairie.model.bean.Enfant</class>
+		<class>nc.noumea.mairie.model.bean.FicheEmploi</class>
 		<class>nc.noumea.mairie.model.bean.FichePoste</class>
+		<class>nc.noumea.mairie.model.bean.NatureAvantage</class>
 		<class>nc.noumea.mairie.model.bean.NiveauEtude</class>
 		<class>nc.noumea.mairie.model.bean.NiveauEtudeFP</class>
 		<class>nc.noumea.mairie.model.bean.ParentEnfant</class>
+		<class>nc.noumea.mairie.model.bean.PrimePointageFP</class>
+		<class>nc.noumea.mairie.model.bean.RegimeIndemnitaire</class>
 		<class>nc.noumea.mairie.model.bean.Sicomm</class>
 		<class>nc.noumea.mairie.model.bean.Siguic</class>
 		<class>nc.noumea.mairie.model.bean.Silieu</class>
@@ -50,8 +57,11 @@
 		<class>nc.noumea.mairie.model.bean.StatutFichePoste</class>
 		<class>nc.noumea.mairie.model.bean.Sptyco</class>
 		<class>nc.noumea.mairie.model.bean.TitrePoste</class>
+		<class>nc.noumea.mairie.model.bean.TypeAvantage</class>
 		<class>nc.noumea.mairie.model.bean.TypeCompetence</class>
 		<class>nc.noumea.mairie.model.bean.TypeContact</class>
+		<class>nc.noumea.mairie.model.bean.TypeDelegation</class>
+		<class>nc.noumea.mairie.model.bean.TypeRegimeIndemnitaire</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

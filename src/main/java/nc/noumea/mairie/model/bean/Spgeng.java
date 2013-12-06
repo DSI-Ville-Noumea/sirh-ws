@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
@@ -45,6 +47,7 @@ public class Spgeng {
 	
 	@OneToOne(optional=true)
 	@JoinColumn(name = "CDFILI", referencedColumnName = "CDFILI")
+	@NotFound(action=NotFoundAction.IGNORE)
 	private Spfili filiere;
 	
 	@ManyToMany(fetch = FetchType.LAZY)

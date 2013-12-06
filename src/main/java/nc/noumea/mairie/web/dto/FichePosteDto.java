@@ -6,8 +6,15 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import nc.noumea.mairie.model.bean.Activite;
+import nc.noumea.mairie.model.bean.Affectation;
+import nc.noumea.mairie.model.bean.AvantageNature;
 import nc.noumea.mairie.model.bean.Competence;
+import nc.noumea.mairie.model.bean.Delegation;
+import nc.noumea.mairie.model.bean.Diplome;
+import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.PrimePointageFP;
+import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
 
 @XmlRootElement
 public class FichePosteDto {
@@ -33,11 +40,38 @@ public class FichePosteDto {
 	private List<String> savoirsFaire;
 	private List<String> comportementsProfessionnels;
 	
+	// informations complementaires pour l impression FDP SIRH
+	private Integer dateDebutAffectation;
+	private String agent;
+	private String categorie;
+	private String filiere;
+	private String diplome;
+	private String superieurHierarchiqueFP;
+	private String superieurHierarchiqueAgent;
+	private String remplaceFP;
+	private String remplaceAgent;
+	private String emploiPrimaire;
+	private String emploiSecondaire;
+	private String NFA;
+	private String OPI;
+	private String anneeEmploi;
+	
+	private List<String> avantages;
+	private List<String> delegations;
+	private List<String> regimesIndemnitaires;
+	private List<String> primes;
+	
+	
 	public FichePosteDto() {
 		activites = new ArrayList<String>();
 		savoirs = new ArrayList<String>();
 		savoirsFaire = new ArrayList<String>();
 		comportementsProfessionnels = new ArrayList<String>();
+		
+		avantages = new ArrayList<String>();
+		delegations = new ArrayList<String>();
+		regimesIndemnitaires = new ArrayList<String>();
+		primes = new ArrayList<String>();
 	}
 	
 	public FichePosteDto(FichePoste fichePoste) {
@@ -50,14 +84,15 @@ public class FichePosteDto {
 		budget = fichePoste.getBudget().getLibelleBudget();
 		budgete = fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste.getBudgete().getLibHor().trim();
 		reglementaire = fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire().getLibHor().trim();
-		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
+		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" 
+				: fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
 		service = fichePoste.getService().getDivision() == null ? "" : fichePoste.getService().getDivision().trim();
 		section = fichePoste.getService().getSection() == null ? "" : fichePoste.getService().getSection().trim();
 		lieu = fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu().trim();
 		gradePoste = fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste().getGradeInitial().trim();
 		
-		superieur = fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
+		//superieur = fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
 		
 		missions = fichePoste.getMissions();
 		
@@ -75,6 +110,94 @@ public class FichePosteDto {
 			// 3 = comportement professionnel
 			if(cp.getTypeCompetence().getIdTypeCompetence().equals(3))
 				comportementsProfessionnels.add(cp.getNomCompetence());
+		}
+	}
+	
+	public FichePosteDto(FichePoste fichePoste, boolean isInfosCompl) {
+		this(fichePoste);
+		
+		dateDebutAffectation = fichePoste.getAnnee();
+		
+		if(null != fichePoste.getAgent()) {
+			for(Affectation agt : fichePoste.getAgent()){
+				agent = agt.getAgent().getNomatr() + " " + agt.getAgent().getDisplayPrenom() + " " + agt.getAgent().getDisplayNom();
+			}
+		}
+		
+		if(null != fichePoste.getGradePoste()) {
+			categorie = fichePoste.getGradePoste().getCdgrad();
+			
+			if(null != fichePoste.getGradePoste().getGradeGenerique()
+					&& null != fichePoste.getGradePoste().getGradeGenerique().getFiliere()) {
+				filiere = fichePoste.getGradePoste().getGradeGenerique().getFiliere().getLibelleFili();
+			}
+		}
+		
+		for(Diplome dipl : fichePoste.getDiplome()){
+			diplome = dipl.getLibDiplomen();
+			break;
+		}
+		
+		if(null != fichePoste.getSuperieurHierarchique()){
+			superieurHierarchiqueFP = fichePoste.getSuperieurHierarchique().getNumFP() 
+					+ " " + fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste();
+
+			if(null != fichePoste.getSuperieurHierarchique().getAgent()) {
+				for(Affectation supHierar : fichePoste.getSuperieurHierarchique().getAgent()) {
+					superieurHierarchiqueAgent = supHierar.getAgent().getNomatr().toString()
+							+ " " + supHierar.getAgent().getDisplayPrenom() 
+							+ " " + supHierar.getAgent().getDisplayNom(); 
+					break;
+				}
+			}
+		}
+		
+		if(null != fichePoste.getRemplace()){
+			remplaceFP = fichePoste.getRemplace().getNumFP() 
+					+ " " + fichePoste.getRemplace().getTitrePoste().getLibTitrePoste();
+
+			if(null != fichePoste.getRemplace().getAgent()) {
+				for(Affectation remplace : fichePoste.getRemplace().getAgent()) {
+					remplaceAgent = remplace.getAgent().getNomatr().toString()
+							+ " " + remplace.getAgent().getDisplayPrenom() 
+							+ " " + remplace.getAgent().getDisplayNom(); 
+					break;
+				}
+			}
+		}
+		
+		for(FicheEmploi emploiPrim : fichePoste.getFicheEmploiPrimaire()){
+			emploiPrimaire = emploiPrim.getRefMairie();
+			break;
+		}
+		for(FicheEmploi emploiSec : fichePoste.getFicheEmploiSecondaire()){
+			emploiSecondaire = emploiSec.getRefMairie();
+			break;
+		}
+		
+		NFA = fichePoste.getNfa();
+		OPI =  fichePoste.getOpi();
+		if(null != fichePoste.getAnnee()) {
+			anneeEmploi =  fichePoste.getAnnee().toString();
+		}
+		
+		for(AvantageNature avg : fichePoste.getAvantagesNature()) {
+			String avantage = "Type: " + avg.getTypeAvantage().getLibTypeAvantage() + " - ";
+			if(avg.getMontant() != null) {
+				avantage += "Montant: " + avg.getMontant() + " - ";
+			}
+			avantage += "Nature: " + avg.getNatureAvantage().getLibNatureAvantage();
+			avantages.add(avantage);
+		}
+		for(Delegation deleg : fichePoste.getDelegations()) {
+			delegations.add("Type: " + deleg.getTypeDelegation().getLibTypeDelegation() + " - Commentaire: " + deleg.getLibDelegation());
+		}
+		for(RegimeIndemnitaire reg : fichePoste.getRegimesIndemnitaires()) {
+			regimesIndemnitaires.add("Type: " + reg.getTypeRegimeIndemnitaire().getLibTypeRegimeIndemnitaire() + " - Forfait: " 
+					+ reg.getForfait() + " - Nb Points: " + reg.getNombrePoint());
+		}
+		for(PrimePointageFP prime : fichePoste.getPrimePointageFP()) {
+			primes.add(prime.getId().getNumRubrique() + " - " + prime.getLibelle());
 		}
 	}
 	
@@ -223,4 +346,151 @@ public class FichePosteDto {
 			List<String> comportementsProfessionnels) {
 		this.comportementsProfessionnels = comportementsProfessionnels;
 	}
+
+	public Integer getDateDebutAffectation() {
+		return dateDebutAffectation;
+	}
+
+	public void setDateDebutAffectation(Integer dateDebutAffectation) {
+		this.dateDebutAffectation = dateDebutAffectation;
+	}
+
+	public String getAgent() {
+		return agent;
+	}
+
+	public void setAgent(String agent) {
+		this.agent = agent;
+	}
+
+	public String getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(String categorie) {
+		this.categorie = categorie;
+	}
+
+	public String getFiliere() {
+		return filiere;
+	}
+
+	public void setFiliere(String filiere) {
+		this.filiere = filiere;
+	}
+
+	public String getDiplome() {
+		return diplome;
+	}
+
+	public void setDiplome(String diplome) {
+		this.diplome = diplome;
+	}
+
+	public String getSuperieurHierarchiqueFP() {
+		return superieurHierarchiqueFP;
+	}
+
+	public void setSuperieurHierarchiqueFP(String superieurHierarchiqueFP) {
+		this.superieurHierarchiqueFP = superieurHierarchiqueFP;
+	}
+
+	public String getSuperieurHierarchiqueAgent() {
+		return superieurHierarchiqueAgent;
+	}
+
+	public void setSuperieurHierarchiqueAgent(String superieurHierarchiqueAgent) {
+		this.superieurHierarchiqueAgent = superieurHierarchiqueAgent;
+	}
+
+	public String getRemplaceFP() {
+		return remplaceFP;
+	}
+
+	public void setRemplaceFP(String remplaceFP) {
+		this.remplaceFP = remplaceFP;
+	}
+
+	public String getRemplaceAgent() {
+		return remplaceAgent;
+	}
+
+	public void setRemplaceAgent(String remplaceAgent) {
+		this.remplaceAgent = remplaceAgent;
+	}
+
+	public String getEmploiPrimaire() {
+		return emploiPrimaire;
+	}
+
+	public void setEmploiPrimaire(String emploiPrimaire) {
+		this.emploiPrimaire = emploiPrimaire;
+	}
+
+	public String getEmploiSecondaire() {
+		return emploiSecondaire;
+	}
+
+	public void setEmploiSecondaire(String emploiSecondaire) {
+		this.emploiSecondaire = emploiSecondaire;
+	}
+
+	public String getNFA() {
+		return NFA;
+	}
+
+	public void setNFA(String nFA) {
+		NFA = nFA;
+	}
+
+	public String getOPI() {
+		return OPI;
+	}
+
+	public void setOPI(String oPI) {
+		OPI = oPI;
+	}
+
+	public String getAnneeEmploi() {
+		return anneeEmploi;
+	}
+
+	public void setAnneeEmploi(String anneeEmploi) {
+		this.anneeEmploi = anneeEmploi;
+	}
+
+	public List<String> getAvantages() {
+		return avantages;
+	}
+
+	public void setAvantages(List<String> avantages) {
+		this.avantages = avantages;
+	}
+
+	public List<String> getDelegations() {
+		return delegations;
+	}
+
+	public void setDelegations(List<String> delegations) {
+		this.delegations = delegations;
+	}
+
+	public List<String> getRegimesIndemnitaires() {
+		return regimesIndemnitaires;
+	}
+
+	public void setRegimesIndemnitaires(List<String> regimesIndemnitaires) {
+		this.regimesIndemnitaires = regimesIndemnitaires;
+	}
+
+	public List<String> getPrimes() {
+		return primes;
+	}
+
+	public void setPrimes(List<String> primes) {
+		this.primes = primes;
+	}
+	
+	
+	
 }
