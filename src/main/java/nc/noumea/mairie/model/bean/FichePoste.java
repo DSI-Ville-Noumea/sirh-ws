@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
@@ -23,6 +24,8 @@ import nc.noumea.mairie.tools.transformer.FichePosteTransformer;
 import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
 import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
 
+import org.hibernate.annotations.Where;
+import org.hibernate.annotations.WhereJoinTable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.json.RooJson;
@@ -33,7 +36,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", table = "FICHE_POSTE", versionField = "")
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", table = "FICHE_POSTE", versionField = "") 
 public class FichePoste {
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
@@ -107,11 +110,56 @@ public class FichePoste {
 	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
-
+ 
+//	@OneToOne(optional = true, fetch = FetchType.LAZY)
+//	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
+//	private FichePoste responsable;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
+	@OrderBy
+	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "DELEGATION_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DELEGATION"))
+	@OrderBy
+	private Set<Delegation> delegations = new HashSet<Delegation>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_REGIME"))
+	@OrderBy
+	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
+	
+	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
+	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "DIPLOME_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DIPLOME_GENERIQUE"))
+	@OrderBy
+	private Set<Diplome> diplome = new HashSet<Diplome>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
+	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
+	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
+	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
+	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>(); 
+	
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
-	private FichePoste responsable;
-
+	private FichePoste superieurHierarchique; 
+	
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_REMPLACEMENT", referencedColumnName = "ID_FICHE_POSTE")
+	private FichePoste remplace;
+	
+	@OneToMany(mappedBy="fichePoste", fetch = FetchType.LAZY)
+	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF = '01/01/0001' or DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
+	private Set<Affectation> agent = new HashSet<Affectation>();
+	
 	@Transient
 	public HashMap<String, List<String>> getCompetences() {
 		HashMap<String, List<String>> res = new HashMap<String, List<String>>();
