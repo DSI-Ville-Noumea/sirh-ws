@@ -146,7 +146,7 @@ public class FichePosteController {
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
-		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.doc\"", fp.getNumFP().replace('/', '_')));
+		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.doc\"", fp.getIdFichePoste()));
 		
 		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
 	}
