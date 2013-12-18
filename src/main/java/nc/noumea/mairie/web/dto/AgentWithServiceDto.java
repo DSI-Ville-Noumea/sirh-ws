@@ -6,6 +6,7 @@ import nc.noumea.mairie.model.bean.AgentRecherche;
 public class AgentWithServiceDto extends AgentDto {
 	private String service;
 	private String codeService;
+	private String direction;
 
 	public AgentWithServiceDto() {
 		super();
@@ -33,6 +34,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setCodeService(String codeService) {
 		this.codeService = codeService;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 
 }
