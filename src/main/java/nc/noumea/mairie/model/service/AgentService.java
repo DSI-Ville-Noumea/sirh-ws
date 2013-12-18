@@ -32,7 +32,8 @@ public class AgentService implements IAgentService {
 	public Agent getAgent(Integer id) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent",
+				Agent.class);
 
 		query.setParameter("idAgent", id);
 		List<Agent> lfp = query.getResultList();
@@ -45,10 +46,13 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent) {
-		TypedQuery<Agent> query = sirhEntityManager.createQuery(
-				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-						+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent " + " and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager
+				.createQuery(
+						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+								+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent "
+								+ " and aff.dateDebutAff<=:dateJour and "
+								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+						Agent.class);
 		query.setParameter("codeServ", servi);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
@@ -58,12 +62,15 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<String> listeCodeService) {
-		TypedQuery<Agent> query = sirhEntityManager.createQuery(
-				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-						+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
-						+ " and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) order by ag.nomUsage ", Agent.class);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable,
+			List<String> listeCodeService) {
+		TypedQuery<Agent> query = sirhEntityManager
+				.createQuery(
+						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+								+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
+								+ " and aff.dateDebutAff<=:dateJour and "
+								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
+						Agent.class);
 		query.setParameter("listeCodeService", listeCodeService);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("idAgentResp", idAgentResponsable);
@@ -126,6 +133,7 @@ public class AgentService implements IAgentService {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			agDto.setService(aff.getFichePoste().getService().getLiServ().trim());
 			agDto.setCodeService(aff.getFichePoste().getService().getServi());
+			agDto.setDirection(aff.getFichePoste().getService().getDirection());
 			result.add(agDto);
 		}
 
@@ -136,8 +144,8 @@ public class AgentService implements IAgentService {
 	public Agent findAgentWithName(Integer idAgent, String nom) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom",
-				Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery(
+				"select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom", Agent.class);
 
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("nom", nom.toUpperCase() + "%");
