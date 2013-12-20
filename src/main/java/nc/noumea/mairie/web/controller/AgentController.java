@@ -26,7 +26,6 @@ import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -479,12 +478,19 @@ public class AgentController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
+		final boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
 
-		JSONObject jsonChef = new JSONObject();
-		jsonChef.put("estResponsable", estChef);
+		/* Fix for using FlexJson and getting rid of google-json dependency */
+		Object o = new Object() {
+			@SuppressWarnings("unused")
+			public boolean isEstResponsable() {
+				return estChef;
+			}
+		};
 
-		return new ResponseEntity<String>(jsonChef.toJSONString(), headers, HttpStatus.OK);
+		String json = new JSONSerializer().exclude("*.class").serialize(o);
+		
+		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/estHabiliteKiosqueRH", headers = "Accept=application/json")
@@ -498,12 +504,19 @@ public class AgentController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Integer dateJour = Integer.valueOf(sdf.format(new Date()));
 
-		boolean estHabilite = spadmnSrv.estPAActive(Integer.valueOf(newNomatrAgent), dateJour);
+		final boolean estHabilite = spadmnSrv.estPAActive(Integer.valueOf(newNomatrAgent), dateJour);
 
-		JSONObject jsonHabiliteKiosque = new JSONObject();
-		jsonHabiliteKiosque.put("estHabiliteKiosqueRH", estHabilite);
+		/* Fix for using FlexJson and getting rid of google-json dependency */
+		Object o = new Object() {
+			@SuppressWarnings("unused")
+			public boolean isEstHabiliteKiosqueRH() {
+				return estHabilite;
+			}
+		};
 
-		return new ResponseEntity<String>(jsonHabiliteKiosque.toJSONString(), headers, HttpStatus.OK);
+		String json = new JSONSerializer().exclude("*.class").serialize(o);
+				
+		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
 	}
 
 	@ResponseBody

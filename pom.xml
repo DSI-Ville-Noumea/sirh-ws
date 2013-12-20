@@ -125,12 +125,6 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<dependencies>
-		<!-- JSONAPI -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
-		</dependency>
 		<!-- General dependencies for standard applications -->
 		<dependency>
 			<groupId>junit</groupId>
