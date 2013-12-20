@@ -15,7 +15,6 @@ import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.service.IEaesService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -98,8 +97,7 @@ public class EaeController {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
 
-		JSONObject jsonHabiliteEAE = new JSONObject();
-		return new ResponseEntity<String>(jsonHabiliteEAE.toJSONString(), headers, HttpStatus.OK);
+		return new ResponseEntity<String>("{}", headers, HttpStatus.OK);
 	}
 
 	@ResponseBody
