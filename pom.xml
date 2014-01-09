@@ -5,6 +5,7 @@
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
 	<version>1.9</version>
+    <name>sirh-ws</name>
 	<organization>
 		<name>Mairie de Nouméa</name>
 		<url>http://www.ville-noumea.nc</url>
