@@ -31,16 +31,16 @@ import flexjson.JSONSerializer;
 public class FichePosteController {
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteController.class);
-	
+
 	@Autowired
 	private IFichePosteService fpSrv;
-	
+
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
-	
+
 	@Autowired
 	private IReportingService reportingService;
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/rebuildFichePosteTree")
 	@Transactional(readOnly = true)
@@ -48,106 +48,111 @@ public class FichePosteController {
 
 		try {
 			fpSrv.construitArbreFichePostes();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			return new ResponseEntity<String>(ex.toString(), HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getSubFichePostes", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
-		
-		Agent ag = Agent.findAgent(newIdAgent);		
-		
+
+		Agent ag = Agent.findAgent(newIdAgent);
+
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-		
+
 		List<Integer> fichePosteIds = fpSrv.getListSubFichePoste(newIdAgent, maxDepth);
-		
+
 		if (fichePosteIds.size() == 0)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT); 
-		
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
 		return new ResponseEntity<String>(new JSONSerializer().serialize(fichePosteIds), HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/downloadFichePoste", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadFichePoste(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
-		
+	public ResponseEntity<byte[]> downloadFichePoste(@RequestParam("idFichePoste") int idFichePoste)
+			throws ParseException {
+
 		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
-		
+
 		if (fp == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-		
+
 		byte[] responseData = null;
-		
+
 		try {
 			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return new ResponseEntity<byte []>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
-		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.pdf\"", fp.getNumFP().replace('/', '_')));
-		
-		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
+		headers.add("Content-Disposition",
+				String.format("attachment; filename=\"%s.pdf\"", fp.getNumFP().replace('/', '_')));
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
-	@RequestMapping(value = "/xml/getFichePoste",  produces = "application/xml", method = RequestMethod.GET)
+	@RequestMapping(value = "/xml/getFichePoste", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ModelAndView getXmlFichePoste(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
-		
+
 		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
-		
+
 		FichePosteDto dto = new FichePosteDto(fp);
-		
+
 		return new ModelAndView("xmlView", "object", dto);
 	}
-	
+
 	@ResponseBody
-	@RequestMapping(value = "/xml/getFichePosteSIRH",  produces = "application/xml", method = RequestMethod.GET)
+	@RequestMapping(value = "/xml/getFichePosteSIRH", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ModelAndView getXmlFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
-		
+
 		FichePoste fp = fpSrv.getFichePosteDetailleSIRHByIdWithRefPrime(idFichePoste);
-				
-		FichePosteDto dto = new FichePosteDto(fp, true);
-		
+		FichePosteDto dto = new FichePosteDto();
+		if (fp != null) {
+			dto = new FichePosteDto(fp, true);
+		}
+
 		return new ModelAndView("xmlView", "object", dto);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/downloadFichePosteSIRH", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
-		
+	public ResponseEntity<byte[]> downloadFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste)
+			throws ParseException {
+
 		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
-		
+
 		if (fp == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-		
+
 		byte[] responseData = null;
-		
+
 		try {
 			responseData = reportingService.getFichePosteSIRHReportAsByteArray(idFichePoste);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return new ResponseEntity<byte []>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
 		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.doc\"", fp.getIdFichePoste()));
-		
-		return new ResponseEntity<byte []>(responseData, headers, HttpStatus.OK);
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
 }
