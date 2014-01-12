@@ -31,7 +31,7 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IFichePosteDao fichePosteDao;
-	
+
 	@Autowired
 	private ISirhPtgWSConsumer sirhPtgWSConsumer;
 
@@ -49,7 +49,8 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", FichePoste.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+				FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 
@@ -78,7 +79,8 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", FichePoste.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+				FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfp = query.getResultList();
@@ -93,9 +95,12 @@ public class FichePosteService implements IFichePosteService {
 	public String getTitrePosteAgent(Integer idAgent, Date dateJour) {
 
 		String res = null;
-		TypedQuery<String> query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
-				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-				+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)", String.class);
+		TypedQuery<String> query = sirhEntityManager.createQuery(
+				"select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
+						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
+						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+				String.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<String> lfp = query.getResultList();
@@ -162,7 +167,8 @@ public class FichePosteService implements IFichePosteService {
 		return fichePostes;
 	}
 
-	private List<Integer> listSubFichesPostes(FichePosteTreeNode fichePosteTreeNode, List<Integer> fichePostes, int maxDepth) {
+	private List<Integer> listSubFichesPostes(FichePosteTreeNode fichePosteTreeNode, List<Integer> fichePostes,
+			int maxDepth) {
 
 		if (maxDepth == 0)
 			return fichePostes;
@@ -195,7 +201,8 @@ public class FichePosteService implements IFichePosteService {
 		return agents;
 	}
 
-	private List<Integer> listSubAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth, String nom) {
+	private List<Integer> listSubAgents(FichePosteTreeNode fichePosteTreeNode, List<Integer> agents, int maxDepth,
+			String nom) {
 
 		if (maxDepth == 0)
 			return agents;
@@ -330,8 +337,8 @@ public class FichePosteService implements IFichePosteService {
 	public FichePoste getFichePosteById(Integer idFichePoste) {
 
 		FichePoste res = null;
-		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp where fp.idFichePoste=:idFichePoste",
-				FichePoste.class);
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(
+				"select fp from FichePoste fp where fp.idFichePoste=:idFichePoste", FichePoste.class);
 		query.setParameter("idFichePoste", idFichePoste);
 
 		List<FichePoste> lfp = query.getResultList();
@@ -341,17 +348,18 @@ public class FichePosteService implements IFichePosteService {
 
 		return res;
 	}
-	
+
 	@Override
 	public FichePoste getFichePosteDetailleSIRHByIdWithRefPrime(Integer idFichePoste) {
-		
-		FichePoste fp = FichePoste.findFichePoste(idFichePoste);
-		
-		for(PrimePointageFP prime : fp.getPrimePointageFP()){
-			RefPrimeDto primeDto = sirhPtgWSConsumer.getPrime(prime.getId().getNumRubrique());
-			prime.setLibelle(primeDto.getLibelle());
+
+		FichePoste fp = getFichePosteById(idFichePoste);
+		if (fp != null) {
+			for (PrimePointageFP prime : fp.getPrimePointageFP()) {
+				RefPrimeDto primeDto = sirhPtgWSConsumer.getPrime(prime.getId().getNumRubrique());
+				prime.setLibelle(primeDto.getLibelle());
+			}
 		}
-		
+
 		return fp;
 	}
 }
