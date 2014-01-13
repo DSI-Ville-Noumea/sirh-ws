@@ -139,8 +139,13 @@ public class FichePosteDto {
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
-				agent = agt.getAgent().getNomatr() + " " + agt.getAgent().getDisplayPrenom() + " "
-						+ agt.getAgent().getDisplayNom();
+				agent = agt.getAgent().getNomatr()
+						+ " - "
+						+ agt.getAgent().getDisplayNom()
+						+ " "
+						+ agt.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
+						+ agt.getAgent().getDisplayPrenom().substring(1, agt.getAgent().getDisplayPrenom().length())
+								.toLowerCase();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				dateDebutAffectation = agt.getDateDebutAff() == null ? "" : sdf.format(agt.getDateDebutAff());
 			}
@@ -166,8 +171,13 @@ public class FichePosteDto {
 
 			if (null != fichePoste.getSuperieurHierarchique().getAgent()) {
 				for (Affectation supHierar : fichePoste.getSuperieurHierarchique().getAgent()) {
-					superieurHierarchiqueAgent = supHierar.getAgent().getNomatr().toString() + " "
-							+ supHierar.getAgent().getDisplayPrenom() + " " + supHierar.getAgent().getDisplayNom();
+					superieurHierarchiqueAgent = supHierar.getAgent().getNomatr().toString()
+							+ " - "
+							+ supHierar.getAgent().getDisplayNom()
+							+ " "
+							+ supHierar.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
+							+ supHierar.getAgent().getDisplayPrenom()
+									.substring(1, supHierar.getAgent().getDisplayPrenom().length()).toLowerCase();
 					break;
 				}
 			}
@@ -179,8 +189,13 @@ public class FichePosteDto {
 
 			if (null != fichePoste.getRemplace().getAgent()) {
 				for (Affectation remplace : fichePoste.getRemplace().getAgent()) {
-					remplaceAgent = remplace.getAgent().getNomatr().toString() + " "
-							+ remplace.getAgent().getDisplayPrenom() + " " + remplace.getAgent().getDisplayNom();
+					remplaceAgent = remplace.getAgent().getNomatr().toString()
+							+ " - "
+							+ remplace.getAgent().getDisplayNom()
+							+ " "
+							+ remplace.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
+							+ remplace.getAgent().getDisplayPrenom()
+									.substring(1, remplace.getAgent().getDisplayPrenom().length()).toLowerCase();
 					break;
 				}
 			}
