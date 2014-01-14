@@ -15,4 +15,7 @@ public class FicheEmploi {
 	
 	@Column(name = "REF_MAIRIE")
 	private String refMairie;
+	
+	@Column(name = "NOM_METIER_EMPLOI")
+	private String nomEmploi;
 }
