@@ -15,4 +15,12 @@ privileged aspect FicheEmploi_Roo_JavaBean {
         this.refMairie = refMairie;
     }
     
+    public String FicheEmploi.getNomEmploi() {
+        return this.nomEmploi;
+    }
+    
+    public void FicheEmploi.setNomEmploi(String nomEmploi) {
+        this.nomEmploi = nomEmploi;
+    }
+    
 }

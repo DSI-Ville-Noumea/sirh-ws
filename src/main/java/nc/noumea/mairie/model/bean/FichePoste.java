@@ -36,7 +36,7 @@ import flexjson.JSONSerializer;
 @RooJavaBean
 @RooToString
 @RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", table = "FICHE_POSTE", versionField = "") 
+@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", table = "FICHE_POSTE", versionField = "")
 public class FichePoste {
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
@@ -110,78 +110,80 @@ public class FichePoste {
 	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
- 
-//	@OneToOne(optional = true, fetch = FetchType.LAZY)
-//	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
-//	private FichePoste responsable;
-	
+
+	// @OneToOne(optional = true, fetch = FetchType.LAZY)
+	// @JoinColumn(name = "ID_RESPONSABLE", referencedColumnName =
+	// "ID_FICHE_POSTE")
+	// private FichePoste responsable;
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
 	@OrderBy
 	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "DELEGATION_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DELEGATION"))
 	@OrderBy
 	private Set<Delegation> delegations = new HashSet<Delegation>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_REGIME"))
 	@OrderBy
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
-	
+
 	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "DIPLOME_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DIPLOME_GENERIQUE"))
 	@OrderBy
 	private Set<Diplome> diplome = new HashSet<Diplome>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
 	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
-	
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
-	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>(); 
-	
+	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
+
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
-	private FichePoste superieurHierarchique; 
-	
+	private FichePoste superieurHierarchique;
+
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_REMPLACEMENT", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste remplace;
-	
-	@OneToMany(mappedBy="fichePoste", fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
 	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF = '01/01/0001' or DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
 	private Set<Affectation> agent = new HashSet<Affectation>();
-	
+
 	@Transient
 	public HashMap<String, List<String>> getCompetences() {
 		HashMap<String, List<String>> res = new HashMap<String, List<String>>();
 		for (Competence comp : getCompetencesFDP()) {
-			if (!res.containsKey(comp.getTypeCompetence()
-					.getLibTypeCompetence())) {
+			if (!res.containsKey(comp.getTypeCompetence().getLibTypeCompetence())) {
 				List<String> list = new ArrayList<String>();
 				res.put(comp.getTypeCompetence().getLibTypeCompetence(), list);
 			}
-			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(
-					comp.getNomCompetence());
+			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(comp.getNomCompetence());
 		}
 		return res;
 	}
 
 	public static JSONSerializer getSerializerForFichePoste() {
-		JSONSerializer serializer = new JSONSerializer()
-				.transform(new FichePosteTransformer(), FichePoste.class)
+		JSONSerializer serializer = new JSONSerializer().transform(new FichePosteTransformer(), FichePoste.class)
 				.transform(new ActiviteTransformer(), Activite.class)
 				.transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
 
 		return serializer;
 	}
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
+	private NatureCredit natureCredit;
 }
