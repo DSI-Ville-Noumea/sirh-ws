@@ -57,6 +57,7 @@ public class FichePosteDto {
 	private String OPI;
 	private String anneeEmploi;
 	private String statutFDP;
+	private String natureCredit;
 
 	private List<String> avantages;
 	private List<String> delegations;
@@ -134,18 +135,21 @@ public class FichePosteDto {
 		NFA = "";
 		OPI = "";
 		anneeEmploi = "";
+		natureCredit = "";
 
 		statutFDP = fichePoste.getStatutFP().getLibStatut();
 
+		if (fichePoste.getNatureCredit() != null) {
+			natureCredit = fichePoste.getNatureCredit().getLibNatureCredit();
+		}
+
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
-				agent = agt.getAgent().getNomatr()
-						+ " - "
-						+ agt.getAgent().getDisplayNom()
+				agent = agt.getAgent().getDisplayNom()
 						+ " "
 						+ agt.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
 						+ agt.getAgent().getDisplayPrenom().substring(1, agt.getAgent().getDisplayPrenom().length())
-								.toLowerCase();
+								.toLowerCase() + " (" + agt.getAgent().getNomatr().toString() + ")";
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				dateDebutAffectation = agt.getDateDebutAff() == null ? "" : sdf.format(agt.getDateDebutAff());
 			}
@@ -166,47 +170,58 @@ public class FichePosteDto {
 		}
 
 		if (null != fichePoste.getSuperieurHierarchique()) {
-			superieurHierarchiqueFP = fichePoste.getSuperieurHierarchique().getNumFP() + " "
-					+ fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste();
+			superieurHierarchiqueFP = fichePoste.getSuperieurHierarchique().getNumFP()
+					+ " "
+					+ fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().substring(0, 1)
+							.toUpperCase()
+					+ fichePoste
+							.getSuperieurHierarchique()
+							.getTitrePoste()
+							.getLibTitrePoste()
+							.substring(1,
+									fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().length())
+							.toLowerCase();
 
 			if (null != fichePoste.getSuperieurHierarchique().getAgent()) {
 				for (Affectation supHierar : fichePoste.getSuperieurHierarchique().getAgent()) {
-					superieurHierarchiqueAgent = supHierar.getAgent().getNomatr().toString()
-							+ " - "
-							+ supHierar.getAgent().getDisplayNom()
+					superieurHierarchiqueAgent = supHierar.getAgent().getDisplayNom()
 							+ " "
 							+ supHierar.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
 							+ supHierar.getAgent().getDisplayPrenom()
-									.substring(1, supHierar.getAgent().getDisplayPrenom().length()).toLowerCase();
+									.substring(1, supHierar.getAgent().getDisplayPrenom().length()).toLowerCase()
+							+ " (" + supHierar.getAgent().getNomatr().toString() + ")";
 					break;
 				}
 			}
 		}
 
 		if (null != fichePoste.getRemplace()) {
-			remplaceFP = fichePoste.getRemplace().getNumFP() + " "
-					+ fichePoste.getRemplace().getTitrePoste().getLibTitrePoste();
+			remplaceFP = fichePoste.getRemplace().getNumFP()
+					+ " "
+					+ fichePoste.getRemplace().getTitrePoste().getLibTitrePoste().substring(0, 1).toUpperCase()
+					+ fichePoste.getRemplace().getTitrePoste().getLibTitrePoste()
+							.substring(1, fichePoste.getRemplace().getTitrePoste().getLibTitrePoste().length())
+							.toLowerCase();
 
 			if (null != fichePoste.getRemplace().getAgent()) {
 				for (Affectation remplace : fichePoste.getRemplace().getAgent()) {
-					remplaceAgent = remplace.getAgent().getNomatr().toString()
-							+ " - "
-							+ remplace.getAgent().getDisplayNom()
+					remplaceAgent = remplace.getAgent().getDisplayNom()
 							+ " "
 							+ remplace.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
 							+ remplace.getAgent().getDisplayPrenom()
-									.substring(1, remplace.getAgent().getDisplayPrenom().length()).toLowerCase();
+									.substring(1, remplace.getAgent().getDisplayPrenom().length()).toLowerCase() + " ("
+							+ remplace.getAgent().getNomatr().toString() + ")";
 					break;
 				}
 			}
 		}
 
 		for (FicheEmploi emploiPrim : fichePoste.getFicheEmploiPrimaire()) {
-			emploiPrimaire = emploiPrim.getRefMairie();
+			emploiPrimaire = emploiPrim.getNomEmploi();
 			break;
 		}
 		for (FicheEmploi emploiSec : fichePoste.getFicheEmploiSecondaire()) {
-			emploiSecondaire = emploiSec.getRefMairie();
+			emploiSecondaire = emploiSec.getNomEmploi();
 			break;
 		}
 
@@ -531,6 +546,14 @@ public class FichePosteDto {
 
 	public void setStatutFDP(String statutFDP) {
 		this.statutFDP = statutFDP;
+	}
+
+	public String getNatureCredit() {
+		return natureCredit;
+	}
+
+	public void setNatureCredit(String natureCredit) {
+		this.natureCredit = natureCredit;
 	}
 
 }
