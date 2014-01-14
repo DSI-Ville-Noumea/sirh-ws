@@ -13,6 +13,7 @@ import nc.noumea.mairie.model.bean.Delegation;
 import nc.noumea.mairie.model.bean.Diplome;
 import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.NatureCredit;
 import nc.noumea.mairie.model.bean.NiveauEtude;
 import nc.noumea.mairie.model.bean.PrimePointageFP;
 import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
@@ -227,6 +228,14 @@ privileged aspect FichePoste_Roo_JavaBean {
     
     public void FichePoste.setAgent(Set<Affectation> agent) {
         this.agent = agent;
+    }
+    
+    public NatureCredit FichePoste.getNatureCredit() {
+        return this.natureCredit;
+    }
+    
+    public void FichePoste.setNatureCredit(NatureCredit natureCredit) {
+        this.natureCredit = natureCredit;
     }
     
 }
