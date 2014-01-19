@@ -44,6 +44,8 @@
         	<item name="EAE" href="conception/eae.html"/>
 			<item name="FichePoste" href="conception/ficheposte.html"/>
 			<item name="Avancements" href="conception/avancements.html"/>
+			<item name="Services" href="conception/services.html"/>
+			<item name="Utilisateur" href="conception/utilisateur.html"/>
         </menu>
         <menu ref="reports"/>
     </body>
