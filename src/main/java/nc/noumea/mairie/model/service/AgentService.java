@@ -13,8 +13,10 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AgentRecherche;
+import nc.noumea.mairie.model.bean.Siidma;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class AgentService implements IAgentService {
 
 	@Autowired
 	private ISiservService siservSrv;
+
+	@Autowired
+	private ISiidmaService siidmaSrv;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -205,5 +210,28 @@ public class AgentService implements IAgentService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public ReturnMessageDto isUtilisateurSIRH(String newIdAgent) {
+		ReturnMessageDto res = new ReturnMessageDto();
+
+		// on cherche si l'agent existe
+		Agent ag = getAgent(Integer.valueOf(newIdAgent));
+		if (ag == null) {
+			String err = "L'agent " + newIdAgent + " n'existe pas.";
+			res.getErrors().add(err);
+		}
+
+		// on cherche son login dans SIIDMA
+		// dans SIIDMA les idIndi sont de type 90+nomatr
+		String idIndi = "90" + newIdAgent.substring(3, newIdAgent.length());
+		Siidma siidma = siidmaSrv.chercherSiidmaByIdIndi(Integer.valueOf(idIndi));
+		if (siidma == null) {
+			String err = "L'agent " + newIdAgent + " n'existe pas dans SIIDMA.";
+			res.getErrors().add(err);
+		}
+
+		return res;
 	}
 }
