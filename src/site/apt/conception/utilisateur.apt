@@ -1,0 +1,43 @@
+ -----
+ SIRH WS
+ -----
+ Noémie NICOLAS
+ -----
+  20/01/2014
+  
+Web Services des utilisateurs
+
+* Json
+
+** IsUtilisateurSRIH
+
+ URL : /utilisateur/isUtilisateurSIRH?idAgent=90xxxx
+
+ <<URL>> : /utilisateur/isUtilisateurSIRH
+ 
+ <<Accepted Methods>> : GET 
+ 
+  <<Parameters>>
+ 
+ * <<idAgent>> : identifiant de l’agent pour qui on veut savoir si il est utilisateur SIRH
+ 
+ <<Content>>
+ 
++-------------------------+
+{
+    "errors":
+    [
+        "L'agent 9005240 n'existe pas dans SIIDMA."
+    ],
+    "infos":
+    [
+    ]
+}
++-------------------------+
+
+ <<Response>> : 
+
++-------------------------+
+HTTP Code 200 : OK
+HTTP Code 409 : CONFLICT (si l'agent n'est pas dans les utilisateurs SIRH)
++-------------------------+
