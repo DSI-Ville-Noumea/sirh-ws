@@ -46,9 +46,7 @@ import flexjson.JSONSerializer;
 @RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
 public class Agent {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
