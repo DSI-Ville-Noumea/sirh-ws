@@ -25,6 +25,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE", sequenceName = "EAE_S_EAE")
 @RooJson
 public class Eae {
+	
 
 	@NotNull
 	@ManyToOne
