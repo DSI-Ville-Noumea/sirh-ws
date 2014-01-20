@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.pk.PrimePointageFPPK;
 privileged aspect PrimePointageFPPK_Roo_Json {
     
     public String PrimePointageFPPK.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String PrimePointageFPPK.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static PrimePointageFPPK PrimePointageFPPK.fromJsonToPrimePointageFPPK(String json) {
-        return new JSONDeserializer<PrimePointageFPPK>().use(null, PrimePointageFPPK.class).deserialize(json);
+        return new JSONDeserializer<PrimePointageFPPK>()
+        .use(null, PrimePointageFPPK.class).deserialize(json);
     }
     
     public static String PrimePointageFPPK.toJsonArray(Collection<PrimePointageFPPK> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String PrimePointageFPPK.toJsonArray(Collection<PrimePointageFPPK> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<PrimePointageFPPK> PrimePointageFPPK.fromJsonArrayToPrimePointageFPPKs(String json) {
-        return new JSONDeserializer<List<PrimePointageFPPK>>().use(null, ArrayList.class).use("values", PrimePointageFPPK.class).deserialize(json);
+        return new JSONDeserializer<List<PrimePointageFPPK>>()
+        .use("values", PrimePointageFPPK.class).deserialize(json);
     }
     
 }

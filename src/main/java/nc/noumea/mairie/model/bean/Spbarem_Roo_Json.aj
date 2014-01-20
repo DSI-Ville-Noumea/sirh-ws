@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Spbarem;
 privileged aspect Spbarem_Roo_Json {
     
     public String Spbarem.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Spbarem.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Spbarem Spbarem.fromJsonToSpbarem(String json) {
-        return new JSONDeserializer<Spbarem>().use(null, Spbarem.class).deserialize(json);
+        return new JSONDeserializer<Spbarem>()
+        .use(null, Spbarem.class).deserialize(json);
     }
     
     public static String Spbarem.toJsonArray(Collection<Spbarem> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Spbarem.toJsonArray(Collection<Spbarem> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Spbarem> Spbarem.fromJsonArrayToSpbarems(String json) {
-        return new JSONDeserializer<List<Spbarem>>().use(null, ArrayList.class).use("values", Spbarem.class).deserialize(json);
+        return new JSONDeserializer<List<Spbarem>>()
+        .use("values", Spbarem.class).deserialize(json);
     }
     
 }

@@ -14,6 +14,8 @@ privileged aspect AvantageNature_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager AvantageNature.entityManager;
     
+    public static final List<String> AvantageNature.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "numRubrique", "typeAvantage", "natureAvantage", "montant");
+    
     public static final EntityManager AvantageNature.entityManager() {
         EntityManager em = new AvantageNature().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect AvantageNature_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM AvantageNature o", AvantageNature.class).getResultList();
     }
     
+    public static List<AvantageNature> AvantageNature.findAllAvantageNatures(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvantageNature o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvantageNature.class).getResultList();
+    }
+    
     public static AvantageNature AvantageNature.findAvantageNature(Integer idAvantage) {
         if (idAvantage == null) return null;
         return entityManager().find(AvantageNature.class, idAvantage);
@@ -35,6 +48,17 @@ privileged aspect AvantageNature_Roo_Jpa_ActiveRecord {
     
     public static List<AvantageNature> AvantageNature.findAvantageNatureEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM AvantageNature o", AvantageNature.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<AvantageNature> AvantageNature.findAvantageNatureEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvantageNature o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvantageNature.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

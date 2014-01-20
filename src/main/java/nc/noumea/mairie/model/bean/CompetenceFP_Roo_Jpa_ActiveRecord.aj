@@ -15,6 +15,8 @@ privileged aspect CompetenceFP_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager CompetenceFP.entityManager;
     
+    public static final List<String> CompetenceFP.fieldNames4OrderClauseFilter = java.util.Arrays.asList("");
+    
     public static final EntityManager CompetenceFP.entityManager() {
         EntityManager em = new CompetenceFP().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect CompetenceFP_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM CompetenceFP o", CompetenceFP.class).getResultList();
     }
     
+    public static List<CompetenceFP> CompetenceFP.findAllCompetenceFPs(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM CompetenceFP o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, CompetenceFP.class).getResultList();
+    }
+    
     public static CompetenceFP CompetenceFP.findCompetenceFP(CompetenceFPPK id) {
         if (id == null) return null;
         return entityManager().find(CompetenceFP.class, id);
@@ -36,6 +49,17 @@ privileged aspect CompetenceFP_Roo_Jpa_ActiveRecord {
     
     public static List<CompetenceFP> CompetenceFP.findCompetenceFPEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM CompetenceFP o", CompetenceFP.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<CompetenceFP> CompetenceFP.findCompetenceFPEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM CompetenceFP o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, CompetenceFP.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

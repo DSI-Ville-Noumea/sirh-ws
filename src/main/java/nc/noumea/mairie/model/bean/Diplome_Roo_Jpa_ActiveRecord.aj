@@ -14,6 +14,8 @@ privileged aspect Diplome_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Diplome.entityManager;
     
+    public static final List<String> Diplome.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "libDiplomen");
+    
     public static final EntityManager Diplome.entityManager() {
         EntityManager em = new Diplome().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Diplome_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Diplome o", Diplome.class).getResultList();
     }
     
+    public static List<Diplome> Diplome.findAllDiplomes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Diplome o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Diplome.class).getResultList();
+    }
+    
     public static Diplome Diplome.findDiplome(Integer idDiplomeGenerique) {
         if (idDiplomeGenerique == null) return null;
         return entityManager().find(Diplome.class, idDiplomeGenerique);
@@ -35,6 +48,17 @@ privileged aspect Diplome_Roo_Jpa_ActiveRecord {
     
     public static List<Diplome> Diplome.findDiplomeEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Diplome o", Diplome.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Diplome> Diplome.findDiplomeEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Diplome o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Diplome.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

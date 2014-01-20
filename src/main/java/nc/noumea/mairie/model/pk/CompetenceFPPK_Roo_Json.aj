@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.pk.CompetenceFPPK;
 privileged aspect CompetenceFPPK_Roo_Json {
     
     public String CompetenceFPPK.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String CompetenceFPPK.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static CompetenceFPPK CompetenceFPPK.fromJsonToCompetenceFPPK(String json) {
-        return new JSONDeserializer<CompetenceFPPK>().use(null, CompetenceFPPK.class).deserialize(json);
+        return new JSONDeserializer<CompetenceFPPK>()
+        .use(null, CompetenceFPPK.class).deserialize(json);
     }
     
     public static String CompetenceFPPK.toJsonArray(Collection<CompetenceFPPK> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String CompetenceFPPK.toJsonArray(Collection<CompetenceFPPK> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<CompetenceFPPK> CompetenceFPPK.fromJsonArrayToCompetenceFPPKs(String json) {
-        return new JSONDeserializer<List<CompetenceFPPK>>().use(null, ArrayList.class).use("values", CompetenceFPPK.class).deserialize(json);
+        return new JSONDeserializer<List<CompetenceFPPK>>()
+        .use("values", CompetenceFPPK.class).deserialize(json);
     }
     
 }

@@ -14,6 +14,8 @@ privileged aspect RegimeIndemnitaire_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager RegimeIndemnitaire.entityManager;
     
+    public static final List<String> RegimeIndemnitaire.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "typeRegimeIndemnitaire", "numRubrique", "forfait", "nombrePoint");
+    
     public static final EntityManager RegimeIndemnitaire.entityManager() {
         EntityManager em = new RegimeIndemnitaire().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect RegimeIndemnitaire_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM RegimeIndemnitaire o", RegimeIndemnitaire.class).getResultList();
     }
     
+    public static List<RegimeIndemnitaire> RegimeIndemnitaire.findAllRegimeIndemnitaires(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM RegimeIndemnitaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, RegimeIndemnitaire.class).getResultList();
+    }
+    
     public static RegimeIndemnitaire RegimeIndemnitaire.findRegimeIndemnitaire(Integer idRegimeIndemnitaire) {
         if (idRegimeIndemnitaire == null) return null;
         return entityManager().find(RegimeIndemnitaire.class, idRegimeIndemnitaire);
@@ -35,6 +48,17 @@ privileged aspect RegimeIndemnitaire_Roo_Jpa_ActiveRecord {
     
     public static List<RegimeIndemnitaire> RegimeIndemnitaire.findRegimeIndemnitaireEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM RegimeIndemnitaire o", RegimeIndemnitaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<RegimeIndemnitaire> RegimeIndemnitaire.findRegimeIndemnitaireEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM RegimeIndemnitaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, RegimeIndemnitaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

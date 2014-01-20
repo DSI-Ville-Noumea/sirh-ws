@@ -14,6 +14,8 @@ privileged aspect Representant_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Representant.entityManager;
     
+    public static final List<String> Representant.fieldNames4OrderClauseFilter = java.util.Arrays.asList("nom", "prenom");
+    
     public static final EntityManager Representant.entityManager() {
         EntityManager em = new Representant().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Representant_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Representant o", Representant.class).getResultList();
     }
     
+    public static List<Representant> Representant.findAllRepresentants(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Representant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Representant.class).getResultList();
+    }
+    
     public static Representant Representant.findRepresentant(Integer idRepresentant) {
         if (idRepresentant == null) return null;
         return entityManager().find(Representant.class, idRepresentant);
@@ -35,6 +48,17 @@ privileged aspect Representant_Roo_Jpa_ActiveRecord {
     
     public static List<Representant> Representant.findRepresentantEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Representant o", Representant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Representant> Representant.findRepresentantEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Representant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Representant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

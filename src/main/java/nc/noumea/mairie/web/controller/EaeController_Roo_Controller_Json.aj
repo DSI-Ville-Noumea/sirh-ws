@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
 privileged aspect EaeController_Roo_Controller_Json {
     
@@ -39,11 +40,13 @@ privileged aspect EaeController_Roo_Controller_Json {
     }
     
     @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> EaeController.createFromJson(@RequestBody String json) {
+    public ResponseEntity<String> EaeController.createFromJson(@RequestBody String json, UriComponentsBuilder uriBuilder) {
         Eae eae = Eae.fromJsonToEae(json);
         eae.persist();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
+        RequestMapping a = (RequestMapping) getClass().getAnnotation(RequestMapping.class);
+        headers.add("Location",uriBuilder.path(a.value()[0]+"/"+eae.getId().toString()).build().toUriString());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
     
@@ -62,6 +65,7 @@ privileged aspect EaeController_Roo_Controller_Json {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         Eae eae = Eae.fromJsonToEae(json);
+        eae.setIdEae(idEae);
         if (eae.merge() == null) {
             return new ResponseEntity<String>(headers, HttpStatus.NOT_FOUND);
         }

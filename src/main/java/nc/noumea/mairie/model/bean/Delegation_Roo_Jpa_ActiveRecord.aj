@@ -14,6 +14,8 @@ privileged aspect Delegation_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Delegation.entityManager;
     
+    public static final List<String> Delegation.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "typeDelegation", "libDelegation");
+    
     public static final EntityManager Delegation.entityManager() {
         EntityManager em = new Delegation().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Delegation_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Delegation o", Delegation.class).getResultList();
     }
     
+    public static List<Delegation> Delegation.findAllDelegations(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Delegation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Delegation.class).getResultList();
+    }
+    
     public static Delegation Delegation.findDelegation(Integer idDelegation) {
         if (idDelegation == null) return null;
         return entityManager().find(Delegation.class, idDelegation);
@@ -35,6 +48,17 @@ privileged aspect Delegation_Roo_Jpa_ActiveRecord {
     
     public static List<Delegation> Delegation.findDelegationEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Delegation o", Delegation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Delegation> Delegation.findDelegationEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Delegation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Delegation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

@@ -14,6 +14,8 @@ privileged aspect TypeDelegation_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager TypeDelegation.entityManager;
     
+    public static final List<String> TypeDelegation.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "libTypeDelegation");
+    
     public static final EntityManager TypeDelegation.entityManager() {
         EntityManager em = new TypeDelegation().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect TypeDelegation_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM TypeDelegation o", TypeDelegation.class).getResultList();
     }
     
+    public static List<TypeDelegation> TypeDelegation.findAllTypeDelegations(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeDelegation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeDelegation.class).getResultList();
+    }
+    
     public static TypeDelegation TypeDelegation.findTypeDelegation(Integer idTypeDelegation) {
         if (idTypeDelegation == null) return null;
         return entityManager().find(TypeDelegation.class, idTypeDelegation);
@@ -35,6 +48,17 @@ privileged aspect TypeDelegation_Roo_Jpa_ActiveRecord {
     
     public static List<TypeDelegation> TypeDelegation.findTypeDelegationEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM TypeDelegation o", TypeDelegation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<TypeDelegation> TypeDelegation.findTypeDelegationEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeDelegation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeDelegation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

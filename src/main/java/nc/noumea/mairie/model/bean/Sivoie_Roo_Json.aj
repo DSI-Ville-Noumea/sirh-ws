@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Sivoie;
 privileged aspect Sivoie_Roo_Json {
     
     public String Sivoie.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Sivoie.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Sivoie Sivoie.fromJsonToSivoie(String json) {
-        return new JSONDeserializer<Sivoie>().use(null, Sivoie.class).deserialize(json);
+        return new JSONDeserializer<Sivoie>()
+        .use(null, Sivoie.class).deserialize(json);
     }
     
     public static String Sivoie.toJsonArray(Collection<Sivoie> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Sivoie.toJsonArray(Collection<Sivoie> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Sivoie> Sivoie.fromJsonArrayToSivoies(String json) {
-        return new JSONDeserializer<List<Sivoie>>().use(null, ArrayList.class).use("values", Sivoie.class).deserialize(json);
+        return new JSONDeserializer<List<Sivoie>>()
+        .use("values", Sivoie.class).deserialize(json);
     }
     
 }

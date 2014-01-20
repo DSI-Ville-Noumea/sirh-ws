@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Sptyco;
 privileged aspect Sptyco_Roo_Json {
     
     public String Sptyco.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Sptyco.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Sptyco Sptyco.fromJsonToSptyco(String json) {
-        return new JSONDeserializer<Sptyco>().use(null, Sptyco.class).deserialize(json);
+        return new JSONDeserializer<Sptyco>()
+        .use(null, Sptyco.class).deserialize(json);
     }
     
     public static String Sptyco.toJsonArray(Collection<Sptyco> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Sptyco.toJsonArray(Collection<Sptyco> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Sptyco> Sptyco.fromJsonArrayToSptycoes(String json) {
-        return new JSONDeserializer<List<Sptyco>>().use(null, ArrayList.class).use("values", Sptyco.class).deserialize(json);
+        return new JSONDeserializer<List<Sptyco>>()
+        .use("values", Sptyco.class).deserialize(json);
     }
     
 }

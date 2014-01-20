@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.eae.EaeFichePoste;
 privileged aspect EaeFichePoste_Roo_Json {
     
     public String EaeFichePoste.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String EaeFichePoste.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static EaeFichePoste EaeFichePoste.fromJsonToEaeFichePoste(String json) {
-        return new JSONDeserializer<EaeFichePoste>().use(null, EaeFichePoste.class).deserialize(json);
+        return new JSONDeserializer<EaeFichePoste>()
+        .use(null, EaeFichePoste.class).deserialize(json);
     }
     
     public static String EaeFichePoste.toJsonArray(Collection<EaeFichePoste> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String EaeFichePoste.toJsonArray(Collection<EaeFichePoste> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<EaeFichePoste> EaeFichePoste.fromJsonArrayToEaeFichePostes(String json) {
-        return new JSONDeserializer<List<EaeFichePoste>>().use(null, ArrayList.class).use("values", EaeFichePoste.class).deserialize(json);
+        return new JSONDeserializer<List<EaeFichePoste>>()
+        .use("values", EaeFichePoste.class).deserialize(json);
     }
     
 }
