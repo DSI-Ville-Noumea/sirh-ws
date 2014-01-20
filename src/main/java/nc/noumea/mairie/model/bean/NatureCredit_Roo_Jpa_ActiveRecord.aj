@@ -14,6 +14,8 @@ privileged aspect NatureCredit_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager NatureCredit.entityManager;
     
+    public static final List<String> NatureCredit.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libNatureCredit");
+    
     public static final EntityManager NatureCredit.entityManager() {
         EntityManager em = new NatureCredit().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect NatureCredit_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM NatureCredit o", NatureCredit.class).getResultList();
     }
     
+    public static List<NatureCredit> NatureCredit.findAllNatureCredits(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM NatureCredit o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, NatureCredit.class).getResultList();
+    }
+    
     public static NatureCredit NatureCredit.findNatureCredit(Integer idNatureCredit) {
         if (idNatureCredit == null) return null;
         return entityManager().find(NatureCredit.class, idNatureCredit);
@@ -35,6 +48,17 @@ privileged aspect NatureCredit_Roo_Jpa_ActiveRecord {
     
     public static List<NatureCredit> NatureCredit.findNatureCreditEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM NatureCredit o", NatureCredit.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<NatureCredit> NatureCredit.findNatureCreditEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM NatureCredit o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, NatureCredit.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

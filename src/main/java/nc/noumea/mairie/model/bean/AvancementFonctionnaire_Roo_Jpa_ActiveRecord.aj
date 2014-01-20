@@ -14,6 +14,8 @@ privileged aspect AvancementFonctionnaire_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager AvancementFonctionnaire.entityManager;
     
+    public static final List<String> AvancementFonctionnaire.fieldNames4OrderClauseFilter = java.util.Arrays.asList("agent", "avisCap", "idModifAvancement", "etat", "codeCategporie", "filiere", "grade", "gradeDate", "gradeNouveau", "dateAvctMini", "dateAvctMoy", "dateAvctMaxi", "accAnnee", "accMois", "accJour", "anneeAvancement", "ordreMerite", "regularisation", "dateCap", "avisCapEmployeur", "nouvAccAnnee", "nouvAccMois", "nouvAccJour", "agentVDN");
+    
     public static final EntityManager AvancementFonctionnaire.entityManager() {
         EntityManager em = new AvancementFonctionnaire().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect AvancementFonctionnaire_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM AvancementFonctionnaire o", AvancementFonctionnaire.class).getResultList();
     }
     
+    public static List<AvancementFonctionnaire> AvancementFonctionnaire.findAllAvancementFonctionnaires(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvancementFonctionnaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvancementFonctionnaire.class).getResultList();
+    }
+    
     public static AvancementFonctionnaire AvancementFonctionnaire.findAvancementFonctionnaire(Integer idAvct) {
         if (idAvct == null) return null;
         return entityManager().find(AvancementFonctionnaire.class, idAvct);
@@ -35,6 +48,17 @@ privileged aspect AvancementFonctionnaire_Roo_Jpa_ActiveRecord {
     
     public static List<AvancementFonctionnaire> AvancementFonctionnaire.findAvancementFonctionnaireEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM AvancementFonctionnaire o", AvancementFonctionnaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<AvancementFonctionnaire> AvancementFonctionnaire.findAvancementFonctionnaireEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvancementFonctionnaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvancementFonctionnaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

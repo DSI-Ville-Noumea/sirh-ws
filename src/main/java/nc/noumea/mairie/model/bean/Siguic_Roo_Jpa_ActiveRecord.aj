@@ -15,6 +15,8 @@ privileged aspect Siguic_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Siguic.entityManager;
     
+    public static final List<String> Siguic.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "id", "liGuic");
+    
     public static final EntityManager Siguic.entityManager() {
         EntityManager em = new Siguic().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect Siguic_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Siguic o", Siguic.class).getResultList();
     }
     
+    public static List<Siguic> Siguic.findAllSiguics(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Siguic o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Siguic.class).getResultList();
+    }
+    
     public static Siguic Siguic.findSiguic(SiguicId id) {
         if (id == null) return null;
         return entityManager().find(Siguic.class, id);
@@ -36,6 +49,17 @@ privileged aspect Siguic_Roo_Jpa_ActiveRecord {
     
     public static List<Siguic> Siguic.findSiguicEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Siguic o", Siguic.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Siguic> Siguic.findSiguicEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Siguic o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Siguic.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

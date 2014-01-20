@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.pk.SpcongId;
 privileged aspect SpcongId_Roo_Json {
     
     public String SpcongId.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String SpcongId.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static SpcongId SpcongId.fromJsonToSpcongId(String json) {
-        return new JSONDeserializer<SpcongId>().use(null, SpcongId.class).deserialize(json);
+        return new JSONDeserializer<SpcongId>()
+        .use(null, SpcongId.class).deserialize(json);
     }
     
     public static String SpcongId.toJsonArray(Collection<SpcongId> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String SpcongId.toJsonArray(Collection<SpcongId> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<SpcongId> SpcongId.fromJsonArrayToSpcongIds(String json) {
-        return new JSONDeserializer<List<SpcongId>>().use(null, ArrayList.class).use("values", SpcongId.class).deserialize(json);
+        return new JSONDeserializer<List<SpcongId>>()
+        .use("values", SpcongId.class).deserialize(json);
     }
     
 }

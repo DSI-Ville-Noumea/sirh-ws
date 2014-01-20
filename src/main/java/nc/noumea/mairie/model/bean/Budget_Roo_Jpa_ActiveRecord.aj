@@ -14,6 +14,8 @@ privileged aspect Budget_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Budget.entityManager;
     
+    public static final List<String> Budget.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libelleBudget");
+    
     public static final EntityManager Budget.entityManager() {
         EntityManager em = new Budget().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Budget_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Budget o", Budget.class).getResultList();
     }
     
+    public static List<Budget> Budget.findAllBudgets(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Budget o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Budget.class).getResultList();
+    }
+    
     public static Budget Budget.findBudget(Integer idBudget) {
         if (idBudget == null) return null;
         return entityManager().find(Budget.class, idBudget);
@@ -35,6 +48,17 @@ privileged aspect Budget_Roo_Jpa_ActiveRecord {
     
     public static List<Budget> Budget.findBudgetEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Budget o", Budget.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Budget> Budget.findBudgetEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Budget o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Budget.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

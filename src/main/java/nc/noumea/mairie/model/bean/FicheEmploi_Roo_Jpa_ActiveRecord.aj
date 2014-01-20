@@ -14,6 +14,8 @@ privileged aspect FicheEmploi_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager FicheEmploi.entityManager;
     
+    public static final List<String> FicheEmploi.fieldNames4OrderClauseFilter = java.util.Arrays.asList("refMairie", "nomEmploi");
+    
     public static final EntityManager FicheEmploi.entityManager() {
         EntityManager em = new FicheEmploi().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect FicheEmploi_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM FicheEmploi o", FicheEmploi.class).getResultList();
     }
     
+    public static List<FicheEmploi> FicheEmploi.findAllFicheEmplois(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FicheEmploi o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, FicheEmploi.class).getResultList();
+    }
+    
     public static FicheEmploi FicheEmploi.findFicheEmploi(Integer idFicheEmploi) {
         if (idFicheEmploi == null) return null;
         return entityManager().find(FicheEmploi.class, idFicheEmploi);
@@ -35,6 +48,17 @@ privileged aspect FicheEmploi_Roo_Jpa_ActiveRecord {
     
     public static List<FicheEmploi> FicheEmploi.findFicheEmploiEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM FicheEmploi o", FicheEmploi.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<FicheEmploi> FicheEmploi.findFicheEmploiEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM FicheEmploi o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, FicheEmploi.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

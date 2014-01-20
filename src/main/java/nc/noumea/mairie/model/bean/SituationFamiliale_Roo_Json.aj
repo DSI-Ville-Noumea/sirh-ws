@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.SituationFamiliale;
 privileged aspect SituationFamiliale_Roo_Json {
     
     public String SituationFamiliale.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String SituationFamiliale.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static SituationFamiliale SituationFamiliale.fromJsonToSituationFamiliale(String json) {
-        return new JSONDeserializer<SituationFamiliale>().use(null, SituationFamiliale.class).deserialize(json);
+        return new JSONDeserializer<SituationFamiliale>()
+        .use(null, SituationFamiliale.class).deserialize(json);
     }
     
     public static String SituationFamiliale.toJsonArray(Collection<SituationFamiliale> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String SituationFamiliale.toJsonArray(Collection<SituationFamiliale> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<SituationFamiliale> SituationFamiliale.fromJsonArrayToSituationFamiliales(String json) {
-        return new JSONDeserializer<List<SituationFamiliale>>().use(null, ArrayList.class).use("values", SituationFamiliale.class).deserialize(json);
+        return new JSONDeserializer<List<SituationFamiliale>>()
+        .use("values", SituationFamiliale.class).deserialize(json);
     }
     
 }

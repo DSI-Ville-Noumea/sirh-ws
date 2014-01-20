@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.FicheEmploi;
 privileged aspect FicheEmploi_Roo_Json {
     
     public String FicheEmploi.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String FicheEmploi.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static FicheEmploi FicheEmploi.fromJsonToFicheEmploi(String json) {
-        return new JSONDeserializer<FicheEmploi>().use(null, FicheEmploi.class).deserialize(json);
+        return new JSONDeserializer<FicheEmploi>()
+        .use(null, FicheEmploi.class).deserialize(json);
     }
     
     public static String FicheEmploi.toJsonArray(Collection<FicheEmploi> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String FicheEmploi.toJsonArray(Collection<FicheEmploi> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<FicheEmploi> FicheEmploi.fromJsonArrayToFicheEmplois(String json) {
-        return new JSONDeserializer<List<FicheEmploi>>().use(null, ArrayList.class).use("values", FicheEmploi.class).deserialize(json);
+        return new JSONDeserializer<List<FicheEmploi>>()
+        .use("values", FicheEmploi.class).deserialize(json);
     }
     
 }

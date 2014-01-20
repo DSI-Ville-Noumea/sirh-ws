@@ -15,6 +15,8 @@ privileged aspect ActiviteFP_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager ActiviteFP.entityManager;
     
+    public static final List<String> ActiviteFP.fieldNames4OrderClauseFilter = java.util.Arrays.asList("");
+    
     public static final EntityManager ActiviteFP.entityManager() {
         EntityManager em = new ActiviteFP().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect ActiviteFP_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM ActiviteFP o", ActiviteFP.class).getResultList();
     }
     
+    public static List<ActiviteFP> ActiviteFP.findAllActiviteFPs(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM ActiviteFP o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, ActiviteFP.class).getResultList();
+    }
+    
     public static ActiviteFP ActiviteFP.findActiviteFP(ActiviteFPPK id) {
         if (id == null) return null;
         return entityManager().find(ActiviteFP.class, id);
@@ -36,6 +49,17 @@ privileged aspect ActiviteFP_Roo_Jpa_ActiveRecord {
     
     public static List<ActiviteFP> ActiviteFP.findActiviteFPEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM ActiviteFP o", ActiviteFP.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<ActiviteFP> ActiviteFP.findActiviteFPEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM ActiviteFP o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, ActiviteFP.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Siidma;
 privileged aspect Siidma_Roo_Json {
     
     public String Siidma.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Siidma.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Siidma Siidma.fromJsonToSiidma(String json) {
-        return new JSONDeserializer<Siidma>().use(null, Siidma.class).deserialize(json);
+        return new JSONDeserializer<Siidma>()
+        .use(null, Siidma.class).deserialize(json);
     }
     
     public static String Siidma.toJsonArray(Collection<Siidma> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Siidma.toJsonArray(Collection<Siidma> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Siidma> Siidma.fromJsonArrayToSiidmas(String json) {
-        return new JSONDeserializer<List<Siidma>>().use(null, ArrayList.class).use("values", Siidma.class).deserialize(json);
+        return new JSONDeserializer<List<Siidma>>()
+        .use("values", Siidma.class).deserialize(json);
     }
     
 }
