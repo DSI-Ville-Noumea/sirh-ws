@@ -15,6 +15,8 @@ privileged aspect CapEmployeur_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager CapEmployeur.entityManager;
     
+    public static final List<String> CapEmployeur.fieldNames4OrderClauseFilter = java.util.Arrays.asList("capEmployeurPk", "cap", "employeur", "position");
+    
     public static final EntityManager CapEmployeur.entityManager() {
         EntityManager em = new CapEmployeur().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect CapEmployeur_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM CapEmployeur o", CapEmployeur.class).getResultList();
     }
     
+    public static List<CapEmployeur> CapEmployeur.findAllCapEmployeurs(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM CapEmployeur o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, CapEmployeur.class).getResultList();
+    }
+    
     public static CapEmployeur CapEmployeur.findCapEmployeur(CapEmployeurPK capEmployeurPk) {
         if (capEmployeurPk == null) return null;
         return entityManager().find(CapEmployeur.class, capEmployeurPk);
@@ -36,6 +49,17 @@ privileged aspect CapEmployeur_Roo_Jpa_ActiveRecord {
     
     public static List<CapEmployeur> CapEmployeur.findCapEmployeurEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM CapEmployeur o", CapEmployeur.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<CapEmployeur> CapEmployeur.findCapEmployeurEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM CapEmployeur o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, CapEmployeur.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

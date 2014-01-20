@@ -15,6 +15,8 @@ privileged aspect ParentEnfant_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager ParentEnfant.entityManager;
     
+    public static final List<String> ParentEnfant.fieldNames4OrderClauseFilter = java.util.Arrays.asList("parentEnfantPK", "parent", "enfant", "enfantACharge");
+    
     public static final EntityManager ParentEnfant.entityManager() {
         EntityManager em = new ParentEnfant().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect ParentEnfant_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM ParentEnfant o", ParentEnfant.class).getResultList();
     }
     
+    public static List<ParentEnfant> ParentEnfant.findAllParentEnfants(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM ParentEnfant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, ParentEnfant.class).getResultList();
+    }
+    
     public static ParentEnfant ParentEnfant.findParentEnfant(ParentEnfantPK parentEnfantPK) {
         if (parentEnfantPK == null) return null;
         return entityManager().find(ParentEnfant.class, parentEnfantPK);
@@ -36,6 +49,17 @@ privileged aspect ParentEnfant_Roo_Jpa_ActiveRecord {
     
     public static List<ParentEnfant> ParentEnfant.findParentEnfantEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM ParentEnfant o", ParentEnfant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<ParentEnfant> ParentEnfant.findParentEnfantEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM ParentEnfant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, ParentEnfant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

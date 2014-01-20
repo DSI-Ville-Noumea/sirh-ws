@@ -15,6 +15,8 @@ privileged aspect Sicomm_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Sicomm.entityManager;
     
+    public static final List<String> Sicomm.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libVil");
+    
     public static final EntityManager Sicomm.entityManager() {
         EntityManager em = new Sicomm().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect Sicomm_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Sicomm o", Sicomm.class).getResultList();
     }
     
+    public static List<Sicomm> Sicomm.findAllSicomms(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Sicomm o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Sicomm.class).getResultList();
+    }
+    
     public static Sicomm Sicomm.findSicomm(BigDecimal codeCommune) {
         if (codeCommune == null) return null;
         return entityManager().find(Sicomm.class, codeCommune);
@@ -36,6 +49,17 @@ privileged aspect Sicomm_Roo_Jpa_ActiveRecord {
     
     public static List<Sicomm> Sicomm.findSicommEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Sicomm o", Sicomm.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Sicomm> Sicomm.findSicommEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Sicomm o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Sicomm.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

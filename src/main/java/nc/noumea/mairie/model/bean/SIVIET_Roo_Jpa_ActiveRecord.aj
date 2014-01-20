@@ -15,6 +15,8 @@ privileged aspect SIVIET_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager SIVIET.entityManager;
     
+    public static final List<String> SIVIET.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "id", "libCop");
+    
     public static final EntityManager SIVIET.entityManager() {
         EntityManager em = new SIVIET().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -29,6 +31,17 @@ privileged aspect SIVIET_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM SIVIET o", SIVIET.class).getResultList();
     }
     
+    public static List<SIVIET> SIVIET.findAllSIVIETS(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM SIVIET o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, SIVIET.class).getResultList();
+    }
+    
     public static SIVIET SIVIET.findSIVIET(SivietId id) {
         if (id == null) return null;
         return entityManager().find(SIVIET.class, id);
@@ -36,6 +49,17 @@ privileged aspect SIVIET_Roo_Jpa_ActiveRecord {
     
     public static List<SIVIET> SIVIET.findSIVIETEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM SIVIET o", SIVIET.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<SIVIET> SIVIET.findSIVIETEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM SIVIET o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, SIVIET.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

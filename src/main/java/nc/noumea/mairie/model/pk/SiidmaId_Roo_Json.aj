@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.pk.SiidmaId;
 privileged aspect SiidmaId_Roo_Json {
     
     public String SiidmaId.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String SiidmaId.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static SiidmaId SiidmaId.fromJsonToSiidmaId(String json) {
-        return new JSONDeserializer<SiidmaId>().use(null, SiidmaId.class).deserialize(json);
+        return new JSONDeserializer<SiidmaId>()
+        .use(null, SiidmaId.class).deserialize(json);
     }
     
     public static String SiidmaId.toJsonArray(Collection<SiidmaId> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String SiidmaId.toJsonArray(Collection<SiidmaId> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<SiidmaId> SiidmaId.fromJsonArrayToSiidmaIds(String json) {
-        return new JSONDeserializer<List<SiidmaId>>().use(null, ArrayList.class).use("values", SiidmaId.class).deserialize(json);
+        return new JSONDeserializer<List<SiidmaId>>()
+        .use("values", SiidmaId.class).deserialize(json);
     }
     
 }

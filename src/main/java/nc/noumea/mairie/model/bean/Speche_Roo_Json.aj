@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Speche;
 privileged aspect Speche_Roo_Json {
     
     public String Speche.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Speche.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Speche Speche.fromJsonToSpeche(String json) {
-        return new JSONDeserializer<Speche>().use(null, Speche.class).deserialize(json);
+        return new JSONDeserializer<Speche>()
+        .use(null, Speche.class).deserialize(json);
     }
     
     public static String Speche.toJsonArray(Collection<Speche> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Speche.toJsonArray(Collection<Speche> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Speche> Speche.fromJsonArrayToSpeches(String json) {
-        return new JSONDeserializer<List<Speche>>().use(null, ArrayList.class).use("values", Speche.class).deserialize(json);
+        return new JSONDeserializer<List<Speche>>()
+        .use("values", Speche.class).deserialize(json);
     }
     
 }

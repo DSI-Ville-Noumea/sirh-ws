@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Spclas;
 privileged aspect Spclas_Roo_Json {
     
     public String Spclas.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Spclas.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Spclas Spclas.fromJsonToSpclas(String json) {
-        return new JSONDeserializer<Spclas>().use(null, Spclas.class).deserialize(json);
+        return new JSONDeserializer<Spclas>()
+        .use(null, Spclas.class).deserialize(json);
     }
     
     public static String Spclas.toJsonArray(Collection<Spclas> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Spclas.toJsonArray(Collection<Spclas> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Spclas> Spclas.fromJsonArrayToSpclases(String json) {
-        return new JSONDeserializer<List<Spclas>>().use(null, ArrayList.class).use("values", Spclas.class).deserialize(json);
+        return new JSONDeserializer<List<Spclas>>()
+        .use("values", Spclas.class).deserialize(json);
     }
     
 }

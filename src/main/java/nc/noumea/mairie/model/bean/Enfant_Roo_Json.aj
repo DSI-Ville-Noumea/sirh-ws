@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Enfant;
 privileged aspect Enfant_Roo_Json {
     
     public String Enfant.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Enfant.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Enfant Enfant.fromJsonToEnfant(String json) {
-        return new JSONDeserializer<Enfant>().use(null, Enfant.class).deserialize(json);
+        return new JSONDeserializer<Enfant>()
+        .use(null, Enfant.class).deserialize(json);
     }
     
     public static String Enfant.toJsonArray(Collection<Enfant> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Enfant.toJsonArray(Collection<Enfant> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Enfant> Enfant.fromJsonArrayToEnfants(String json) {
-        return new JSONDeserializer<List<Enfant>>().use(null, ArrayList.class).use("values", Enfant.class).deserialize(json);
+        return new JSONDeserializer<List<Enfant>>()
+        .use("values", Enfant.class).deserialize(json);
     }
     
 }

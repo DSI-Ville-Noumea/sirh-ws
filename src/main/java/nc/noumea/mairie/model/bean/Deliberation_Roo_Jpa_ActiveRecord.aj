@@ -14,6 +14,8 @@ privileged aspect Deliberation_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Deliberation.entityManager;
     
+    public static final List<String> Deliberation.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libDeliberation", "texteCap");
+    
     public static final EntityManager Deliberation.entityManager() {
         EntityManager em = new Deliberation().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Deliberation_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Deliberation o", Deliberation.class).getResultList();
     }
     
+    public static List<Deliberation> Deliberation.findAllDeliberations(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Deliberation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Deliberation.class).getResultList();
+    }
+    
     public static Deliberation Deliberation.findDeliberation(Integer idDeliberation) {
         if (idDeliberation == null) return null;
         return entityManager().find(Deliberation.class, idDeliberation);
@@ -35,6 +48,17 @@ privileged aspect Deliberation_Roo_Jpa_ActiveRecord {
     
     public static List<Deliberation> Deliberation.findDeliberationEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Deliberation o", Deliberation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Deliberation> Deliberation.findDeliberationEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Deliberation o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Deliberation.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

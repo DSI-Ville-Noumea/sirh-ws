@@ -14,6 +14,8 @@ privileged aspect Spgradn_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Spgradn.entityManager;
     
+    public static final List<String> Spgradn.fieldNames4OrderClauseFilter = java.util.Arrays.asList("cdgrad", "liGrad", "gradeInitial", "gradeGenerique", "barem", "codcla", "codech");
+    
     public static final EntityManager Spgradn.entityManager() {
         EntityManager em = new Spgradn().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Spgradn_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Spgradn o", Spgradn.class).getResultList();
     }
     
+    public static List<Spgradn> Spgradn.findAllSpgradns(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Spgradn o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Spgradn.class).getResultList();
+    }
+    
     public static Spgradn Spgradn.findSpgradn(String cdgrad) {
         if (cdgrad == null || cdgrad.length() == 0) return null;
         return entityManager().find(Spgradn.class, cdgrad);
@@ -35,6 +48,17 @@ privileged aspect Spgradn_Roo_Jpa_ActiveRecord {
     
     public static List<Spgradn> Spgradn.findSpgradnEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Spgradn o", Spgradn.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Spgradn> Spgradn.findSpgradnEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Spgradn o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Spgradn.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional
