@@ -14,6 +14,8 @@ privileged aspect TitrePoste_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager TitrePoste.entityManager;
     
+    public static final List<String> TitrePoste.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libTitrePoste");
+    
     public static final EntityManager TitrePoste.entityManager() {
         EntityManager em = new TitrePoste().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect TitrePoste_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM TitrePoste o", TitrePoste.class).getResultList();
     }
     
+    public static List<TitrePoste> TitrePoste.findAllTitrePostes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TitrePoste o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TitrePoste.class).getResultList();
+    }
+    
     public static TitrePoste TitrePoste.findTitrePoste(Integer idTitrePoste) {
         if (idTitrePoste == null) return null;
         return entityManager().find(TitrePoste.class, idTitrePoste);
@@ -35,6 +48,17 @@ privileged aspect TitrePoste_Roo_Jpa_ActiveRecord {
     
     public static List<TitrePoste> TitrePoste.findTitrePosteEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM TitrePoste o", TitrePoste.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<TitrePoste> TitrePoste.findTitrePosteEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TitrePoste o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TitrePoste.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

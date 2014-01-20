@@ -14,6 +14,8 @@ privileged aspect Speche_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Speche.entityManager;
     
+    public static final List<String> Speche.fieldNames4OrderClauseFilter = java.util.Arrays.asList("codEch", "libEch");
+    
     public static final EntityManager Speche.entityManager() {
         EntityManager em = new Speche().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Speche_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Speche o", Speche.class).getResultList();
     }
     
+    public static List<Speche> Speche.findAllSpeches(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Speche o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Speche.class).getResultList();
+    }
+    
     public static Speche Speche.findSpeche(String codEch) {
         if (codEch == null || codEch.length() == 0) return null;
         return entityManager().find(Speche.class, codEch);
@@ -35,6 +48,17 @@ privileged aspect Speche_Roo_Jpa_ActiveRecord {
     
     public static List<Speche> Speche.findSpecheEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Speche o", Speche.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Speche> Speche.findSpecheEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Speche o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Speche.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

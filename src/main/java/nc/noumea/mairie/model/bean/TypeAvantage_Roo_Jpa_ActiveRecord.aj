@@ -14,6 +14,8 @@ privileged aspect TypeAvantage_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager TypeAvantage.entityManager;
     
+    public static final List<String> TypeAvantage.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "libTypeAvantage");
+    
     public static final EntityManager TypeAvantage.entityManager() {
         EntityManager em = new TypeAvantage().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect TypeAvantage_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM TypeAvantage o", TypeAvantage.class).getResultList();
     }
     
+    public static List<TypeAvantage> TypeAvantage.findAllTypeAvantages(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeAvantage o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeAvantage.class).getResultList();
+    }
+    
     public static TypeAvantage TypeAvantage.findTypeAvantage(Integer idTypeAvantage) {
         if (idTypeAvantage == null) return null;
         return entityManager().find(TypeAvantage.class, idTypeAvantage);
@@ -35,6 +48,17 @@ privileged aspect TypeAvantage_Roo_Jpa_ActiveRecord {
     
     public static List<TypeAvantage> TypeAvantage.findTypeAvantageEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM TypeAvantage o", TypeAvantage.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<TypeAvantage> TypeAvantage.findTypeAvantageEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeAvantage o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeAvantage.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

@@ -14,6 +14,8 @@ privileged aspect AvancementDetache_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager AvancementDetache.entityManager;
     
+    public static final List<String> AvancementDetache.fieldNames4OrderClauseFilter = java.util.Arrays.asList("agent", "idModifAvancement", "etat", "codeCategporie", "filiere", "grade", "gradeDate", "gradeNouveau", "dateAvctMoy", "accAnnee", "accMois", "accJour", "anneeAvancement", "regularisation", "nouvAccAnnee", "nouvAccMois", "nouvAccJour", "agentVDN");
+    
     public static final EntityManager AvancementDetache.entityManager() {
         EntityManager em = new AvancementDetache().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect AvancementDetache_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM AvancementDetache o", AvancementDetache.class).getResultList();
     }
     
+    public static List<AvancementDetache> AvancementDetache.findAllAvancementDetaches(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvancementDetache o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvancementDetache.class).getResultList();
+    }
+    
     public static AvancementDetache AvancementDetache.findAvancementDetache(Integer idAvct) {
         if (idAvct == null) return null;
         return entityManager().find(AvancementDetache.class, idAvct);
@@ -35,6 +48,17 @@ privileged aspect AvancementDetache_Roo_Jpa_ActiveRecord {
     
     public static List<AvancementDetache> AvancementDetache.findAvancementDetacheEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM AvancementDetache o", AvancementDetache.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<AvancementDetache> AvancementDetache.findAvancementDetacheEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvancementDetache o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvancementDetache.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

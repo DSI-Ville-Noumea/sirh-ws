@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Spbhor;
 privileged aspect Spbhor_Roo_Json {
     
     public String Spbhor.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Spbhor.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Spbhor Spbhor.fromJsonToSpbhor(String json) {
-        return new JSONDeserializer<Spbhor>().use(null, Spbhor.class).deserialize(json);
+        return new JSONDeserializer<Spbhor>()
+        .use(null, Spbhor.class).deserialize(json);
     }
     
     public static String Spbhor.toJsonArray(Collection<Spbhor> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Spbhor.toJsonArray(Collection<Spbhor> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Spbhor> Spbhor.fromJsonArrayToSpbhors(String json) {
-        return new JSONDeserializer<List<Spbhor>>().use(null, ArrayList.class).use("values", Spbhor.class).deserialize(json);
+        return new JSONDeserializer<List<Spbhor>>()
+        .use("values", Spbhor.class).deserialize(json);
     }
     
 }

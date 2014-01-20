@@ -14,6 +14,8 @@ privileged aspect StatutFichePoste_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager StatutFichePoste.entityManager;
     
+    public static final List<String> StatutFichePoste.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libStatut");
+    
     public static final EntityManager StatutFichePoste.entityManager() {
         EntityManager em = new StatutFichePoste().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect StatutFichePoste_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM StatutFichePoste o", StatutFichePoste.class).getResultList();
     }
     
+    public static List<StatutFichePoste> StatutFichePoste.findAllStatutFichePostes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM StatutFichePoste o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, StatutFichePoste.class).getResultList();
+    }
+    
     public static StatutFichePoste StatutFichePoste.findStatutFichePoste(Integer idStatutFp) {
         if (idStatutFp == null) return null;
         return entityManager().find(StatutFichePoste.class, idStatutFp);
@@ -35,6 +48,17 @@ privileged aspect StatutFichePoste_Roo_Jpa_ActiveRecord {
     
     public static List<StatutFichePoste> StatutFichePoste.findStatutFichePosteEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM StatutFichePoste o", StatutFichePoste.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<StatutFichePoste> StatutFichePoste.findStatutFichePosteEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM StatutFichePoste o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, StatutFichePoste.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

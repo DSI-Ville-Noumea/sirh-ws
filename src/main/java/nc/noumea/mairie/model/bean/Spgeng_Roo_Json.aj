@@ -13,27 +13,33 @@ import nc.noumea.mairie.model.bean.Spgeng;
 privileged aspect Spgeng_Roo_Json {
     
     public String Spgeng.toJson() {
-        return new JSONSerializer().exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(this);
     }
     
     public String Spgeng.toJson(String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(this);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(this);
     }
     
     public static Spgeng Spgeng.fromJsonToSpgeng(String json) {
-        return new JSONDeserializer<Spgeng>().use(null, Spgeng.class).deserialize(json);
+        return new JSONDeserializer<Spgeng>()
+        .use(null, Spgeng.class).deserialize(json);
     }
     
     public static String Spgeng.toJsonArray(Collection<Spgeng> collection) {
-        return new JSONSerializer().exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .exclude("*.class").serialize(collection);
     }
     
     public static String Spgeng.toJsonArray(Collection<Spgeng> collection, String[] fields) {
-        return new JSONSerializer().include(fields).exclude("*.class").serialize(collection);
+        return new JSONSerializer()
+        .include(fields).exclude("*.class").serialize(collection);
     }
     
     public static Collection<Spgeng> Spgeng.fromJsonArrayToSpgengs(String json) {
-        return new JSONDeserializer<List<Spgeng>>().use(null, ArrayList.class).use("values", Spgeng.class).deserialize(json);
+        return new JSONDeserializer<List<Spgeng>>()
+        .use("values", Spgeng.class).deserialize(json);
     }
     
 }

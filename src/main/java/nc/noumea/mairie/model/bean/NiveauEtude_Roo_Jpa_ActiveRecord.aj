@@ -14,6 +14,8 @@ privileged aspect NiveauEtude_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager NiveauEtude.entityManager;
     
+    public static final List<String> NiveauEtude.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "libelleNiveauEtude");
+    
     public static final EntityManager NiveauEtude.entityManager() {
         EntityManager em = new NiveauEtude().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect NiveauEtude_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM NiveauEtude o", NiveauEtude.class).getResultList();
     }
     
+    public static List<NiveauEtude> NiveauEtude.findAllNiveauEtudes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM NiveauEtude o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, NiveauEtude.class).getResultList();
+    }
+    
     public static NiveauEtude NiveauEtude.findNiveauEtude(Integer idNiveauEtude) {
         if (idNiveauEtude == null) return null;
         return entityManager().find(NiveauEtude.class, idNiveauEtude);
@@ -35,6 +48,17 @@ privileged aspect NiveauEtude_Roo_Jpa_ActiveRecord {
     
     public static List<NiveauEtude> NiveauEtude.findNiveauEtudeEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM NiveauEtude o", NiveauEtude.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<NiveauEtude> NiveauEtude.findNiveauEtudeEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM NiveauEtude o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, NiveauEtude.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

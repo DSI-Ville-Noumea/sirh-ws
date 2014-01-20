@@ -14,6 +14,8 @@ privileged aspect Sptyco_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Sptyco.entityManager;
     
+    public static final List<String> Sptyco.fieldNames4OrderClauseFilter = java.util.Arrays.asList("idType", "libTypeConge");
+    
     public static final EntityManager Sptyco.entityManager() {
         EntityManager em = new Sptyco().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Sptyco_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Sptyco o", Sptyco.class).getResultList();
     }
     
+    public static List<Sptyco> Sptyco.findAllSptycoes(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Sptyco o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Sptyco.class).getResultList();
+    }
+    
     public static Sptyco Sptyco.findSptyco(Integer idType) {
         if (idType == null) return null;
         return entityManager().find(Sptyco.class, idType);
@@ -35,6 +48,17 @@ privileged aspect Sptyco_Roo_Jpa_ActiveRecord {
     
     public static List<Sptyco> Sptyco.findSptycoEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Sptyco o", Sptyco.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Sptyco> Sptyco.findSptycoEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Sptyco o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Sptyco.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

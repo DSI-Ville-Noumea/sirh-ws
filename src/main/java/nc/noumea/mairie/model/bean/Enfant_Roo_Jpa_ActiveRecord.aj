@@ -14,6 +14,8 @@ privileged aspect Enfant_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Enfant.entityManager;
     
+    public static final List<String> Enfant.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "sivietSrv", "nom", "prenom", "sexe", "dateNaissance", "codeCommuneNaissFr", "codeCommuneNaissEt", "codePaysNaissEt", "lieuNaissance");
+    
     public static final EntityManager Enfant.entityManager() {
         EntityManager em = new Enfant().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Enfant_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Enfant o", Enfant.class).getResultList();
     }
     
+    public static List<Enfant> Enfant.findAllEnfants(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Enfant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Enfant.class).getResultList();
+    }
+    
     public static Enfant Enfant.findEnfant(Integer idEnfant) {
         if (idEnfant == null) return null;
         return entityManager().find(Enfant.class, idEnfant);
@@ -35,6 +48,17 @@ privileged aspect Enfant_Roo_Jpa_ActiveRecord {
     
     public static List<Enfant> Enfant.findEnfantEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Enfant o", Enfant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Enfant> Enfant.findEnfantEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Enfant o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Enfant.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

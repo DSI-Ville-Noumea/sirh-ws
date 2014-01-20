@@ -14,6 +14,8 @@ privileged aspect AvisCap_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager AvisCap.entityManager;
     
+    public static final List<String> AvisCap.fieldNames4OrderClauseFilter = java.util.Arrays.asList("libLong");
+    
     public static final EntityManager AvisCap.entityManager() {
         EntityManager em = new AvisCap().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect AvisCap_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM AvisCap o", AvisCap.class).getResultList();
     }
     
+    public static List<AvisCap> AvisCap.findAllAvisCaps(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvisCap o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvisCap.class).getResultList();
+    }
+    
     public static AvisCap AvisCap.findAvisCap(Integer idAvisCap) {
         if (idAvisCap == null) return null;
         return entityManager().find(AvisCap.class, idAvisCap);
@@ -35,6 +48,17 @@ privileged aspect AvisCap_Roo_Jpa_ActiveRecord {
     
     public static List<AvisCap> AvisCap.findAvisCapEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM AvisCap o", AvisCap.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<AvisCap> AvisCap.findAvisCapEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM AvisCap o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, AvisCap.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

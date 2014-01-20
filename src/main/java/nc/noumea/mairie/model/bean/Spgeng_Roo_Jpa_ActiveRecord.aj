@@ -14,6 +14,8 @@ privileged aspect Spgeng_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager Spgeng.entityManager;
     
+    public static final List<String> Spgeng.fieldNames4OrderClauseFilter = java.util.Arrays.asList("cdgeng", "liGrad", "cadreEmploiGrade", "texteCapCadreEmploi", "cdcadr", "filiere", "caps", "deliberationTerritoriale", "deliberationCommunale");
+    
     public static final EntityManager Spgeng.entityManager() {
         EntityManager em = new Spgeng().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect Spgeng_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM Spgeng o", Spgeng.class).getResultList();
     }
     
+    public static List<Spgeng> Spgeng.findAllSpgengs(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Spgeng o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Spgeng.class).getResultList();
+    }
+    
     public static Spgeng Spgeng.findSpgeng(String cdgeng) {
         if (cdgeng == null || cdgeng.length() == 0) return null;
         return entityManager().find(Spgeng.class, cdgeng);
@@ -35,6 +48,17 @@ privileged aspect Spgeng_Roo_Jpa_ActiveRecord {
     
     public static List<Spgeng> Spgeng.findSpgengEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Spgeng o", Spgeng.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<Spgeng> Spgeng.findSpgengEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM Spgeng o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, Spgeng.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional

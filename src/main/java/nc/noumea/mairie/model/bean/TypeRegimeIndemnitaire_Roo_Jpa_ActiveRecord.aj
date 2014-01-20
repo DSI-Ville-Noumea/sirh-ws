@@ -14,6 +14,8 @@ privileged aspect TypeRegimeIndemnitaire_Roo_Jpa_ActiveRecord {
     @PersistenceContext(unitName = "sirhPersistenceUnit")
     transient EntityManager TypeRegimeIndemnitaire.entityManager;
     
+    public static final List<String> TypeRegimeIndemnitaire.fieldNames4OrderClauseFilter = java.util.Arrays.asList("serialVersionUID", "libTypeRegimeIndemnitaire");
+    
     public static final EntityManager TypeRegimeIndemnitaire.entityManager() {
         EntityManager em = new TypeRegimeIndemnitaire().entityManager;
         if (em == null) throw new IllegalStateException("Entity manager has not been injected (is the Spring Aspects JAR configured as an AJC/AJDT aspects library?)");
@@ -28,6 +30,17 @@ privileged aspect TypeRegimeIndemnitaire_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM TypeRegimeIndemnitaire o", TypeRegimeIndemnitaire.class).getResultList();
     }
     
+    public static List<TypeRegimeIndemnitaire> TypeRegimeIndemnitaire.findAllTypeRegimeIndemnitaires(String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeRegimeIndemnitaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeRegimeIndemnitaire.class).getResultList();
+    }
+    
     public static TypeRegimeIndemnitaire TypeRegimeIndemnitaire.findTypeRegimeIndemnitaire(Integer idTypeRegimeIndemnitaire) {
         if (idTypeRegimeIndemnitaire == null) return null;
         return entityManager().find(TypeRegimeIndemnitaire.class, idTypeRegimeIndemnitaire);
@@ -35,6 +48,17 @@ privileged aspect TypeRegimeIndemnitaire_Roo_Jpa_ActiveRecord {
     
     public static List<TypeRegimeIndemnitaire> TypeRegimeIndemnitaire.findTypeRegimeIndemnitaireEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM TypeRegimeIndemnitaire o", TypeRegimeIndemnitaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+    
+    public static List<TypeRegimeIndemnitaire> TypeRegimeIndemnitaire.findTypeRegimeIndemnitaireEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
+        String jpaQuery = "SELECT o FROM TypeRegimeIndemnitaire o";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        return entityManager().createQuery(jpaQuery, TypeRegimeIndemnitaire.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
     @Transactional
