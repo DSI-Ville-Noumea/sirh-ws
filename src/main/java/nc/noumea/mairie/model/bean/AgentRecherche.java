@@ -1,25 +1,20 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooSerializable
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AGENT", identifierField = "idAgent", identifierType = Integer.class, table = "AGENT", versionField = "")
+@Entity
+@Table(name = "AGENT")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class AgentRecherche {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	@Id
+	@Column(name = "ID_AGENT")
+	private Integer idAgent;
 
 	@NotNull
 	@Column(name = "NOMATR")
@@ -41,6 +36,39 @@ public class AgentRecherche {
 
 	@Override
 	public String toString() {
-		return "Nomatr=" + getNomatr() + ",Prenom=" + getPrenomUsage() + ",Nom=" + getNomUsage() + ",IdAgent=" + getIdAgent();
+		return "Nomatr=" + getNomatr() + ",Prenom=" + getPrenomUsage() + ",Nom=" + getNomUsage() + ",IdAgent="
+				+ getIdAgent();
+	}
+
+	public Integer getNomatr() {
+		return nomatr;
+	}
+
+	public void setNomatr(Integer nomatr) {
+		this.nomatr = nomatr;
+	}
+
+	public String getNomUsage() {
+		return nomUsage;
+	}
+
+	public void setNomUsage(String nomUsage) {
+		this.nomUsage = nomUsage;
+	}
+
+	public String getPrenomUsage() {
+		return prenomUsage;
+	}
+
+	public void setPrenomUsage(String prenomUsage) {
+		this.prenomUsage = prenomUsage;
+	}
+
+	public Integer getIdAgent() {
+		return idAgent;
+	}
+
+	public void setIdAgent(Integer idAgent) {
+		this.idAgent = idAgent;
 	}
 }

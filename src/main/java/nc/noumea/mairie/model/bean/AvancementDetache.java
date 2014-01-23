@@ -3,17 +3,23 @@ package nc.noumea.mairie.model.bean;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-
-@RooJavaBean
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_AVCT", identifierField = "idAvct", identifierType = Integer.class, table = "AVCT_DETACHE", versionField = "")
+@Entity
+@Table(name = "AVCT_DETACHE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class AvancementDetache {
+
+	@Id
+	@Column(name = "ID_AVCT")
+	private Integer idAvct;
 
 	@ManyToOne(optional = true)
 	@JoinColumn(name = "ID_AGENT")
@@ -91,4 +97,156 @@ public class AvancementDetache {
 
 	@Column(name = "AGENT_VDN")
 	private boolean agentVDN;
+
+	public Integer getIdAvct() {
+		return idAvct;
+	}
+
+	public void setIdAvct(Integer idAvct) {
+		this.idAvct = idAvct;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+	public Integer getIdModifAvancement() {
+		return idModifAvancement;
+	}
+
+	public void setIdModifAvancement(Integer idModifAvancement) {
+		this.idModifAvancement = idModifAvancement;
+	}
+
+	public String getEtat() {
+		return etat;
+	}
+
+	public void setEtat(String etat) {
+		this.etat = etat;
+	}
+
+	public int getCodeCategporie() {
+		return codeCategporie;
+	}
+
+	public void setCodeCategporie(int codeCategporie) {
+		this.codeCategporie = codeCategporie;
+	}
+
+	public String getFiliere() {
+		return filiere;
+	}
+
+	public void setFiliere(String filiere) {
+		this.filiere = filiere;
+	}
+
+	public Spgradn getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Spgradn grade) {
+		this.grade = grade;
+	}
+
+	public Date getGradeDate() {
+		return gradeDate;
+	}
+
+	public void setGradeDate(Date gradeDate) {
+		this.gradeDate = gradeDate;
+	}
+
+	public Spgradn getGradeNouveau() {
+		return gradeNouveau;
+	}
+
+	public void setGradeNouveau(Spgradn gradeNouveau) {
+		this.gradeNouveau = gradeNouveau;
+	}
+
+	public Date getDateAvctMoy() {
+		return dateAvctMoy;
+	}
+
+	public void setDateAvctMoy(Date dateAvctMoy) {
+		this.dateAvctMoy = dateAvctMoy;
+	}
+
+	public Integer getAccAnnee() {
+		return accAnnee;
+	}
+
+	public void setAccAnnee(Integer accAnnee) {
+		this.accAnnee = accAnnee;
+	}
+
+	public Integer getAccMois() {
+		return accMois;
+	}
+
+	public void setAccMois(Integer accMois) {
+		this.accMois = accMois;
+	}
+
+	public Integer getAccJour() {
+		return accJour;
+	}
+
+	public void setAccJour(Integer accJour) {
+		this.accJour = accJour;
+	}
+
+	public int getAnneeAvancement() {
+		return anneeAvancement;
+	}
+
+	public void setAnneeAvancement(int anneeAvancement) {
+		this.anneeAvancement = anneeAvancement;
+	}
+
+	public boolean isRegularisation() {
+		return regularisation;
+	}
+
+	public void setRegularisation(boolean regularisation) {
+		this.regularisation = regularisation;
+	}
+
+	public Integer getNouvAccAnnee() {
+		return nouvAccAnnee;
+	}
+
+	public void setNouvAccAnnee(Integer nouvAccAnnee) {
+		this.nouvAccAnnee = nouvAccAnnee;
+	}
+
+	public Integer getNouvAccMois() {
+		return nouvAccMois;
+	}
+
+	public void setNouvAccMois(Integer nouvAccMois) {
+		this.nouvAccMois = nouvAccMois;
+	}
+
+	public Integer getNouvAccJour() {
+		return nouvAccJour;
+	}
+
+	public void setNouvAccJour(Integer nouvAccJour) {
+		this.nouvAccJour = nouvAccJour;
+	}
+
+	public boolean isAgentVDN() {
+		return agentVDN;
+	}
+
+	public void setAgentVDN(boolean agentVDN) {
+		this.agentVDN = agentVDN;
+	}
 }

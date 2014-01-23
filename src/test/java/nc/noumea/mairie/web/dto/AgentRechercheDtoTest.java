@@ -12,6 +12,7 @@ public class AgentRechercheDtoTest {
 		// Given
 		AgentRecherche ag = new AgentRecherche();
 		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
 		ag.setNomUsage("TITI");
 		ag.setPrenomUsage("Nono");
 

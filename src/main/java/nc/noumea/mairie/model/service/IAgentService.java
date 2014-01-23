@@ -5,7 +5,6 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
 
 public interface IAgentService {
 
@@ -20,7 +19,8 @@ public interface IAgentService {
 
 	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent);
 
-	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<String> listeCodeService);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable,
+			List<String> listeCodeService);
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
@@ -40,7 +40,5 @@ public interface IAgentService {
 	public Agent findAgentWithName(Integer idAgent, String nom);
 
 	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, String codeService);
-
-	public ReturnMessageDto isUtilisateurSIRH(String newIdAgent);
 
 }

@@ -9,18 +9,9 @@ import javax.persistence.OneToOne;
 
 import nc.noumea.mairie.model.bean.Sptyco;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
 @Embeddable
 public class SpcongId implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -36,7 +27,7 @@ public class SpcongId implements Serializable {
 	public SpcongId() {
 	}
 
-	public SpcongId(Integer nomatr, Integer dateDeb,Integer rang,Sptyco typConge) {
+	public SpcongId(Integer nomatr, Integer dateDeb, Integer rang, Sptyco typConge) {
 		this.nomatr = nomatr;
 		this.dateDeb = dateDeb;
 		this.rang = rang;
@@ -53,6 +44,38 @@ public class SpcongId implements Serializable {
 	private Integer rang;
 
 	@OneToOne
-	@JoinColumn(name = "TYPE2", referencedColumnName = "TYPE2",insertable=false,updatable=false)
+	@JoinColumn(name = "TYPE2", referencedColumnName = "TYPE2", insertable = false, updatable = false)
 	private Sptyco typConge;
+
+	public Integer getNomatr() {
+		return nomatr;
+	}
+
+	public void setNomatr(Integer nomatr) {
+		this.nomatr = nomatr;
+	}
+
+	public Integer getDateDeb() {
+		return dateDeb;
+	}
+
+	public void setDateDeb(Integer dateDeb) {
+		this.dateDeb = dateDeb;
+	}
+
+	public Integer getRang() {
+		return rang;
+	}
+
+	public void setRang(Integer rang) {
+		this.rang = rang;
+	}
+
+	public Sptyco getTypConge() {
+		return typConge;
+	}
+
+	public void setTypConge(Sptyco typConge) {
+		this.typConge = typConge;
+	}
 }

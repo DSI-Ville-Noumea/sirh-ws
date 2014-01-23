@@ -40,7 +40,8 @@ public class ArreteDto {
 
 	}
 
-	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr) throws ParseException {
+	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
+			throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -67,12 +68,9 @@ public class ArreteDto {
 
 		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong()
 				.toLowerCase();
-		String classe = avct.getGradeNouveau().getCodcla() == null
-				|| avct.getGradeNouveau().getCodcla().trim().equals("") ? "" : " "
-				+ Spclas.findSpclas(avct.getGradeNouveau().getCodcla()).getLibCla().trim();
-		String echelon = avct.getGradeNouveau().getCodech() == null
-				|| avct.getGradeNouveau().getCodech().trim().equals("") ? "" : " "
-				+ Speche.findSpeche(avct.getGradeNouveau().getCodech()).getLibEch().trim();
+
+		String classe = classeGrade == null ? "" : " " + classeGrade.getLibCla().trim();
+		String echelon = echelonGrade == null ? "" : " " + echelonGrade.getLibEch().trim();
 		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
 
 		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
@@ -98,11 +96,12 @@ public class ArreteDto {
 		this.directionAgent = fp != null && fp.getService() != null ? " (" + fp.getService().getDirectionSigle() + ")"
 				: "";
 		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
-				+ fp.getService().getSigle().trim() + ")" : "";
+				+ fp.getService().getSigle() + ")" : "";
 
 	}
 
-	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr) throws ParseException {
+	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
+			throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -128,12 +127,9 @@ public class ArreteDto {
 		}
 
 		this.dureeAvct = "";
-		String classe = avct.getGradeNouveau().getCodcla() == null
-				|| avct.getGradeNouveau().getCodcla().trim().equals("") ? "" : " "
-				+ Spclas.findSpclas(avct.getGradeNouveau().getCodcla()).getLibCla().trim();
-		String echelon = avct.getGradeNouveau().getCodech() == null
-				|| avct.getGradeNouveau().getCodech().trim().equals("") ? "" : " "
-				+ Speche.findSpeche(avct.getGradeNouveau().getCodech()).getLibEch().trim();
+
+		String classe = classeGrade == null ? "" : " " + classeGrade.getLibCla().trim();
+		String echelon = echelonGrade == null ? "" : " " + echelonGrade.getLibEch().trim();
 		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
 
 		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
@@ -159,7 +155,7 @@ public class ArreteDto {
 		this.directionAgent = fp != null && fp.getService() != null ? " (" + fp.getService().getDirectionSigle() + ")"
 				: "";
 		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
-				+ fp.getService().getSigle().trim() + ")" : "";
+				+ fp.getService().getSigle() + ")" : "";
 	}
 
 	private Date getDateAvancement(AvancementFonctionnaire avct) {

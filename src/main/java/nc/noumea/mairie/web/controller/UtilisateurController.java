@@ -1,6 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
-import nc.noumea.mairie.model.service.IAgentService;
+import nc.noumea.mairie.model.service.IUtilisateurService;
 import nc.noumea.mairie.web.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class UtilisateurController {
 	private Logger logger = LoggerFactory.getLogger(UtilisateurController.class);
 
 	@Autowired
-	private IAgentService agentSrv;
+	private IUtilisateurService utilisateurSrv;
 
 	private String remanieIdAgent(Integer idAgent) {
 		String newIdAgent;
@@ -50,7 +50,7 @@ public class UtilisateurController {
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
-		ReturnMessageDto srm = agentSrv.isUtilisateurSIRH(newIdAgent);
+		ReturnMessageDto srm = utilisateurSrv.isUtilisateurSIRH(newIdAgent);
 
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(srm);
 

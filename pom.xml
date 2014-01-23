@@ -85,7 +85,7 @@
 		<aspectj.version>1.7.3</aspectj.version>
 		<java.version>7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<roo.version>1.2.5.RELEASE</roo.version>
+		<!-- <roo.version>1.2.5.RELEASE</roo.version> -->
 		<slf4j.version>1.7.5</slf4j.version>
 		<spring.version>4.0.0.RELEASE</spring.version>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
@@ -101,11 +101,11 @@
 			<name>Spring Maven Milestone Repository</name>
 			<url>http://maven.springframework.org/milestone</url>
 		</repository>
-		<repository>
+		<!-- <repository>
 			<id>spring-roo-repository</id>
 			<name>Spring Roo Repository</name>
 			<url>http://spring-roo-repository.springsource.org/release</url>
-		</repository>
+		</repository> -->
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -118,11 +118,11 @@
 			<name>Spring Maven Milestone Repository</name>
 			<url>http://maven.springframework.org/milestone</url>
 		</pluginRepository>
-		<pluginRepository>
+		<!-- <pluginRepository>
 			<id>spring-roo-repository</id>
 			<name>Spring Roo Repository</name>
 			<url>http://spring-roo-repository.springsource.org/release</url>
-		</pluginRepository>
+		</pluginRepository> -->
 	</pluginRepositories>
 	<dependencies>
 		<!-- General dependencies for standard applications -->
@@ -179,12 +179,12 @@
 			<version>3.1</version>
 		</dependency>
 		<!-- ROO dependencies -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.springframework.roo</groupId>
 			<artifactId>org.springframework.roo.annotations</artifactId>
 			<version>${roo.version}</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<!-- Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -603,7 +603,7 @@
 					</additionalBuildcommands>
 					<additionalProjectnatures>
 						<projectnature>org.eclipse.ajdt.ui.ajnature</projectnature>
-						<projectnature>com.springsource.sts.roo.core.nature</projectnature>
+						<!-- <projectnature>com.springsource.sts.roo.core.nature</projectnature> -->
 						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
 					</additionalProjectnatures>
 				</configuration>

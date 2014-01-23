@@ -1,18 +1,15 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SPBHOR", versionField = "")
+@Entity
+@Table(name = "SPBHOR")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spbhor {
 
 	@Id
@@ -22,4 +19,20 @@ public class Spbhor {
 	@NotNull
 	@Column(name = "LIBHOR", columnDefinition = "char")
 	private String libHor;
+
+	public String getCdThor() {
+		return cdThor;
+	}
+
+	public void setCdThor(String cdThor) {
+		this.cdThor = cdThor;
+	}
+
+	public String getLibHor() {
+		return libHor;
+	}
+
+	public void setLibHor(String libHor) {
+		this.libHor = libHor;
+	}
 }

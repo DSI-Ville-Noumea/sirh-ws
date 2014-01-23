@@ -355,7 +355,7 @@ public class FichePosteService implements IFichePosteService {
 		FichePoste fp = getFichePosteById(idFichePoste);
 		if (fp != null) {
 			for (PrimePointageFP prime : fp.getPrimePointageFP()) {
-				RefPrimeDto primeDto = sirhPtgWSConsumer.getPrime(prime.getId().getNumRubrique());
+				RefPrimeDto primeDto = sirhPtgWSConsumer.getPrime(prime.getPrimePointageFPPK().getNumRubrique());
 				prime.setLibelle(primeDto.getLibelle());
 			}
 		}

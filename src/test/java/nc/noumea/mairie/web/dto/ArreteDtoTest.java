@@ -14,14 +14,13 @@ import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.Spclas;
+import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
-import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class ArreteDtoTest {
 
@@ -91,24 +90,21 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -124,6 +120,7 @@ public class ArreteDtoTest {
 		assertEquals(false, dto.isChangementClasse());
 		assertEquals(true, dto.isFeminin());
 		assertEquals("I", dto.getBaseReglement());
+		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -175,24 +172,21 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -203,6 +197,7 @@ public class ArreteDtoTest {
 		assertEquals("1 mois", dto.getAcc());
 		assertEquals("5138", dto.getMatriculeAgent());
 		assertEquals("I", dto.getBaseReglement());
+		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -265,30 +260,26 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = null;
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals("", dto.getDeliberationLabel());
 		assertEquals("", dto.getDeliberationCapText());
 		assertEquals("néant", dto.getAcc());
 		assertEquals("M", dto.getBaseReglement());
+		assertEquals("de titi nono 1", dto.getGradeLabel());
 	}
 
 	@Test
@@ -338,24 +329,19 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = null;
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
@@ -363,6 +349,7 @@ public class ArreteDtoTest {
 		assertEquals("épuisée", dto.getAcc());
 		assertEquals("M", dto.getBaseReglement());
 		assertEquals("SN (S)", dto.getServiceAgent());
+		assertEquals("de titi nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -412,30 +399,28 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("néant", dto.getAcc());
 		assertEquals("I", dto.getBaseReglement());
+		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -475,19 +460,16 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
@@ -503,13 +485,14 @@ public class ArreteDtoTest {
 		avct.setNouvAccJour(2);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
 		assertEquals("I", dto.getBaseReglement());
+		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -549,19 +532,16 @@ public class ArreteDtoTest {
 		service.setServi("TATA");
 		service.setSigle("S");
 		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("DIRECTION NONO");
-		service.setDirectionSigle("DIR");
+		service.setDirection("TEST");
+		service.setDirectionSigle("SN");
 
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setSigle("SN");
-		serviceDirection.setLiServ("TEST");
-		serviceDirection.setDirection("DIRECTION");
-		serviceDirection.setDirectionSigle("DIRN");
+		Spclas classeGrade = new Spclas();
+		classeGrade.setCodcla("1");
+		classeGrade.setLibCla("nono 1");
 
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getDirection("TATA")).thenReturn(serviceDirection);
-		ReflectionTestUtils.setField(service, "siservSrv", mockSiservService);
+		Speche echelonGrade = new Speche();
+		echelonGrade.setCodEch("e");
+		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
 		fp.setService(service);
@@ -577,7 +557,7 @@ public class ArreteDtoTest {
 		avct.setNouvAccJour(2);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -586,5 +566,6 @@ public class ArreteDtoTest {
 		assertEquals("I", dto.getBaseReglement());
 		assertEquals(null, dto.getDateCap());
 		assertEquals("", dto.getDureeAvct());
+		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
 	}
 }

@@ -52,15 +52,16 @@ public class FichePosteTransformer extends AbstractTransformer {
 
 		getContext().writeName("cadreEmploi");
 		getContext().transform(
-				fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi() == null ? "" : fp.getGradePoste()
-						.getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi());
+				fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fp.getGradePoste()
+						.getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi() == null ? "" : fp
+						.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi());
 		getContext().writeComma();
 		getContext().writeName("niveauEtude");
 		getContext().transform(fp.getNiveauEtude() != null ? fp.getNiveauEtude().getLibelleNiveauEtude() : "");
 
 		getContext().writeComma();
 		getContext().writeName("service");
-		getContext().transform(fp.getService().getDivision());
+		getContext().transform(fp.getService().getLiServ());
 		getContext().writeComma();
 		getContext().writeName("direction");
 		getContext().transform(fp.getService().getDirection());

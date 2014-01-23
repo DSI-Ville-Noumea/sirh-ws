@@ -1,18 +1,15 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SPCLAS", versionField = "")
+@Entity
+@Table(name = "SPCLAS")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spclas {
 
 	@Id
@@ -22,4 +19,20 @@ public class Spclas {
 	@NotNull
 	@Column(name = "LIBCLA", columnDefinition = "char")
 	private String libCla;
+
+	public String getCodcla() {
+		return codcla;
+	}
+
+	public void setCodcla(String codcla) {
+		this.codcla = codcla;
+	}
+
+	public String getLibCla() {
+		return libCla;
+	}
+
+	public void setLibCla(String libCla) {
+		this.libCla = libCla;
+	}
 }

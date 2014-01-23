@@ -8,7 +8,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
@@ -16,6 +18,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -26,18 +30,17 @@ import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
 
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.WhereJoinTable;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
 
 import flexjson.JSONSerializer;
 
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = Integer.class, identifierColumn = "ID_FICHE_POSTE", identifierField = "idFichePoste", table = "FICHE_POSTE", versionField = "")
+@Entity
+@Table(name = "FICHE_POSTE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class FichePoste {
+
+	@Id
+	@Column(name = "ID_FICHE_POSTE")
+	private Integer idFichePoste;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
@@ -111,11 +114,6 @@ public class FichePoste {
 	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
 
-	// @OneToOne(optional = true, fetch = FetchType.LAZY)
-	// @JoinColumn(name = "ID_RESPONSABLE", referencedColumnName =
-	// "ID_FICHE_POSTE")
-	// private FichePoste responsable;
-
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
 	@OrderBy
@@ -132,6 +130,7 @@ public class FichePoste {
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
 
 	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
+	@OrderBy("primePointageFPPK.numRubrique asc")
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -186,4 +185,224 @@ public class FichePoste {
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
 	private NatureCredit natureCredit;
+
+	public TitrePoste getTitrePoste() {
+		return titrePoste;
+	}
+
+	public void setTitrePoste(TitrePoste titrePoste) {
+		this.titrePoste = titrePoste;
+	}
+
+	public Silieu getLieuPoste() {
+		return lieuPoste;
+	}
+
+	public void setLieuPoste(Silieu lieuPoste) {
+		this.lieuPoste = lieuPoste;
+	}
+
+	public Budget getBudget() {
+		return budget;
+	}
+
+	public void setBudget(Budget budget) {
+		this.budget = budget;
+	}
+
+	public String getNfa() {
+		return nfa;
+	}
+
+	public void setNfa(String nfa) {
+		this.nfa = nfa;
+	}
+
+	public Integer getAnnee() {
+		return annee;
+	}
+
+	public void setAnnee(Integer annee) {
+		this.annee = annee;
+	}
+
+	public String getNumFP() {
+		return numFP;
+	}
+
+	public void setNumFP(String numFP) {
+		this.numFP = numFP;
+	}
+
+	public String getMissions() {
+		return missions;
+	}
+
+	public void setMissions(String missions) {
+		this.missions = missions;
+	}
+
+	public StatutFichePoste getStatutFP() {
+		return statutFP;
+	}
+
+	public void setStatutFP(StatutFichePoste statutFP) {
+		this.statutFP = statutFP;
+	}
+
+	public Spbhor getBudgete() {
+		return budgete;
+	}
+
+	public void setBudgete(Spbhor budgete) {
+		this.budgete = budgete;
+	}
+
+	public Spbhor getReglementaire() {
+		return reglementaire;
+	}
+
+	public void setReglementaire(Spbhor reglementaire) {
+		this.reglementaire = reglementaire;
+	}
+
+	public Siserv getService() {
+		return service;
+	}
+
+	public void setService(Siserv service) {
+		this.service = service;
+	}
+
+	public Spgradn getGradePoste() {
+		return gradePoste;
+	}
+
+	public void setGradePoste(Spgradn gradePoste) {
+		this.gradePoste = gradePoste;
+	}
+
+	public Set<Activite> getActivites() {
+		return activites;
+	}
+
+	public void setActivites(Set<Activite> activites) {
+		this.activites = activites;
+	}
+
+	public Set<Competence> getCompetencesFDP() {
+		return competencesFDP;
+	}
+
+	public void setCompetencesFDP(Set<Competence> competencesFDP) {
+		this.competencesFDP = competencesFDP;
+	}
+
+	public NiveauEtude getNiveauEtude() {
+		return niveauEtude;
+	}
+
+	public void setNiveauEtude(NiveauEtude niveauEtude) {
+		this.niveauEtude = niveauEtude;
+	}
+
+	public Set<AvantageNature> getAvantagesNature() {
+		return avantagesNature;
+	}
+
+	public void setAvantagesNature(Set<AvantageNature> avantagesNature) {
+		this.avantagesNature = avantagesNature;
+	}
+
+	public Set<Delegation> getDelegations() {
+		return delegations;
+	}
+
+	public void setDelegations(Set<Delegation> delegations) {
+		this.delegations = delegations;
+	}
+
+	public Set<RegimeIndemnitaire> getRegimesIndemnitaires() {
+		return regimesIndemnitaires;
+	}
+
+	public void setRegimesIndemnitaires(Set<RegimeIndemnitaire> regimesIndemnitaires) {
+		this.regimesIndemnitaires = regimesIndemnitaires;
+	}
+
+	public Set<PrimePointageFP> getPrimePointageFP() {
+		return primePointageFP;
+	}
+
+	public void setPrimePointageFP(Set<PrimePointageFP> primePointageFP) {
+		this.primePointageFP = primePointageFP;
+	}
+
+	public Set<Diplome> getDiplome() {
+		return diplome;
+	}
+
+	public void setDiplome(Set<Diplome> diplome) {
+		this.diplome = diplome;
+	}
+
+	public Set<FicheEmploi> getFicheEmploiPrimaire() {
+		return ficheEmploiPrimaire;
+	}
+
+	public void setFicheEmploiPrimaire(Set<FicheEmploi> ficheEmploiPrimaire) {
+		this.ficheEmploiPrimaire = ficheEmploiPrimaire;
+	}
+
+	public Set<FicheEmploi> getFicheEmploiSecondaire() {
+		return ficheEmploiSecondaire;
+	}
+
+	public void setFicheEmploiSecondaire(Set<FicheEmploi> ficheEmploiSecondaire) {
+		this.ficheEmploiSecondaire = ficheEmploiSecondaire;
+	}
+
+	public FichePoste getSuperieurHierarchique() {
+		return superieurHierarchique;
+	}
+
+	public void setSuperieurHierarchique(FichePoste superieurHierarchique) {
+		this.superieurHierarchique = superieurHierarchique;
+	}
+
+	public FichePoste getRemplace() {
+		return remplace;
+	}
+
+	public void setRemplace(FichePoste remplace) {
+		this.remplace = remplace;
+	}
+
+	public Set<Affectation> getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Set<Affectation> agent) {
+		this.agent = agent;
+	}
+
+	public NatureCredit getNatureCredit() {
+		return natureCredit;
+	}
+
+	public void setNatureCredit(NatureCredit natureCredit) {
+		this.natureCredit = natureCredit;
+	}
+
+	public void setOpi(String opi) {
+		this.opi = opi;
+	}
+
+	public Integer getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(Integer idFichePoste) {
+		this.idFichePoste = idFichePoste;
+	}
 }

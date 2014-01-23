@@ -5,27 +5,33 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.bean.Agent;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE", identifierField = "idEae", identifierType = Integer.class, table = "EAE", sequenceName = "EAE_S_EAE")
-@RooJson
+@Entity
+@Table(name = "EAE")
+@PersistenceUnit(unitName = "eaePersistenceUnit")
 public class Eae {
-	
+
+	@Id
+	@SequenceGenerator(name = "eaeGen", sequenceName = "EAE_S_EAE")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "eaeGen")
+	@Column(name = "ID_EAE")
+	private Integer idEae;
 
 	@NotNull
 	@ManyToOne
@@ -42,18 +48,89 @@ public class Eae {
 	private EaeFichePoste eaeFichePoste;
 
 	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
-    private EaeEvalue eaeEvalue;
+	private EaeEvalue eaeEvalue;
 
 	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
-    private EaeEvaluation eaeEvaluation;	
-		
-	
+	private EaeEvaluation eaeEvaluation;
+
 	/*
 	 * Transient properties (will be populated by AS400 entity manager)
 	 */
-	@Transient	
+	@Transient
 	private Agent agentEvalue;
 
 	@Transient
 	private Agent agentDelegataire;
+
+	public Integer getIdEae() {
+		return idEae;
+	}
+
+	public void setIdEae(Integer idEae) {
+		this.idEae = idEae;
+	}
+
+	public EaeCampagne getEaeCampagne() {
+		return eaeCampagne;
+	}
+
+	public void setEaeCampagne(EaeCampagne eaeCampagne) {
+		this.eaeCampagne = eaeCampagne;
+	}
+
+	public Integer getIdAgentDelegataire() {
+		return idAgentDelegataire;
+	}
+
+	public void setIdAgentDelegataire(Integer idAgentDelegataire) {
+		this.idAgentDelegataire = idAgentDelegataire;
+	}
+
+	public Set<EaeEvaluateur> getEaeEvaluateurs() {
+		return eaeEvaluateurs;
+	}
+
+	public void setEaeEvaluateurs(Set<EaeEvaluateur> eaeEvaluateurs) {
+		this.eaeEvaluateurs = eaeEvaluateurs;
+	}
+
+	public EaeFichePoste getEaeFichePoste() {
+		return eaeFichePoste;
+	}
+
+	public void setEaeFichePoste(EaeFichePoste eaeFichePoste) {
+		this.eaeFichePoste = eaeFichePoste;
+	}
+
+	public EaeEvalue getEaeEvalue() {
+		return eaeEvalue;
+	}
+
+	public void setEaeEvalue(EaeEvalue eaeEvalue) {
+		this.eaeEvalue = eaeEvalue;
+	}
+
+	public EaeEvaluation getEaeEvaluation() {
+		return eaeEvaluation;
+	}
+
+	public void setEaeEvaluation(EaeEvaluation eaeEvaluation) {
+		this.eaeEvaluation = eaeEvaluation;
+	}
+
+	public Agent getAgentEvalue() {
+		return agentEvalue;
+	}
+
+	public void setAgentEvalue(Agent agentEvalue) {
+		this.agentEvalue = agentEvalue;
+	}
+
+	public Agent getAgentDelegataire() {
+		return agentDelegataire;
+	}
+
+	public void setAgentDelegataire(Agent agentDelegataire) {
+		this.agentDelegataire = agentDelegataire;
+	}
 }
