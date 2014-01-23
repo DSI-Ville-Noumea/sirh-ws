@@ -78,14 +78,7 @@ public class EaeController {
 
 		if (campagneEnCours == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
-
-		// on regarde si la personne connectée est chef
-		// boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
-		// List<String> listService = null;
-		/*
-		 * if (estChef) { // alors on regarde les sousService listService =
-		 * siservSrv.getListServiceAgent(ag.getIdAgent()); }
-		 */
+		
 		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3, null);
 		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), listAgentsId,
 				ag.getIdAgent());

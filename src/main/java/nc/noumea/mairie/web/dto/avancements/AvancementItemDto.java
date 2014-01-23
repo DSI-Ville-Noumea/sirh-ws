@@ -3,8 +3,6 @@ package nc.noumea.mairie.web.dto.avancements;
 import java.util.Date;
 
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
-import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 
 public class AvancementItemDto {
 
@@ -23,8 +21,7 @@ public class AvancementItemDto {
 
 	}
 
-	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE,
-			Integer valeurAvisEAE) {
+	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE, Integer valeurAvisEAE) {
 
 		if (avct.getAgent() != null) {
 			this.nom = avct.getAgent().getDisplayNom();
@@ -39,41 +36,41 @@ public class AvancementItemDto {
 		if (!avisEAE) {
 			if (avct.getAvisCap() != null) {
 				switch (avct.getAvisCap().getIdAvisCap()) {
-				case 1:
-					this.dureeMin = true;
-					break;
-				case 2:
-					this.dureeMoy = true;
-					break;
-				case 3:
-					this.dureeMax = true;
-					break;
-				case 4:
-					this.favorable = true;
-					break;
-				case 5:
-					this.favorable = false;
-					break;
+					case 1:
+						this.dureeMin = true;
+						break;
+					case 2:
+						this.dureeMoy = true;
+						break;
+					case 3:
+						this.dureeMax = true;
+						break;
+					case 4:
+						this.favorable = true;
+						break;
+					case 5:
+						this.favorable = false;
+						break;
 				}
 			}
 		} else {
 			if (valeurAvisEAE != null) {
 				switch (valeurAvisEAE) {
-				case 1:
-					this.dureeMin = true;
-					break;
-				case 2:
-					this.dureeMoy = true;
-					break;
-				case 3:
-					this.dureeMax = true;
-					break;
-				case 4:
-					this.favorable = true;
-					break;
-				case 5:
-					this.favorable = false;
-					break;
+					case 1:
+						this.dureeMin = true;
+						break;
+					case 2:
+						this.dureeMoy = true;
+						break;
+					case 3:
+						this.dureeMax = true;
+						break;
+					case 4:
+						this.favorable = true;
+						break;
+					case 5:
+						this.favorable = false;
+						break;
 				}
 			}
 		}
@@ -108,8 +105,7 @@ public class AvancementItemDto {
 		return datePrevisionnelleAvancement;
 	}
 
-	public void setDatePrevisionnelleAvancement(
-			Date datePrevisionnelleAvancement) {
+	public void setDatePrevisionnelleAvancement(Date datePrevisionnelleAvancement) {
 		this.datePrevisionnelleAvancement = datePrevisionnelleAvancement;
 	}
 

@@ -1,28 +1,46 @@
 package nc.noumea.mairie.model.pk;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-import nc.noumea.mairie.model.bean.FichePoste;
+public final class PrimePointageFPPK implements Serializable {
 
-import org.springframework.roo.addon.equals.RooEquals;
-import org.springframework.roo.addon.jpa.identifier.RooIdentifier;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooToString
-@RooEquals
-@RooIdentifier
-public final class PrimePointageFPPK { 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Column(name = "NUM_RUBRIQUE")
 	private Integer numRubrique;
 
-//	@Column(name = "ID_FICHE_POSTE")
-//	private FichePoste idFichePoste;
+	public Integer getNumRubrique() {
+		return numRubrique;
+	}
+
+	public void setNumRubrique(Integer numRubrique) {
+		this.numRubrique = numRubrique;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((numRubrique == null) ? 0 : numRubrique.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PrimePointageFPPK other = (PrimePointageFPPK) obj;
+		if (numRubrique == null) {
+			if (other.numRubrique != null)
+				return false;
+		} else if (!numRubrique.equals(other.numRubrique))
+			return false;
+		return true;
+	}
 }

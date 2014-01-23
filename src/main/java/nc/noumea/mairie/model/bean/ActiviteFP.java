@@ -1,13 +1,26 @@
 package nc.noumea.mairie.model.bean;
 
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
+
 import nc.noumea.mairie.model.pk.ActiviteFPPK;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = ActiviteFPPK.class, table = "ACTIVITE_FP", versionField = "")
+@Entity
+@Table(name = "ACTIVITE_FP")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class ActiviteFP {
+
+	@EmbeddedId
+	private ActiviteFPPK activiteFPPK;
+
+	public ActiviteFPPK getActiviteFPPK() {
+		return activiteFPPK;
+	}
+
+	public void setActiviteFPPK(ActiviteFPPK activiteFPPK) {
+		this.activiteFPPK = activiteFPPK;
+	}
+
 }

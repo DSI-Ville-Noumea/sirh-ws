@@ -80,6 +80,7 @@ public class FichePosteDto {
 		this();
 
 		numero = fichePoste.getNumFP();
+
 		direction = fichePoste.getService().getDirection();
 		titre = fichePoste.getTitrePoste().getLibTitrePoste();
 
@@ -90,8 +91,10 @@ public class FichePosteDto {
 		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
 				.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
-		service = fichePoste.getService().getDivision() == null ? "" : fichePoste.getService().getDivision().trim();
-		section = fichePoste.getService().getSection() == null ? "" : fichePoste.getService().getSection().trim();
+
+		service = fichePoste.getService() == null ? "" : fichePoste.getService().getLiServ();
+
+		section = fichePoste.getService().getSection();
 		lieu = fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu()
 				.trim();
 		gradePoste = fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste()
@@ -248,7 +251,7 @@ public class FichePosteDto {
 					+ " - Forfait: " + reg.getForfait() + " - Nb Points: " + reg.getNombrePoint());
 		}
 		for (PrimePointageFP prime : fichePoste.getPrimePointageFP()) {
-			primes.add(prime.getId().getNumRubrique() + " - " + prime.getLibelle());
+			primes.add(prime.getPrimePointageFPPK().getNumRubrique() + " - " + prime.getLibelle());
 		}
 	}
 

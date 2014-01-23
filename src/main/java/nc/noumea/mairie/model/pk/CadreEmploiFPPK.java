@@ -1,19 +1,11 @@
 package nc.noumea.mairie.model.pk;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 
-import org.springframework.roo.addon.equals.RooEquals;
-import org.springframework.roo.addon.jpa.identifier.RooIdentifier;
-import org.springframework.roo.addon.tostring.RooToString;
+public final class CadreEmploiFPPK implements Serializable {
 
-@RooToString
-@RooEquals
-@RooIdentifier
-public final class CadreEmploiFPPK  {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "ID_CADRE_EMPLOI")
@@ -21,4 +13,20 @@ public final class CadreEmploiFPPK  {
 
 	@Column(name = "ID_FICHE_POSTE")
 	private Integer idFichePoste;
+
+	public Integer getIdCadreEmploi() {
+		return idCadreEmploi;
+	}
+
+	public void setIdCadreEmploi(Integer idCadreEmploi) {
+		this.idCadreEmploi = idCadreEmploi;
+	}
+
+	public Integer getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(Integer idFichePoste) {
+		this.idFichePoste = idFichePoste;
+	}
 }

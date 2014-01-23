@@ -4,23 +4,17 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 
 import nc.noumea.mairie.model.pk.SiguicId;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SIGUIC", versionField = "")
+@Entity
+@Table(name = "SIGUIC")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Siguic implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
@@ -34,5 +28,21 @@ public class Siguic implements Serializable {
 
 	public Siguic(Integer codeBanque, Integer codeGuichet) {
 		this.id = new SiguicId(codeBanque, codeGuichet);
+	}
+
+	public SiguicId getId() {
+		return id;
+	}
+
+	public void setId(SiguicId id) {
+		this.id = id;
+	}
+
+	public String getLiGuic() {
+		return liGuic;
+	}
+
+	public void setLiGuic(String liGuic) {
+		this.liGuic = liGuic;
 	}
 }

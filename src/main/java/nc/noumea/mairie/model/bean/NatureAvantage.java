@@ -1,23 +1,36 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_NATURE_AVANTAGE", identifierField = "idNatureAvantage", identifierType = Integer.class, table = "P_NATURE_AVANTAGE", versionField = "")
-@RooSerializable
+@Entity
+@Table(name = "P_NATURE_AVANTAGE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class NatureAvantage {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	@Column(name = "LIB_NATURE_AVANTAGE") 
+	@Id
+	@Column(name = "ID_NATURE_AVANTAGE")
+	private Integer idNatureAvantage;
+
+	@Column(name = "LIB_NATURE_AVANTAGE")
 	private String libNatureAvantage;
+
+	public Integer getIdNatureAvantage() {
+		return idNatureAvantage;
+	}
+
+	public void setIdNatureAvantage(Integer idNatureAvantage) {
+		this.idNatureAvantage = idNatureAvantage;
+	}
+
+	public String getLibNatureAvantage() {
+		return libNatureAvantage;
+	}
+
+	public void setLibNatureAvantage(String libNatureAvantage) {
+		this.libNatureAvantage = libNatureAvantage;
+	}
 }

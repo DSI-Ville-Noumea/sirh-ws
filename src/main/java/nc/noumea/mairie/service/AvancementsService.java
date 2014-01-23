@@ -15,11 +15,14 @@ import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.Spclas;
+import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
+import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
@@ -48,6 +51,9 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private IFichePosteService fichePosteService;
+
+	@Autowired
+	private ISiservService siservSrv;
 
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
@@ -279,6 +285,17 @@ public class AvancementsService implements IAvancementsService {
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
+			Spclas classeGrade = sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
+			Speche echelonGrade = sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			if (fp != null) {
+				fp.getService().setDirection(
+						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+								fp.getService().getServi()).getLiServ());
+				fp.getService().setDirectionSigle(
+						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+								fp.getService().getServi()).getSigle());
+			}
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
 			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
@@ -286,7 +303,7 @@ public class AvancementsService implements IAvancementsService {
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 			arretes.getArretes().add(dto);
 		}
 
@@ -342,6 +359,16 @@ public class AvancementsService implements IAvancementsService {
 			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
+			Spclas classeGrade = sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
+			Speche echelonGrade = sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			if (fp != null) {
+				fp.getService().setDirection(
+						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+								fp.getService().getServi()).getLiServ());
+				fp.getService().setDirectionSigle(
+						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+								fp.getService().getServi()).getSigle());
+			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
@@ -350,7 +377,7 @@ public class AvancementsService implements IAvancementsService {
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
 			arretes.getArretes().add(dto);
 		}
 

@@ -1,23 +1,36 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_TYPE_AVANTAGE", identifierField = "idTypeAvantage", identifierType = Integer.class, table = "P_TYPE_AVANTAGE", versionField = "")
-@RooSerializable
+@Entity
+@Table(name = "P_TYPE_AVANTAGE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class TypeAvantage {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	@Column(name = "LIB_TYPE_AVANTAGE") 
+
+	@Id
+	@Column(name = "ID_TYPE_AVANTAGE")
+	private Integer idTypeAvantage;
+
+	@Column(name = "LIB_TYPE_AVANTAGE")
 	private String libTypeAvantage;
+
+	public Integer getIdTypeAvantage() {
+		return idTypeAvantage;
+	}
+
+	public void setIdTypeAvantage(Integer idTypeAvantage) {
+		this.idTypeAvantage = idTypeAvantage;
+	}
+
+	public String getLibTypeAvantage() {
+		return libTypeAvantage;
+	}
+
+	public void setLibTypeAvantage(String libTypeAvantage) {
+		this.libTypeAvantage = libTypeAvantage;
+	}
 }
