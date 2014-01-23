@@ -1,27 +1,17 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import nc.noumea.mairie.model.service.ISiservService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SISERV", versionField = "")
+@Entity
+@Table(name = "SISERV")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Siserv {
-
-	@Autowired
-	@Transient
-	ISiservService siservSrv;
 
 	@Id
 	@Column(name = "SERVI", columnDefinition = "char")
@@ -46,61 +36,85 @@ public class Siserv {
 	@Transient
 	private String division;
 
-	public String getDivision() {
-		String service = "";
-		if (this.servi != null) {
-			Siserv divisionService = siservSrv.getDivision(this.servi);
-			if (divisionService != null) {
-				service = divisionService.getLiServ().trim();
-			} else {
-				Siserv servicePoste = siservSrv.getService(this.servi);
-				if (servicePoste != null) {
-					service = servicePoste.getLiServ().trim();
-				}
-			}
-		}
-		return service;
-	}
-
 	@Transient
 	private String direction;
-
-	public String getDirection() {
-		String direction = "";
-		if (this.servi != null) {
-			Siserv directionService = siservSrv.getDirection(this.servi);
-			if (directionService != null) {
-				direction = directionService.getLiServ().trim();
-			}
-		}
-		return direction;
-	}
 
 	@Transient
 	private String directionSigle;
 
-	public String getDirectionSigle() {
-		String direction = "";
-		if (this.servi != null) {
-			Siserv directionService = siservSrv.getDirection(this.servi);
-			if (directionService != null) {
-				direction = directionService.getSigle().trim();
-			}
-		}
-		return direction;
-	}
-
 	@Transient
 	private String section;
 
-	public String getSection() {
-		String section = "";
-		if (this.servi != null) {
-			Siserv sectionService = siservSrv.getSection(this.servi);
-			if (sectionService != null) {
-				section = sectionService.getLiServ().trim();
-			}
-		}
-		return section;
+	public String getDivision() {
+		return division == null ? "" : division.trim();
 	}
+
+	public String getDirection() {
+		return direction == null ? "" : direction.trim();
+	}
+
+	public String getDirectionSigle() {
+		return directionSigle == null ? "" : directionSigle.trim();
+	}
+
+	public String getSection() {
+		return section == null ? "" : section.trim();
+	}
+
+	public String getServi() {
+		return servi == null ? "" : servi.trim();
+	}
+
+	public void setServi(String servi) {
+		this.servi = servi;
+	}
+
+	public String getLiServ() {
+		return liServ == null ? "" : liServ.trim();
+	}
+
+	public void setLiServ(String liServ) {
+		this.liServ = liServ;
+	}
+
+	public String getCodeActif() {
+		return codeActif;
+	}
+
+	public void setCodeActif(String codeActif) {
+		this.codeActif = codeActif;
+	}
+
+	public String getSigle() {
+		return sigle == null ? "" : sigle.trim();
+	}
+
+	public void setSigle(String sigle) {
+		this.sigle = sigle;
+	}
+
+	public String getParentSigle() {
+		return parentSigle == null ? "" : parentSigle.trim();
+	}
+
+	public void setParentSigle(String parentSigle) {
+		this.parentSigle = parentSigle;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public void setDirectionSigle(String directionSigle) {
+		this.directionSigle = directionSigle;
+	}
+
+	public void setSection(String section) {
+		this.section = section;
+	}
+
 }

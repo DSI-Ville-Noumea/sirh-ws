@@ -1,0 +1,72 @@
+package nc.noumea.mairie.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.service.SiservService;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
+
+public class SiservServiceTest {
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getDirection_returnSiserv() {
+		// Given
+		Siserv s = new Siserv();
+		s.setServi("T");
+		List<Siserv> listServ = new ArrayList<>();
+		listServ.add(s);
+		TypedQuery<Siserv> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listServ);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siserv.class))).thenReturn(mockQuery);
+
+		SiservService siservService = new SiservService();
+		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Siserv result = siservService.getDirection("DDCA");
+
+		// Then
+		assertEquals("T", result.getServi());
+
+	}
+
+	@Test
+	public void estAlphabetique_returnFalse() {
+		// Given
+		SiservService siservService = new SiservService();
+
+		// When
+		@SuppressWarnings("static-access")
+		boolean result = siservService.estAlphabetique("1");
+
+		// Then
+		assertFalse(result);
+	}
+
+	@Test
+	public void estAlphabetique_returnTrue() {
+		// Given
+		SiservService siservService = new SiservService();
+
+		// When
+		@SuppressWarnings("static-access")
+		boolean result = siservService.estAlphabetique("DCCA");
+
+		// Then
+		assertTrue(result);
+	}
+}

@@ -5,18 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
 @Embeddable
 public class SivietId implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -42,4 +33,20 @@ public class SivietId implements Serializable {
 
 	@Column(name = "SCODPA", insertable = false, updatable = false, columnDefinition = "numeric")
 	private Integer sousCodePays;
+
+	public Integer getCodePays() {
+		return codePays;
+	}
+
+	public void setCodePays(Integer codePays) {
+		this.codePays = codePays;
+	}
+
+	public Integer getSousCodePays() {
+		return sousCodePays;
+	}
+
+	public void setSousCodePays(Integer sousCodePays) {
+		this.sousCodePays = sousCodePays;
+	}
 }

@@ -5,18 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
 @Embeddable
 public class SiguicId implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -37,9 +28,25 @@ public class SiguicId implements Serializable {
 		this.codeGuichet = codeGuichet;
 	}
 
-	@Column(name = "CDBANQ", insertable = false, updatable = false,columnDefinition="decimal")
+	@Column(name = "CDBANQ", insertable = false, updatable = false, columnDefinition = "decimal")
 	private Integer codeBanque;
 
-	@Column(name = "CDGUIC", insertable = false, updatable = false,columnDefinition="decimal")
+	@Column(name = "CDGUIC", insertable = false, updatable = false, columnDefinition = "decimal")
 	private Integer codeGuichet;
+
+	public Integer getCodeBanque() {
+		return codeBanque;
+	}
+
+	public void setCodeBanque(Integer codeBanque) {
+		this.codeBanque = codeBanque;
+	}
+
+	public Integer getCodeGuichet() {
+		return codeGuichet;
+	}
+
+	public void setCodeGuichet(Integer codeGuichet) {
+		this.codeGuichet = codeGuichet;
+	}
 }

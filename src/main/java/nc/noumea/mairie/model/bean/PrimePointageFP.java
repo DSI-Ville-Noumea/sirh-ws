@@ -1,24 +1,27 @@
 package nc.noumea.mairie.model.bean;
 
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import nc.noumea.mairie.model.pk.PrimePointageFPPK;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = PrimePointageFPPK.class, table = "PRIME_POINTAGE_FP", versionField = "") 
+@Entity
+@Table(name = "PRIME_POINTAGE_FP")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class PrimePointageFP {
-	
+
+	@EmbeddedId
+	private PrimePointageFPPK primePointageFPPK;
+
 	@ManyToOne
 	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste idFichePoste;
-	
+
 	@Transient
 	private String libelle;
 
@@ -29,6 +32,21 @@ public class PrimePointageFP {
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
-	
-	
+
+	public FichePoste getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(FichePoste idFichePoste) {
+		this.idFichePoste = idFichePoste;
+	}
+
+	public PrimePointageFPPK getPrimePointageFPPK() {
+		return primePointageFPPK;
+	}
+
+	public void setPrimePointageFPPK(PrimePointageFPPK primePointageFPPK) {
+		this.primePointageFPPK = primePointageFPPK;
+	}
+
 }

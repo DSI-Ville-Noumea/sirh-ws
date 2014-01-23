@@ -1,25 +1,38 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_ACTIVITE", identifierField = "idActivite", identifierType = Integer.class, table = "ACTIVITE", versionField = "")
-@RooSerializable
+@Entity
+@Table(name = "ACTIVITE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Activite {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	@Id
+	@Column(name = "ID_ACTIVITE")
+	private Integer idActivite;
 
 	@NotNull
 	@Column(name = "NOM_ACTIVITE")
 	private String nomActivite;
+
+	public Integer getIdActivite() {
+		return idActivite;
+	}
+
+	public void setIdActivite(Integer idActivite) {
+		this.idActivite = idActivite;
+	}
+
+	public String getNomActivite() {
+		return nomActivite;
+	}
+
+	public void setNomActivite(String nomActivite) {
+		this.nomActivite = nomActivite;
+	}
 }

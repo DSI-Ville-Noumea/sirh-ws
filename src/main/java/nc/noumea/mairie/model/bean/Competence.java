@@ -1,25 +1,22 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_COMPETENCE", identifierField = "idCompetence", identifierType = Integer.class, table = "COMPETENCE", versionField = "")
-@RooSerializable
+@Entity
+@Table(name = "COMPETENCE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Competence {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	@Id
+	@Column(name = "ID_COMPETENCE")
+	private Integer idCompetence;
 
 	@NotNull
 	@Column(name = "NOM_COMPETENCE")
@@ -28,5 +25,29 @@ public class Competence {
 	@OneToOne
 	@JoinColumn(name = "ID_TYPE_COMPETENCE", referencedColumnName = "ID_TYPE_COMPETENCE")
 	private TypeCompetence typeCompetence;
+
+	public Integer getIdCompetence() {
+		return idCompetence;
+	}
+
+	public void setIdCompetence(Integer idCompetence) {
+		this.idCompetence = idCompetence;
+	}
+
+	public String getNomCompetence() {
+		return nomCompetence;
+	}
+
+	public void setNomCompetence(String nomCompetence) {
+		this.nomCompetence = nomCompetence;
+	}
+
+	public TypeCompetence getTypeCompetence() {
+		return typeCompetence;
+	}
+
+	public void setTypeCompetence(TypeCompetence typeCompetence) {
+		this.typeCompetence = typeCompetence;
+	}
 
 }

@@ -1,20 +1,17 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
 
 import flexjson.JSONSerializer;
 
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SPSOLD", versionField = "")
+@Entity
+@Table(name = "SPSOLD")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class SpSold {
 
 	@Id
@@ -31,10 +28,33 @@ public class SpSold {
 
 	public static JSONSerializer getSerializerForAgentSoldeConge() {
 
-		JSONSerializer serializer = new JSONSerializer()
-				.include("soldeAnneeEnCours").include("soldeAnneePrec")
+		JSONSerializer serializer = new JSONSerializer().include("soldeAnneeEnCours").include("soldeAnneePrec")
 				.exclude("*");
 
 		return serializer;
+	}
+
+	public Integer getNomatr() {
+		return nomatr;
+	}
+
+	public void setNomatr(Integer nomatr) {
+		this.nomatr = nomatr;
+	}
+
+	public Double getSoldeAnneeEnCours() {
+		return soldeAnneeEnCours;
+	}
+
+	public void setSoldeAnneeEnCours(Double soldeAnneeEnCours) {
+		this.soldeAnneeEnCours = soldeAnneeEnCours;
+	}
+
+	public Double getSoldeAnneePrec() {
+		return soldeAnneePrec;
+	}
+
+	public void setSoldeAnneePrec(Double soldeAnneePrec) {
+		this.soldeAnneePrec = soldeAnneePrec;
 	}
 }

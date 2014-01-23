@@ -1,25 +1,38 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.serializable.RooSerializable;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierColumn = "ID_NIVEAU_ETUDE", identifierField = "idNiveauEtude", identifierType = Integer.class, table = "R_NIVEAU_ETUDE", versionField = "")
-@RooSerializable
+@Entity
+@Table(name = "R_NIVEAU_ETUDE")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class NiveauEtude {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
+	@Id
+	@Column(name = "ID_NIVEAU_ETUDE")
+	private Integer idNiveauEtude;
+
 	@NotNull
 	@Column(name = "CODE_NIVEAU_ETUDE")
 	private String libelleNiveauEtude;
+
+	public Integer getIdNiveauEtude() {
+		return idNiveauEtude;
+	}
+
+	public void setIdNiveauEtude(Integer idNiveauEtude) {
+		this.idNiveauEtude = idNiveauEtude;
+	}
+
+	public String getLibelleNiveauEtude() {
+		return libelleNiveauEtude;
+	}
+
+	public void setLibelleNiveauEtude(String libelleNiveauEtude) {
+		this.libelleNiveauEtude = libelleNiveauEtude;
+	}
 }

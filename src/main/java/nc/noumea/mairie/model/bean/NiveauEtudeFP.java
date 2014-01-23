@@ -1,13 +1,25 @@
 package nc.noumea.mairie.model.bean;
 
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
+
 import nc.noumea.mairie.model.pk.NiveauEtudeFPPK;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", identifierType = NiveauEtudeFPPK.class, table = "NIVEAU_ETUDE_FP", versionField = "")
+@Entity
+@Table(name = "NIVEAU_ETUDE_FP")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class NiveauEtudeFP {
+
+	@EmbeddedId
+	private NiveauEtudeFPPK niveauEtudeFPPK;
+
+	public NiveauEtudeFPPK getNiveauEtudeFPPK() {
+		return niveauEtudeFPPK;
+	}
+
+	public void setNiveauEtudeFPPK(NiveauEtudeFPPK niveauEtudeFPPK) {
+		this.niveauEtudeFPPK = niveauEtudeFPPK;
+	}
 }
