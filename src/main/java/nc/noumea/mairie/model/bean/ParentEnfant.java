@@ -2,20 +2,17 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 
 import nc.noumea.mairie.model.pk.ParentEnfantPK;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "PARENT_ENFANT", versionField = "")
-@RooJson
+@Entity
+@Table(name = "PARENT_ENFANT")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class ParentEnfant {
 
 	@EmbeddedId
@@ -31,11 +28,39 @@ public class ParentEnfant {
 
 	@Column(name = "ENFANT_A_CHARGE")
 	private Boolean enfantACharge;
-    
-    public String getEnfantACharge() {
-    	if(this.enfantACharge==true){
-    		return "oui";
-    	}
-        return "non";
-    }
+
+	public String getEnfantACharge() {
+		if (this.enfantACharge == true) {
+			return "oui";
+		}
+		return "non";
+	}
+
+	public ParentEnfantPK getParentEnfantPK() {
+		return parentEnfantPK;
+	}
+
+	public void setParentEnfantPK(ParentEnfantPK parentEnfantPK) {
+		this.parentEnfantPK = parentEnfantPK;
+	}
+
+	public Agent getParent() {
+		return parent;
+	}
+
+	public void setParent(Agent parent) {
+		this.parent = parent;
+	}
+
+	public Enfant getEnfant() {
+		return enfant;
+	}
+
+	public void setEnfant(Enfant enfant) {
+		this.enfant = enfant;
+	}
+
+	public void setEnfantACharge(Boolean enfantACharge) {
+		this.enfantACharge = enfantACharge;
+	}
 }

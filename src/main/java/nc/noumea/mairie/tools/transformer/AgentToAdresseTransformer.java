@@ -12,7 +12,7 @@ public class AgentToAdresseTransformer extends AbstractTransformer {
 		getContext().writeOpenObject();
 
 		getContext().writeName("BP");
-		getContext().transform(agent.getBP());
+		getContext().transform(agent.getbP());
 
 		getContext().writeComma();
 		getContext().writeName("adresseComplementaire");
@@ -32,22 +32,26 @@ public class AgentToAdresseTransformer extends AbstractTransformer {
 
 		getContext().writeComma();
 		getContext().writeName("codeCommuneVilleDom");
-		getContext().transform(agent.getCodeCommuneVilleDom() == null ? "" : agent.getCodeCommuneVilleDom().getLibVil().trim());
+		getContext().transform(
+				agent.getCodeCommuneVilleDom() == null ? "" : agent.getCodeCommuneVilleDom().getLibVil().trim());
 
 		getContext().writeComma();
 		getContext().writeName("codeCommuneVilleBP");
-		getContext().transform(agent.getCodeCommuneVilleBP() == null ? "" : agent.getCodeCommuneVilleBP().getLibVil().trim());
+		getContext().transform(
+				agent.getCodeCommuneVilleBP() == null ? "" : agent.getCodeCommuneVilleBP().getLibVil().trim());
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleDom");
 		getContext().transform(
 				agent.getCodePostalVilleDom() == null || agent.getCodePostalVilleDom().toString().equals("0")
-						|| agent.getCodePostalVilleDom().toString().equals("") ? "" : agent.getCodePostalVilleDom().toString());
+						|| agent.getCodePostalVilleDom().toString().equals("") ? "" : agent.getCodePostalVilleDom()
+						.toString());
 
 		getContext().writeComma();
 		getContext().writeName("codePostalVilleBP");
-		getContext().transform(agent.getCodePostalVilleBP() == null || agent.getCodePostalVilleBP().toString().equals("0")
-				|| agent.getCodePostalVilleBP().toString().equals("") ? "" : agent.getCodePostalVilleBP());
+		getContext().transform(
+				agent.getCodePostalVilleBP() == null || agent.getCodePostalVilleBP().toString().equals("0")
+						|| agent.getCodePostalVilleBP().toString().equals("") ? "" : agent.getCodePostalVilleBP());
 
 		getContext().writeCloseObject();
 

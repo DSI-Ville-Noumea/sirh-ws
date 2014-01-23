@@ -5,13 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
 @Embeddable
 public class SiidmaId implements Serializable {
 
@@ -40,4 +33,20 @@ public class SiidmaId implements Serializable {
 
 	@Column(name = "IDINDI", insertable = false, updatable = false, columnDefinition = "decimal")
 	private Integer idIndi;
+
+	public String getCdidut() {
+		return cdidut == null ? "" : cdidut.trim();
+	}
+
+	public void setCdidut(String cdidut) {
+		this.cdidut = cdidut;
+	}
+
+	public Integer getIdIndi() {
+		return idIndi;
+	}
+
+	public void setIdIndi(Integer idIndi) {
+		this.idIndi = idIndi;
+	}
 }

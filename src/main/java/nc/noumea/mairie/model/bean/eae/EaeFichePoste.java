@@ -1,24 +1,31 @@
 package nc.noumea.mairie.model.bean.eae;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "eaePersistenceUnit", identifierColumn = "ID_EAE_FICHE_POSTE", identifierField = "idEaeFichePoste", identifierType = Integer.class, table = "EAE_FICHE_POSTE", sequenceName = "EAE_S_FICHE_POSTE")
+@Entity
+@Table(name = "EAE_FICHE_POSTE")
+@PersistenceUnit(unitName = "eaePersistenceUnit")
 public class EaeFichePoste {
+
+	@Id
+	@SequenceGenerator(name = "eaeFichePosteGen", sequenceName = "EAE_S_FICHE_POSTE")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "eaeFichePosteGen")
+	@Column(name = "ID_EAE_FICHE_POSTE")
+	private Integer idEaeFichePoste;
 
 	@Column(name = "ID_SHD")
 	private Integer idAgentShd;
@@ -36,4 +43,52 @@ public class EaeFichePoste {
 
 	@Transient
 	private Agent agentShd;
+
+	public Integer getIdEaeFichePoste() {
+		return idEaeFichePoste;
+	}
+
+	public void setIdEaeFichePoste(Integer idEaeFichePoste) {
+		this.idEaeFichePoste = idEaeFichePoste;
+	}
+
+	public Integer getIdAgentShd() {
+		return idAgentShd;
+	}
+
+	public void setIdAgentShd(Integer idAgentShd) {
+		this.idAgentShd = idAgentShd;
+	}
+
+	public Eae getEae() {
+		return eae;
+	}
+
+	public void setEae(Eae eae) {
+		this.eae = eae;
+	}
+
+	public String getCodeService() {
+		return codeService;
+	}
+
+	public void setCodeService(String codeService) {
+		this.codeService = codeService;
+	}
+
+	public Siserv getService() {
+		return service;
+	}
+
+	public void setService(Siserv service) {
+		this.service = service;
+	}
+
+	public Agent getAgentShd() {
+		return agentShd;
+	}
+
+	public void setAgentShd(Agent agentShd) {
+		this.agentShd = agentShd;
+	}
 }

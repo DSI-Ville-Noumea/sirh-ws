@@ -2,20 +2,17 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.pk.SpcarrId;
 
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
-import org.springframework.roo.addon.json.RooJson;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooJavaBean
-@RooToString
-@RooJson
-@RooJpaActiveRecord(persistenceUnit = "sirhPersistenceUnit", table = "SPCARR", versionField = "")
+@Entity
+@Table(name = "SPCARR")
+@PersistenceUnit(unitName = "sirhPersistenceUnit")
 @NamedQuery(name = "getCurrentCarriere", query = "select carr from Spcarr carr where carr.id.nomatr = :nomatr and carr.id.datdeb <= :todayFormatMairie and (carr.dateFin = 0 or carr.dateFin >= :todayFormatMairie)")
 public class Spcarr {
 
@@ -43,4 +40,44 @@ public class Spcarr {
 
 	@Column(name = "MODREG", columnDefinition = "char")
 	private String modReg;
+
+	public SpcarrId getId() {
+		return id;
+	}
+
+	public void setId(SpcarrId id) {
+		this.id = id;
+	}
+
+	public Integer getDateFin() {
+		return dateFin;
+	}
+
+	public void setDateFin(Integer dateFin) {
+		this.dateFin = dateFin;
+	}
+
+	public Integer getDateArrete() {
+		return dateArrete;
+	}
+
+	public void setDateArrete(Integer dateArrete) {
+		this.dateArrete = dateArrete;
+	}
+
+	public Integer getReferenceArrete() {
+		return referenceArrete;
+	}
+
+	public void setReferenceArrete(Integer referenceArrete) {
+		this.referenceArrete = referenceArrete;
+	}
+
+	public String getModReg() {
+		return modReg;
+	}
+
+	public void setModReg(String modReg) {
+		this.modReg = modReg;
+	}
 }

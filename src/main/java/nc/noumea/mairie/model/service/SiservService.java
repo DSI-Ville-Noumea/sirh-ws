@@ -11,7 +11,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.tools.ServiceTreeNode;
 
 import org.slf4j.Logger;
@@ -33,7 +32,8 @@ public class SiservService implements ISiservService {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(1, 2).equals("A")) {
 			String codeDirection = servi.substring(0, 2) + "AA";
-			TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeDirection", Siserv.class);
+			TypedQuery<Siserv> query = sirhEntityManager.createQuery(
+					"select serv from Siserv serv where  servi=:codeDirection", Siserv.class);
 			query.setParameter("codeDirection", codeDirection);
 			List<Siserv> lserv = query.getResultList();
 
@@ -62,7 +62,8 @@ public class SiservService implements ISiservService {
 	public Siserv getSection(String servi) {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(3, 4).equals("A")) {
-			TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeSection", Siserv.class);
+			TypedQuery<Siserv> query = sirhEntityManager.createQuery(
+					"select serv from Siserv serv where  servi=:codeSection", Siserv.class);
 			query.setParameter("codeSection", servi);
 			List<Siserv> lserv = query.getResultList();
 
@@ -78,7 +79,8 @@ public class SiservService implements ISiservService {
 		Siserv res = null;
 		if (servi.length() == 4 && estAlphabetique(servi) && !servi.substring(2, 3).equals("A")) {
 			String codeDivision = servi.substring(0, 3) + "A";
-			TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:codeDivision", Siserv.class);
+			TypedQuery<Siserv> query = sirhEntityManager.createQuery(
+					"select serv from Siserv serv where  servi=:codeDivision", Siserv.class);
 			query.setParameter("codeDivision", codeDivision);
 			List<Siserv> lserv = query.getResultList();
 
@@ -91,7 +93,8 @@ public class SiservService implements ISiservService {
 	@Override
 	public Siserv getService(String servi) {
 		Siserv res = null;
-		TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:service", Siserv.class);
+		TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  servi=:service",
+				Siserv.class);
 		query.setParameter("service", servi);
 		List<Siserv> lserv = query.getResultList();
 
@@ -122,7 +125,8 @@ public class SiservService implements ISiservService {
 		// Sinon, un service a été précisé comme filtre
 		// on vérifie qu'il appartient bien aux services de l'agent
 		// sinon, on retourne une liste vide
-		if (getServiceTree().get(sigleServiceParent) == null || !services.contains((getServiceTree().get(sigleServiceParent).getService())))
+		if (getServiceTree().get(sigleServiceParent) == null
+				|| !services.contains((getServiceTree().get(sigleServiceParent).getService())))
 			return new ArrayList<String>();
 
 		// et ensuite on récupère les services et sous services du sigleParent
@@ -161,7 +165,8 @@ public class SiservService implements ISiservService {
 
 	@Override
 	public List<Siserv> getListServiceActif() {
-		TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  codeActif<>'I')", Siserv.class);
+		TypedQuery<Siserv> query = sirhEntityManager.createQuery("select serv from Siserv serv where  codeActif<>'I')",
+				Siserv.class);
 		List<Siserv> lserv = query.getResultList();
 
 		return lserv;
@@ -181,19 +186,19 @@ public class SiservService implements ISiservService {
 
 		List<ServiceTreeNode> result = new ArrayList<ServiceTreeNode>();
 		Siserv siserv = getService(servi);
-		
+
 		ServiceTreeNode rootNode = getServiceTree().get(siserv.getSigle().trim());
-		
+
 		listSubServices(rootNode, result);
-		
+
 		return result;
 	}
-	
+
 	private void listSubServices(ServiceTreeNode servi, List<ServiceTreeNode> services) {
-		
+
 		if (servi == null)
 			return;
-		
+
 		services.add(servi);
 
 		for (ServiceTreeNode child : servi.getServicesEnfant())
@@ -205,20 +210,20 @@ public class SiservService implements ISiservService {
 
 		List<String> result = new ArrayList<String>();
 		Siserv siserv = getService(servi);
-		
+
 		ServiceTreeNode rootNode = getServiceTree().get(siserv.getSigle().trim());
-		
+
 		result.add(siserv.getServi());
 		listSubServicesSigles(rootNode, result);
-		
+
 		return result;
 	}
-	
+
 	private void listSubServicesSigles(ServiceTreeNode servi, List<String> services) {
-		
+
 		if (servi == null)
 			return;
-		
+
 		services.add(servi.getService());
 
 		for (ServiceTreeNode child : servi.getServicesEnfant())
@@ -283,8 +288,8 @@ public class SiservService implements ISiservService {
 	@Override
 	public Siserv getServiceBySigle(String sigleService) {
 		Siserv res = null;
-		TypedQuery<Siserv> query = sirhEntityManager
-				.createQuery("select serv from Siserv serv where  sigle=:sigle and codeActif<>'I' ", Siserv.class);
+		TypedQuery<Siserv> query = sirhEntityManager.createQuery(
+				"select serv from Siserv serv where  sigle=:sigle and codeActif<>'I' ", Siserv.class);
 		query.setParameter("sigle", sigleService);
 		List<Siserv> lserv = query.getResultList();
 
@@ -297,17 +302,17 @@ public class SiservService implements ISiservService {
 	public ServiceTreeNode getAgentDirection(Integer idAgent) {
 
 		ServiceTreeNode agentService = getAgentServiceTree(idAgent);
-		
+
 		ServiceTreeNode directionAgent = agentService;
 		boolean directionFound = false;
-		
+
 		while (!directionFound && directionAgent != null) {
 			if (directionAgent.getService().endsWith("AA"))
 				directionFound = true;
 			else
 				directionAgent = directionAgent.getServiceParent();
 		}
-		
+
 		return directionAgent;
 	}
 
