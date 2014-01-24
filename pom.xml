@@ -465,10 +465,10 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- Attention PDF ne marche pas en 1.1 -->
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pdf-plugin</artifactId>
-				<!-- ne marche pas en 1.1 -->
 				<version>1.0</version>
 				<executions>
 					<execution>
@@ -485,7 +485,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
