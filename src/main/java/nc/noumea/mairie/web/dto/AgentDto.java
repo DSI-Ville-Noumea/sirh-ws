@@ -8,22 +8,26 @@ public class AgentDto {
 	private String nom;
 	private String prenom;
 	private Integer idAgent;
-	
+
 	private FichePosteDto fichePoste;
 
 	public AgentDto() {
 	}
 
 	public AgentDto(Agent agent) {
-		nom = agent.getDisplayNom();
-		prenom = agent.getDisplayPrenom();
-		idAgent = agent.getIdAgent();
+		if (agent != null) {
+			nom = agent.getDisplayNom();
+			prenom = agent.getDisplayPrenom();
+			idAgent = agent.getIdAgent();
+		}
 	}
 
 	public AgentDto(AgentRecherche agent) {
-		nom = agent.getDisplayNom();
-		prenom = agent.getDisplayPrenom();
-		idAgent = agent.getIdAgent();
+		if (agent != null) {
+			nom = agent.getDisplayNom();
+			prenom = agent.getDisplayPrenom();
+			idAgent = agent.getIdAgent();
+		}
 	}
 
 	public String getNom() {
@@ -57,5 +61,5 @@ public class AgentDto {
 	public void setFichePoste(FichePosteDto fichePoste) {
 		this.fichePoste = fichePoste;
 	}
-	
+
 }

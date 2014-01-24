@@ -5,9 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.service.IAgentService;
@@ -36,9 +33,6 @@ public class ServiceController {
 
 	@Autowired
 	private ISiservService siservSrv;
-
-	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhEntityManager;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -96,7 +90,7 @@ public class ServiceController {
 			@RequestParam(value = "codeService", required = true) String codeService,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
 
-		Siserv service = sirhEntityManager.find(Siserv.class, codeService);
+		Siserv service = siservSrv.getService(codeService);
 
 		// Si le service n'existe pas, on ne retourne rien
 		if (service == null)
@@ -158,7 +152,7 @@ public class ServiceController {
 	public ResponseEntity<String> getSubServices(
 			@RequestParam(value = "codeService", required = true) String codeService) {
 
-		Siserv service = sirhEntityManager.find(Siserv.class, codeService);
+		Siserv service = siservSrv.getService(codeService);
 
 		// Si le service n'existe pas, on ne retourne rien
 		if (service == null)

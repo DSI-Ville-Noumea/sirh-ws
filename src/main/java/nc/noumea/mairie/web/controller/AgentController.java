@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Contact;
 import nc.noumea.mairie.model.bean.FichePoste;
@@ -74,9 +71,6 @@ public class AgentController {
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
-
-	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhEntityManager;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -565,7 +559,7 @@ public class AgentController {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
 
-		Agent ag = sirhEntityManager.find(Agent.class, newIdAgent);
+		Agent ag = agentSrv.getAgent(newIdAgent);
 
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
@@ -586,7 +580,7 @@ public class AgentController {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
 
-		Agent ag = sirhEntityManager.find(Agent.class, newIdAgent);
+		Agent ag = agentSrv.getAgent(newIdAgent);
 
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
@@ -631,7 +625,7 @@ public class AgentController {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
 
-		Agent ag = sirhEntityManager.find(Agent.class, newIdAgent);
+		Agent ag = agentSrv.getAgent(newIdAgent);
 
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
@@ -643,7 +637,8 @@ public class AgentController {
 
 		List<AgentDto> listeAgentSub = new ArrayList<AgentDto>();
 		for (Integer idAgentSub : agentIds) {
-			Agent agSub = sirhEntityManager.find(Agent.class, idAgentSub);
+
+			Agent agSub = agentSrv.getAgent(idAgentSub);
 			AgentDto agDto = new AgentDto(agSub);
 			listeAgentSub.add(agDto);
 		}
