@@ -3,12 +3,10 @@ package nc.noumea.mairie.web.controller;
 import java.text.ParseException;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.service.IAgentMatriculeConverterService;
+import nc.noumea.mairie.model.service.IAgentService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.model.service.IReportingService;
 import nc.noumea.mairie.model.service.ISiservService;
@@ -45,11 +43,11 @@ public class FichePosteController {
 	@Autowired
 	private IReportingService reportingService;
 
-	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhEntityManager;
-
 	@Autowired
 	private ISiservService siservSrv;
+
+	@Autowired
+	private IAgentService agentSrv;
 
 	@ResponseBody
 	@RequestMapping(value = "/rebuildFichePosteTree")
@@ -72,7 +70,7 @@ public class FichePosteController {
 
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
 
-		Agent ag = sirhEntityManager.find(Agent.class, newIdAgent);
+		Agent ag = agentSrv.getAgent(newIdAgent);
 
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
@@ -91,7 +89,7 @@ public class FichePosteController {
 	public ResponseEntity<byte[]> downloadFichePoste(@RequestParam("idFichePoste") int idFichePoste)
 			throws ParseException {
 
-		FichePoste fp = sirhEntityManager.find(FichePoste.class, idFichePoste);
+		FichePoste fp = fpSrv.getFichePosteById(idFichePoste);
 
 		if (fp == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
@@ -118,7 +116,7 @@ public class FichePosteController {
 	@Transactional(readOnly = true)
 	public ModelAndView getXmlFichePoste(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
 
-		FichePoste fp = sirhEntityManager.find(FichePoste.class, idFichePoste);
+		FichePoste fp = fpSrv.getFichePosteById(idFichePoste);
 
 		if (fp != null) {
 
@@ -168,7 +166,7 @@ public class FichePosteController {
 	public ResponseEntity<byte[]> downloadFichePosteSIRH(@RequestParam("idFichePoste") int idFichePoste)
 			throws ParseException {
 
-		FichePoste fp = sirhEntityManager.find(FichePoste.class, idFichePoste);
+		FichePoste fp = fpSrv.getFichePosteById(idFichePoste);
 
 		if (fp == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
