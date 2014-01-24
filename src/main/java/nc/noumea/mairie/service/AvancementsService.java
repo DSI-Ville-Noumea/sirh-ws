@@ -285,8 +285,10 @@ public class AvancementsService implements IAvancementsService {
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
-			Spclas classeGrade = sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
-			Speche echelonGrade = sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodcla() == null ? null
+					: sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodech() == null ? null
+					: sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
 			if (fp != null) {
 				fp.getService().setDirection(
 						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -359,8 +361,10 @@ public class AvancementsService implements IAvancementsService {
 			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
-			Spclas classeGrade = sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
-			Speche echelonGrade = sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodcla() == null ? null
+					: sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodech() == null ? null
+					: sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
 			if (fp != null) {
 				fp.getService().setDirection(
 						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
