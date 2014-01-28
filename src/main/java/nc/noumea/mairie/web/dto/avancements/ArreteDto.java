@@ -59,7 +59,7 @@ public class ArreteDto {
 		SimpleDateFormat date = new SimpleDateFormat("d MMMM y", new Locale("fr", "FR"));
 		SimpleDateFormat jourDate = new SimpleDateFormat("d", new Locale("fr", "FR"));
 		if (getDateAvancement(avct) != null) {
-			if (jourDate.format(getDateAvancement(avct).getDay()).equals("1")) {
+			if (jourDate.format(getDateAvancement(avct)).equals("1")) {
 				this.dateAvct = "1er " + dateMoisAnnee.format(getDateAvancement(avct));
 			} else {
 				this.dateAvct = date.format(getDateAvancement(avct));
