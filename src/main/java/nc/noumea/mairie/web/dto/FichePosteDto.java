@@ -228,8 +228,8 @@ public class FichePosteDto {
 			break;
 		}
 
-		NFA = fichePoste.getNfa();
-		OPI = fichePoste.getOpi();
+		NFA = fichePoste.getNfa() == null ? "" : fichePoste.getNfa();
+		OPI = fichePoste.getOpi() == null ? "" : fichePoste.getOpi();
 		if (null != fichePoste.getAnnee()) {
 			anneeEmploi = fichePoste.getAnnee().toString();
 		}
