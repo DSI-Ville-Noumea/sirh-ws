@@ -248,7 +248,9 @@ public class FichePosteService implements IFichePosteService {
 		if (maxDepth == 0 || fichePosteTreeNode.getFichePosteParent() == null)
 			return agents;
 
-		agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
+		if (fichePosteTreeNode.getFichePosteParent().getIdAgent() != null) {
+			agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
+		}
 
 		listShdAgents(fichePosteTreeNode.getFichePosteParent(), agents, maxDepth - 1);
 
