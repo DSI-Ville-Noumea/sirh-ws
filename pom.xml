@@ -4,7 +4,7 @@
 	<groupId>nc.noumea.mairie</groupId>
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
-	<version>1.11</version>
+	<version>1.12-SNAPSHOT</version>
     <name>sirh-ws</name>
 	<organization>
 		<name>Mairie de Nouméa</name>
