@@ -27,7 +27,6 @@
 		<class>nc.noumea.mairie.model.bean.CompetenceFP</class>
 		<class>nc.noumea.mairie.model.bean.Contact</class>
 		<class>nc.noumea.mairie.model.bean.Delegation</class>
-		<class>nc.noumea.mairie.model.bean.Diplome</class>
 		<class>nc.noumea.mairie.model.bean.Enfant</class>
 		<class>nc.noumea.mairie.model.bean.FicheEmploi</class>
 		<class>nc.noumea.mairie.model.bean.FichePoste</class>
