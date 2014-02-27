@@ -134,11 +134,6 @@ public class FichePoste {
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "DIPLOME_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DIPLOME_GENERIQUE"))
-	@OrderBy
-	private Set<Diplome> diplome = new HashSet<Diplome>();
-
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
 	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
@@ -336,14 +331,6 @@ public class FichePoste {
 
 	public void setPrimePointageFP(Set<PrimePointageFP> primePointageFP) {
 		this.primePointageFP = primePointageFP;
-	}
-
-	public Set<Diplome> getDiplome() {
-		return diplome;
-	}
-
-	public void setDiplome(Set<Diplome> diplome) {
-		this.diplome = diplome;
 	}
 
 	public Set<FicheEmploi> getFicheEmploiPrimaire() {
