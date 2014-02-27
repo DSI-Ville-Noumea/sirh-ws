@@ -12,7 +12,6 @@ import nc.noumea.mairie.model.bean.AvantageNature;
 import nc.noumea.mairie.model.bean.Budget;
 import nc.noumea.mairie.model.bean.CadreEmploi;
 import nc.noumea.mairie.model.bean.Competence;
-import nc.noumea.mairie.model.bean.Diplome;
 import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.NatureAvantage;
@@ -106,8 +105,6 @@ public class FichePosteDtoTest {
 		agent.setPrenomUsage("Prenom Usage");
 		agent.setNomUsage("Nom usage");
 		agent.setNomatr(5138);
-		Diplome diplome1 = new Diplome();
-		diplome1.setLibDiplomen("Diplome 1");
 		Affectation aff = new Affectation();
 		aff.setDateDebutAff(new DateTime(2013, 02, 25, 0, 0, 0).toDate());
 		aff.setAgent(agent);
@@ -137,7 +134,6 @@ public class FichePosteDtoTest {
 		fp.setStatutFP(statutFP);
 		fp.setNatureCredit(natureCredit);
 		fp.getAgent().add(aff);
-		fp.getDiplome().add(diplome1);
 		fp.setSuperieurHierarchique(superieurHierarchique);
 		fp.getFicheEmploiPrimaire().add(fe);
 		fp.getAvantagesNature().add(avNature);
@@ -167,7 +163,6 @@ public class FichePosteDtoTest {
 		assertEquals("Nom usage Prenom usage (5138)", dto.getAgent());
 		assertEquals("25/02/2013", dto.getDateDebutAffectation());
 		assertEquals("", dto.getFiliere());
-		assertEquals("Diplome 1", dto.getDiplome());
 		assertEquals("Usage sup Prenom sup (2990)", dto.getSuperieurHierarchiqueAgent());
 		assertEquals("2011/8 Poste sup", dto.getSuperieurHierarchiqueFP());
 		assertEquals("", dto.getRemplaceAgent());
