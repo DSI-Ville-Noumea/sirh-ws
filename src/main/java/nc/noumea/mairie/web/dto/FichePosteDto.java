@@ -11,7 +11,6 @@ import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.AvantageNature;
 import nc.noumea.mairie.model.bean.Competence;
 import nc.noumea.mairie.model.bean.Delegation;
-import nc.noumea.mairie.model.bean.Diplome;
 import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.PrimePointageFP;
@@ -46,7 +45,6 @@ public class FichePosteDto {
 	private String agent;
 	private String categorie;
 	private String filiere;
-	private String diplome;
 	private String superieurHierarchiqueFP;
 	private String superieurHierarchiqueAgent;
 	private String remplaceFP;
@@ -128,7 +126,6 @@ public class FichePosteDto {
 		dateDebutAffectation = "";
 		categorie = "";
 		filiere = "";
-		diplome = "";
 		superieurHierarchiqueFP = "";
 		superieurHierarchiqueAgent = "";
 		remplaceFP = "";
@@ -165,11 +162,6 @@ public class FichePosteDto {
 					&& null != fichePoste.getGradePoste().getGradeGenerique().getFiliere()) {
 				filiere = fichePoste.getGradePoste().getGradeGenerique().getFiliere().getLibelleFili().trim();
 			}
-		}
-
-		for (Diplome dipl : fichePoste.getDiplome()) {
-			diplome = dipl.getLibDiplomen();
-			break;
 		}
 
 		if (null != fichePoste.getSuperieurHierarchique()) {
@@ -429,14 +421,6 @@ public class FichePosteDto {
 
 	public void setFiliere(String filiere) {
 		this.filiere = filiere;
-	}
-
-	public String getDiplome() {
-		return diplome;
-	}
-
-	public void setDiplome(String diplome) {
-		this.diplome = diplome;
 	}
 
 	public String getSuperieurHierarchiqueFP() {
