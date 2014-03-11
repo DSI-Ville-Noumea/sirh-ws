@@ -11,8 +11,6 @@ import nc.noumea.mairie.model.bean.Siidma;
 import nc.noumea.mairie.model.bean.Utilisateur;
 import nc.noumea.mairie.web.dto.ReturnMessageDto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +25,6 @@ public class UtilisateurService implements IUtilisateurService {
 
 	@Autowired
 	private IAgentService agentSrv;
-
-	private Logger logger = LoggerFactory.getLogger(UtilisateurService.class);
 
 	@Override
 	public Utilisateur chercherUtilisateurSIRHByLogin(String login) {
