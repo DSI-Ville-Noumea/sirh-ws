@@ -8,8 +8,6 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siidma;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +15,6 @@ public class SiidmaService implements ISiidmaService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
-
-	private Logger logger = LoggerFactory.getLogger(SiidmaService.class);
 
 	@Override
 	public Siidma chercherSiidmaByIdIndi(Integer idIndi) {
