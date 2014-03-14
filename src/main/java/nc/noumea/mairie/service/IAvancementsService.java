@@ -8,6 +8,7 @@ import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
@@ -37,4 +38,8 @@ public interface IAvancementsService {
 			throws ParseException;
 
 	public List<AvancementDetache> getAvancementsDetacheForArretes(List<Integer> agentIds, int year);
+	
+	AvancementEaeDto getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire);
+	
+	AvancementEaeDto getAvancementDetache(Integer idAgent, Integer anneeAvancement);
 }
