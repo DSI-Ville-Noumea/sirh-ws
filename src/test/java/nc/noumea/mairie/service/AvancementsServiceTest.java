@@ -801,6 +801,7 @@ public class AvancementsServiceTest {
 			classe.setLibCla("libelle classe");
 		Spgeng gradeGenerique = new Spgeng();
 			gradeGenerique.setCdcadr("cdcadr");
+			gradeGenerique.setCdgeng("cdgeng");
 		Speche echelon = new Speche();
 			echelon.setCodEch("codech");
 			echelon.setLibEch("libelle echelon");
@@ -841,7 +842,7 @@ public class AvancementsServiceTest {
 		assertEquals("codcla", result.getGrade().getCodeClasse());
 		assertEquals("codech", result.getGrade().getCodeEchelon());
 		assertEquals("CDGRAD", result.getGrade().getCodeGrade());
-		assertEquals("cdcadr", result.getGrade().getCodeGradeGenerique());
+		assertEquals("cdgeng", result.getGrade().getCodeGradeGenerique());
 		assertEquals("codeavct", result.getGrade().getCodeMotifAvancement());
 		assertEquals(30, result.getGrade().getDureeMaximum().intValue());
 		assertEquals(18, result.getGrade().getDureeMinimum().intValue());
