@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashSet;
+import java.util.Set;
 
 import nc.noumea.mairie.model.bean.Activite;
 import nc.noumea.mairie.model.bean.Affectation;
@@ -60,6 +62,7 @@ public class FichePosteDtoTest {
 		FichePosteDto dto = new FichePosteDto(fp);
 
 		// Then
+		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
 		assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
@@ -105,6 +108,7 @@ public class FichePosteDtoTest {
 		agent.setPrenomUsage("Prenom Usage");
 		agent.setNomUsage("Nom usage");
 		agent.setNomatr(5138);
+		agent.setIdAgent(5138);
 		Affectation aff = new Affectation();
 		aff.setDateDebutAff(new DateTime(2013, 02, 25, 0, 0, 0).toDate());
 		aff.setAgent(agent);
@@ -143,6 +147,7 @@ public class FichePosteDtoTest {
 		FichePosteDto dto = new FichePosteDto(fp, true);
 
 		// Then
+		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
 		assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
@@ -180,6 +185,8 @@ public class FichePosteDtoTest {
 		assertEquals(0, dto.getDelegations().size());
 		assertEquals(0, dto.getRegimesIndemnitaires().size());
 		assertEquals(2, dto.getPrimes().size());
+		
+		assertEquals(5138, dto.getIdAgent().intValue());
 	}
 
 	private FichePoste getFichePoste() {
@@ -234,6 +241,7 @@ public class FichePosteDtoTest {
 		comp6.setTypeCompetence(typeCompetenceComportement);
 
 		FichePoste fp = new FichePoste();
+		fp.setIdFichePoste(1234);
 		fp.setService(service);
 		fp.setNumFP("2013/5");
 		fp.setTitrePoste(tp);

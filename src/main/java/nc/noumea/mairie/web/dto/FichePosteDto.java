@@ -19,6 +19,7 @@ import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
 @XmlRootElement
 public class FichePosteDto {
 
+	private Integer idFichePoste;
 	private String numero;
 	private String titre;
 	private String direction;
@@ -27,6 +28,7 @@ public class FichePosteDto {
 	private String reglementaire;
 	private String cadreEmploi;
 	private String niveauEtudes;
+	private String codeService;
 	private String service;
 	private String section;
 	private String lieu;
@@ -62,6 +64,10 @@ public class FichePosteDto {
 	private List<String> regimesIndemnitaires;
 	private List<String> primes;
 
+	private TitrePosteDto titrePoste;
+	
+	private Integer idAgent;
+
 	public FichePosteDto() {
 		activites = new ArrayList<String>();
 		savoirs = new ArrayList<String>();
@@ -76,9 +82,18 @@ public class FichePosteDto {
 
 	public FichePosteDto(FichePoste fichePoste) {
 		this();
-
+		idFichePoste = fichePoste.getIdFichePoste();
 		numero = fichePoste.getNumFP();
 
+		if (null != fichePoste.getAgent()) {
+			for (Affectation agt : fichePoste.getAgent()) {
+				if(null != agt.getAgent()) {
+					idAgent = agt.getAgent().getIdAgent();
+					break;
+				}
+			}
+		}
+		
 		direction = fichePoste.getService().getDirection();
 		titre = fichePoste.getTitrePoste().getLibTitrePoste();
 
@@ -90,6 +105,7 @@ public class FichePosteDto {
 				.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
 
+		codeService  = fichePoste.getService() == null ? "" : fichePoste.getService().getServi();
 		service = fichePoste.getService() == null ? "" : fichePoste.getService().getLiServ();
 
 		section = fichePoste.getService().getSection();
@@ -118,6 +134,15 @@ public class FichePosteDto {
 			if (cp.getTypeCompetence().getIdTypeCompetence().equals(3))
 				comportementsProfessionnels.add(cp.getNomCompetence());
 		}
+		
+		for (FicheEmploi emploiPrim : fichePoste.getFicheEmploiPrimaire()) {
+			emploiPrimaire = emploiPrim.getNomEmploi();
+			break;
+		}
+		for (FicheEmploi emploiSec : fichePoste.getFicheEmploiSecondaire()) {
+			emploiSecondaire = emploiSec.getNomEmploi();
+			break;
+		}
 	}
 
 	public FichePosteDto(FichePoste fichePoste, boolean isInfosCompl) {
@@ -142,7 +167,7 @@ public class FichePosteDto {
 		if (fichePoste.getNatureCredit() != null) {
 			natureCredit = fichePoste.getNatureCredit().getLibNatureCredit();
 		}
-
+		
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
 				agent = agt.getAgent().getDisplayNom()
@@ -541,6 +566,38 @@ public class FichePosteDto {
 
 	public void setNatureCredit(String natureCredit) {
 		this.natureCredit = natureCredit;
+	}
+	
+	public TitrePosteDto getTitrePoste() {
+		return titrePoste;
+	}
+
+	public void setTitrePoste(TitrePosteDto titrePoste) {
+		this.titrePoste = titrePoste;
+	}
+
+	public String getCodeService() {
+		return codeService;
+	}
+
+	public void setCodeService(String codeService) {
+		this.codeService = codeService;
+	}
+
+	public Integer getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(Integer idFichePoste) {
+		this.idFichePoste = idFichePoste;
+	}
+
+	public Integer getIdAgent() {
+		return idAgent;
+	}
+
+	public void setIdAgent(Integer idAgent) {
+		this.idAgent = idAgent;
 	}
 
 }

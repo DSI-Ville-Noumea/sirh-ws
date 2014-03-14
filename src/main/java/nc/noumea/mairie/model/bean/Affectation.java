@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
@@ -17,7 +18,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "AFFECTATION")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
-@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '01/01/0001' or a.dateFinAff is null or a.dateFinAff >= :today)")
+@NamedQueries({
+	@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '01/01/0001' or a.dateFinAff is null or a.dateFinAff >= :today)"),
+	@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '0001-01-01' or a.dateFinAff is null or a.dateFinAff >= :today)")
+})
 public class Affectation {
 
 	@Id
@@ -26,10 +30,9 @@ public class Affectation {
 
 	@NotNull
 	@OneToOne
-	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT", insertable = false, updatable = false)
+	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT")
 	private Agent agent;
 
-	@NotNull
 	@OneToOne
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT", insertable = false, updatable = false)
 	private AgentRecherche agentrecherche;

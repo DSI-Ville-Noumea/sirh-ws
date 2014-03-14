@@ -34,12 +34,27 @@ public class Spgradn {
 	@JoinColumn(name = "IBAN", referencedColumnName = "IBAN")
 	private Spbarem barem;
 
-	@Column(name = "CODCLA", columnDefinition = "char")
-	private String codcla;
+	@OneToOne(optional = true)
+	@JoinColumn(name = "CODCLA", referencedColumnName = "CODCLA")
+	private Spclas classe;
 
-	@Column(name = "CODECH", columnDefinition = "char")
-	private String codech;
+	@OneToOne(optional = true)
+	@JoinColumn(name = "CODECH", referencedColumnName = "CODECH")
+	private Speche echelon;
 
+	@Column(name = "DURMIN", columnDefinition = "numeric")
+	private Integer dureeMinimum;
+	
+	@Column(name = "DURMOY", columnDefinition = "numeric")
+	private Integer dureeMoyenne;
+	
+	@Column(name = "DURMAX", columnDefinition = "numeric")
+	private Integer dureeMaximum;
+	
+	@OneToOne(optional = true)
+	@JoinColumn(name = "CDTAVA", referencedColumnName = "ID_MOTIF_AVCT")
+	private PMotifAvct motifAvct;
+	
 	public String getCdgrad() {
 		return cdgrad;
 	}
@@ -80,19 +95,52 @@ public class Spgradn {
 		this.barem = barem;
 	}
 
-	public String getCodcla() {
-		return codcla;
+	public Speche getEchelon() {
+		return echelon;
 	}
 
-	public void setCodcla(String codcla) {
-		this.codcla = codcla;
+	public void setEchelon(Speche echelon) {
+		this.echelon = echelon;
 	}
 
-	public String getCodech() {
-		return codech;
+	public Spclas getClasse() {
+		return classe;
 	}
 
-	public void setCodech(String codech) {
-		this.codech = codech;
+	public void setClasse(Spclas classe) {
+		this.classe = classe;
 	}
+
+	public Integer getDureeMinimum() {
+		return dureeMinimum;
+	}
+
+	public void setDureeMinimum(Integer dureeMinimum) {
+		this.dureeMinimum = dureeMinimum;
+	}
+
+	public Integer getDureeMoyenne() {
+		return dureeMoyenne;
+	}
+
+	public void setDureeMoyenne(Integer dureeMoyenne) {
+		this.dureeMoyenne = dureeMoyenne;
+	}
+
+	public Integer getDureeMaximum() {
+		return dureeMaximum;
+	}
+
+	public void setDureeMaximum(Integer dureeMaximum) {
+		this.dureeMaximum = dureeMaximum;
+	}
+
+	public PMotifAvct getMotifAvct() {
+		return motifAvct;
+	}
+
+	public void setMotifAvct(PMotifAvct motifAvct) {
+		this.motifAvct = motifAvct;
+	}
+	
 }

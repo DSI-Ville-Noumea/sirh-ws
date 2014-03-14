@@ -201,7 +201,7 @@ public class Agent {
 	private String rue;
 
 	@Transient
-	private String position;
+	private String position; 
 
 	public String getDisplayPrenom() {
 		return getPrenomUsage();
