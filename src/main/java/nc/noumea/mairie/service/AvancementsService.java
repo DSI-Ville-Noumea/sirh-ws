@@ -20,11 +20,13 @@ import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.eae.Eae;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
+import nc.noumea.mairie.model.repository.ISirhRepository;
 import nc.noumea.mairie.model.service.IEaeCampagneService;
 import nc.noumea.mairie.model.service.IFichePosteService;
 import nc.noumea.mairie.model.service.ISiservService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
@@ -54,6 +56,9 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private ISiservService siservSrv;
+	
+	@Autowired
+	private ISirhRepository sirhRepository;
 
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
@@ -285,10 +290,10 @@ public class AvancementsService implements IAvancementsService {
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodcla() == null ? null
-					: sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodech() == null ? null
-					: sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
+					: avct.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+					: avct.getGradeNouveau().getEchelon();
 			if (fp != null) {
 				fp.getService().setDirection(
 						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -361,10 +366,11 @@ public class AvancementsService implements IAvancementsService {
 			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
 					.getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodcla() == null ? null
-					: sirhEntityManager.find(Spclas.class, avct.getGradeNouveau().getCodcla());
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getCodech() == null ? null
-					: sirhEntityManager.find(Speche.class, avct.getGradeNouveau().getCodech());
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
+					: avct.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+					: avct.getGradeNouveau().getEchelon();
+			
 			if (fp != null) {
 				fp.getService().setDirection(
 						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -409,5 +415,29 @@ public class AvancementsService implements IAvancementsService {
 		result = qA.getResultList();
 
 		return result;
+	}
+	
+	@Override 
+	public AvancementEaeDto getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire) {
+	 
+		AvancementFonctionnaire avct = sirhRepository.getAvancement(idAgent, anneeAvancement, isFonctionnaire);
+		
+		if(null == avct)
+			return null;
+		
+		AvancementEaeDto dto = new AvancementEaeDto(avct);
+		return dto;
+	}
+	
+	@Override 
+	public AvancementEaeDto getAvancementDetache(Integer idAgent, Integer anneeAvancement) {
+	 
+		AvancementDetache avct = sirhRepository.getAvancementDetache(idAgent, anneeAvancement);
+		
+		if(null == avct)
+			return null;
+		
+		AvancementEaeDto dto = new AvancementEaeDto(avct);
+		return dto;
 	}
 }

@@ -43,11 +43,19 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<jee:jndi-lookup id="eaeDataSource" jndi-name="jdbc/KIOSQUE_DS2"
-		resource-ref="true" />
+	<bean id="eaeDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:mem:eaetest;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean> 
 
-	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1"
-		resource-ref="true" />
+	<bean id="sirhDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:mem:sirhtest;MODE=DB2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean> 
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="eaeTransactionManager">
@@ -58,6 +66,7 @@
 	<bean
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		id="eaeEntityManagerFactory">
+		<property name="persistenceXmlLocation" value="/META-INF/persistence.xml" />
 		<property name="persistenceUnitName" value="eaePersistenceUnit" />
 		<property name="dataSource" ref="eaeDataSource" />
 	</bean>
@@ -65,20 +74,20 @@
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
 		<property name="entityManagerFactory" ref="sirhEntityManagerFactory" />
-		<qualifier value="SIRHTransactionManager"/>
 	</bean>
 	<tx:annotation-driven mode="aspectj"
 		transaction-manager="sirhTransactionManager" />
 	<bean
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		id="sirhEntityManagerFactory">
+		<property name="persistenceXmlLocation" value="/META-INF/persistence.xml" />
 		<property name="persistenceUnitName" value="sirhPersistenceUnit" />
 		<property name="dataSource" ref="sirhDataSource" />
 	</bean>
 	
-	<jee:jndi-lookup id="reportServerPath" jndi-name="REPORTING_SERVER_SIRH_REPORT_PATH" expected-type="java.lang.String"/>
+	<bean class="java.lang.String" id="reportServerPath" />
 	
-	<jee:jndi-lookup id="reportingBaseUrl" jndi-name="REPORTING_BASE_URL" expected-type="java.lang.String"/>
+	<bean class="java.lang.String" id="reportingBaseUrl" />
 	
-	<jee:jndi-lookup id="ptgWsBaseUrl" jndi-name="PTG_WS_BASE_URL" expected-type="java.lang.String"/>
+	<bean class="java.lang.String" id="ptgWsBaseUrl" />
 </beans>
