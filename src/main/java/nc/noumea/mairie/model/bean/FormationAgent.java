@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "FORMATION_AGENT")
@@ -26,6 +27,7 @@ public class FormationAgent {
 	@JoinColumn(name = "ID_CENTRE_FORMATION", referencedColumnName = "ID_CENTRE_FORMATION")
 	private CentreFormation centreFormation;
 	
+	@NotNull
 	@Column(name = "ID_AGENT")
 	private Integer idAgent;
 	
@@ -35,6 +37,7 @@ public class FormationAgent {
 	@Column(name = "UNITE_DUREE")
 	private String uniteformation;
 	
+	@NotNull
 	@Column(name = "ANNEE_FORMATION")
 	private Integer anneeFormation;
 

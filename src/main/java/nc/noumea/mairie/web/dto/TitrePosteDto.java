@@ -2,6 +2,10 @@ package nc.noumea.mairie.web.dto;
 
 public class TitrePosteDto {
 
+	public TitrePosteDto() {
+		super();
+	}
+
 	private String libTitrePoste;
 
 	public String getLibTitrePoste() {
@@ -11,6 +15,5 @@ public class TitrePosteDto {
 	public void setLibTitrePoste(String libTitrePoste) {
 		this.libTitrePoste = libTitrePoste;
 	}
-	
-	
+
 }
