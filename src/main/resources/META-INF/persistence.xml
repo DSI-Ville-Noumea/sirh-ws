@@ -64,6 +64,17 @@
 		<class>nc.noumea.mairie.model.bean.NatureCredit</class>
 		<class>nc.noumea.mairie.model.bean.Siidma</class>
 		<class>nc.noumea.mairie.model.bean.Utilisateur</class>
+		<class>nc.noumea.mairie.model.bean.AutreAdministration</class>
+		<class>nc.noumea.mairie.model.bean.AutreAdministrationAgent</class>
+		<class>nc.noumea.mairie.model.bean.Spcatg</class>
+		<class>nc.noumea.mairie.model.bean.PMotifAvct</class>
+		<class>nc.noumea.mairie.model.bean.DiplomeAgent</class>
+		<class>nc.noumea.mairie.model.bean.TitreDiplome</class>
+		<class>nc.noumea.mairie.model.bean.SpecialiteDiplome</class>
+		<class>nc.noumea.mairie.model.bean.Spmtsr</class>
+		<class>nc.noumea.mairie.model.bean.FormationAgent</class>
+		<class>nc.noumea.mairie.model.bean.TitreFormation</class>
+		<class>nc.noumea.mairie.model.bean.CentreFormation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />
@@ -74,7 +85,7 @@
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
 			<property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
 			<property name="hibernate.connection.charSet" value="UTF-8" />
-			<property name="hibernate.show_sql" value="false" /> 
+			<property name="hibernate.show_sql" value="true" /> 
 			<!-- Uncomment the following two properties for JBoss only -->
 			<!-- property name="hibernate.validator.apply_to_ddl" value="false" / -->
 			<!-- property name="hibernate.validator.autoregister_listeners" value="false" 
