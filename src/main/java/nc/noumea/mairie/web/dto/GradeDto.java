@@ -33,7 +33,7 @@ public class GradeDto {
 		this.dureeMoyenne = spGradn.getDureeMoyenne();
 		this.dureeMaximum = spGradn.getDureeMaximum();
 		if(null != spGradn.getGradeGenerique()) {
-			this.codeGradeGenerique = spGradn.getGradeGenerique().getCdcadr();
+			this.codeGradeGenerique = spGradn.getGradeGenerique().getCdgeng();
 		}
 		if(null != spGradn.getEchelon()) {
 			this.codeEchelon = spGradn.getEchelon().getCodEch();
