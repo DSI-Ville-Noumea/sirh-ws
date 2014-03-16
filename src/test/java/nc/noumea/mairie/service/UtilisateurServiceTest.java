@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siidma;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Utilisateur;
 import nc.noumea.mairie.model.pk.SiidmaId;
 import nc.noumea.mairie.model.service.AgentService;
@@ -104,7 +103,7 @@ public class UtilisateurServiceTest {
 		Siidma sii = new Siidma();
 		sii.setId(id);
 		sii.setNomatr(5138);
-		
+
 		List<Utilisateur> listUtil = new ArrayList<>();
 
 		AgentService agSrvEMMock = Mockito.mock(AgentService.class);
@@ -112,7 +111,7 @@ public class UtilisateurServiceTest {
 
 		SiidmaService siidmaEMMock = Mockito.mock(SiidmaService.class);
 		Mockito.when(siidmaEMMock.chercherSiidmaByIdIndi(905138)).thenReturn(sii);
-		
+
 		@SuppressWarnings("unchecked")
 		TypedQuery<Utilisateur> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(listUtil);
@@ -145,7 +144,7 @@ public class UtilisateurServiceTest {
 		Siidma sii = new Siidma();
 		sii.setId(id);
 		sii.setNomatr(5138);
-		
+
 		Utilisateur u = new Utilisateur();
 		u.setLogin("login");
 		List<Utilisateur> listUtil = new ArrayList<>();
@@ -156,7 +155,7 @@ public class UtilisateurServiceTest {
 
 		SiidmaService siidmaEMMock = Mockito.mock(SiidmaService.class);
 		Mockito.when(siidmaEMMock.chercherSiidmaByIdIndi(905138)).thenReturn(sii);
-		
+
 		@SuppressWarnings("unchecked")
 		TypedQuery<Utilisateur> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(listUtil);
