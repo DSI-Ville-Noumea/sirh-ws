@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
 
 import nc.noumea.mairie.model.bean.Activite;
 import nc.noumea.mairie.model.bean.Affectation;
@@ -185,7 +183,7 @@ public class FichePosteDtoTest {
 		assertEquals(0, dto.getDelegations().size());
 		assertEquals(0, dto.getRegimesIndemnitaires().size());
 		assertEquals(2, dto.getPrimes().size());
-		
+
 		assertEquals(5138, dto.getIdAgent().intValue());
 	}
 
