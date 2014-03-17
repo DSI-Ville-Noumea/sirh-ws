@@ -640,7 +640,8 @@ public class AgentController {
 
 			Agent agSub = agentSrv.getAgent(idAgentSub);
 			AgentDto agDto = new AgentDto(agSub);
-			listeAgentSub.add(agDto);
+			if (!listeAgentSub.contains(agDto))
+				listeAgentSub.add(agDto);
 		}
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentSub),
