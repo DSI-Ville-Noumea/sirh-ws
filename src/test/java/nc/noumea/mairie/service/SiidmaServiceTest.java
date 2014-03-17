@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siidma;
 import nc.noumea.mairie.model.pk.SiidmaId;
-import nc.noumea.mairie.model.service.SiidmaService;
+import nc.noumea.mairie.service.SiidmaService;
 
 import org.junit.Test;
 import org.mockito.Mockito;

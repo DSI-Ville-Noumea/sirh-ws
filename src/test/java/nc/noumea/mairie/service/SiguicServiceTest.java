@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siguic;
 import nc.noumea.mairie.model.pk.SiguicId;
-import nc.noumea.mairie.model.service.SiguicService;
+import nc.noumea.mairie.service.SiguicService;
 
 import org.junit.Test;
 import org.mockito.Mockito;

@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Cap;
-import nc.noumea.mairie.model.service.IReportingService;
-import nc.noumea.mairie.service.IAvancementsService;
+import nc.noumea.mairie.service.IReportingService;
+import nc.noumea.mairie.service.sirh.IAvancementsService;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
