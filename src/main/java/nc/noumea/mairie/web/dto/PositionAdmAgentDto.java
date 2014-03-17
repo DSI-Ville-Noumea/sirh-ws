@@ -9,6 +9,9 @@ public class PositionAdmAgentDto {
 	private Integer datfin;
 	private String cdpadm;
 	
+	public PositionAdmAgentDto(){
+	}
+	
 	public PositionAdmAgentDto(Spadmn spAdmn) {
 		this.nomatr = spAdmn.getId().getNomatr();
 		this.datdeb = spAdmn.getId().getDatdeb();
