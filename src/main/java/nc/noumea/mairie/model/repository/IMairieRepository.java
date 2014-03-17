@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Spadmn;
@@ -8,9 +9,9 @@ import nc.noumea.mairie.model.bean.Spmtsr;
 
 public interface IMairieRepository {
 
-	List<java.math.BigDecimal> getListeCarriereActiveAvecPAAffecte();
+	List<BigDecimal> getListeCarriereActiveAvecPAAffecte();
 
-	List<java.math.BigDecimal> getListeCarriereActiveAvecPA();
+	List<BigDecimal> getListeCarriereActiveAvecPA();
 	
 	Spadmn chercherPositionAdmAgentAncienne(Integer noMatr);
 	
