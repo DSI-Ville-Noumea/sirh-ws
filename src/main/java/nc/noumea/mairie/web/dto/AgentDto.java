@@ -62,4 +62,12 @@ public class AgentDto {
 		this.fichePoste = fichePoste;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this.idAgent == null) {
+			return false;
+		}
+		return this.idAgent.equals(((AgentDto) obj).getIdAgent());
+	}
+
 }
