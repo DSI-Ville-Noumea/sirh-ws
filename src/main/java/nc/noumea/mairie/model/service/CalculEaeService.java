@@ -133,9 +133,11 @@ public class CalculEaeService implements ICalculEaeService {
 		
 		List<Affectation> listAffectation = sirhRepository.getListeAffectationsAgentAvecService(idAgent, idService);
 		
-		for(Affectation affectation : listAffectation) {
-			CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
-			listDto.add(dto);
+		if(null != listAffectation) {
+			for(Affectation affectation : listAffectation) {
+				CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
+				listDto.add(dto);
+			}
 		}
 		
 		return listDto;
@@ -148,9 +150,11 @@ public class CalculEaeService implements ICalculEaeService {
 		
 		List<Affectation> listAffectation = sirhRepository.getListeAffectationsAgentAvecFP(idAgent, idFichePoste);
 		
-		for(Affectation affectation : listAffectation) {
-			CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
-			listDto.add(dto);
+		if(null != listAffectation) {
+			for(Affectation affectation : listAffectation) {
+				CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
+				listDto.add(dto);
+			}
 		}
 		
 		return listDto;
@@ -224,21 +228,4 @@ public class CalculEaeService implements ICalculEaeService {
 		
 		return result;
 	}
-	
-	@Override
-	public List<FormationDto> getListeAutreAdministrationAgent(Integer idAgent, Integer anneeFormation) {
-		
-		List<FormationAgent> list = sirhRepository.getListFormationAgentByAnnee(idAgent, anneeFormation);
-		
-		List<FormationDto> result = new ArrayList<FormationDto>();
-		if(null != list) {
-			for(FormationAgent fa : list) {
-				FormationDto dto = new FormationDto(fa);
-				result.add(dto);
-			}
-		}
-		
-		return result;
-	}
-	
 }

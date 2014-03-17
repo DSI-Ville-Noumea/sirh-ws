@@ -21,7 +21,7 @@ public class GradeDtoTest {
 		speche.setCodEch("classe");
 		speche.setLibEch("lib classe");
 		Spgeng spgeng = new Spgeng();
-		spgeng.setCdcadr("CDCADR");
+		spgeng.setCdgeng("CDCADR");
 		Spgradn spgradn = new Spgradn();
 		spgradn.setClasse(spclas);
 		spgradn.setEchelon(speche);

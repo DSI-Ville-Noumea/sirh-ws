@@ -5,7 +5,6 @@ import java.util.List;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
-import nc.noumea.mairie.web.dto.FormationDto;
 
 public interface ICalculEaeService {
 
@@ -22,8 +21,6 @@ public interface ICalculEaeService {
 	AutreAdministrationAgentDto chercherAutreAdministrationAgentAncienne(Integer idAgent, boolean isFonctionnaire);
 	
 	List<AutreAdministrationAgentDto> getListeAutreAdministrationAgent(Integer idAgent);
-	
-	List<FormationDto> getListeAutreAdministrationAgent(Integer idAgent, Integer anneeFormation);
 	
 	
 }
