@@ -13,24 +13,24 @@ import nc.noumea.mairie.model.bean.FormationAgent;
 public interface ISirhRepository {
 
 	AvancementFonctionnaire getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire);
-	
+
 	AvancementDetache getAvancementDetache(Integer idAgent, Integer anneeAvancement);
-	
+
 	Affectation getAffectationActiveByAgent(int idAgent);
-	
+
 	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, String idService);
-	
+
 	List<Affectation> getListeAffectationsAgentAvecFP(Integer idAgent, Integer idFichePoste);
-	
+
 	Agent getAgentWithListNomatr(Integer noMatr);
-	
+
 	Agent getAgentEligibleEAESansAffectes(Integer noMatr);
-	
+
 	AutreAdministrationAgent chercherAutreAdministrationAgentAncienne(Integer idAgent, boolean isFonctionnaire);
-	
+
 	List<AutreAdministrationAgent> getListeAutreAdministrationAgent(Integer idAgent);
-	
+
 	List<DiplomeAgent> getListDiplomeByAgent(Integer idAgent);
-	
+
 	List<FormationAgent> getListFormationAgentByAnnee(Integer idAgent, Integer anneeFormation);
 }

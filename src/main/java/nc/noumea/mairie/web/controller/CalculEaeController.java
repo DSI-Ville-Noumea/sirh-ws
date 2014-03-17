@@ -53,6 +53,8 @@ public class CalculEaeController {
 		logger.debug("entered GET [calculEae/listeAgentEligibleEAESansAffectes] => getListeAgentEligibleEAESansAffectes ");
 		
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAESansAffectes();
+		
+		logger.debug("FIN [calculEae/listeAgentEligibleEAESansAffectes] : " + result.size());
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 	}
@@ -65,6 +67,8 @@ public class CalculEaeController {
 		logger.debug("entered GET [calculEae/listeAgentEligibleEAEAffectes] => getListeAgentEligibleEAEAffectes ");
 		
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+		
+		logger.debug("FIN [calculEae/listeAgentEligibleEAEAffectes] : " + result.size());
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 	}

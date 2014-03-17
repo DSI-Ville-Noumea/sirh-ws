@@ -27,7 +27,7 @@ public class MairieRepository implements IMairieRepository {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(" select carr.nomatr from Spcarr carr ");
+		sb.append(" select cast(carr.nomatr as int) nomatr from Spcarr carr ");
 		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
 		sb.append(" where (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
 		sb.append(" and pa.CDPADM in('58','54','56','57','67') ");
@@ -51,7 +51,7 @@ public class MairieRepository implements IMairieRepository {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select carr.nomatr from Spcarr carr, Spadmn pa ");
+		sb.append("select cast(carr.nomatr as int) nomatr from Spcarr carr, Spadmn pa ");
 		sb.append(" where carr.nomatr = pa.nomatr ");
 		sb.append(" and (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
 		sb.append(" and LENGTH(TRIM(TRANSLATE(pa.cdpadm ,' ', ' +-.0123456789'))) = 0 ");
