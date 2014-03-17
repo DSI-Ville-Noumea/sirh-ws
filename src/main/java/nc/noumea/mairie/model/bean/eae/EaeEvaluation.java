@@ -2,13 +2,10 @@ package nc.noumea.mairie.model.bean.eae;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -17,8 +14,6 @@ import javax.persistence.Table;
 public class EaeEvaluation {
 
 	@Id
-	@SequenceGenerator(name = "eaeEvaluationGen", sequenceName = "EAE_S_EVALUATION")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "eaeEvaluationGen")
 	@Column(name = "ID_EAE_EVALUATION")
 	private Integer idEaeEvaluation;
 

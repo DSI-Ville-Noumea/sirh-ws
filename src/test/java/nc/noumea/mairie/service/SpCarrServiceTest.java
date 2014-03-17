@@ -9,7 +9,7 @@ import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spcatg;
 import nc.noumea.mairie.model.pk.SpcarrId;
 import nc.noumea.mairie.model.repository.IMairieRepository;
-import nc.noumea.mairie.model.service.SpCarrService;
+import nc.noumea.mairie.service.SpCarrService;
 import nc.noumea.mairie.web.dto.CarriereDto;
 
 import org.junit.Test;

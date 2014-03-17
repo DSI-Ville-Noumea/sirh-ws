@@ -3,10 +3,10 @@ package nc.noumea.mairie.web.controller;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.service.ICalculEaeService;
-import nc.noumea.mairie.model.service.ISpCarrService;
-import nc.noumea.mairie.model.service.ISpadmnService;
-import nc.noumea.mairie.service.IAvancementsService;
+import nc.noumea.mairie.service.ISpCarrService;
+import nc.noumea.mairie.service.ISpadmnService;
+import nc.noumea.mairie.service.eae.ICalculEaeService;
+import nc.noumea.mairie.service.sirh.IAvancementsService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
