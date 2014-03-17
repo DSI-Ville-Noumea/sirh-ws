@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -355,7 +356,7 @@ public class CalculEaeServiceTest {
 			agent.setNomUsage("nomUsage");
 			agent.setIdAgent(1);
 		
-		List<java.math.BigDecimal> listNoMatr = new ArrayList<java.math.BigDecimal>();
+		List<BigDecimal> listNoMatr = new ArrayList<BigDecimal>();
 			listNoMatr.add(new BigDecimal(1));
 			
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
@@ -379,7 +380,7 @@ public class CalculEaeServiceTest {
 	@Test
 	public void getListeAgentEligibleEAESansAffectes_returnNoResult_noAgent() {
 		
-		List<java.math.BigDecimal> listNoMatr = new ArrayList<java.math.BigDecimal>();
+		List<BigDecimal> listNoMatr = new ArrayList<BigDecimal>();
 			listNoMatr.add(new BigDecimal(1));
 			
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
