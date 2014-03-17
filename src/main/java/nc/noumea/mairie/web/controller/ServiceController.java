@@ -7,8 +7,8 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.model.service.IAgentService;
-import nc.noumea.mairie.model.service.ISiservService;
+import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 

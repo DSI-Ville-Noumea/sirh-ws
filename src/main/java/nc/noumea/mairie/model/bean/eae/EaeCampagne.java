@@ -4,11 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -18,8 +15,6 @@ import javax.validation.constraints.NotNull;
 public class EaeCampagne {
 
 	@Id
-	@SequenceGenerator(name = "eaeCampagneGen", sequenceName = "EAE_S_CAMPAGNE_EAE")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "eaeCampagneGen")
 	@Column(name = "ID_CAMPAGNE_EAE")
 	private Integer idCampagneEae;
 

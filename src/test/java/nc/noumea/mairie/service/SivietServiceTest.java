@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.SIVIET;
 import nc.noumea.mairie.model.pk.SivietId;
-import nc.noumea.mairie.model.service.SivietService;
+import nc.noumea.mairie.service.SivietService;
 
 import org.junit.Test;
 import org.mockito.Mockito;

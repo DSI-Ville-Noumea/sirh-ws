@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.SpSold;
-import nc.noumea.mairie.model.service.SoldeService;
+import nc.noumea.mairie.service.SoldeService;
 
 import org.junit.Test;
 import org.mockito.Mockito;
