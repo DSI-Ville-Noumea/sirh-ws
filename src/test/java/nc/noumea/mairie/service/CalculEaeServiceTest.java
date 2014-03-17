@@ -3,7 +3,6 @@ package nc.noumea.mairie.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,165 +45,167 @@ import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class CalculEaeServiceTest {
-	
+
 	@Test
 	public void getAffectationActiveByAgent() throws ParseException {
-		
+
 		Agent agent = new Agent();
-			agent.setNomatr(5138);
-			agent.setIdAgent(9005138);
-		
+		agent.setNomatr(5138);
+		agent.setIdAgent(9005138);
+
 		TitrePoste titrePoste = new TitrePoste();
-			titrePoste.setLibTitrePoste("libTitrePoste");
-		
+		titrePoste.setLibTitrePoste("libTitrePoste");
+
 		Siserv service = new Siserv();
-			service.setServi("servi");
-			service.setLiServ("liServ");
-		
+		service.setServi("servi");
+		service.setLiServ("liServ");
+
 		Budget budget = new Budget();
-			budget.setLibelleBudget("libelleBudget");
+		budget.setLibelleBudget("libelleBudget");
 		Spbhor budgete = new Spbhor();
-			budgete.setLibHor("libHor");
+		budgete.setLibHor("libHor");
 		Spbhor reglementaire = new Spbhor();
-			reglementaire.setLibHor("libHorRegl");
-		
+		reglementaire.setLibHor("libHorRegl");
+
 		CadreEmploi cadreEmploiGrade = new CadreEmploi();
-			cadreEmploiGrade.setLibelleCadreEmploi("libelleCadreEmploi");
+		cadreEmploiGrade.setLibelleCadreEmploi("libelleCadreEmploi");
 		Spgeng gradeGenerique = new Spgeng();
-			gradeGenerique.setCadreEmploiGrade(cadreEmploiGrade);
-		
+		gradeGenerique.setCadreEmploiGrade(cadreEmploiGrade);
+
 		Spgradn gradePoste = new Spgradn();
-			gradePoste.setGradeInitial("gradeInitial");
-			gradePoste.setGradeGenerique(gradeGenerique);
-		
+		gradePoste.setGradeInitial("gradeInitial");
+		gradePoste.setGradeGenerique(gradeGenerique);
+
 		Silieu lieuPoste = new Silieu();
-			lieuPoste.setLibelleLieu("libelleLieu");
-		
+		lieuPoste.setLibelleLieu("libelleLieu");
+
 		NiveauEtude niveauEtude = new NiveauEtude();
-			niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
-		
-		FichePoste superieurHierarchique = new FichePoste(); 
-			superieurHierarchique.setService(service);
-			superieurHierarchique.setTitrePoste(titrePoste);
-			superieurHierarchique.setBudget(budget);
-			superieurHierarchique.setBudgete(budgete);
-			superieurHierarchique.setReglementaire(reglementaire);
-			superieurHierarchique.setGradePoste(gradePoste);
-			superieurHierarchique.setLieuPoste(lieuPoste);
-		
+		niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
+
+		FichePoste superieurHierarchique = new FichePoste();
+		superieurHierarchique.setService(service);
+		superieurHierarchique.setTitrePoste(titrePoste);
+		superieurHierarchique.setBudget(budget);
+		superieurHierarchique.setBudgete(budgete);
+		superieurHierarchique.setReglementaire(reglementaire);
+		superieurHierarchique.setGradePoste(gradePoste);
+		superieurHierarchique.setLieuPoste(lieuPoste);
+
 		FichePoste fichePoste = new FichePoste();
-			fichePoste.setSuperieurHierarchique(superieurHierarchique);
-			fichePoste.setService(service);
-			fichePoste.setTitrePoste(titrePoste);
-			fichePoste.setBudget(budget);
-			fichePoste.setBudgete(budgete);
-			fichePoste.setReglementaire(reglementaire);
-			fichePoste.setGradePoste(gradePoste);
-			fichePoste.setLieuPoste(lieuPoste);
-			fichePoste.setIdFichePoste(2);
-			fichePoste.setMissions("missions");
-			fichePoste.setNumFP("NumFP");
-			fichePoste.setNiveauEtude(niveauEtude);
+		fichePoste.setSuperieurHierarchique(superieurHierarchique);
+		fichePoste.setService(service);
+		fichePoste.setTitrePoste(titrePoste);
+		fichePoste.setBudget(budget);
+		fichePoste.setBudgete(budgete);
+		fichePoste.setReglementaire(reglementaire);
+		fichePoste.setGradePoste(gradePoste);
+		fichePoste.setLieuPoste(lieuPoste);
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("NumFP");
+		fichePoste.setNiveauEtude(niveauEtude);
 
 		FichePoste fichePosteSecondaire = new FichePoste();
-			fichePosteSecondaire.setSuperieurHierarchique(superieurHierarchique);
-			fichePosteSecondaire.setService(service);
-			fichePosteSecondaire.setTitrePoste(titrePoste);
-			fichePosteSecondaire.setBudget(budget);
-			fichePosteSecondaire.setBudgete(budgete);
-			fichePosteSecondaire.setReglementaire(reglementaire);
-			fichePosteSecondaire.setGradePoste(gradePoste);
-			fichePosteSecondaire.setLieuPoste(lieuPoste);
-			fichePosteSecondaire.setIdFichePoste(3);
-			fichePosteSecondaire.setMissions("missions2");
-			fichePosteSecondaire.setNumFP("NumFP2");
-			fichePosteSecondaire.setNiveauEtude(niveauEtude);
-		
+		fichePosteSecondaire.setSuperieurHierarchique(superieurHierarchique);
+		fichePosteSecondaire.setService(service);
+		fichePosteSecondaire.setTitrePoste(titrePoste);
+		fichePosteSecondaire.setBudget(budget);
+		fichePosteSecondaire.setBudgete(budgete);
+		fichePosteSecondaire.setReglementaire(reglementaire);
+		fichePosteSecondaire.setGradePoste(gradePoste);
+		fichePosteSecondaire.setLieuPoste(lieuPoste);
+		fichePosteSecondaire.setIdFichePoste(3);
+		fichePosteSecondaire.setMissions("missions2");
+		fichePosteSecondaire.setNumFP("NumFP2");
+		fichePosteSecondaire.setNiveauEtude(niveauEtude);
+
 		Date dateDebutAff = new Date();
 		Date dateFinAff = new Date();
-		
+
 		Affectation aff = new Affectation();
-			aff.setAgent(agent);
-			aff.setFichePoste(fichePoste);
-			aff.setFichePosteSecondaire(fichePosteSecondaire);
-			aff.setFichePoste(fichePoste);
-			aff.setDateDebutAff(dateDebutAff);
-			aff.setDateFinAff(dateFinAff);
+		aff.setAgent(agent);
+		aff.setFichePoste(fichePoste);
+		aff.setFichePosteSecondaire(fichePosteSecondaire);
+		aff.setFichePoste(fichePoste);
+		aff.setDateDebutAff(dateDebutAff);
+		aff.setDateFinAff(dateFinAff);
 		Set<Affectation> agents = new HashSet<Affectation>();
-			agents.add(aff);
+		agents.add(aff);
 
 		fichePoste.setAgent(agents);
 		fichePosteSecondaire.setAgent(agents);
-		
+
 		Siserv siservDirection = new Siserv();
-			siservDirection.setLiServ("direction");
+		siservDirection.setLiServ("direction");
 		Siserv siservSection = new Siserv();
-			siservSection.setLiServ("section");
+		siservSection.setLiServ("section");
 		Siserv siservService = new Siserv();
-			siservService.setLiServ("liServ");
-		
+		siservService.setLiServ("liServ");
+
 		PositionAdmAgentDto positionAdmAgentDto = new PositionAdmAgentDto();
-			positionAdmAgentDto.setCdpadm("cdpadm");
+		positionAdmAgentDto.setCdpadm("cdpadm");
 		PositionAdmAgentDto positionAdmAgentDtoAncienne = new PositionAdmAgentDto();
-			positionAdmAgentDtoAncienne.setCdpadm("cdpadmAncienne");
-		
+		positionAdmAgentDtoAncienne.setCdpadm("cdpadmAncienne");
+
 		CarriereDto carriereDto = new CarriereDto();
-			carriereDto.setCodeCategorie(1);
-			carriereDto.setLibelleCategorie("libelleCategorie");
+		carriereDto.setCodeCategorie(1);
+		carriereDto.setLibelleCategorie("libelleCategorie");
 		CarriereDto carriereDtoAncienne = new CarriereDto();
-			carriereDtoAncienne.setCodeCategorie(2);
-			carriereDtoAncienne.setLibelleCategorie("libelleCategorie2");
-			
+		carriereDtoAncienne.setCodeCategorie(2);
+		carriereDtoAncienne.setLibelleCategorie("libelleCategorie2");
+
 		Date dateObtention = new Date();
 		DiplomeAgent diplomeAgent = new DiplomeAgent();
-			diplomeAgent.setDateObtention(dateObtention);
-			diplomeAgent.setIdDiplome(10);
+		diplomeAgent.setDateObtention(dateObtention);
+		diplomeAgent.setIdDiplome(10);
 		List<DiplomeAgent> lstDiplome = new ArrayList<DiplomeAgent>();
-			lstDiplome.add(diplomeAgent);
-		
+		lstDiplome.add(diplomeAgent);
+
 		FormationAgent formationAgent = new FormationAgent();
-			formationAgent.setIdFormation(11);
-			formationAgent.setDureeFormation(10);
-		List<FormationAgent> listFormationAgent =  new ArrayList<FormationAgent>();
-			listFormationAgent.add(formationAgent);
-		
+		formationAgent.setIdFormation(11);
+		formationAgent.setDureeFormation(10);
+		List<FormationAgent> listFormationAgent = new ArrayList<FormationAgent>();
+		listFormationAgent.add(formationAgent);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
-			Mockito.when(sirhRepository.getListDiplomeByAgent(Mockito.anyInt())).thenReturn(lstDiplome);
-			Mockito.when(sirhRepository.getListFormationAgentByAnnee(Mockito.anyInt(), Mockito.anyInt())).thenReturn(listFormationAgent);
-			
+		Mockito.when(sirhRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
+		Mockito.when(sirhRepository.getListDiplomeByAgent(Mockito.anyInt())).thenReturn(lstDiplome);
+		Mockito.when(sirhRepository.getListFormationAgentByAnnee(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
+				listFormationAgent);
+
 		ISiservService siservSrv = Mockito.mock(ISiservService.class);
-			Mockito.when(siservSrv.getDirection(Mockito.anyString())).thenReturn(siservDirection);
-			Mockito.when(siservSrv.getSection(Mockito.anyString())).thenReturn(siservSection);
-			Mockito.when(siservSrv.getService(Mockito.anyString())).thenReturn(siservService);
-		
+		Mockito.when(siservSrv.getDirection(Mockito.anyString())).thenReturn(siservDirection);
+		Mockito.when(siservSrv.getSection(Mockito.anyString())).thenReturn(siservSection);
+		Mockito.when(siservSrv.getService(Mockito.anyString())).thenReturn(siservService);
+
 		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
-			Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(positionAdmAgentDto);
-			Mockito.when(spadmnService.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(positionAdmAgentDtoAncienne);
-		
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(positionAdmAgentDto);
+		Mockito.when(spadmnService.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(
+				positionAdmAgentDtoAncienne);
+
 		ISpCarrService spCarrService = Mockito.mock(ISpCarrService.class);
-			Mockito.when(spCarrService.getCarriereFonctionnaireAncienne(Mockito.anyInt())).thenReturn(carriereDtoAncienne);
-			Mockito.when(spCarrService.getCarriereActive(Mockito.anyInt())).thenReturn(carriereDto);
-		
+		Mockito.when(spCarrService.getCarriereFonctionnaireAncienne(Mockito.anyInt())).thenReturn(carriereDtoAncienne);
+		Mockito.when(spCarrService.getCarriereActive(Mockito.anyInt())).thenReturn(carriereDto);
+
 		Spmtsr spMtsr = new Spmtsr();
-			spMtsr.setDatdeb(20101010);
-			spMtsr.setServi("servi");
+		spMtsr.setDatdeb(20101010);
+		spMtsr.setServi("servi");
 		List<Spmtsr> listParcoursPro = new ArrayList<Spmtsr>();
-			listParcoursPro.add(spMtsr);
+		listParcoursPro.add(spMtsr);
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-			Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
-		
+		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-			ReflectionTestUtils.setField(calculEaeService, "siservSrv", siservSrv);
-			ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
-			ReflectionTestUtils.setField(calculEaeService, "spCarrService", spCarrService);
-			ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "siservSrv", siservSrv);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+		ReflectionTestUtils.setField(calculEaeService, "spCarrService", spCarrService);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
 		CalculEaeInfosDto result = calculEaeService.getAffectationActiveByAgent(9005138, 2010);
-		
+
 		assertEquals(result.getCarriereActive().getCodeCategorie().intValue(), 1);
-		
+
 		assertEquals(result.getFichePostePrincipale().getIdFichePoste().intValue(), 2);
 		assertEquals(result.getFichePostePrincipale().getNumero(), "NumFP");
 		assertEquals(result.getFichePostePrincipale().getIdAgent().intValue(), 9005138);
@@ -221,7 +222,7 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePostePrincipale().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePostePrincipale().getGradePoste(), "gradeInitial");
 		assertEquals(result.getFichePostePrincipale().getMissions(), "missions");
-		
+
 		assertEquals(result.getFichePosteSecondaire().getIdFichePoste().intValue(), 3);
 		assertEquals(result.getFichePosteSecondaire().getNumero(), "NumFP2");
 		assertEquals(result.getFichePosteSecondaire().getIdAgent().intValue(), 9005138);
@@ -238,254 +239,260 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePosteSecondaire().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePosteSecondaire().getGradePoste(), "gradeInitial");
 		assertEquals(result.getFichePosteSecondaire().getMissions(), "missions2");
-		
+
 		assertEquals(result.getFichePosteResponsable().getTitrePoste().getLibTitrePoste(), "libTitrePoste");
-		
+
 		assertEquals(result.getListParcoursPro().size(), 1);
 		assertEquals(result.getListParcoursPro().get(0).getDirection(), "direction");
 		assertEquals(result.getListParcoursPro().get(0).getService(), "liServ");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		assertEquals(result.getListParcoursPro().get(0).getDateDebut(), sdf.parse("20101010"));
-		
+
 		assertEquals(result.getListDiplome().size(), 1);
 		assertEquals(result.getListDiplome().get(0).getDateObtention(), dateObtention);
 		assertEquals(result.getListDiplome().get(0).getIdDiplome().intValue(), 10);
-		
+
 		assertEquals(result.getListFormation().size(), 1);
 		assertEquals(result.getListFormation().get(0).getIdFormation().intValue(), 11);
 		assertEquals(result.getListFormation().get(0).getDureeFormation().intValue(), 10);
-		
+
 		assertEquals(result.getPositionAdmAgentEnCours().getCdpadm(), "cdpadm");
 		assertEquals(result.getPositionAdmAgentAncienne().getCdpadm(), "cdpadmAncienne");
-		
+
 		assertEquals(result.getCarriereActive().getCodeCategorie().intValue(), 1);
 		assertEquals(result.getCarriereActive().getLibelleCategorie(), "libelleCategorie");
 
 		assertEquals(result.getCarriereFonctionnaireAncienne().getCodeCategorie().intValue(), 2);
 		assertEquals(result.getCarriereFonctionnaireAncienne().getLibelleCategorie(), "libelleCategorie2");
-		
+
 		assertEquals(result.getDateDebut(), dateDebutAff);
 		assertEquals(result.getDateFin(), dateFinAff);
 	}
-	
+
 	@Test
 	public void getListeAffectationsAgentAvecService_returnNoResult() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+				.thenReturn(null);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
-		
+
 		assertEquals(0, result.size());
 	}
-	
+
 	@Test
 	public void getListeAffectationsAgentAvecService_return1Result() {
-		
+
 		Date dateDebutAff = new Date();
 		Date dateFinAff = new Date();
-		
+
 		Affectation affectation = new Affectation();
-			affectation.setDateDebutAff(dateDebutAff);
-			affectation.setDateFinAff(dateFinAff);
-		
+		affectation.setDateDebutAff(dateDebutAff);
+		affectation.setDateFinAff(dateFinAff);
+
 		List<Affectation> listAffectation = new ArrayList<Affectation>();
-			listAffectation.add(affectation);
-		
+		listAffectation.add(affectation);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString())).thenReturn(listAffectation);
-		
+		Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+				.thenReturn(listAffectation);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
-		
+
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).getDateDebut(), dateDebutAff);
 		assertEquals(result.get(0).getDateFin(), dateFinAff);
 	}
-	
+
 	@Test
 	public void getListeAffectationsAgentAvecFP_returnNoResult() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
+				null);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecFP(9005138, 1);
-		
+
 		assertEquals(0, result.size());
 	}
-	
+
 	@Test
 	public void getListeAffectationsAgentAvecFP_return1Result() {
-		
+
 		Date dateDebutAff = new Date();
 		Date dateFinAff = new Date();
-		
+
 		Affectation affectation = new Affectation();
-			affectation.setDateDebutAff(dateDebutAff);
-			affectation.setDateFinAff(dateFinAff);
-		
+		affectation.setDateDebutAff(dateDebutAff);
+		affectation.setDateFinAff(dateFinAff);
+
 		List<Affectation> listAffectation = new ArrayList<Affectation>();
-			listAffectation.add(affectation);
-		
+		listAffectation.add(affectation);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(listAffectation);
-		
+		Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
+				listAffectation);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecFP(9005138, 1);
-		
+
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).getDateDebut(), dateDebutAff);
 		assertEquals(result.get(0).getDateFin(), dateFinAff);
 	}
-	
+
 	@Test
 	public void getListeAgentEligibleEAESansAffectes_return1Result() {
-		
+
 		Agent agent = new Agent();
-			agent.setPrenomUsage("prenomUsage");
-			agent.setNomUsage("nomUsage");
-			agent.setIdAgent(1);
-		
-		List<BigDecimal> listNoMatr = new ArrayList<BigDecimal>();
-			listNoMatr.add(new BigDecimal(1));
-			
+		agent.setPrenomUsage("prenomUsage");
+		agent.setNomUsage("nomUsage");
+		agent.setIdAgent(1);
+
+		List<Integer> listNoMatr = new ArrayList<Integer>();
+		listNoMatr.add(1);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(agent);
-		
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(agent);
+
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
-			
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-			ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
-		
+
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).getIdAgent().intValue(), 1);
 		assertEquals(result.get(0).getNom(), "nomUsage");
 		assertEquals(result.get(0).getPrenom(), "prenomUsage");
 	}
-	
+
 	@Test
 	public void getListeAgentEligibleEAESansAffectes_returnNoResult_noAgent() {
-		
-		List<BigDecimal> listNoMatr = new ArrayList<BigDecimal>();
-			listNoMatr.add(new BigDecimal(1));
-			
+
+		List<Integer> listNoMatr = new ArrayList<Integer>();
+		listNoMatr.add(1);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
-			
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-			ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
-		
+
 		assertEquals(0, result.size());
 	}
-	
+
 	@Test
 	public void getListeAgentEligibleEAESansAffectes_returnNoResult_noListAgent() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(null);
-			
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-			ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
-		
+
 		assertEquals(0, result.size());
 	}
-	
+
 	@Test
 	public void chercherAutreAdministrationAgentAncienne_return1result() {
-		
+
 		AutreAdministrationAgentPK autreAdministrationAgentPK = new AutreAdministrationAgentPK();
-			autreAdministrationAgentPK.setIdAutreAdmin(1);
-		
+		autreAdministrationAgentPK.setIdAutreAdmin(1);
+
 		AutreAdministrationAgent autreAdministrationAgent = new AutreAdministrationAgent();
-			autreAdministrationAgent.setAutreAdministrationAgentPK(autreAdministrationAgentPK);
-		
+		autreAdministrationAgent.setAutreAdministrationAgentPK(autreAdministrationAgentPK);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.chercherAutreAdministrationAgentAncienne(Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(autreAdministrationAgent);
-			
+		Mockito.when(sirhRepository.chercherAutreAdministrationAgentAncienne(Mockito.anyInt(), Mockito.anyBoolean()))
+				.thenReturn(autreAdministrationAgent);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		AutreAdministrationAgentDto result = calculEaeService.chercherAutreAdministrationAgentAncienne(9005138, true);
-		
+
 		assertEquals(1, result.getIdAutreAdmin().intValue());
 	}
-	
+
 	@Test
 	public void chercherAutreAdministrationAgentAncienne_returnNoResult() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.chercherAutreAdministrationAgentAncienne(Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(null);
-			
+		Mockito.when(sirhRepository.chercherAutreAdministrationAgentAncienne(Mockito.anyInt(), Mockito.anyBoolean()))
+				.thenReturn(null);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		AutreAdministrationAgentDto result = calculEaeService.chercherAutreAdministrationAgentAncienne(9005138, true);
-		
+
 		assertNull(result);
 	}
-	
+
 	@Test
 	public void getListeAutreAdministrationAgent_return1result() {
-		
+
 		AutreAdministrationAgentPK autreAdministrationAgentPK = new AutreAdministrationAgentPK();
-			autreAdministrationAgentPK.setIdAutreAdmin(1);
-		
+		autreAdministrationAgentPK.setIdAutreAdmin(1);
+
 		AutreAdministrationAgent aaa = new AutreAdministrationAgent();
-			aaa.setAutreAdministrationAgentPK(autreAdministrationAgentPK);
-		
+		aaa.setAutreAdministrationAgentPK(autreAdministrationAgentPK);
+
 		List<AutreAdministrationAgent> list = new ArrayList<AutreAdministrationAgent>();
-			list.add(aaa);
-		
+		list.add(aaa);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAutreAdministrationAgent(Mockito.anyInt())).thenReturn(list);
-		
+		Mockito.when(sirhRepository.getListeAutreAdministrationAgent(Mockito.anyInt())).thenReturn(list);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<AutreAdministrationAgentDto> result = calculEaeService.getListeAutreAdministrationAgent(9005138);
-		
+
 		assertEquals(1, result.size());
 	}
-	
+
 	@Test
 	public void getListeAutreAdministrationAgent_returnNoResult() {
-		
+
 		List<AutreAdministrationAgent> list = new ArrayList<AutreAdministrationAgent>();
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getListeAutreAdministrationAgent(Mockito.anyInt())).thenReturn(list);
-		
+		Mockito.when(sirhRepository.getListeAutreAdministrationAgent(Mockito.anyInt())).thenReturn(list);
+
 		CalculEaeService calculEaeService = new CalculEaeService();
-			ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+
 		List<AutreAdministrationAgentDto> result = calculEaeService.getListeAutreAdministrationAgent(9005138);
-		
+
 		assertEquals(0, result.size());
 	}
 }

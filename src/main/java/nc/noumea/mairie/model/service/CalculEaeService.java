@@ -1,6 +1,5 @@
 package nc.noumea.mairie.model.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,12 +176,12 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public List<AgentDto> getListeAgentEligibleEAESansAffectes() {
 
-		List<BigDecimal> listNoMatr = mairieRepository.getListeCarriereActiveAvecPA();
+		List<Integer> listNoMatr = mairieRepository.getListeCarriereActiveAvecPA();
 
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
-			for (BigDecimal noMatr : listNoMatr) {
-				Agent agent = sirhRepository.getAgentEligibleEAESansAffectes(noMatr.intValue());
+			for (Integer noMatr : listNoMatr) {
+				Agent agent = sirhRepository.getAgentEligibleEAESansAffectes(noMatr);
 
 				if (null != agent) {
 					AgentDto dto = new AgentDto(agent);
@@ -197,12 +196,12 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public List<AgentDto> getListeAgentEligibleEAEAffectes() {
 
-		List<BigDecimal> listNoMatr = mairieRepository.getListeCarriereActiveAvecPAAffecte();
+		List<Integer> listNoMatr = mairieRepository.getListeCarriereActiveAvecPAAffecte();
 
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
-			for (BigDecimal noMatr : listNoMatr) {
-				Agent agent = sirhRepository.getAgentWithListNomatr(noMatr.intValue());
+			for (Integer noMatr : listNoMatr) {
+				Agent agent = sirhRepository.getAgentWithListNomatr(noMatr);
 
 				if (null != agent) {
 					AgentDto dto = new AgentDto(agent);
