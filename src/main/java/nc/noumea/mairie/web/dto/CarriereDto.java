@@ -16,6 +16,9 @@ public class CarriereDto {
 	private String libelleCategorie;
 	private GradeDto grade;
 
+	public CarriereDto(){
+	}
+			
 	public CarriereDto(Spcarr carr) {
 		try {
 			this.dateDebut = sdf.parse(carr.getId().getDatdeb().toString());
