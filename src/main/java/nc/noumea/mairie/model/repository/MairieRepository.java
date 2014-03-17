@@ -1,6 +1,5 @@
 package nc.noumea.mairie.model.repository;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,14 +19,14 @@ import org.springframework.stereotype.Repository;
 public class MairieRepository implements IMairieRepository {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-    private EntityManager sirhEntityManager;
-	
+	private EntityManager sirhEntityManager;
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<BigDecimal> getListeCarriereActiveAvecPAAffecte() {
+	public List<Integer> getListeCarriereActiveAvecPAAffecte() {
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append(" select carr.nomatr from Spcarr carr ");
 		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
 		sb.append(" where (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
@@ -39,19 +38,19 @@ public class MairieRepository implements IMairieRepository {
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :dateJourMairie ) ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());
-		
+
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-		query.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date()))); 
-		
+		query.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
+
 		return query.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<BigDecimal> getListeCarriereActiveAvecPA() {
+	public List<Integer> getListeCarriereActiveAvecPA() {
 
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("select carr.nomatr from Spcarr carr, Spadmn pa ");
 		sb.append(" where carr.nomatr = pa.nomatr ");
 		sb.append(" and (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
@@ -59,86 +58,87 @@ public class MairieRepository implements IMairieRepository {
 		sb.append(" and carr.CDCATE not in (7,9,10,11) ");
 		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV') ");
 		sb.append(" and carr.datdeb = ( ");
-			sb.append(" select max(c.datdeb) from Spcarr c where c.nomatr = carr.nomatr ");
-			sb.append(" and c.datdeb <= :dateJourMairie ");
-			sb.append(" and (c.DATFIN = 0 or c.DATFIN >= :dateJourMairie )) ");
+		sb.append(" select max(c.datdeb) from Spcarr c where c.nomatr = carr.nomatr ");
+		sb.append(" and c.datdeb <= :dateJourMairie ");
+		sb.append(" and (c.DATFIN = 0 or c.DATFIN >= :dateJourMairie )) ");
 		sb.append(" and pa.datdeb <= :dateJourMairie ");
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :dateJourMairie ) ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());
-		
+
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-		query.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date()))); 
-		
+		query.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
+
 		return query.getResultList();
 	}
-	
+
 	@Override
 	public Spadmn chercherPositionAdmAgentAncienne(Integer noMatr) {
-		
-		TypedQuery<Spadmn> q = sirhEntityManager.createQuery(
-				"select a from Spadmn a where a.id.nomatr = :noMatr and a.id.datdeb = (select min(pa.id.datdeb) from Spadmn pa where pa.id.nomatr = a.id.nomatr )", 
-				Spadmn.class);
-			q.setParameter("noMatr", noMatr); 
-		
-		if(!q.getResultList().isEmpty())
+
+		TypedQuery<Spadmn> q = sirhEntityManager
+				.createQuery(
+						"select a from Spadmn a where a.id.nomatr = :noMatr and a.id.datdeb = (select min(pa.id.datdeb) from Spadmn pa where pa.id.nomatr = a.id.nomatr )",
+						Spadmn.class);
+		q.setParameter("noMatr", noMatr);
+
+		if (!q.getResultList().isEmpty())
 			return q.getSingleResult();
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public Spadmn chercherPositionAdmAgentEnCours(Integer noMatr) {
-		
-		TypedQuery<Spadmn> q = sirhEntityManager.createQuery(
-				"select a from Spadmn a where a.id.nomatr = :noMatr and ( (:dateJourMairie between a.id.datdeb and a.datfin) or (a.id.datdeb <= :dateJourMairie and a.datfin = 0 ))", 
-				Spadmn.class);
-			q.setParameter("noMatr", noMatr);
-			
+
+		TypedQuery<Spadmn> q = sirhEntityManager
+				.createQuery(
+						"select a from Spadmn a where a.id.nomatr = :noMatr and ( (:dateJourMairie between a.id.datdeb and a.datfin) or (a.id.datdeb <= :dateJourMairie and a.datfin = 0 ))",
+						Spadmn.class);
+		q.setParameter("noMatr", noMatr);
+
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-			q.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date()))); 
-		
-		if(!q.getResultList().isEmpty())
+		q.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
+
+		if (!q.getResultList().isEmpty())
 			return q.getSingleResult();
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public List<Spmtsr> getListSpmtsr(Integer noMatricule) {
-		
+
 		TypedQuery<Spmtsr> q = sirhEntityManager.createQuery(
-				"select a from Spmtsr a where a.id.nomatr = :noMatricule order by a.id.datdeb ", 
-				Spmtsr.class);
-		
+				"select a from Spmtsr a where a.id.nomatr = :noMatricule order by a.id.datdeb ", Spmtsr.class);
+
 		q.setParameter("noMatricule", noMatricule);
-		
+
 		return q.getResultList();
 	}
-	
+
 	@Override
 	public Spcarr getCarriereFonctionnaireAncienne(Integer noMatr) {
-		
+
 		TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCarriereFonctionnaireAncienne", Spcarr.class);
-			qCarr.setParameter("nomatr", noMatr);
-		
-		if(0 < qCarr.getResultList().size()) 
+		qCarr.setParameter("nomatr", noMatr);
+
+		if (0 < qCarr.getResultList().size())
 			return qCarr.getSingleResult();
-	
+
 		return null;
 	}
-	
+
 	@Override
 	public Spcarr getCarriereActive(Integer noMatr) {
-		
+
 		TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
-			qCarr.setParameter("nomatr", noMatr);
+		qCarr.setParameter("nomatr", noMatr);
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-			qCarr.setParameter("todayFormatMairie", Integer.valueOf(sdfMairie.format(new Date()))); 
-		
-		if(0 < qCarr.getResultList().size()) 
+		qCarr.setParameter("todayFormatMairie", Integer.valueOf(sdfMairie.format(new Date())));
+
+		if (0 < qCarr.getResultList().size())
 			return qCarr.getSingleResult();
-	
+
 		return null;
 	}
 }
