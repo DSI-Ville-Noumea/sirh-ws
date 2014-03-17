@@ -5,14 +5,11 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,8 +21,6 @@ import javax.validation.constraints.NotNull;
 public class EaeFinalisation {
 
 	@Id
-	@SequenceGenerator(name = "eaeFinalisationGen", sequenceName = "EAE_S_FINALISATION")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "eaeFinalisationGen")
 	@Column(name = "ID_EAE_FINALISATION")
 	private Integer idEaeFinalisation;
 

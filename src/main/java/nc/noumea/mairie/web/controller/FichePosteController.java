@@ -5,11 +5,11 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.FichePoste;
-import nc.noumea.mairie.model.service.IAgentMatriculeConverterService;
-import nc.noumea.mairie.model.service.IAgentService;
-import nc.noumea.mairie.model.service.IFichePosteService;
-import nc.noumea.mairie.model.service.IReportingService;
-import nc.noumea.mairie.model.service.ISiservService;
+import nc.noumea.mairie.service.IReportingService;
+import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
+import nc.noumea.mairie.service.sirh.IAgentService;
+import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 
 import org.slf4j.Logger;

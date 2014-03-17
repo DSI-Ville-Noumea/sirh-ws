@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import nc.noumea.mairie.model.service.ISivietService;
+import nc.noumea.mairie.service.ISivietService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

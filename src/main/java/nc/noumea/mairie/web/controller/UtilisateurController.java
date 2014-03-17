@@ -1,6 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
-import nc.noumea.mairie.model.service.IUtilisateurService;
+import nc.noumea.mairie.service.sirh.IUtilisateurService;
 import nc.noumea.mairie.web.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;

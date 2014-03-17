@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.model.service.SiservService;
+import nc.noumea.mairie.service.SiservService;
 
 import org.junit.Test;
 import org.mockito.Mockito;

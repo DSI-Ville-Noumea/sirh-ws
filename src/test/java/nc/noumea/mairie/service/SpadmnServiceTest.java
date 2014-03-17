@@ -12,7 +12,7 @@ import javax.persistence.Query;
 import nc.noumea.mairie.model.bean.Spadmn;
 import nc.noumea.mairie.model.pk.SpadmnId;
 import nc.noumea.mairie.model.repository.IMairieRepository;
-import nc.noumea.mairie.model.service.SpadmnService;
+import nc.noumea.mairie.service.SpadmnService;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 
 import org.junit.Test;

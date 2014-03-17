@@ -7,11 +7,11 @@ import java.util.List;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.eae.EaeCampagne;
-import nc.noumea.mairie.model.service.IAgentService;
-import nc.noumea.mairie.model.service.IEaeCampagneService;
-import nc.noumea.mairie.model.service.IFichePosteService;
-import nc.noumea.mairie.model.service.ISiservService;
-import nc.noumea.mairie.service.IEaesService;
+import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.service.eae.IEaeCampagneService;
+import nc.noumea.mairie.service.eae.IEaesService;
+import nc.noumea.mairie.service.sirh.IAgentService;
+import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 
 import org.springframework.beans.factory.annotation.Autowired;
