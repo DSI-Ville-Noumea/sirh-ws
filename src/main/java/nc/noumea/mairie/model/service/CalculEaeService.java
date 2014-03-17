@@ -206,7 +206,8 @@ public class CalculEaeService implements ICalculEaeService {
 
 				if (null != agent) {
 					AgentDto dto = new AgentDto(agent);
-					result.add(dto);
+					if (!result.contains(dto))
+						result.add(dto);
 				}
 			}
 		}
