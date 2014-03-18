@@ -51,13 +51,14 @@ public class ParentEnfantTransformerTest {
 		ag.setEnfantACharge(false);
 
 		// When
-		String json = serializer.transform(tr, ParentEnfant.class).serialize(ag);
+		String json = serializer.transform(tr, ParentEnfant.class).transform(new MSDateTransformer(), Date.class)
+				.serialize(ag);
 
 		// Then
 		assertEquals(
 				json,
-				"{\"dateNaissance\":"
-						+ datenaiss.getTime()
-						+ ",\"aCharge\":\"non\",\"nom\":\"nom enf\",\"prenom\":\"prenom enf\",\"sexe\":\"M\",\"lieuNaissance\":\"ANGERS\"}");
+				"{\"dateNaissance\":\"/Date("
+						+ +datenaiss.getTime()
+						+ "+1100)/\",\"aCharge\":\"non\",\"nom\":\"nom enf\",\"prenom\":\"prenom enf\",\"sexe\":\"M\",\"lieuNaissance\":\"ANGERS\"}");
 	}
 }
