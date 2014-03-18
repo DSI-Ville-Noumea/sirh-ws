@@ -85,6 +85,9 @@ public class MairieRepositoryTest {
 		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
 
 		assertEquals(1, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -132,6 +135,9 @@ public class MairieRepositoryTest {
 		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
 
 		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -179,6 +185,9 @@ public class MairieRepositoryTest {
 		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
 
 		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -229,6 +238,9 @@ public class MairieRepositoryTest {
 		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
 
 		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -265,6 +277,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentAncienne(5140);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -283,6 +298,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentEnCours(5138);
 
 		assertNotNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -301,6 +319,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentEnCours(5130);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -319,6 +340,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentEnCours(5138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -340,6 +364,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentEnCours(5138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -359,6 +386,9 @@ public class MairieRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -378,6 +408,9 @@ public class MairieRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -416,6 +449,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereFonctionnaireAncienne(5138);
 
 		assertNotNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -454,6 +490,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereFonctionnaireAncienne(5138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -492,6 +531,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereFonctionnaireAncienne(5131);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -529,6 +571,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereActive(5138);
 
 		assertNotNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -570,6 +615,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereActive(5138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -611,6 +659,9 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereActive(5138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -649,5 +700,8 @@ public class MairieRepositoryTest {
 		Spcarr result = repository.getCarriereActive(2138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 }

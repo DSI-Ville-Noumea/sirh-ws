@@ -6,13 +6,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.service.SiservService;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -253,6 +253,54 @@ public class SiservServiceTest {
 
 		// When
 		Siserv result = siservService.getServiceAgent(9005138);
+
+		// Then
+		assertEquals("T", result.getServi());
+
+	}
+
+	@Test
+	public void getListServiceActif_returnSiserv() {
+		// Given
+		Siserv s = new Siserv();
+		s.setServi("T");
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Siserv> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(s));
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siserv.class))).thenReturn(mockQuery);
+
+		SiservService siservService = new SiservService();
+		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		List<Siserv> result = siservService.getListServiceActif();
+
+		// Then
+		assertEquals(1, result.size());
+
+	}
+
+	@Test
+	public void getgetServiceBySigle_returnSiserv() {
+		// Given
+		Siserv s = new Siserv();
+		s.setServi("T");
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Siserv> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(s));
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siserv.class))).thenReturn(mockQuery);
+
+		SiservService siservService = new SiservService();
+		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Siserv result = siservService.getServiceBySigle("S");
 
 		// Then
 		assertEquals("T", result.getServi());
