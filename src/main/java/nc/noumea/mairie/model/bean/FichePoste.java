@@ -102,12 +102,12 @@ public class FichePoste {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "ACTIVITE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ACTIVITE"))
-	@OrderBy
+	@OrderBy("idActivite asc")
 	private Set<Activite> activites = new HashSet<Activite>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "COMPETENCE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_COMPETENCE"))
-	@OrderBy
+	@OrderBy("nomCompetence asc")
 	private Set<Competence> competencesFDP = new HashSet<Competence>();
 
 	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -116,17 +116,17 @@ public class FichePoste {
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
-	@OrderBy
+	@OrderBy("numRubrique asc")
 	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "DELEGATION_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DELEGATION"))
-	@OrderBy
+	@OrderBy("libDelegation asc")
 	private Set<Delegation> delegations = new HashSet<Delegation>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_REGIME"))
-	@OrderBy
+	@OrderBy("numRubrique asc")
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
 
 	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
