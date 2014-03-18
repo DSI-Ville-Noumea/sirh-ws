@@ -51,9 +51,9 @@ public class MairieRepository implements IMairieRepository {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select cast(carr.nomatr as int) nomatr from Spcarr carr, Spadmn pa ");
-		sb.append(" where carr.nomatr = pa.nomatr ");
-		sb.append(" and (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
+		sb.append("select cast(carr.nomatr as int) nomatr from Spcarr carr ");
+		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
+		sb.append(" where (pa.datfin = 0 or pa.datfin >= :dateJourMairie ) ");
 		sb.append(" and LENGTH(TRIM(TRANSLATE(pa.cdpadm ,' ', ' +-.0123456789'))) = 0 ");
 		sb.append(" and carr.CDCATE not in (7,9,10,11) ");
 		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV') ");
