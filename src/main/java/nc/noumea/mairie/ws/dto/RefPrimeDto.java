@@ -12,6 +12,10 @@ public class RefPrimeDto {
 	private String aide;
 	
 
+	public RefPrimeDto() {
+		super();
+	}
+
 	public Integer getIdRefPrime() {
 		return idRefPrime;
 	}
