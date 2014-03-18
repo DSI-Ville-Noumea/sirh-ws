@@ -365,16 +365,16 @@ public class CalculEaeServiceTest {
 		listNoMatr.add(1);
 
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(agent);
+		Mockito.when(sirhRepository.getAgentEligibleEAESansAffectes(Mockito.anyInt())).thenReturn(agent);
 
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPA()).thenReturn(listNoMatr);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
 		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
 
-		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAESansAffectes();
 
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).getIdAgent().intValue(), 1);
@@ -389,16 +389,16 @@ public class CalculEaeServiceTest {
 		listNoMatr.add(1);
 
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+		Mockito.when(sirhRepository.getAgentEligibleEAESansAffectes(Mockito.anyInt())).thenReturn(null);
 
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPA()).thenReturn(listNoMatr);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
 		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
 
-		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAESansAffectes();
 
 		assertEquals(0, result.size());
 	}
@@ -407,16 +407,16 @@ public class CalculEaeServiceTest {
 	public void getListeAgentEligibleEAESansAffectes_returnNoResult_noListAgent() {
 
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+		Mockito.when(sirhRepository.getAgentEligibleEAESansAffectes(Mockito.anyInt())).thenReturn(null);
 
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(null);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPA()).thenReturn(null);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
 		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
 
-		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAESansAffectes();
 
 		assertEquals(0, result.size());
 	}
@@ -492,6 +492,75 @@ public class CalculEaeServiceTest {
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
 
 		List<AutreAdministrationAgentDto> result = calculEaeService.getListeAutreAdministrationAgent(9005138);
+
+		assertEquals(0, result.size());
+	}
+
+
+	@Test
+	public void getListeAgentEligibleEAEAffectes_return1Result() {
+
+		Agent agent = new Agent();
+		agent.setPrenomUsage("prenomUsage");
+		agent.setNomUsage("nomUsage");
+		agent.setIdAgent(1);
+
+		List<Integer> listNoMatr = new ArrayList<Integer>();
+		listNoMatr.add(1);
+
+		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(agent);
+
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+
+		assertEquals(1, result.size());
+		assertEquals(result.get(0).getIdAgent().intValue(), 1);
+		assertEquals(result.get(0).getNom(), "nomUsage");
+		assertEquals(result.get(0).getPrenom(), "prenomUsage");
+	}
+
+	@Test
+	public void getListeAgentEligibleEAEAffectes_returnNoResult_noAgent() {
+
+		List<Integer> listNoMatr = new ArrayList<Integer>();
+		listNoMatr.add(1);
+
+		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(listNoMatr);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
+
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void getListeAgentEligibleEAEAffectes_returnNoResult_noListAgent() {
+
+		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
+		Mockito.when(sirhRepository.getAgentWithListNomatr(Mockito.anyInt())).thenReturn(null);
+
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.getListeCarriereActiveAvecPAAffecte()).thenReturn(null);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
+		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
 
 		assertEquals(0, result.size());
 	}
