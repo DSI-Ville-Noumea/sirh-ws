@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import flexjson.JSONSerializer;
 
-public class AgentToAdresseTransformerTest {
+public class AgentToBanqueTransformerTest {
 
 	@Test
 	public void testTransformNullAgentDelegataire() {
 
 		// Given
 		JSONSerializer serializer = new JSONSerializer();
-		AgentToAdresseTransformer tr = new AgentToAdresseTransformer();
+		AgentToBanqueTransformer tr = new AgentToBanqueTransformer();
 		Agent ag = null;
 
 		// When
@@ -29,10 +29,12 @@ public class AgentToAdresseTransformerTest {
 
 		// Given
 		JSONSerializer serializer = new JSONSerializer();
-		AgentToAdresseTransformer tr = new AgentToAdresseTransformer();
+		AgentToBanqueTransformer tr = new AgentToBanqueTransformer();
 		Agent ag = new Agent();
-		ag.setbP("bp98");
-		ag.setNumRue("2");
+		ag.setIntituleCompte("intitu");
+		ag.setNumCompte("0101");
+		ag.setCodeBanque(12);
+		ag.setCodeGuichet(26);
 
 		// When
 		String json = serializer.transform(tr, Agent.class).serialize(ag);
@@ -40,6 +42,6 @@ public class AgentToAdresseTransformerTest {
 		// Then
 		assertEquals(
 				json,
-				"{\"BP\":\"bp98\",\"adresseComplementaire\":null,\"numRue\":\"2\",\"bisTer\":null,\"rue\":\"\",\"codeCommuneVilleDom\":\"\",\"codeCommuneVilleBP\":\"\",\"codePostalVilleDom\":\"\",\"codePostalVilleBP\":\"\"}");
+				"{\"intituleCompte\":\"intitu\",\"rib\":\"\",\"numCompte\":\"00000000101\",\"banque\":\"\",\"codeBanque\":\"00012\",\"codeGuichet\":\"00026\"}");
 	}
 }
