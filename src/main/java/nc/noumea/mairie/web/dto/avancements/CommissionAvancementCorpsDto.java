@@ -9,7 +9,7 @@ public class CommissionAvancementCorpsDto {
 	private AvancementsDto changementClasses;
 
 	public CommissionAvancementCorpsDto() {
-		
+		super();
 	}
 	
 	public CommissionAvancementCorpsDto(Spgeng spgeng) {
