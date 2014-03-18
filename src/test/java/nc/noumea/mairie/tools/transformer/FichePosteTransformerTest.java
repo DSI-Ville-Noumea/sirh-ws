@@ -46,9 +46,6 @@ public class FichePosteTransformerTest {
 		Activite acti1 = new Activite();
 		acti1.setNomActivite("acti1");
 		acti1.setIdActivite(1);
-		Activite acti2 = new Activite();
-		acti2.setNomActivite("acti2");
-		acti2.setIdActivite(2);
 		TypeCompetence typeC = new TypeCompetence();
 		typeC.setLibTypeCompetence("savoir");
 		TypeCompetence typeC2 = new TypeCompetence();
@@ -89,7 +86,6 @@ public class FichePosteTransformerTest {
 
 		FichePoste fp = new FichePoste();
 		fp.getActivites().add(acti1);
-		fp.getActivites().add(acti2);
 		fp.getCompetencesFDP().add(comp1);
 		fp.getCompetencesFDP().add(comp2);
 		fp.setGradePoste(gradePoste);
@@ -115,6 +111,6 @@ public class FichePosteTransformerTest {
 		// Then
 		assertEquals(
 				json,
-				"{\"activites\":[{\"nomActivite\":\"acti2\"},{\"nomActivite\":\"acti1\"}],\"competences\":[{\"typeCompetence\":\"savoir faire\",\"nomCompetence\":[\"comp2\"]},{\"typeCompetence\":\"savoir\",\"nomCompetence\":[\"comp1\"]}],\"cadreEmploi\":\"cadre A\",\"niveauEtude\":\"niveau etude\",\"service\":\"LIB SERV\",\"direction\":\"DIRECTION\",\"section\":\"SECTION\",\"gradePoste\":\"grade ini\",\"reglementaire\":\"regl\",\"budgete\":\"budgete\",\"budget\":\"budget\",\"lieuPoste\":\"lieu\",\"titrePoste\":\"titre poste\",\"statutFP\":\"actif\",\"opi\":\"20\",\"nfa\":\"41\",\"missions\":\"mission de la FDP\",\"numFP\":\"2013/85\",\"annee\":2013,\"idFichePoste\":12}");
+				"{\"activites\":[{\"nomActivite\":\"acti1\"}],\"competences\":[{\"typeCompetence\":\"savoir faire\",\"nomCompetence\":[\"comp2\"]},{\"typeCompetence\":\"savoir\",\"nomCompetence\":[\"comp1\"]}],\"cadreEmploi\":\"cadre A\",\"niveauEtude\":\"niveau etude\",\"service\":\"LIB SERV\",\"direction\":\"DIRECTION\",\"section\":\"SECTION\",\"gradePoste\":\"grade ini\",\"reglementaire\":\"regl\",\"budgete\":\"budgete\",\"budget\":\"budget\",\"lieuPoste\":\"lieu\",\"titrePoste\":\"titre poste\",\"statutFP\":\"actif\",\"opi\":\"20\",\"nfa\":\"41\",\"missions\":\"mission de la FDP\",\"numFP\":\"2013/85\",\"annee\":2013,\"idFichePoste\":12}");
 	}
 }
