@@ -37,7 +37,7 @@ public class ArreteDto {
 	private String serviceAgent;
 
 	public ArreteDto() {
-
+		super();
 	}
 
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
