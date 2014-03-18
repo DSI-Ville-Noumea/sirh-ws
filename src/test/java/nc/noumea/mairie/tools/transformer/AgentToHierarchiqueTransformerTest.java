@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import flexjson.JSONSerializer;
 
-public class AgentToBanqueTransformerTest {
+public class AgentToHierarchiqueTransformerTest {
 
 	@Test
-	public void testTransformNullAgentDelegataire() {
+	public void testTransformNullAgentToHierarchique() {
 
 		// Given
 		JSONSerializer serializer = new JSONSerializer();
-		AgentToBanqueTransformer tr = new AgentToBanqueTransformer();
+		AgentToHierarchiqueTransformer tr = new AgentToHierarchiqueTransformer();
 		Agent ag = null;
 
 		// When
@@ -25,24 +25,22 @@ public class AgentToBanqueTransformerTest {
 	}
 
 	@Test
-	public void testTransformValidAgentDelegataire() {
+	public void testTransformValidAgentToHierarchique() {
 
 		// Given
 		JSONSerializer serializer = new JSONSerializer();
-		AgentToBanqueTransformer tr = new AgentToBanqueTransformer();
+		AgentToHierarchiqueTransformer tr = new AgentToHierarchiqueTransformer();
 		Agent ag = new Agent();
-		ag.setIntituleCompte("intitu");
-		ag.setRib(1);
-		ag.setNumCompte("0101");
-		ag.setCodeBanque(12);
-		ag.setCodeGuichet(26);
+		ag.setTitre("1");
+		ag.setPosition("a");
+		ag.setPrenomUsage("usage");
+		ag.setNomUsage("nomuasag");
 
 		// When
 		String json = serializer.transform(tr, Agent.class).serialize(ag);
 
 		// Then
-		assertEquals(
-				json,
-				"{\"intituleCompte\":\"intitu\",\"rib\":\"01\",\"numCompte\":\"00000000101\",\"banque\":\"\",\"codeBanque\":\"00012\",\"codeGuichet\":\"00026\"}");
+		assertEquals(json,
+				"{\"nom\":\"nomuasag\",\"prenom\":\"usage\",\"position\":\"a\",\"titre\":\"Madame\"}");
 	}
 }
