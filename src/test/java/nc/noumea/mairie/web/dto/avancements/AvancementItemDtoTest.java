@@ -1,4 +1,4 @@
-package nc.noumea.mairie.web.dto;
+package nc.noumea.mairie.web.dto.avancements;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
