@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -25,8 +25,8 @@ public class EaeFichePoste {
 	@Column(name = "ID_SHD")
 	private Integer idAgentShd;
 
-	@OneToOne(optional = false)
-	@JoinColumn(name = "ID_EAE", unique = true, nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "ID_EAE", referencedColumnName = "ID_EAE")
 	private Eae eae;
 
 	@NotNull
