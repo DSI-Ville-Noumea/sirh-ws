@@ -9,6 +9,7 @@ import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.DiplomeAgent;
 import nc.noumea.mairie.model.bean.FormationAgent;
+import nc.noumea.mairie.model.bean.PMotifAvct;
 
 public interface ISirhRepository {
 
@@ -33,4 +34,8 @@ public interface ISirhRepository {
 	List<DiplomeAgent> getListDiplomeByAgent(Integer idAgent);
 
 	List<FormationAgent> getListFormationAgentByAnnee(Integer idAgent, Integer anneeFormation);
+	
+	Agent getAgent(Integer idAgent);
+	
+	PMotifAvct getMotifAvct(Integer idMotifAvct);
 }

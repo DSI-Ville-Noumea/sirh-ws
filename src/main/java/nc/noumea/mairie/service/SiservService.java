@@ -43,6 +43,28 @@ public class SiservService implements ISiservService {
 
 		return res;
 	}
+	
+	@Override
+	public Siserv getDirectionPourEAE(String codeService) {
+		Siserv res = null;
+		if (codeService.length() == 4) {
+			String codeDirection = "";
+			if (!codeService.substring(0, 3).equals("DAG")) {
+				codeDirection = codeService.substring(0, 2) + "AA";
+			} else {
+				codeDirection = "DAGA";
+			}
+			TypedQuery<Siserv> query = sirhEntityManager.createQuery(
+					"select serv from Siserv serv where servi=:codeDirection", Siserv.class);
+			query.setParameter("codeDirection", codeDirection);
+			
+			List<Siserv> lserv = query.getResultList();
+			for (Siserv serv : lserv)
+				res = serv;
+		}
+
+		return res;
+	}
 
 	public static boolean estAlphabetique(String param) {
 		if (param == null || param.length() == 0)

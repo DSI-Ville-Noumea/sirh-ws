@@ -19,6 +19,7 @@ import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.pk.SpadmnId;
 import nc.noumea.mairie.model.pk.SpcarrId;
+import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 
 import org.junit.Test;
@@ -373,13 +374,16 @@ public class MairieRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void getListSpmtsr_return1result() {
 
+		SpmtsrId spmtsrId = new SpmtsrId();
+			spmtsrId.setNomatr(5138);
+			spmtsrId.setDatdeb(2010);
+			spmtsrId.setServi("service");
+		
 		Spmtsr spmtsr = new Spmtsr();
-		spmtsr.setNomatr(5138);
-		spmtsr.setCdecol(1);
-		spmtsr.setDatdeb(2010);
-		spmtsr.setDatfin(2014);
-		spmtsr.setRefarr(1);
-		spmtsr.setServi("service");
+			spmtsr.setId(spmtsrId);
+			spmtsr.setCdecol(1);
+			spmtsr.setDatfin(2014);
+			spmtsr.setRefarr(1);
 		sirhPersistenceUnit.persist(spmtsr);
 
 		List<Spmtsr> result = repository.getListSpmtsr(5138);
@@ -395,13 +399,16 @@ public class MairieRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void getListSpmtsr_returnNoResult() {
 
+		SpmtsrId spmtsrId = new SpmtsrId();
+			spmtsrId.setNomatr(5138);
+			spmtsrId.setDatdeb(2010);
+			spmtsrId.setServi("service");
+		
 		Spmtsr spmtsr = new Spmtsr();
-		spmtsr.setNomatr(5138);
-		spmtsr.setCdecol(1);
-		spmtsr.setDatdeb(2010);
-		spmtsr.setDatfin(2014);
-		spmtsr.setRefarr(1);
-		spmtsr.setServi("service");
+			spmtsr.setId(spmtsrId);
+			spmtsr.setCdecol(1);
+			spmtsr.setDatfin(2014);
+			spmtsr.setRefarr(1);
 		sirhPersistenceUnit.persist(spmtsr);
 
 		List<Spmtsr> result = repository.getListSpmtsr(5145);

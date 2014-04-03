@@ -74,7 +74,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/avancement", method = RequestMethod.GET)
+	@RequestMapping(value = "/avancement", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAvancement(@RequestParam("idAgent") int idAgent,
 			@RequestParam("anneeAvancement") int anneeAvancement,
@@ -91,7 +91,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/avancementDetache", method = RequestMethod.GET)
+	@RequestMapping(value = "/avancementDetache", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAvancementDetache(@RequestParam("idAgent") int idAgent,
 			@RequestParam("anneeAvancement") int anneeAvancement) {
@@ -107,7 +107,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/affectationActiveByAgent", method = RequestMethod.GET)
+	@RequestMapping(value = "/affectationActiveByAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getDetailAffectationActiveByAgent(@RequestParam("idAgent") int idAgent,
 			@RequestParam("anneeFormation") int anneeFormation) {
@@ -123,7 +123,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listeAffectationsAgentAvecService", method = RequestMethod.GET)
+	@RequestMapping(value = "/listeAffectationsAgentAvecService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAffectationsAgentAvecService(@RequestParam("idAgent") int idAgent,
 			@RequestParam("idService") String idService) {
@@ -139,7 +139,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listeAffectationsAgentAvecFP", method = RequestMethod.GET)
+	@RequestMapping(value = "/listeAffectationsAgentAvecFP", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAffectationsAgentAvecFP(@RequestParam("idAgent") int idAgent,
 			@RequestParam("idFichePoste") int idFichePoste) {
@@ -155,7 +155,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/autreAdministrationAgentAncienne", method = RequestMethod.GET)
+	@RequestMapping(value = "/autreAdministrationAgentAncienne", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> chercherAutreAdministrationAgentAncienne(@RequestParam("idAgent") int idAgent,
 			@RequestParam("isFonctionnaire") boolean isFonctionnaire) {
@@ -172,7 +172,7 @@ public class CalculEaeController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listeAutreAdministrationAgent", method = RequestMethod.GET)
+	@RequestMapping(value = "/listeAutreAdministrationAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAutreAdministrationAgent(@RequestParam("idAgent") int idAgent) {
 

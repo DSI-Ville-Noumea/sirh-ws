@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import java.util.Date;
 
 import nc.noumea.mairie.model.bean.Spmtsr;
+import nc.noumea.mairie.model.pk.SpmtsrId;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -15,8 +16,11 @@ public class ParcoursProDtoTest extends AgentDto {
 	@Test
 	public void testParcoursProDto_cst() {
 		// Given
+		SpmtsrId id = new SpmtsrId();
+			id.setDatdeb(20140101);
+		
 		Spmtsr spmtsr = new Spmtsr();
-		spmtsr.setDatdeb(20140101);
+			spmtsr.setId(id);
 
 		Date spmtsrDate = new DateTime(2014, 01, 01, 0, 0, 0).toDate();
 

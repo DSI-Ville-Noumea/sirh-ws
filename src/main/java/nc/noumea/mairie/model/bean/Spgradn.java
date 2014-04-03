@@ -2,12 +2,16 @@ package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "SPGRADN")
@@ -26,19 +30,23 @@ public class Spgradn {
 	@Column(name = "GRADE", columnDefinition = "char")
 	private String gradeInitial;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action=NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODGRG", referencedColumnName = "CDGENG")
 	private Spgeng gradeGenerique;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action=NotFoundAction.IGNORE)
 	@JoinColumn(name = "IBAN", referencedColumnName = "IBAN")
 	private Spbarem barem;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action=NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODCLA", referencedColumnName = "CODCLA")
 	private Spclas classe;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action=NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODECH", referencedColumnName = "CODECH")
 	private Speche echelon;
 
@@ -51,9 +59,8 @@ public class Spgradn {
 	@Column(name = "DURMAX", columnDefinition = "numeric")
 	private Integer dureeMaximum;
 	
-	@OneToOne(optional = true)
-	@JoinColumn(name = "CDTAVA", referencedColumnName = "ID_MOTIF_AVCT")
-	private PMotifAvct motifAvct;
+	@Column(name = "CDTAVA", columnDefinition = "char")
+	private String cdTava;
 	
 	public String getCdgrad() {
 		return cdgrad;
@@ -135,12 +142,12 @@ public class Spgradn {
 		this.dureeMaximum = dureeMaximum;
 	}
 
-	public PMotifAvct getMotifAvct() {
-		return motifAvct;
+	public String getCdTava() {
+		return cdTava;
 	}
 
-	public void setMotifAvct(PMotifAvct motifAvct) {
-		this.motifAvct = motifAvct;
+	public void setCdTava(String cdTava) {
+		this.cdTava = cdTava;
 	}
 	
 }
