@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import nc.noumea.mairie.enums.eae.EaeEtatEnum;
 import nc.noumea.mairie.model.bean.Agent;
 
 @Entity
@@ -47,6 +50,11 @@ public class Eae {
 
 	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
 	private EaeEvaluation eaeEvaluation;
+
+	@NotNull
+	@Column(name = "ETAT")
+	@Enumerated(EnumType.STRING)
+	private EaeEtatEnum etat;
 
 	/*
 	 * Transient properties (will be populated by AS400 entity manager)
@@ -127,5 +135,13 @@ public class Eae {
 
 	public void setEaeFichePoste(Set<EaeFichePoste> eaeFichePoste) {
 		this.eaeFichePoste = eaeFichePoste;
+	}
+
+	public EaeEtatEnum getEtat() {
+		return etat;
+	}
+
+	public void setEtat(EaeEtatEnum etat) {
+		this.etat = etat;
 	}
 }
