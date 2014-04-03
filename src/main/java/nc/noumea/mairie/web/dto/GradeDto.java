@@ -23,24 +23,22 @@ public class GradeDto {
 	
 	public GradeDto(Spgradn spGradn) {
 		this.codeGrade = spGradn.getCdgrad();
-		this.libelleGrade = spGradn.getLiGrad();
-		this.gradeInitial = spGradn.getGradeInitial();
+		this.libelleGrade = null != spGradn.getLiGrad() ? spGradn.getLiGrad().trim() : "";
+		this.gradeInitial = null != spGradn.getGradeInitial() ? spGradn.getGradeInitial().trim() : "";
 		if(null != spGradn.getClasse()) {
 			this.codeClasse = spGradn.getClasse().getCodcla();
-			this.libelleClasse = spGradn.getClasse().getLibCla();
+			this.libelleClasse = null != spGradn.getClasse().getLibCla() ? spGradn.getClasse().getLibCla().trim() : "";
 		}
 		this.dureeMinimum = spGradn.getDureeMinimum();
 		this.dureeMoyenne = spGradn.getDureeMoyenne();
 		this.dureeMaximum = spGradn.getDureeMaximum();
-		if(null != spGradn.getGradeGenerique()) {
-			this.codeGradeGenerique = spGradn.getGradeGenerique().getCdgeng();
+		if(null != spGradn.getGradeGenerique()
+				&& null != spGradn.getGradeGenerique().getCdcadr()) {
+			this.codeGradeGenerique = spGradn.getGradeGenerique().getCdcadr().trim();
 		}
 		if(null != spGradn.getEchelon()) {
 			this.codeEchelon = spGradn.getEchelon().getCodEch();
-			this.libelleEchelon = spGradn.getEchelon().getLibEch();
-		}
-		if(null != spGradn.getMotifAvct()) {
-			this.codeMotifAvancement = spGradn.getMotifAvct().getCodeAvct();
+			this.libelleEchelon = null != spGradn.getEchelon().getLibEch() ? spGradn.getEchelon().getLibEch().trim() : "";
 		}
 	}
 	

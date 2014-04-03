@@ -17,6 +17,10 @@ public class AvancementEaeDto {
 	public AvancementEaeDto(AvancementFonctionnaire avct){
 		this.idAvct = avct.getIdAvct();
 		this.etat = avct.getEtat();
+		this.dateAvctMoy = avct.getDateAvctMoy();
+		if(null != avct.getGradeNouveau()) {
+			this.grade = new GradeDto(avct.getGradeNouveau());
+		}
 	}
 	
 	public AvancementEaeDto(AvancementDetache avct){

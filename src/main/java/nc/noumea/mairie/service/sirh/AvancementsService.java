@@ -14,6 +14,7 @@ import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.PMotifAvct;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
@@ -426,6 +427,12 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 		
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
+		if(null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
+			PMotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			if(null != motifAvct) {
+				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
+			}
+		}
 		return dto;
 	}
 	
@@ -438,6 +445,12 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 		
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
+		if(null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
+			PMotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			if(null != motifAvct) {
+				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
+			}
+		}
 		return dto;
 	}
 }

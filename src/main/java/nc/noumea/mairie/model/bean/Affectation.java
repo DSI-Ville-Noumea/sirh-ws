@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
@@ -20,7 +21,29 @@ import javax.validation.constraints.NotNull;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 @NamedQueries({
 	@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '01/01/0001' or a.dateFinAff is null or a.dateFinAff >= :today)"),
-	@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '0001-01-01' or a.dateFinAff is null or a.dateFinAff >= :today)")
+	@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '0001-01-01' or a.dateFinAff is null or a.dateFinAff >= :today)"),
+	@NamedQuery(name = "getAffectationActiveByAgentPourCalculEAE", query = 
+	"select a "
+	+ " from Affectation a "
+	+ " join fetch a.fichePoste fp "
+	+ " left  join fetch a.fichePosteSecondaire fpSec "
+	+ " left  join fetch fp.service serv "
+	+ " left  join fetch fp.titrePoste tp "
+	+ " left  join fetch fp.budget budget "
+	+ " left  join fetch fp.lieuPoste lieu "
+	+ " left  join fetch fp.gradePoste grade "
+	+ " left  join fetch grade.gradeGenerique gradeGen "
+	+ " left  join fetch fp.budgete budgete "
+	+ " left  join fetch fp.niveauEtude niveauEtude "
+	+ " left  join fetch fp.superieurHierarchique superieurHierarchique "
+	+ " left  join fetch superieurHierarchique.service serviceHierarchique "
+	+ " left  join fetch superieurHierarchique.agent agentHierarchique "
+	+ " left  join fetch superieurHierarchique.titrePoste titrePosteHierarchique "
+	+ " left  join fetch fp.activites "
+	+ " left join fetch fp.competencesFDP "
+	+ " left join fetch fp.ficheEmploiPrimaire "
+	+ " left join fetch fp.ficheEmploiSecondaire "
+	+ " where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff = '0001-01-01' or a.dateFinAff is null or a.dateFinAff >= :today)")
 })
 public class Affectation {
 
@@ -29,20 +52,20 @@ public class Affectation {
 	private Integer idAffectation;
 
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT")
 	private Agent agent;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT", insertable = false, updatable = false)
 	private AgentRecherche agentrecherche;
 
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste fichePoste;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_FICHE_POSTE_SECONDAIRE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste fichePosteSecondaire;
 

@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.dto;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,6 +16,7 @@ import nc.noumea.mairie.model.bean.FicheEmploi;
 import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.PrimePointageFP;
 import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
+import nc.noumea.mairie.model.bean.Siserv;
 
 @XmlRootElement
 public class FichePosteDto {
@@ -98,10 +100,20 @@ public class FichePosteDto {
 		titre = fichePoste.getTitrePoste().getLibTitrePoste();
 
 		budget = fichePoste.getBudget().getLibelleBudget();
-		budgete = fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste.getBudgete().getLibHor().trim();
-		reglementaire = fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire()
-				.getLibHor().trim();
-		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
+		try {
+			budgete = null == fichePoste.getBudgete() || fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste.getBudgete().getLibHor().trim();
+		} catch(javax.persistence.EntityNotFoundException e) {
+			budgete = "";
+		}
+		try {
+			reglementaire = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire()
+					.getLibHor().trim();
+		} catch(javax.persistence.EntityNotFoundException e) {
+			reglementaire = "";
+		}
+		
+		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique() == null || 
+				fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
 				.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
 
@@ -109,7 +121,7 @@ public class FichePosteDto {
 		service = fichePoste.getService() == null ? "" : fichePoste.getService().getLiServ();
 
 		section = fichePoste.getService().getSection();
-		lieu = fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu()
+		lieu = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu()
 				.trim();
 		gradePoste = fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste()
 				.getGradeInitial().trim();
@@ -142,6 +154,22 @@ public class FichePosteDto {
 		for (FicheEmploi emploiSec : fichePoste.getFicheEmploiSecondaire()) {
 			emploiSecondaire = emploiSec.getNomEmploi();
 			break;
+		}
+	}
+	
+	public FichePosteDto(Siserv service, Integer idFichePoste, Set<Affectation> agent) {
+		this();
+		this.idFichePoste = idFichePoste;
+		if (null != agent) {
+			for (Affectation agt : agent) {
+				if(null != agt && null != agt.getAgent()) {
+					idAgent = agt.getAgent().getIdAgent();
+					break;
+				}
+			}
+		}
+		if(null != service) {
+			this.codeService = service.getServi();
 		}
 	}
 

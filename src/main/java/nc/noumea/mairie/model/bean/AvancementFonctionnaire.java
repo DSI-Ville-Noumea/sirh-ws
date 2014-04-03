@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,11 +23,11 @@ public class AvancementFonctionnaire {
 	@Column(name = "ID_AVCT")
 	private Integer idAvct;
 
-	@ManyToOne(optional = true)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_AGENT")
 	private Agent agent;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_AVIS_CAP")
 	private AvisCap avisCap;
 
@@ -42,7 +43,7 @@ public class AvancementFonctionnaire {
 	@Column(name = "FILIERE")
 	private String filiere;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "GRADE")
 	private Spgradn grade;
 
@@ -50,7 +51,7 @@ public class AvancementFonctionnaire {
 	@Temporal(TemporalType.DATE)
 	private Date gradeDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_NOUV_GRADE")
 	private Spgradn gradeNouveau;
 
@@ -88,7 +89,7 @@ public class AvancementFonctionnaire {
 	@Temporal(TemporalType.DATE)
 	private Date dateCap;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_AVIS_EMP")
 	private AvisCap avisCapEmployeur;
 

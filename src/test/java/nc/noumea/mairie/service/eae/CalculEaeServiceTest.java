@@ -28,12 +28,12 @@ import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.TitrePoste;
 import nc.noumea.mairie.model.pk.AutreAdministrationAgentPK;
+import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISpCarrService;
 import nc.noumea.mairie.service.ISpadmnService;
-import nc.noumea.mairie.service.eae.CalculEaeService;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
@@ -50,150 +50,153 @@ public class CalculEaeServiceTest {
 	public void getAffectationActiveByAgent() throws ParseException {
 
 		Agent agent = new Agent();
-		agent.setNomatr(5138);
-		agent.setIdAgent(9005138);
+			agent.setNomatr(5138);
+			agent.setIdAgent(9005138);
 
 		TitrePoste titrePoste = new TitrePoste();
-		titrePoste.setLibTitrePoste("libTitrePoste");
+			titrePoste.setLibTitrePoste("libTitrePoste");
 
 		Siserv service = new Siserv();
-		service.setServi("servi");
-		service.setLiServ("liServ");
+			service.setServi("servi");
+			service.setLiServ("liServ");
 
 		Budget budget = new Budget();
-		budget.setLibelleBudget("libelleBudget");
+			budget.setLibelleBudget("libelleBudget");
 		Spbhor budgete = new Spbhor();
-		budgete.setLibHor("libHor");
+			budgete.setLibHor("libHor");
 		Spbhor reglementaire = new Spbhor();
-		reglementaire.setLibHor("libHorRegl");
+			reglementaire.setLibHor("libHorRegl");
 
 		CadreEmploi cadreEmploiGrade = new CadreEmploi();
-		cadreEmploiGrade.setLibelleCadreEmploi("libelleCadreEmploi");
+			cadreEmploiGrade.setLibelleCadreEmploi("libelleCadreEmploi");
 		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCadreEmploiGrade(cadreEmploiGrade);
+			gradeGenerique.setCadreEmploiGrade(cadreEmploiGrade);
 
 		Spgradn gradePoste = new Spgradn();
-		gradePoste.setGradeInitial("gradeInitial");
-		gradePoste.setGradeGenerique(gradeGenerique);
+			gradePoste.setGradeInitial("gradeInitial");
+			gradePoste.setGradeGenerique(gradeGenerique);
 
 		Silieu lieuPoste = new Silieu();
-		lieuPoste.setLibelleLieu("libelleLieu");
+			lieuPoste.setLibelleLieu("libelleLieu");
 
 		NiveauEtude niveauEtude = new NiveauEtude();
-		niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
+			niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
 
 		FichePoste superieurHierarchique = new FichePoste();
-		superieurHierarchique.setService(service);
-		superieurHierarchique.setTitrePoste(titrePoste);
-		superieurHierarchique.setBudget(budget);
-		superieurHierarchique.setBudgete(budgete);
-		superieurHierarchique.setReglementaire(reglementaire);
-		superieurHierarchique.setGradePoste(gradePoste);
-		superieurHierarchique.setLieuPoste(lieuPoste);
+			superieurHierarchique.setService(service);
+			superieurHierarchique.setTitrePoste(titrePoste);
+			superieurHierarchique.setBudget(budget);
+			superieurHierarchique.setBudgete(budgete);
+			superieurHierarchique.setReglementaire(reglementaire);
+			superieurHierarchique.setGradePoste(gradePoste);
+			superieurHierarchique.setLieuPoste(lieuPoste);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setSuperieurHierarchique(superieurHierarchique);
-		fichePoste.setService(service);
-		fichePoste.setTitrePoste(titrePoste);
-		fichePoste.setBudget(budget);
-		fichePoste.setBudgete(budgete);
-		fichePoste.setReglementaire(reglementaire);
-		fichePoste.setGradePoste(gradePoste);
-		fichePoste.setLieuPoste(lieuPoste);
-		fichePoste.setIdFichePoste(2);
-		fichePoste.setMissions("missions");
-		fichePoste.setNumFP("NumFP");
-		fichePoste.setNiveauEtude(niveauEtude);
+			fichePoste.setSuperieurHierarchique(superieurHierarchique);
+			fichePoste.setService(service);
+			fichePoste.setTitrePoste(titrePoste);
+			fichePoste.setBudget(budget);
+			fichePoste.setBudgete(budgete);
+			fichePoste.setReglementaire(reglementaire);
+			fichePoste.setGradePoste(gradePoste);
+			fichePoste.setLieuPoste(lieuPoste);
+			fichePoste.setIdFichePoste(2);
+			fichePoste.setMissions("missions");
+			fichePoste.setNumFP("NumFP");
+			fichePoste.setNiveauEtude(niveauEtude);
 
 		FichePoste fichePosteSecondaire = new FichePoste();
-		fichePosteSecondaire.setSuperieurHierarchique(superieurHierarchique);
-		fichePosteSecondaire.setService(service);
-		fichePosteSecondaire.setTitrePoste(titrePoste);
-		fichePosteSecondaire.setBudget(budget);
-		fichePosteSecondaire.setBudgete(budgete);
-		fichePosteSecondaire.setReglementaire(reglementaire);
-		fichePosteSecondaire.setGradePoste(gradePoste);
-		fichePosteSecondaire.setLieuPoste(lieuPoste);
-		fichePosteSecondaire.setIdFichePoste(3);
-		fichePosteSecondaire.setMissions("missions2");
-		fichePosteSecondaire.setNumFP("NumFP2");
-		fichePosteSecondaire.setNiveauEtude(niveauEtude);
+			fichePosteSecondaire.setSuperieurHierarchique(superieurHierarchique);
+			fichePosteSecondaire.setService(service);
+			fichePosteSecondaire.setTitrePoste(titrePoste);
+			fichePosteSecondaire.setBudget(budget);
+			fichePosteSecondaire.setBudgete(budgete);
+			fichePosteSecondaire.setReglementaire(reglementaire);
+			fichePosteSecondaire.setGradePoste(gradePoste);
+			fichePosteSecondaire.setLieuPoste(lieuPoste);
+			fichePosteSecondaire.setIdFichePoste(3);
+			fichePosteSecondaire.setMissions("missions2");
+			fichePosteSecondaire.setNumFP("NumFP2");
+			fichePosteSecondaire.setNiveauEtude(niveauEtude);
 
 		Date dateDebutAff = new Date();
 		Date dateFinAff = new Date();
 
 		Affectation aff = new Affectation();
-		aff.setAgent(agent);
-		aff.setFichePoste(fichePoste);
-		aff.setFichePosteSecondaire(fichePosteSecondaire);
-		aff.setFichePoste(fichePoste);
-		aff.setDateDebutAff(dateDebutAff);
-		aff.setDateFinAff(dateFinAff);
+			aff.setAgent(agent);
+			aff.setFichePoste(fichePoste);
+			aff.setFichePosteSecondaire(fichePosteSecondaire);
+			aff.setFichePoste(fichePoste);
+			aff.setDateDebutAff(dateDebutAff);
+			aff.setDateFinAff(dateFinAff);
 		Set<Affectation> agents = new HashSet<Affectation>();
-		agents.add(aff);
+			agents.add(aff);
 
 		fichePoste.setAgent(agents);
 		fichePosteSecondaire.setAgent(agents);
 
 		Siserv siservDirection = new Siserv();
-		siservDirection.setLiServ("direction");
+			siservDirection.setLiServ("direction");
 		Siserv siservSection = new Siserv();
-		siservSection.setLiServ("section");
+			siservSection.setLiServ("section");
 		Siserv siservService = new Siserv();
-		siservService.setLiServ("liServ");
+			siservService.setLiServ("liServ");
 
 		PositionAdmAgentDto positionAdmAgentDto = new PositionAdmAgentDto();
-		positionAdmAgentDto.setCdpadm("cdpadm");
+			positionAdmAgentDto.setCdpadm("cdpadm");
 		PositionAdmAgentDto positionAdmAgentDtoAncienne = new PositionAdmAgentDto();
-		positionAdmAgentDtoAncienne.setCdpadm("cdpadmAncienne");
+			positionAdmAgentDtoAncienne.setCdpadm("cdpadmAncienne");
 
 		CarriereDto carriereDto = new CarriereDto();
-		carriereDto.setCodeCategorie(1);
-		carriereDto.setLibelleCategorie("libelleCategorie");
+			carriereDto.setCodeCategorie(1);
+			carriereDto.setLibelleCategorie("libelleCategorie");
 		CarriereDto carriereDtoAncienne = new CarriereDto();
-		carriereDtoAncienne.setCodeCategorie(2);
-		carriereDtoAncienne.setLibelleCategorie("libelleCategorie2");
+			carriereDtoAncienne.setCodeCategorie(2);
+			carriereDtoAncienne.setLibelleCategorie("libelleCategorie2");
 
 		Date dateObtention = new Date();
 		DiplomeAgent diplomeAgent = new DiplomeAgent();
-		diplomeAgent.setDateObtention(dateObtention);
-		diplomeAgent.setIdDiplome(10);
+			diplomeAgent.setDateObtention(dateObtention);
+			diplomeAgent.setIdDiplome(10);
 		List<DiplomeAgent> lstDiplome = new ArrayList<DiplomeAgent>();
-		lstDiplome.add(diplomeAgent);
+			lstDiplome.add(diplomeAgent);
 
 		FormationAgent formationAgent = new FormationAgent();
-		formationAgent.setIdFormation(11);
-		formationAgent.setDureeFormation(10);
+			formationAgent.setIdFormation(11);
+			formationAgent.setDureeFormation(10);
 		List<FormationAgent> listFormationAgent = new ArrayList<FormationAgent>();
-		listFormationAgent.add(formationAgent);
+			listFormationAgent.add(formationAgent);
 
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
 		Mockito.when(sirhRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
 		Mockito.when(sirhRepository.getListDiplomeByAgent(Mockito.anyInt())).thenReturn(lstDiplome);
 		Mockito.when(sirhRepository.getListFormationAgentByAnnee(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
 				listFormationAgent);
+		Mockito.when(sirhRepository.getAgent(Mockito.anyInt())).thenReturn(agent);
 
 		ISiservService siservSrv = Mockito.mock(ISiservService.class);
-		Mockito.when(siservSrv.getDirection(Mockito.anyString())).thenReturn(siservDirection);
-		Mockito.when(siservSrv.getSection(Mockito.anyString())).thenReturn(siservSection);
-		Mockito.when(siservSrv.getService(Mockito.anyString())).thenReturn(siservService);
+			Mockito.when(siservSrv.getDirectionPourEAE(Mockito.anyString())).thenReturn(siservDirection);
+			Mockito.when(siservSrv.getSection(Mockito.anyString())).thenReturn(siservSection);
+			Mockito.when(siservSrv.getService(Mockito.anyString())).thenReturn(siservService);
 
 		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
-		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(positionAdmAgentDto);
-		Mockito.when(spadmnService.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(
-				positionAdmAgentDtoAncienne);
+			Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(positionAdmAgentDto);
+			Mockito.when(spadmnService.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(
+					positionAdmAgentDtoAncienne);
 
 		ISpCarrService spCarrService = Mockito.mock(ISpCarrService.class);
-		Mockito.when(spCarrService.getCarriereFonctionnaireAncienne(Mockito.anyInt())).thenReturn(carriereDtoAncienne);
-		Mockito.when(spCarrService.getCarriereActive(Mockito.anyInt())).thenReturn(carriereDto);
+			Mockito.when(spCarrService.getCarriereFonctionnaireAncienne(Mockito.anyInt())).thenReturn(carriereDtoAncienne);
+			Mockito.when(spCarrService.getCarriereActive(Mockito.anyInt())).thenReturn(carriereDto);
 
+		SpmtsrId spMtsrId = new SpmtsrId();
+			spMtsrId.setDatdeb(20101010);
+			spMtsrId.setServi("servi");
 		Spmtsr spMtsr = new Spmtsr();
-		spMtsr.setDatdeb(20101010);
-		spMtsr.setServi("servi");
+			spMtsr.setId(spMtsrId);
 		List<Spmtsr> listParcoursPro = new ArrayList<Spmtsr>();
-		listParcoursPro.add(spMtsr);
+			listParcoursPro.add(spMtsr);
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
+			Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);

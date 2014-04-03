@@ -17,7 +17,7 @@ public class ParcoursProDto {
 
 	public ParcoursProDto(Spmtsr spMtsr) {
 		try {
-			this.dateDebut = sdf.parse(spMtsr.getDatdeb().toString());
+			this.dateDebut = sdf.parse(spMtsr.getId().getDatdeb().toString());
 		} catch (ParseException e) {
 			this.dateDebut = null;
 		}
