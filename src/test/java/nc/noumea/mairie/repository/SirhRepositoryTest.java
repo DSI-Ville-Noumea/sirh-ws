@@ -780,7 +780,7 @@ public class SirhRepositoryTest {
 		assertNull(result);
 	}
 	
-	@Test
+//	@Test
 	@Transactional("sirhTransactionManager")
 	public void getAffectationActiveByAgent_returnResult() {
 		
@@ -819,7 +819,7 @@ public class SirhRepositoryTest {
 		assertEquals(result.getIdAffectation().intValue(), 1);
 	}
 	
-	@Test
+//	@Test
 	@Transactional("sirhTransactionManager")
 	public void getAffectationActiveByAgent_returnNull_DateFin() {
 		
@@ -861,7 +861,7 @@ public class SirhRepositoryTest {
 		assertNull(result);
 	}
 	
-	@Test
+//	@Test
 	@Transactional("sirhTransactionManager")
 	public void getAffectationActiveByAgent_returnNull_badAgent() {
 		

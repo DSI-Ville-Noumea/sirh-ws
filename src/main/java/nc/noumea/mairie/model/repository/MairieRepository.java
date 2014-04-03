@@ -81,8 +81,9 @@ public class MairieRepository implements IMairieRepository {
 						Spadmn.class);
 		q.setParameter("noMatr", noMatr);
 
-		if (!q.getResultList().isEmpty())
-			return q.getSingleResult();
+		List<Spadmn> result = q.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
 
 		return null;
 	}
@@ -99,8 +100,9 @@ public class MairieRepository implements IMairieRepository {
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		q.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
 
-		if (!q.getResultList().isEmpty())
-			return q.getSingleResult();
+		List<Spadmn> result = q.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
 
 		return null;
 	}
@@ -122,8 +124,9 @@ public class MairieRepository implements IMairieRepository {
 		TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCarriereFonctionnaireAncienne", Spcarr.class);
 		qCarr.setParameter("nomatr", noMatr);
 
-		if (0 < qCarr.getResultList().size())
-			return qCarr.getSingleResult();
+		List<Spcarr> result = qCarr.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
 
 		return null;
 	}
@@ -136,8 +139,9 @@ public class MairieRepository implements IMairieRepository {
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		qCarr.setParameter("todayFormatMairie", Integer.valueOf(sdfMairie.format(new Date())));
 
-		if (0 < qCarr.getResultList().size())
-			return qCarr.getSingleResult();
+		List<Spcarr> result = qCarr.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
 
 		return null;
 	}

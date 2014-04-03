@@ -7,7 +7,9 @@ import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AutreAdministrationAgent;
 import nc.noumea.mairie.model.bean.DiplomeAgent;
+import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.FormationAgent;
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISirhRepository;
@@ -49,49 +51,58 @@ public class CalculEaeService implements ICalculEaeService {
 
 		Affectation affectation = sirhRepository.getAffectationActiveByAgent(idAgent);
 
-		CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
+		CalculEaeInfosDto dto = new CalculEaeInfosDto();
 
-		affectation
-				.getFichePoste()
-				.getService()
-				.setDirection(
-						siservSrv.getDirection(affectation.getFichePoste().getService().getServi()) == null ? ""
-								: siservSrv.getDirection(affectation.getFichePoste().getService().getServi())
-										.getLiServ());
-		affectation
-				.getFichePoste()
-				.getService()
-				.setSection(
-						siservSrv.getSection(affectation.getFichePoste().getService().getServi()) == null ? ""
-								: siservSrv.getSection(affectation.getFichePoste().getService().getServi()).getLiServ());
+		if(null != affectation) {
+			
+			dto.setDateDebut(affectation.getDateDebutAff());
+			dto.setDateFin(affectation.getDateFinAff());
 
-		FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste());
-		dto.setFichePostePrincipale(fichePostePrincipale);
-		FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire());
-		dto.setFichePosteSecondaire(fichePosteSecondaire);
-
-		FichePosteDto fichePosteResponsable = new FichePosteDto(affectation.getFichePoste().getSuperieurHierarchique());
-		if (null != affectation.getFichePoste().getSuperieurHierarchique().getTitrePoste()) {
-			TitrePosteDto titrePosteResponable = new TitrePosteDto();
-			titrePosteResponable.setLibTitrePoste(affectation.getFichePoste().getSuperieurHierarchique()
-					.getTitrePoste().getLibTitrePoste());
-			fichePosteResponsable.setTitrePoste(titrePosteResponable);
+			Siserv direction = siservSrv.getDirectionPourEAE(affectation.getFichePoste().getService().getServi());
+			affectation.getFichePoste().getService().setDirection(direction == null ? "" : direction.getLiServ());
+			
+			Siserv section = siservSrv.getSection(affectation.getFichePoste().getService().getServi());
+			affectation.getFichePoste().getService().setSection(section == null ? "" : section.getLiServ());
+	
+			TitrePosteDto titrePoste = new TitrePosteDto();
+				titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
+			
+			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste());
+				fichePostePrincipale.setTitrePoste(titrePoste);
+			
+			dto.setFichePostePrincipale(fichePostePrincipale);
+			if(null != affectation.getFichePosteSecondaire()) {
+				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire());
+				dto.setFichePosteSecondaire(fichePosteSecondaire);
+			}
+			
+			if(null != affectation.getFichePoste().getSuperieurHierarchique()) {
+				FichePoste fichePosteSuperieur = affectation.getFichePoste().getSuperieurHierarchique();
+				FichePosteDto fichePosteResponsable = new FichePosteDto(
+						fichePosteSuperieur.getService(), 
+						fichePosteSuperieur.getIdFichePoste(), 
+						fichePosteSuperieur.getAgent());
+				if (null != fichePosteSuperieur.getTitrePoste()) {
+					TitrePosteDto titrePosteResponable = new TitrePosteDto();
+						titrePosteResponable.setLibTitrePoste(fichePosteSuperieur.getTitrePoste().getLibTitrePoste());
+					fichePosteResponsable.setTitrePoste(titrePosteResponable);
+				}
+				dto.setFichePosteResponsable(fichePosteResponsable);
+			}
 		}
-		dto.setFichePosteResponsable(fichePosteResponsable);
-		dto.setListDiplome(getListDiplomeDto(idAgent));
-		dto.setListParcoursPro(getListParcoursPro(affectation.getAgent().getNomatr()));
-		dto.setListFormation(getListFormation(idAgent, anneeFormation));
+		
+		Agent agent = sirhRepository.getAgent(idAgent);
 
-		if (null != affectation.getAgent()) {
-			dto.setPositionAdmAgentEnCours(spadmnService.chercherPositionAdmAgentEnCours(affectation.getAgent()
-					.getNomatr()));
-			dto.setPositionAdmAgentAncienne(spadmnService.chercherPositionAdmAgentAncienne(affectation.getAgent()
-					.getNomatr()));
-			dto.setCarriereFonctionnaireAncienne(spCarrService.getCarriereFonctionnaireAncienne(affectation.getAgent()
-					.getNomatr()));
-			dto.setCarriereActive(spCarrService.getCarriereActive(affectation.getAgent().getNomatr()));
+		if (null != agent) {
+			dto.setListDiplome(getListDiplomeDto(idAgent));
+			dto.setListParcoursPro(getListParcoursPro(agent.getNomatr()));
+			dto.setListFormation(getListFormation(idAgent, anneeFormation));
+			dto.setPositionAdmAgentEnCours(spadmnService.chercherPositionAdmAgentEnCours(agent.getNomatr()));
+			dto.setPositionAdmAgentAncienne(spadmnService.chercherPositionAdmAgentAncienne(agent.getNomatr()));
+			dto.setCarriereFonctionnaireAncienne(spCarrService.getCarriereFonctionnaireAncienne(agent.getNomatr()));
+			dto.setCarriereActive(spCarrService.getCarriereActive(agent.getNomatr()));
 		}
-
+		
 		return dto;
 	}
 
@@ -116,10 +127,13 @@ public class CalculEaeService implements ICalculEaeService {
 		if (null != listSpmtsr) {
 			for (Spmtsr spMtsr : listSpmtsr) {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
-				parcoursProDto.setDirection(siservSrv.getDirection(spMtsr.getServi()) == null ? "" : siservSrv
-						.getDirection(spMtsr.getServi()).getLiServ());
-				parcoursProDto.setService(siservSrv.getService(spMtsr.getServi()) == null ? "" : siservSrv.getService(
-						spMtsr.getServi()).getLiServ());
+				
+				Siserv direction = siservSrv.getDirectionPourEAE(spMtsr.getId().getServi());
+				parcoursProDto.setDirection(direction == null ? "" : direction.getLiServ());
+				
+				Siserv service = siservSrv.getService(spMtsr.getId().getServi());
+				parcoursProDto.setService(service == null ? "" : service.getLiServ());
+				
 				listParcoursPro.add(parcoursProDto);
 			}
 		}
@@ -151,7 +165,9 @@ public class CalculEaeService implements ICalculEaeService {
 
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
-				CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
+				CalculEaeInfosDto dto = new CalculEaeInfosDto();
+					dto.setDateDebut(affectation.getDateDebutAff());
+					dto.setDateFin(affectation.getDateFinAff());
 				listDto.add(dto);
 			}
 		}
@@ -168,7 +184,9 @@ public class CalculEaeService implements ICalculEaeService {
 
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
-				CalculEaeInfosDto dto = new CalculEaeInfosDto(affectation);
+				CalculEaeInfosDto dto = new CalculEaeInfosDto();
+					dto.setDateDebut(affectation.getDateDebutAff());
+					dto.setDateFin(affectation.getDateFinAff());
 				listDto.add(dto);
 			}
 		}

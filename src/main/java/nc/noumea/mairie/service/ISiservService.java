@@ -8,6 +8,8 @@ import nc.noumea.mairie.tools.ServiceTreeNode;
 public interface ISiservService {
 
 	public Siserv getDirection(String servi);
+	
+	Siserv getDirectionPourEAE(String codeService);
 
 	public Siserv getSection(String servi);
 

@@ -3,8 +3,6 @@ package nc.noumea.mairie.web.dto;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Affectation;
-
 public class CalculEaeInfosDto {
 
 	private Date dateDebut;
@@ -28,12 +26,6 @@ public class CalculEaeInfosDto {
 	// mairie.Spcarr
 	CarriereDto carriereFonctionnaireAncienne;
 	CarriereDto carriereActive;
-	
-	
-	public CalculEaeInfosDto(Affectation affectation){
-		this.setDateDebut(affectation.getDateDebutAff());
-		this.setDateFin(affectation.getDateFinAff());
-	}
 	
 
 	public PositionAdmAgentDto getPositionAdmAgentEnCours() {

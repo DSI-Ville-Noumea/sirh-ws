@@ -43,20 +43,19 @@ public class Spgeng {
 	@Column(name = "CDCADR", columnDefinition = "char")
 	private String cdcadr;
 
-	@OneToOne(optional = true)
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "CDFILI", referencedColumnName = "CDFILI")
-	@NotFound(action = NotFoundAction.IGNORE)
 	private Spfili filiere;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "CORPS_CAP", joinColumns = { @javax.persistence.JoinColumn(name = "CDGENG") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_CAP"))
 	private Set<Cap> caps;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDDELIBTERR")
 	private Deliberation deliberationTerritoriale;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDDELIBCOMM")
 	private Deliberation deliberationCommunale;
 
