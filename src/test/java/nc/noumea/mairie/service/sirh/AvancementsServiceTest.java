@@ -757,19 +757,24 @@ public class AvancementsServiceTest {
 			gradeNouveau.setDureeMaximum(30);
 			gradeNouveau.setGradeGenerique(gradeGenerique);
 			gradeNouveau.setEchelon(echelon);
-			gradeNouveau.setMotifAvct(motifAvct);
+			
+		Spgradn	grade = new Spgradn();
+			grade.setCdTava("  2");
+			
 		Date dateAvctMoy = new Date();
 		AvancementFonctionnaire af = new AvancementFonctionnaire();
 			af.setIdAvct(1);
 			af.setEtat("etat");
 			af.setDateAvctMoy(dateAvctMoy);
 			af.setGradeNouveau(gradeNouveau);
+			af.setGrade(grade);
 		
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
 			Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(af);
+			Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
 		
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+			ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
 		
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
 		
@@ -777,8 +782,20 @@ public class AvancementsServiceTest {
 		assertEquals(1, result.getIdAvct().intValue());
 		assertEquals("etat", result.getEtat());
 		
-		assertNull(result.getDateAvctMoy());
-		assertNull(result.getGrade());
+		assertEquals(dateAvctMoy, result.getDateAvctMoy());
+
+		assertEquals("codcla", result.getGrade().getCodeClasse());
+		assertEquals("codech", result.getGrade().getCodeEchelon());
+		assertEquals("CDGRAD", result.getGrade().getCodeGrade());
+		assertEquals("cdcadr", result.getGrade().getCodeGradeGenerique());
+		assertEquals("codeavct", result.getGrade().getCodeMotifAvancement());
+		assertEquals(30, result.getGrade().getDureeMaximum().intValue());
+		assertEquals(18, result.getGrade().getDureeMinimum().intValue());
+		assertEquals(24, result.getGrade().getDureeMoyenne().intValue());
+		assertEquals("grade initial", result.getGrade().getGradeInitial());
+		assertEquals("libelle classe", result.getGrade().getLibelleClasse());
+		assertEquals("libelle echelon", result.getGrade().getLibelleEchelon());
+		assertEquals("libelle grade", result.getGrade().getLibelleGrade());
 	}
 	
 	@Test
@@ -807,9 +824,13 @@ public class AvancementsServiceTest {
 		Speche echelon = new Speche();
 			echelon.setCodEch("codech");
 			echelon.setLibEch("libelle echelon");
+			
 		PMotifAvct motifAvct = new PMotifAvct();
 			motifAvct.setCodeAvct("codeavct");
 
+		Spgradn	grade = new Spgradn();
+			grade.setCdTava("  1");
+			
 		Spgradn gradeNouveau = new Spgradn();
 			gradeNouveau.setCdgrad("CDGRAD");
 			gradeNouveau.setLiGrad("libelle grade");
@@ -820,16 +841,17 @@ public class AvancementsServiceTest {
 			gradeNouveau.setDureeMaximum(30);
 			gradeNouveau.setGradeGenerique(gradeGenerique);
 			gradeNouveau.setEchelon(echelon);
-			gradeNouveau.setMotifAvct(motifAvct);
 		Date dateAvctMoy = new Date();
 		AvancementDetache af = new AvancementDetache();
 			af.setIdAvct(1);
 			af.setEtat("etat");
 			af.setDateAvctMoy(dateAvctMoy);
 			af.setGradeNouveau(gradeNouveau);
+			af.setGrade(grade);
 		
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
 			Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
+			Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
 		
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
@@ -844,7 +866,7 @@ public class AvancementsServiceTest {
 		assertEquals("codcla", result.getGrade().getCodeClasse());
 		assertEquals("codech", result.getGrade().getCodeEchelon());
 		assertEquals("CDGRAD", result.getGrade().getCodeGrade());
-		assertEquals("cdgeng", result.getGrade().getCodeGradeGenerique());
+		assertEquals("cdcadr", result.getGrade().getCodeGradeGenerique());
 		assertEquals("codeavct", result.getGrade().getCodeMotifAvancement());
 		assertEquals(30, result.getGrade().getDureeMaximum().intValue());
 		assertEquals(18, result.getGrade().getDureeMinimum().intValue());

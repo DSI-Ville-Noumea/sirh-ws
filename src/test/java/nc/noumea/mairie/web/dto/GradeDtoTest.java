@@ -15,20 +15,22 @@ public class GradeDtoTest {
 	public void testGradeDto_ctor() {
 		// Given
 		Spclas spclas = new Spclas();
-		spclas.setCodcla("classe");
-		spclas.setLibCla("lib classe");
+			spclas.setCodcla("classe");
+			spclas.setLibCla("lib classe");
 		Speche speche = new Speche();
-		speche.setCodEch("classe");
-		speche.setLibEch("lib classe");
+			speche.setCodEch("classe");
+			speche.setLibEch("lib classe");
 		Spgeng spgeng = new Spgeng();
-		spgeng.setCdgeng("CDCADR");
+			spgeng.setCdgeng("Cdgeng");
+			spgeng.setCdcadr("CDCADR");
 		Spgradn spgradn = new Spgradn();
-		spgradn.setClasse(spclas);
-		spgradn.setEchelon(speche);
-		spgradn.setGradeGenerique(spgeng);
+			spgradn.setClasse(spclas);
+			spgradn.setEchelon(speche);
+			spgradn.setGradeGenerique(spgeng);
+			spgradn.setGradeInitial(null);
+			spgradn.setLiGrad("liGrad");
 		PMotifAvct motifAvct = new PMotifAvct();
-		motifAvct.setCodeAvct("AD");
-		spgradn.setMotifAvct(motifAvct);
+			motifAvct.setCodeAvct("AD");
 
 		// When
 		GradeDto dto = new GradeDto(spgradn);
@@ -37,12 +39,11 @@ public class GradeDtoTest {
 		assertEquals(spgradn.getClasse().getCodcla(), dto.getCodeClasse());
 		assertEquals(spgradn.getEchelon().getCodEch(), dto.getCodeEchelon());
 		assertEquals(spgradn.getCdgrad(), dto.getCodeGrade());
-		assertEquals(spgradn.getGradeGenerique().getCdgeng(), dto.getCodeGradeGenerique());
-		assertEquals(spgradn.getMotifAvct().getCodeAvct(), dto.getCodeMotifAvancement());
+		assertEquals(spgradn.getGradeGenerique().getCdcadr(), dto.getCodeGradeGenerique());
 		assertEquals(spgradn.getDureeMaximum(), dto.getDureeMaximum());
 		assertEquals(spgradn.getDureeMinimum(), dto.getDureeMinimum());
 		assertEquals(spgradn.getDureeMoyenne(), dto.getDureeMoyenne());
-		assertEquals(spgradn.getGradeInitial(), dto.getGradeInitial());
+		assertEquals("", dto.getGradeInitial());
 		assertEquals(spgradn.getClasse().getLibCla(), dto.getLibelleClasse());
 		assertEquals(spgradn.getEchelon().getLibEch(), dto.getLibelleEchelon());
 		assertEquals(spgradn.getLiGrad(), dto.getLibelleGrade());

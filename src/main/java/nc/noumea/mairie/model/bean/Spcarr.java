@@ -11,6 +11,9 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import nc.noumea.mairie.model.pk.SpcarrId;
 
 @Entity
@@ -54,6 +57,7 @@ public class Spcarr {
 	private String modReg;
 	
 	@NotNull
+	@NotFound(action=NotFoundAction.IGNORE)
 	@OneToOne
 	@JoinColumn(name = "CDGRAD", referencedColumnName = "CDGRAD")
 	private Spgradn grade;

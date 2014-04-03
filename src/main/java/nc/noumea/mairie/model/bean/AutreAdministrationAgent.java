@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
@@ -32,7 +33,7 @@ public class AutreAdministrationAgent {
 	private Integer fonctionnaire;
 	
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_AUTRE_ADMIN", referencedColumnName = "ID_AUTRE_ADMIN", insertable = false, updatable = false)
 	private AutreAdministration autreAdministration;
 
