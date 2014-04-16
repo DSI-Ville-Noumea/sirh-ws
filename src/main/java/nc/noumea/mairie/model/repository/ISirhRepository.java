@@ -9,7 +9,7 @@ import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.DiplomeAgent;
 import nc.noumea.mairie.model.bean.FormationAgent;
-import nc.noumea.mairie.model.bean.PMotifAvct;
+import nc.noumea.mairie.model.bean.MotifAvct;
 
 public interface ISirhRepository {
 
@@ -37,5 +37,5 @@ public interface ISirhRepository {
 	
 	Agent getAgent(Integer idAgent);
 	
-	PMotifAvct getMotifAvct(Integer idMotifAvct);
+	MotifAvct getMotifAvct(Integer idMotifAvct);
 }
