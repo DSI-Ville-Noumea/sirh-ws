@@ -19,7 +19,7 @@ import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.AvisCap;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.FichePoste;
-import nc.noumea.mairie.model.bean.PMotifAvct;
+import nc.noumea.mairie.model.bean.MotifAvct;
 import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
@@ -744,7 +744,7 @@ public class AvancementsServiceTest {
 		Speche echelon = new Speche();
 			echelon.setCodEch("codech");
 			echelon.setLibEch("libelle echelon");
-		PMotifAvct motifAvct = new PMotifAvct();
+		MotifAvct motifAvct = new MotifAvct();
 			motifAvct.setCodeAvct("codeavct");
 
 		Spgradn gradeNouveau = new Spgradn();
@@ -825,7 +825,7 @@ public class AvancementsServiceTest {
 			echelon.setCodEch("codech");
 			echelon.setLibEch("libelle echelon");
 			
-		PMotifAvct motifAvct = new PMotifAvct();
+		MotifAvct motifAvct = new MotifAvct();
 			motifAvct.setCodeAvct("codeavct");
 
 		Spgradn	grade = new Spgradn();

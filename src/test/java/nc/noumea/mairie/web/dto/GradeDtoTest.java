@@ -1,7 +1,7 @@
 package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.PMotifAvct;
+import nc.noumea.mairie.model.bean.MotifAvct;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
@@ -29,7 +29,7 @@ public class GradeDtoTest {
 			spgradn.setGradeGenerique(spgeng);
 			spgradn.setGradeInitial(null);
 			spgradn.setLiGrad("liGrad");
-		PMotifAvct motifAvct = new PMotifAvct();
+		MotifAvct motifAvct = new MotifAvct();
 			motifAvct.setCodeAvct("AD");
 
 		// When
