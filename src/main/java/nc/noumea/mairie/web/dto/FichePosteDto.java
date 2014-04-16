@@ -67,7 +67,7 @@ public class FichePosteDto {
 	private List<String> primes;
 
 	private TitrePosteDto titrePoste;
-	
+
 	private Integer idAgent;
 
 	public FichePosteDto() {
@@ -89,42 +89,43 @@ public class FichePosteDto {
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
-				if(null != agt.getAgent()) {
+				if (null != agt.getAgent()) {
 					idAgent = agt.getAgent().getIdAgent();
 					break;
 				}
 			}
 		}
-		
+
 		direction = fichePoste.getService().getDirection();
 		titre = fichePoste.getTitrePoste().getLibTitrePoste();
 
 		budget = fichePoste.getBudget().getLibelleBudget();
 		try {
-			budgete = null == fichePoste.getBudgete() || fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste.getBudgete().getLibHor().trim();
-		} catch(javax.persistence.EntityNotFoundException e) {
+			budgete = null == fichePoste.getBudgete() || fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste
+					.getBudgete().getLibHor().trim();
+		} catch (javax.persistence.EntityNotFoundException e) {
 			budgete = "";
 		}
 		try {
-			reglementaire = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire()
-					.getLibHor().trim();
-		} catch(javax.persistence.EntityNotFoundException e) {
+			reglementaire = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getLibHor() == null ? ""
+					: fichePoste.getReglementaire().getLibHor().trim();
+		} catch (javax.persistence.EntityNotFoundException e) {
 			reglementaire = "";
 		}
-		
-		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique() == null || 
-				fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
+
+		cadreEmploi = fichePoste.getGradePoste().getGradeGenerique() == null
+				|| fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
 				.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
 
-		codeService  = fichePoste.getService() == null ? "" : fichePoste.getService().getServi();
+		codeService = fichePoste.getService() == null ? "" : fichePoste.getService().getServi();
 		service = fichePoste.getService() == null ? "" : fichePoste.getService().getLiServ();
 
 		section = fichePoste.getService().getSection();
-		lieu = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu()
-				.trim();
-		gradePoste = fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste()
-				.getGradeInitial().trim();
+		lieu = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? ""
+				: fichePoste.getLieuPoste().getLibelleLieu().trim();
+		gradePoste = fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? ""
+				: fichePoste.getGradePoste().getGradeInitial().trim();
 
 		// superieur =
 		// fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
@@ -146,7 +147,7 @@ public class FichePosteDto {
 			if (cp.getTypeCompetence().getIdTypeCompetence().equals(3))
 				comportementsProfessionnels.add(cp.getNomCompetence());
 		}
-		
+
 		for (FicheEmploi emploiPrim : fichePoste.getFicheEmploiPrimaire()) {
 			emploiPrimaire = emploiPrim.getNomEmploi();
 			break;
@@ -156,19 +157,19 @@ public class FichePosteDto {
 			break;
 		}
 	}
-	
+
 	public FichePosteDto(Siserv service, Integer idFichePoste, Set<Affectation> agent) {
 		this();
 		this.idFichePoste = idFichePoste;
 		if (null != agent) {
 			for (Affectation agt : agent) {
-				if(null != agt && null != agt.getAgent()) {
+				if (null != agt && null != agt.getAgent()) {
 					idAgent = agt.getAgent().getIdAgent();
 					break;
 				}
 			}
 		}
-		if(null != service) {
+		if (null != service) {
 			this.codeService = service.getServi();
 		}
 	}
@@ -195,7 +196,7 @@ public class FichePosteDto {
 		if (fichePoste.getNatureCredit() != null) {
 			natureCredit = fichePoste.getNatureCredit().getLibNatureCredit();
 		}
-		
+
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
 				agent = agt.getAgent().getDisplayNom()
@@ -595,7 +596,7 @@ public class FichePosteDto {
 	public void setNatureCredit(String natureCredit) {
 		this.natureCredit = natureCredit;
 	}
-	
+
 	public TitrePosteDto getTitrePoste() {
 		return titrePoste;
 	}
