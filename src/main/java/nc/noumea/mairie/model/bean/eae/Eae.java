@@ -42,9 +42,6 @@ public class Eae {
 	@OneToMany(mappedBy = "eae", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<EaeEvaluateur> eaeEvaluateurs = new HashSet<EaeEvaluateur>();
 
-	@OneToMany(mappedBy = "eae", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<EaeFichePoste> eaeFichePoste = new HashSet<EaeFichePoste>();
-
 	@OneToOne(mappedBy = "eae", fetch = FetchType.LAZY)
 	private EaeEvalue eaeEvalue;
 
@@ -127,14 +124,6 @@ public class Eae {
 
 	public void setAgentDelegataire(Agent agentDelegataire) {
 		this.agentDelegataire = agentDelegataire;
-	}
-
-	public Set<EaeFichePoste> getEaeFichePoste() {
-		return eaeFichePoste;
-	}
-
-	public void setEaeFichePoste(Set<EaeFichePoste> eaeFichePoste) {
-		this.eaeFichePoste = eaeFichePoste;
 	}
 
 	public EaeEtatEnum getEtat() {
