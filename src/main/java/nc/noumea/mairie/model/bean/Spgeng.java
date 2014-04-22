@@ -16,9 +16,6 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 @Entity
 @Table(name = "SPGENG")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
