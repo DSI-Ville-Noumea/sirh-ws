@@ -31,40 +31,49 @@
 		maxWait="30000" initialSize="10" removeAbandonedTimeout="500"
 		removeAbandoned="true" logAbandoned="true" minEvictableIdleTimeMillis="30000"
 		jmxEnabled="true" username="***REMOVED***" password="***REMOVED***"
-		driverClassName="com.ibm.as400.access.AS400JDBCDriver" url="***REMOVED***" />
-		
-		<!--<Resource name="jdbc/KIOSQUE_DS1" auth="Container" type="javax.sql.DataSource"
-		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" testWhileIdle="true"
-		testOnBorrow="true" testOnReturn="false" validationQuery="select 1 from sysdummy1"
-		validationInterval="30000" timeBetweenEvictionRunsMillis="30000"
-		maxActive="300" maxIdle="30" maxWait="30000" initialSize="10"
-		removeAbandonedTimeout="500" removeAbandoned="true" logAbandoned="true"
-		minEvictableIdleTimeMillis="30000" jmxEnabled="true"
-		jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
-            org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-		username="***REMOVED***" password="***REMOVED***" driverClassName="com.ibm.as400.access.AS400JDBCDriver"
-		url="***REMOVED***;errors=full;" /> -->
-		
-	<Resource name="jdbc/KIOSQUE_DS2" auth="Container" type="javax.sql.DataSource" 
-		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual" 
-		maxWait="10000" initialSize="1" username="eae" password="eae" driverClassName="oracle.jdbc.driver.OracleDriver" 
-		url="jdbc:oracle:thin:@DVLP:1521:ORADEV" poolPreparedStatements="true" />
-		
-<!-- 	<Resource name="jdbc/KIOSQUE_DS2" auth="Container" type="javax.sql.DataSource"  -->
-<!-- 		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual"  -->
-<!-- 		maxWait="10000" initialSize="1" username="eae_debug" password="qsd159" driverClassName="oracle.jdbc.driver.OracleDriver"  -->
-<!-- 		url="***REMOVED***" poolPreparedStatements="false"  />  -->
-		
+		driverClassName="com.ibm.as400.access.AS400JDBCDriver"
+		url="***REMOVED***" />
+
+	<!--<Resource name="jdbc/KIOSQUE_DS1" auth="Container" type="javax.sql.DataSource" 
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" testWhileIdle="true" 
+		testOnBorrow="true" testOnReturn="false" validationQuery="select 1 from sysdummy1" 
+		validationInterval="30000" timeBetweenEvictionRunsMillis="30000" maxActive="300" 
+		maxIdle="30" maxWait="30000" initialSize="10" removeAbandonedTimeout="500" 
+		removeAbandoned="true" logAbandoned="true" minEvictableIdleTimeMillis="30000" 
+		jmxEnabled="true" jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState; 
+		org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer" username="***REMOVED***" 
+		password="***REMOVED***" driverClassName="com.ibm.as400.access.AS400JDBCDriver" 
+		url="***REMOVED***;errors=full;" 
+		/> -->
+
+	<Resource name="jdbc/KIOSQUE_DS2" auth="Container" type="javax.sql.DataSource"
+		maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 from dual"
+		maxWait="10000" initialSize="1" username="eae" password="eae"
+		driverClassName="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@DVLP:1521:ORADEV"
+		poolPreparedStatements="true" />
+
+	<!-- <Resource name="jdbc/KIOSQUE_DS2" auth="Container" type="javax.sql.DataSource" -->
+	<!-- maxActive="100" maxIdle="30" minIdle="0" validationQuery="select 1 
+		from dual" -->
+	<!-- maxWait="10000" initialSize="1" username="eae_debug" password="qsd159" 
+		driverClassName="oracle.jdbc.driver.OracleDriver" -->
+	<!-- url="***REMOVED***" 
+		poolPreparedStatements="false" /> -->
+
 	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String"
-		description="SIRH reports path on Birt"
-		value="report/sirh-reports/" override="false" />
+		description="SIRH reports path on Birt" value="report/sirh-reports/"
+		override="false" />
 
 	<Environment name="REPORTING_BASE_URL" type="java.lang.String"
-		description="BIRT report viewer base URL for SIRH reporting"
-		value="http://172.16.24.19:8085/birt/" override="false" />
-		
+		description="BIRT report viewer base URL for SIRH reporting" value="http://172.16.24.19:8085/birt/"
+		override="false" />
+
 	<Environment name="PTG_WS_BASE_URL" type="java.lang.String"
-		description="SIRH PTG WS url pour les droits" 
-		value="http://172.16.24.19:8085/sirh-ptg-ws/" override="false" />
-		
+		description="SIRH PTG WS url pour les droits" value="http://172.16.24.19:8085/sirh-ptg-ws/"
+		override="false" />
+
+	<!-- WS RADI pour interroger AD -->
+	<Environment name="RADI_WS" type="java.lang.String"
+		description="RADI WS url" override="false" value="http://localhost:8090/radi/" />
+
 </Context>

@@ -90,4 +90,6 @@
 	<bean class="java.lang.String" id="reportingBaseUrl" />
 	
 	<bean class="java.lang.String" id="ptgWsBaseUrl" />
+	
+	<bean class="java.lang.String" id="radiWsBaseUrl" />
 </beans>

@@ -14,7 +14,6 @@ import nc.noumea.mairie.model.bean.Affectation;
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.AgentRecherche;
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.service.ISiidmaService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
@@ -29,9 +28,6 @@ public class AgentService implements IAgentService {
 
 	@Autowired
 	private ISiservService siservSrv;
-
-	@Autowired
-	private ISiidmaService siidmaSrv;
 
 	@Autowired
 	private IUtilisateurService utilisateurSrv;

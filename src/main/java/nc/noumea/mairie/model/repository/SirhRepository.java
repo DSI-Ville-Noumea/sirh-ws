@@ -178,6 +178,7 @@ public class SirhRepository implements ISirhRepository {
 		qA.setParameter("anneeAvancement", anneeAvancement);
 		qA.setParameter("idAgent", idAgent);
 
+		@SuppressWarnings("unchecked")
 		List<Object[]> result = qA.getResultList();
 
 		if (null == result || result.isEmpty()) {
