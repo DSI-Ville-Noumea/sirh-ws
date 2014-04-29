@@ -7,10 +7,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.Siidma;
 import nc.noumea.mairie.model.bean.Utilisateur;
-import nc.noumea.mairie.service.ISiidmaService;
+import nc.noumea.mairie.web.dto.LightUserDto;
 import nc.noumea.mairie.web.dto.ReturnMessageDto;
+import nc.noumea.mairie.ws.IRadiWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,10 @@ public class UtilisateurService implements IUtilisateurService {
 	transient EntityManager sirhEntityManager;
 
 	@Autowired
-	private ISiidmaService siidmaSrv;
+	private IAgentService agentSrv;
 
 	@Autowired
-	private IAgentService agentSrv;
+	private IRadiWSConsumer radiWSConsumer;
 
 	@Override
 	public Utilisateur chercherUtilisateurSIRHByLogin(String login) {
@@ -52,17 +52,16 @@ public class UtilisateurService implements IUtilisateurService {
 			return res;
 		}
 
-		// on cherche son login dans SIIDMA
-		// dans SIIDMA les idIndi sont de type 90+nomatr
-		String idIndi = "90" + newIdAgent.substring(3, newIdAgent.length());
-		Siidma siidma = siidmaSrv.chercherSiidmaByIdIndi(Integer.valueOf(idIndi));
-		if (siidma == null) {
-			String err = "L'agent " + newIdAgent + " n'existe pas dans SIIDMA.";
+		// on fait la correspondance entre le login et l'agent via RADI
+		LightUserDto user = radiWSConsumer.getAgentCompteAD(Integer.valueOf(radiWSConsumer.getNomatrWithIdAgent(Integer
+				.valueOf(newIdAgent))));
+		if (user == null || user.getsAMAccountName() == null) {
+			String err = "L'agent " + newIdAgent + " n'a pas de compte AD ou n'a pas son login renseigné.";
 			res.getErrors().add(err);
 			return res;
 		}
 		// on verifie que son login est dans la table des utilisateurs SIRH
-		Utilisateur utilisateurSIRH = chercherUtilisateurSIRHByLogin(siidma.getId().getCdidut());
+		Utilisateur utilisateurSIRH = chercherUtilisateurSIRHByLogin(user.getsAMAccountName());
 		if (utilisateurSIRH == null) {
 			String err = "L'agent " + newIdAgent + " n'est pas un utilisateur SIRH.";
 			res.getErrors().add(err);

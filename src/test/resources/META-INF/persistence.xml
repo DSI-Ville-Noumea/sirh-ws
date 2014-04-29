@@ -62,7 +62,6 @@
 		<class>nc.noumea.mairie.model.bean.TypeDelegation</class>
 		<class>nc.noumea.mairie.model.bean.TypeRegimeIndemnitaire</class>
 		<class>nc.noumea.mairie.model.bean.NatureCredit</class>
-		<class>nc.noumea.mairie.model.bean.Siidma</class>
 		<class>nc.noumea.mairie.model.bean.Utilisateur</class>
 		<class>nc.noumea.mairie.model.bean.AutreAdministration</class>
 		<class>nc.noumea.mairie.model.bean.AutreAdministrationAgent</class>
@@ -77,17 +76,21 @@
 		<class>nc.noumea.mairie.model.bean.CentreFormation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <!-- value="create" to build a new database on each run; value="update" to modify an existing database; value="create-drop" means the same as "create" but also drops tables when Hibernate closes; value="validate" makes no changes to the database -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
-            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
-            <property name="hibernate.connection.charSet" value="UTF-8"/>
-            <property name="org.hibernate.FlushMode" value="manual"/>
-            <property name="hibernate.show_sql" value="true" />
-        </properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- value="create" to build a new database on each run; value="update" 
+				to modify an existing database; value="create-drop" means the same as "create" 
+				but also drops tables when Hibernate closes; value="validate" makes no changes 
+				to the database -->
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
+			<property name="hibernate.connection.charSet" value="UTF-8" />
+			<property name="org.hibernate.FlushMode" value="manual" />
+			<property name="hibernate.show_sql" value="true" />
+		</properties>
 	</persistence-unit>
-	
-	<persistence-unit name="eaePersistenceUnit" transaction-type="RESOURCE_LOCAL">
+
+	<persistence-unit name="eaePersistenceUnit"
+		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>nc.noumea.mairie.model.bean.eae.Eae</class>
 		<class>nc.noumea.mairie.model.bean.eae.EaeCampagne</class>
@@ -97,12 +100,15 @@
 		<class>nc.noumea.mairie.model.bean.eae.EaeFinalisation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <!-- value="create" to build a new database on each run; value="update" to modify an existing database; value="create-drop" means the same as "create" but also drops tables when Hibernate closes; value="validate" makes no changes to the database -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
-            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
-            <property name="hibernate.connection.charSet" value="UTF-8"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<!-- value="create" to build a new database on each run; value="update" 
+				to modify an existing database; value="create-drop" means the same as "create" 
+				but also drops tables when Hibernate closes; value="validate" makes no changes 
+				to the database -->
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy" />
+			<property name="hibernate.connection.charSet" value="UTF-8" />
 			<property name="hibernate.show_sql" value="true" />
-        </properties>
+		</properties>
 	</persistence-unit>
 </persistence>
