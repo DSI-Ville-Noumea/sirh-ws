@@ -57,7 +57,7 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private ISiservService siservSrv;
-	
+
 	@Autowired
 	private ISirhRepository sirhRepository;
 
@@ -130,7 +130,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and avct.anneeAvancement = :annee ");
 		sb.append("and avct.agentVDN = :capVDN ");
 		sb.append("and ca.idCap = :idCap ");
-		sb.append("and spgeng.cdgeng = :cdgeng");
+		sb.append("and spgeng.cdgeng = :cdgeng ");
+		sb.append("order by avct.grade.gradeInitial desc , avct.agent.nomUsage asc ");
 
 		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(),
 				AvancementFonctionnaire.class);
@@ -242,7 +243,6 @@ public class AvancementsService implements IAvancementsService {
 					break;
 			}
 		}
-
 		result.getAvancementsDifferencies().updateNbAgents();
 		result.getChangementClasses().updateNbAgents();
 
@@ -371,7 +371,7 @@ public class AvancementsService implements IAvancementsService {
 					: avct.getGradeNouveau().getClasse();
 			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
-			
+
 			if (fp != null) {
 				fp.getService().setDirection(
 						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -417,37 +417,37 @@ public class AvancementsService implements IAvancementsService {
 
 		return result;
 	}
-	
-	@Override 
+
+	@Override
 	public AvancementEaeDto getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire) {
-	 
+
 		AvancementFonctionnaire avct = sirhRepository.getAvancement(idAgent, anneeAvancement, isFonctionnaire);
-		
-		if(null == avct)
+
+		if (null == avct)
 			return null;
-		
+
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if(null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
+		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
 			MotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
-			if(null != motifAvct) {
+			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
 		}
 		return dto;
 	}
-	
-	@Override 
+
+	@Override
 	public AvancementEaeDto getAvancementDetache(Integer idAgent, Integer anneeAvancement) {
-	 
+
 		AvancementDetache avct = sirhRepository.getAvancementDetache(idAgent, anneeAvancement);
-		
-		if(null == avct)
+
+		if (null == avct)
 			return null;
-		
+
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if(null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
+		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
 			MotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
-			if(null != motifAvct) {
+			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
 		}
