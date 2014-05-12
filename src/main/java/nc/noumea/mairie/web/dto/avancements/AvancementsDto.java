@@ -46,22 +46,20 @@ public class AvancementsDto {
 		if (spgeng.getFiliere() != null)
 			this.filiere = spgeng.getFiliere().getLibelleFili();
 
-		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi().trim();
+		this.cadreEmploiLibelle = spgeng.getTexteCapCadreEmploi() == null ? null : spgeng.getTexteCapCadreEmploi()
+				.trim();
 		this.cap = cap.getRefCap();
 		this.annee = annee;
 		this.categorie = spgeng.getCdcadr() == null ? null : spgeng.getCdcadr().trim();
 		this.employeur = "Ville de Nouméa";
 
 		for (CapEmployeur cE : cap.getEmployeurs()) {
-			getEmployeurs().add(
-					String.format("%s\n%s", cE.getEmployeur().getLibelle(), cE
-							.getEmployeur().getTitre()));
+			getEmployeurs().add(String.format("%s\n%s", cE.getEmployeur().getLibelle(), cE.getEmployeur().getTitre()));
 		}
 
 		for (CapRepresentant cR : cap.getRepresentants()) {
 			getRepresentants().add(
-					String.format("%s %s", cR.getRepresentant().getNom(), cR
-							.getRepresentant().getPrenom()));
+					String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
 		}
 	}
 
