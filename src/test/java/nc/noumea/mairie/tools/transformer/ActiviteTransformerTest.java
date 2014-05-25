@@ -1,7 +1,7 @@
 package nc.noumea.mairie.tools.transformer;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.Activite;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 
 import org.junit.Test;
 

@@ -6,11 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.Utilisateur;
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

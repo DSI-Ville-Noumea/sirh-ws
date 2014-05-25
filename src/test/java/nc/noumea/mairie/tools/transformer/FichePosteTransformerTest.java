@@ -1,20 +1,20 @@
 package nc.noumea.mairie.tools.transformer;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.Activite;
-import nc.noumea.mairie.model.bean.Budget;
-import nc.noumea.mairie.model.bean.CadreEmploi;
-import nc.noumea.mairie.model.bean.Competence;
-import nc.noumea.mairie.model.bean.FichePoste;
-import nc.noumea.mairie.model.bean.NiveauEtude;
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
-import nc.noumea.mairie.model.bean.StatutFichePoste;
-import nc.noumea.mairie.model.bean.TitrePoste;
-import nc.noumea.mairie.model.bean.TypeCompetence;
+import nc.noumea.mairie.model.bean.sirh.Activite;
+import nc.noumea.mairie.model.bean.sirh.Budget;
+import nc.noumea.mairie.model.bean.sirh.CadreEmploi;
+import nc.noumea.mairie.model.bean.sirh.Competence;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.bean.sirh.TypeCompetence;
 
 import org.junit.Test;
 

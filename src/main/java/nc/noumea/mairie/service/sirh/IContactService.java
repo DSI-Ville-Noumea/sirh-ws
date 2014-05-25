@@ -2,7 +2,7 @@ package nc.noumea.mairie.service.sirh;
 
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Contact;
+import nc.noumea.mairie.model.bean.sirh.Contact;
 
 public interface IContactService {
 

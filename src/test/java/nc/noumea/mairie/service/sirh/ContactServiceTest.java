@@ -8,8 +8,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Contact;
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.service.sirh.ContactService;
 
 import org.junit.Test;

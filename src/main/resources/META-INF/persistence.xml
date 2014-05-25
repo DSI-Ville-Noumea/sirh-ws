@@ -5,37 +5,37 @@
 	<persistence-unit name="sirhPersistenceUnit"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		<class>nc.noumea.mairie.model.bean.Activite</class>
-		<class>nc.noumea.mairie.model.bean.ActiviteFP</class>
-		<class>nc.noumea.mairie.model.bean.AvancementFonctionnaire</class>
-		<class>nc.noumea.mairie.model.bean.AvancementDetache</class>
-		<class>nc.noumea.mairie.model.bean.AvantageNature</class>
-		<class>nc.noumea.mairie.model.bean.AvisCap</class>
-		<class>nc.noumea.mairie.model.bean.CadreEmploi</class>
-		<class>nc.noumea.mairie.model.bean.Cap</class>
-		<class>nc.noumea.mairie.model.bean.CapEmployeur</class>
-		<class>nc.noumea.mairie.model.bean.CapRepresentant</class>
-		<class>nc.noumea.mairie.model.bean.Employeur</class>
-		<class>nc.noumea.mairie.model.bean.Representant</class>
-		<class>nc.noumea.mairie.model.bean.Deliberation</class>
-		<class>nc.noumea.mairie.model.bean.Budget</class>
-		<class>nc.noumea.mairie.model.bean.Agent</class>
-		<class>nc.noumea.mairie.model.bean.AgentRecherche</class>
-		<class>nc.noumea.mairie.model.bean.Affectation</class>
-		<class>nc.noumea.mairie.model.bean.SituationFamiliale</class>
-		<class>nc.noumea.mairie.model.bean.Competence</class>
-		<class>nc.noumea.mairie.model.bean.CompetenceFP</class>
-		<class>nc.noumea.mairie.model.bean.Contact</class>
-		<class>nc.noumea.mairie.model.bean.Delegation</class>
-		<class>nc.noumea.mairie.model.bean.Enfant</class>
-		<class>nc.noumea.mairie.model.bean.FicheEmploi</class>
-		<class>nc.noumea.mairie.model.bean.FichePoste</class>
-		<class>nc.noumea.mairie.model.bean.NatureAvantage</class>
-		<class>nc.noumea.mairie.model.bean.NiveauEtude</class>
-		<class>nc.noumea.mairie.model.bean.NiveauEtudeFP</class>
-		<class>nc.noumea.mairie.model.bean.ParentEnfant</class>
-		<class>nc.noumea.mairie.model.bean.PrimePointageFP</class>
-		<class>nc.noumea.mairie.model.bean.RegimeIndemnitaire</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Activite</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AvancementDetache</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AvantageNature</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AvisCap</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CadreEmploi</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Cap</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CapEmployeur</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CapRepresentant</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Employeur</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Representant</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Deliberation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Budget</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Agent</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AgentRecherche</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Affectation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.SituationFamiliale</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Competence</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CompetenceFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Contact</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Delegation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Enfant</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FicheEmploi</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FichePoste</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NatureAvantage</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NiveauEtude</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ParentEnfant</class>
+		<class>nc.noumea.mairie.model.bean.sirh.PrimePointageFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire</class>
 		<class>nc.noumea.mairie.model.bean.Sicomm</class>
 		<class>nc.noumea.mairie.model.bean.Siguic</class>
 		<class>nc.noumea.mairie.model.bean.Silieu</class>
@@ -53,27 +53,27 @@
 		<class>nc.noumea.mairie.model.bean.Spgeng</class>
 		<class>nc.noumea.mairie.model.bean.Spfili</class>
 		<class>nc.noumea.mairie.model.bean.SpSold</class>
-		<class>nc.noumea.mairie.model.bean.StatutFichePoste</class>
+		<class>nc.noumea.mairie.model.bean.sirh.StatutFichePoste</class>
 		<class>nc.noumea.mairie.model.bean.Sptyco</class>
-		<class>nc.noumea.mairie.model.bean.TitrePoste</class>
-		<class>nc.noumea.mairie.model.bean.TypeAvantage</class>
-		<class>nc.noumea.mairie.model.bean.TypeCompetence</class>
-		<class>nc.noumea.mairie.model.bean.TypeContact</class>
-		<class>nc.noumea.mairie.model.bean.TypeDelegation</class>
-		<class>nc.noumea.mairie.model.bean.TypeRegimeIndemnitaire</class>
-		<class>nc.noumea.mairie.model.bean.NatureCredit</class>
-		<class>nc.noumea.mairie.model.bean.Utilisateur</class>
-		<class>nc.noumea.mairie.model.bean.AutreAdministration</class>
-		<class>nc.noumea.mairie.model.bean.AutreAdministrationAgent</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TitrePoste</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TypeAvantage</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TypeCompetence</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TypeContact</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TypeDelegation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TypeRegimeIndemnitaire</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NatureCredit</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Utilisateur</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AutreAdministration</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent</class>
 		<class>nc.noumea.mairie.model.bean.Spcatg</class>
-		<class>nc.noumea.mairie.model.bean.MotifAvct</class>
-		<class>nc.noumea.mairie.model.bean.DiplomeAgent</class>
-		<class>nc.noumea.mairie.model.bean.TitreDiplome</class>
-		<class>nc.noumea.mairie.model.bean.SpecialiteDiplome</class>
+		<class>nc.noumea.mairie.model.bean.sirh.MotifAvct</class>
+		<class>nc.noumea.mairie.model.bean.sirh.DiplomeAgent</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TitreDiplome</class>
+		<class>nc.noumea.mairie.model.bean.sirh.SpecialiteDiplome</class>
 		<class>nc.noumea.mairie.model.bean.Spmtsr</class>
-		<class>nc.noumea.mairie.model.bean.FormationAgent</class>
-		<class>nc.noumea.mairie.model.bean.TitreFormation</class>
-		<class>nc.noumea.mairie.model.bean.CentreFormation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FormationAgent</class>
+		<class>nc.noumea.mairie.model.bean.sirh.TitreFormation</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CentreFormation</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

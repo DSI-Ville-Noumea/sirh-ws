@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Contact;
+import nc.noumea.mairie.model.bean.sirh.Contact;
 
 import org.springframework.stereotype.Service;
 

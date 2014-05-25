@@ -3,10 +3,10 @@ package nc.noumea.mairie.web.dto.avancements;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
-import nc.noumea.mairie.model.bean.AvisCap;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 
 import org.joda.time.DateTime;

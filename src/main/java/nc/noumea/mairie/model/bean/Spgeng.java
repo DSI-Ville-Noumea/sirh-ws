@@ -16,6 +16,10 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import nc.noumea.mairie.model.bean.sirh.CadreEmploi;
+import nc.noumea.mairie.model.bean.sirh.Cap;
+import nc.noumea.mairie.model.bean.sirh.Deliberation;
+
 @Entity
 @Table(name = "SPGENG")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")

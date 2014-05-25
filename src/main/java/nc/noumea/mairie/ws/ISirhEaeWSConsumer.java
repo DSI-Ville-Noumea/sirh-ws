@@ -2,8 +2,8 @@ package nc.noumea.mairie.ws;
 
 import java.util.List;
 
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface ISirhEaeWSConsumer {
 

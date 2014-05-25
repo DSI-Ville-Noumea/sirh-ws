@@ -1,6 +1,6 @@
 package nc.noumea.mairie.tools.transformer;
 
-import nc.noumea.mairie.model.bean.ParentEnfant;
+import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 import flexjson.transformer.AbstractTransformer;
 
 public class ParentEnfantTransformer extends AbstractTransformer {

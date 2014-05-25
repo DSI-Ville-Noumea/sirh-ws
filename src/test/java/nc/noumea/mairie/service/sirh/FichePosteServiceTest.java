@@ -14,9 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.FichePoste;
-import nc.noumea.mairie.model.bean.PrimePointageFP;
-import nc.noumea.mairie.model.pk.PrimePointageFPPK;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.service.sirh.FichePosteService;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;

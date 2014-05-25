@@ -7,16 +7,16 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nc.noumea.mairie.model.bean.Activite;
-import nc.noumea.mairie.model.bean.Affectation;
-import nc.noumea.mairie.model.bean.AvantageNature;
-import nc.noumea.mairie.model.bean.Competence;
-import nc.noumea.mairie.model.bean.Delegation;
-import nc.noumea.mairie.model.bean.FicheEmploi;
-import nc.noumea.mairie.model.bean.FichePoste;
-import nc.noumea.mairie.model.bean.PrimePointageFP;
-import nc.noumea.mairie.model.bean.RegimeIndemnitaire;
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Activite;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.AvantageNature;
+import nc.noumea.mairie.model.bean.sirh.Competence;
+import nc.noumea.mairie.model.bean.sirh.Delegation;
+import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 
 @XmlRootElement
 public class FichePosteDto {

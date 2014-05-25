@@ -5,13 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AvancementDetache;
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
-import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 
 public class ArreteDto {
 

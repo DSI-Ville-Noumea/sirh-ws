@@ -1,7 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
-import nc.noumea.mairie.model.bean.Utilisateur;
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
+import nc.noumea.mairie.model.bean.sirh.Utilisateur;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IUtilisateurService {
 

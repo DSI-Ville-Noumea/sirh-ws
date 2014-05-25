@@ -1,9 +1,9 @@
 package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.CentreFormation;
-import nc.noumea.mairie.model.bean.FormationAgent;
-import nc.noumea.mairie.model.bean.TitreFormation;
+import nc.noumea.mairie.model.bean.sirh.CentreFormation;
+import nc.noumea.mairie.model.bean.sirh.FormationAgent;
+import nc.noumea.mairie.model.bean.sirh.TitreFormation;
 
 import org.junit.Test;
 

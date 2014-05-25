@@ -3,7 +3,7 @@ package nc.noumea.mairie.service.sirh;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 
 public interface IFichePosteService {
 
