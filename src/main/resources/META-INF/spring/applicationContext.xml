@@ -43,24 +43,8 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<jee:jndi-lookup id="eaeDataSource" jndi-name="jdbc/KIOSQUE_DS2"
-		resource-ref="true" />
-
 	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1"
 		resource-ref="true" />
-
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
-		id="eaeTransactionManager">
-		<property name="entityManagerFactory" ref="eaeEntityManagerFactory" />
-	</bean>
-	<tx:annotation-driven mode="aspectj"
-		transaction-manager="eaeTransactionManager" />
-	<bean
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		id="eaeEntityManagerFactory">
-		<property name="persistenceUnitName" value="eaePersistenceUnit" />
-		<property name="dataSource" ref="eaeDataSource" />
-	</bean>
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
@@ -83,4 +67,6 @@
 	<jee:jndi-lookup id="ptgWsBaseUrl" jndi-name="PTG_WS_BASE_URL" expected-type="java.lang.String"/>
 	
 	<jee:jndi-lookup id="radiWsBaseUrl" jndi-name="RADI_WS" expected-type="java.lang.String"/>
+	
+	<jee:jndi-lookup id="eaeWsBaseUrl" jndi-name="EAE_WS_BASE_URL" expected-type="java.lang.String"/>
 </beans>
