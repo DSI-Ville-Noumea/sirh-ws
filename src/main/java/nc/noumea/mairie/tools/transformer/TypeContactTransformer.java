@@ -1,6 +1,6 @@
 package nc.noumea.mairie.tools.transformer;
 
-import nc.noumea.mairie.model.bean.TypeContact;
+import nc.noumea.mairie.model.bean.sirh.TypeContact;
 import flexjson.transformer.AbstractTransformer;
 
 public class TypeContactTransformer extends AbstractTransformer {

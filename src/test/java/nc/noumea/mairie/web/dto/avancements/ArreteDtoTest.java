@@ -5,12 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AvancementDetache;
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
-import nc.noumea.mairie.model.bean.AvisCap;
-import nc.noumea.mairie.model.bean.Deliberation;
-import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
@@ -18,6 +12,12 @@ import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvisCap;
+import nc.noumea.mairie.model.bean.sirh.Deliberation;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 
 import org.junit.Test;

@@ -3,10 +3,10 @@ package nc.noumea.mairie.web.dto.avancements;
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Cap;
-import nc.noumea.mairie.model.bean.CapEmployeur;
-import nc.noumea.mairie.model.bean.CapRepresentant;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.model.bean.sirh.Cap;
+import nc.noumea.mairie.model.bean.sirh.CapEmployeur;
+import nc.noumea.mairie.model.bean.sirh.CapRepresentant;
 
 public class AvancementsDto {
 

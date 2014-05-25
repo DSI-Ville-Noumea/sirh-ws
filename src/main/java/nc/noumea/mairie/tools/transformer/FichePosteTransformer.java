@@ -3,7 +3,7 @@ package nc.noumea.mairie.tools.transformer;
 import java.util.List;
 import java.util.Map.Entry;
 
-import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import flexjson.transformer.AbstractTransformer;
 
 public class FichePosteTransformer extends AbstractTransformer {

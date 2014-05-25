@@ -2,14 +2,14 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import nc.noumea.mairie.model.bean.Cap;
-import nc.noumea.mairie.model.bean.CapEmployeur;
-import nc.noumea.mairie.model.bean.CapRepresentant;
-import nc.noumea.mairie.model.bean.Deliberation;
-import nc.noumea.mairie.model.bean.Employeur;
-import nc.noumea.mairie.model.bean.Representant;
 import nc.noumea.mairie.model.bean.Spfili;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.model.bean.sirh.Cap;
+import nc.noumea.mairie.model.bean.sirh.CapEmployeur;
+import nc.noumea.mairie.model.bean.sirh.CapRepresentant;
+import nc.noumea.mairie.model.bean.sirh.Deliberation;
+import nc.noumea.mairie.model.bean.sirh.Employeur;
+import nc.noumea.mairie.model.bean.sirh.Representant;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 

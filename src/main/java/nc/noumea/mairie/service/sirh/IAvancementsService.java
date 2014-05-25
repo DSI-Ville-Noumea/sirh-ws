@@ -3,15 +3,15 @@ package nc.noumea.mairie.service.sirh;
 import java.text.ParseException;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.AvancementDetache;
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
-import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
+import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IAvancementsService {
 

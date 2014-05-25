@@ -1,11 +1,11 @@
 package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.MotifAvct;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.sirh.MotifAvct;
 
 import org.junit.Test;
 

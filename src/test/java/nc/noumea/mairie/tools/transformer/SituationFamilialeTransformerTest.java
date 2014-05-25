@@ -1,7 +1,7 @@
 package nc.noumea.mairie.tools.transformer;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.SituationFamiliale;
+import nc.noumea.mairie.model.bean.sirh.SituationFamiliale;
 
 import org.junit.Test;
 

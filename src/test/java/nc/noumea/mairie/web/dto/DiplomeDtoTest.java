@@ -1,9 +1,9 @@
 package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.DiplomeAgent;
-import nc.noumea.mairie.model.bean.SpecialiteDiplome;
-import nc.noumea.mairie.model.bean.TitreDiplome;
+import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
+import nc.noumea.mairie.model.bean.sirh.SpecialiteDiplome;
+import nc.noumea.mairie.model.bean.sirh.TitreDiplome;
 
 import org.junit.Test;
 
