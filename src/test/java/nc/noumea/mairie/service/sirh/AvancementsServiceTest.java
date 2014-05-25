@@ -26,18 +26,14 @@ import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
-import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.bean.eae.EaeCampagne;
-import nc.noumea.mairie.model.bean.eae.EaeEvaluation;
 import nc.noumea.mairie.model.repository.ISirhRepository;
-import nc.noumea.mairie.service.eae.EaeCampagneService;
-import nc.noumea.mairie.service.eae.EaesService;
-import nc.noumea.mairie.service.sirh.AvancementsService;
-import nc.noumea.mairie.service.sirh.FichePosteService;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
+import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
+import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -237,10 +233,10 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<String> result = service.getAvancementsEaesForCapAndCadreEmploi(idCap, 0);
+		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(idCap, 0);
 
 		// Then
-		assertEquals(0, result.size());
+		assertEquals(0, result.getInfos().size());
 
 		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
 	}
@@ -334,10 +330,10 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<String> result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
+		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
 
 		// Then
-		assertEquals(0, result.size());
+		assertEquals(0, result.getInfos().size());
 	}
 
 	@Test
@@ -370,9 +366,6 @@ public class AvancementsServiceTest {
 		@SuppressWarnings("unchecked")
 		TypedQuery<Integer> mockQueryIdAgent = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQueryIdAgent.getResultList()).thenReturn(listeIdAgent);
-		@SuppressWarnings("unchecked")
-		TypedQuery<String> mockQueryIdGed = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQueryIdGed.getResultList()).thenReturn(listIdGed);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
@@ -381,24 +374,21 @@ public class AvancementsServiceTest {
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Integer.class))).thenReturn(
 				mockQueryIdAgent);
 
-		EntityManager eaeEntityManagerMock = Mockito.mock(EntityManager.class);
-		Mockito.when(eaeEntityManagerMock.createQuery(Mockito.anyString(), Mockito.eq(String.class))).thenReturn(
-				mockQueryIdGed);
-
-		EaesService eaesServiceMock = new EaesService();
-		ReflectionTestUtils.setField(eaesServiceMock, "eaeEntityManager", eaeEntityManagerMock);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(String.class))).thenReturn(mockQueryIdGed);
+		ReturnMessageDto dto = new ReturnMessageDto();
+		dto.getInfos().addAll(listIdGed);
+		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito.mock(ISirhEaeWSConsumer.class);
+		Mockito.when(sirhEaeWSConsumer.getEaesGedIdsForAgents(listeIdAgent, 2014)).thenReturn(dto);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
-		ReflectionTestUtils.setField(service, "eaesService", eaesServiceMock);
+		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer", sirhEaeWSConsumer);
 
 		// When
-		List<String> result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
+		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
 
 		// Then
-		assertEquals(1, result.size());
-		assertEquals(listIdGed.get(0), result.get(0));
+		assertEquals(1, result.getInfos().size());
+		assertEquals(listIdGed.get(0), result.getInfos().get(0));
 	}
 
 	@Test
@@ -430,29 +420,28 @@ public class AvancementsServiceTest {
 		listeAvctFonct.add(avct1);
 		listeAvctFonct.add(avct2);
 
-		EaeCampagne campagne = new EaeCampagne();
+		CampagneEaeDto campagne = new CampagneEaeDto();
 		campagne.setAnnee(2014);
-		EaeEvaluation eaeEvaluatio1 = new EaeEvaluation();
-		eaeEvaluatio1.setAvisShd("Favorable");
-		EaeEvaluation eaeEvaluatio2 = new EaeEvaluation();
-		eaeEvaluatio2.setAvisShd("Durée minimale");
-		Eae eae1 = new Eae();
-		eae1.setAgentEvalue(agent1);
-		eae1.setEaeEvaluation(eaeEvaluatio1);
-		Eae eae2 = new Eae();
-		eae2.setAgentEvalue(agent2);
-		eae2.setEaeEvaluation(eaeEvaluatio2);
 
-		EaeCampagneService eaeCampagneServiceMock = Mockito.mock(EaeCampagneService.class);
-		Mockito.when(eaeCampagneServiceMock.getEaeCampagneOuverte()).thenReturn(campagne);
+		ReturnMessageDto msg2 = new ReturnMessageDto();
+		msg2.getInfos().add("Favorable");
+		ReturnMessageDto msg1 = new ReturnMessageDto();
+		msg1.getInfos().add("Durée minimale");
 
-		EaesService eaesServiceMock = Mockito.mock(EaesService.class);
-		Mockito.when(eaesServiceMock.findEaeByAgentAndYear(9005138, "2014")).thenReturn(eae1);
-		Mockito.when(eaesServiceMock.findEaeByAgentAndYear(9005131, "2014")).thenReturn(eae2);
+		ReturnMessageDto dto2 = new ReturnMessageDto();
+		dto2.getInfos().add("2");
+		ReturnMessageDto dto1 = new ReturnMessageDto();
+		dto1.getInfos().add("1");
+
+		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito.mock(ISirhEaeWSConsumer.class);
+		Mockito.when(sirhEaeWSConsumer.getAvisSHDEae(1)).thenReturn(msg1);
+		Mockito.when(sirhEaeWSConsumer.getAvisSHDEae(2)).thenReturn(msg2);
+		Mockito.when(sirhEaeWSConsumer.getEaeCampagneOuverte()).thenReturn(campagne);
+		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005138, 2014)).thenReturn(dto1);
+		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005131, 2014)).thenReturn(dto2);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "eaeCampagneService", eaeCampagneServiceMock);
-		ReflectionTestUtils.setField(service, "eaesService", eaesServiceMock);
+		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer", sirhEaeWSConsumer);
 
 		// When
 		CommissionAvancementCorpsDto result = service.createCommissionCorps(cap, sp1, listeAvctFonct, true);
@@ -602,7 +591,6 @@ public class AvancementsServiceTest {
 		assertEquals("5131", result.getArretes().get(1).getMatriculeAgent());
 	}
 
-
 	@Test
 	public void getArretesDetachesForUsers_returnArreteListDto() throws ParseException {
 		// Given
@@ -682,8 +670,8 @@ public class AvancementsServiceTest {
 		Mockito.when(mockQueryFDPFiche.getResultList()).thenReturn(new ArrayList<FichePoste>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AvancementDetache.class)))
-				.thenReturn(mockQueryAvct);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AvancementDetache.class))).thenReturn(
+				mockQueryAvct);
 		Mockito.when(sirhEMMock.createNamedQuery("getCurrentCarriere", Spcarr.class)).thenReturn(mockQuerySpcarr);
 
 		EntityManager sirhFDPEMMock = Mockito.mock(EntityManager.class);
@@ -731,57 +719,57 @@ public class AvancementsServiceTest {
 		assertEquals("iban", result.getArretes().get(1).getIb());
 		assertEquals("5131", result.getArretes().get(1).getMatriculeAgent());
 	}
-	
-	
+
 	@Test
 	public void getAvancement_return1dto() {
-		
+
 		Spclas classe = new Spclas();
-			classe.setCodcla("codcla");
-			classe.setLibCla("libelle classe");
+		classe.setCodcla("codcla");
+		classe.setLibCla("libelle classe");
 		Spgeng gradeGenerique = new Spgeng();
-			gradeGenerique.setCdcadr("cdcadr");
+		gradeGenerique.setCdcadr("cdcadr");
 		Speche echelon = new Speche();
-			echelon.setCodEch("codech");
-			echelon.setLibEch("libelle echelon");
+		echelon.setCodEch("codech");
+		echelon.setLibEch("libelle echelon");
 		MotifAvct motifAvct = new MotifAvct();
-			motifAvct.setCodeAvct("codeavct");
+		motifAvct.setCodeAvct("codeavct");
 
 		Spgradn gradeNouveau = new Spgradn();
-			gradeNouveau.setCdgrad("CDGRAD");
-			gradeNouveau.setLiGrad("libelle grade");
-			gradeNouveau.setGradeInitial("grade initial");
-			gradeNouveau.setClasse(classe);
-			gradeNouveau.setDureeMinimum(18);
-			gradeNouveau.setDureeMoyenne(24);
-			gradeNouveau.setDureeMaximum(30);
-			gradeNouveau.setGradeGenerique(gradeGenerique);
-			gradeNouveau.setEchelon(echelon);
-			
-		Spgradn	grade = new Spgradn();
-			grade.setCdTava("  2");
-			
+		gradeNouveau.setCdgrad("CDGRAD");
+		gradeNouveau.setLiGrad("libelle grade");
+		gradeNouveau.setGradeInitial("grade initial");
+		gradeNouveau.setClasse(classe);
+		gradeNouveau.setDureeMinimum(18);
+		gradeNouveau.setDureeMoyenne(24);
+		gradeNouveau.setDureeMaximum(30);
+		gradeNouveau.setGradeGenerique(gradeGenerique);
+		gradeNouveau.setEchelon(echelon);
+
+		Spgradn grade = new Spgradn();
+		grade.setCdTava("  2");
+
 		Date dateAvctMoy = new Date();
 		AvancementFonctionnaire af = new AvancementFonctionnaire();
-			af.setIdAvct(1);
-			af.setEtat("etat");
-			af.setDateAvctMoy(dateAvctMoy);
-			af.setGradeNouveau(gradeNouveau);
-			af.setGrade(grade);
-		
+		af.setIdAvct(1);
+		af.setEtat("etat");
+		af.setDateAvctMoy(dateAvctMoy);
+		af.setGradeNouveau(gradeNouveau);
+		af.setGrade(grade);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(af);
-			Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
-		
+		Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
+				.thenReturn(af);
+		Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+
 		AvancementsService service = new AvancementsService();
-			ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
-		
+		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
-		
+
 		assertNotNull(result);
 		assertEquals(1, result.getIdAvct().intValue());
 		assertEquals("etat", result.getEtat());
-		
+
 		assertEquals(dateAvctMoy, result.getDateAvctMoy());
 
 		assertEquals("codcla", result.getGrade().getCodeClasse());
@@ -797,69 +785,70 @@ public class AvancementsServiceTest {
 		assertEquals("libelle echelon", result.getGrade().getLibelleEchelon());
 		assertEquals("libelle grade", result.getGrade().getLibelleGrade());
 	}
-	
+
 	@Test
 	public void getAvancement_returnNull() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
+				.thenReturn(null);
+
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
-		
+
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
-		
+
 		assertNull(result);
 	}
-	
+
 	@Test
 	public void getAvancementDetache_return1dto() {
-		
-		Spclas classe = new Spclas();
-			classe.setCodcla("codcla");
-			classe.setLibCla("libelle classe");
-		Spgeng gradeGenerique = new Spgeng();
-			gradeGenerique.setCdcadr("cdcadr");
-			gradeGenerique.setCdgeng("cdgeng");
-		Speche echelon = new Speche();
-			echelon.setCodEch("codech");
-			echelon.setLibEch("libelle echelon");
-			
-		MotifAvct motifAvct = new MotifAvct();
-			motifAvct.setCodeAvct("codeavct");
 
-		Spgradn	grade = new Spgradn();
-			grade.setCdTava("  1");
-			
+		Spclas classe = new Spclas();
+		classe.setCodcla("codcla");
+		classe.setLibCla("libelle classe");
+		Spgeng gradeGenerique = new Spgeng();
+		gradeGenerique.setCdcadr("cdcadr");
+		gradeGenerique.setCdgeng("cdgeng");
+		Speche echelon = new Speche();
+		echelon.setCodEch("codech");
+		echelon.setLibEch("libelle echelon");
+
+		MotifAvct motifAvct = new MotifAvct();
+		motifAvct.setCodeAvct("codeavct");
+
+		Spgradn grade = new Spgradn();
+		grade.setCdTava("  1");
+
 		Spgradn gradeNouveau = new Spgradn();
-			gradeNouveau.setCdgrad("CDGRAD");
-			gradeNouveau.setLiGrad("libelle grade");
-			gradeNouveau.setGradeInitial("grade initial");
-			gradeNouveau.setClasse(classe);
-			gradeNouveau.setDureeMinimum(18);
-			gradeNouveau.setDureeMoyenne(24);
-			gradeNouveau.setDureeMaximum(30);
-			gradeNouveau.setGradeGenerique(gradeGenerique);
-			gradeNouveau.setEchelon(echelon);
+		gradeNouveau.setCdgrad("CDGRAD");
+		gradeNouveau.setLiGrad("libelle grade");
+		gradeNouveau.setGradeInitial("grade initial");
+		gradeNouveau.setClasse(classe);
+		gradeNouveau.setDureeMinimum(18);
+		gradeNouveau.setDureeMoyenne(24);
+		gradeNouveau.setDureeMaximum(30);
+		gradeNouveau.setGradeGenerique(gradeGenerique);
+		gradeNouveau.setEchelon(echelon);
 		Date dateAvctMoy = new Date();
 		AvancementDetache af = new AvancementDetache();
-			af.setIdAvct(1);
-			af.setEtat("etat");
-			af.setDateAvctMoy(dateAvctMoy);
-			af.setGradeNouveau(gradeNouveau);
-			af.setGrade(grade);
-		
+		af.setIdAvct(1);
+		af.setEtat("etat");
+		af.setDateAvctMoy(dateAvctMoy);
+		af.setGradeNouveau(gradeNouveau);
+		af.setGrade(grade);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
-			Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
-		
+		Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
+		Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
-		
+
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
-		
+
 		assertNotNull(result);
-		
+
 		assertEquals(dateAvctMoy, result.getDateAvctMoy());
 		assertEquals("etat", result.getEtat());
 		assertEquals(1, result.getIdAvct().intValue());
@@ -876,18 +865,18 @@ public class AvancementsServiceTest {
 		assertEquals("libelle echelon", result.getGrade().getLibelleEchelon());
 		assertEquals("libelle grade", result.getGrade().getLibelleGrade());
 	}
-	
+
 	@Test
 	public void getAvancementDetache_returnNull() {
-		
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-			Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
-		
+		Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
+
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
-		
+
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
-		
+
 		assertNull(result);
 	}
 }

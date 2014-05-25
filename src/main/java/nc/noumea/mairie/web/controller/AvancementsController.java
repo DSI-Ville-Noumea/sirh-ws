@@ -1,11 +1,13 @@
 package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.sirh.IAvancementsService;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
@@ -91,7 +93,11 @@ public class AvancementsController {
 	public ResponseEntity<String> getEaesGedIds(@RequestParam("idCap") int idCap,
 			@RequestParam("idCadreEmploi") int idCadreEmploi) {
 
-		List<String> eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
+		ReturnMessageDto eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < eaeIds.getInfos().size(); i++) {
+			res.add(eaeIds.getInfos().get(i));
+		}
 
 		return new ResponseEntity<String>(new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
 	}

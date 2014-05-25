@@ -7,6 +7,7 @@ import nc.noumea.mairie.model.bean.AvancementDetache;
 import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.Cap;
 import nc.noumea.mairie.model.bean.Spgeng;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
@@ -17,7 +18,7 @@ public interface IAvancementsService {
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
 			boolean capVDN);
 
-	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
+	public ReturnMessageDto getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
 
 	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year)
 			throws ParseException;

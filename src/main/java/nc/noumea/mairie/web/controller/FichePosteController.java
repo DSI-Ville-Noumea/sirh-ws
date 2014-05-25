@@ -68,7 +68,7 @@ public class FichePosteController {
 	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent,
 			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
-		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToEAEIdAgent(idAgent);
+		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
 

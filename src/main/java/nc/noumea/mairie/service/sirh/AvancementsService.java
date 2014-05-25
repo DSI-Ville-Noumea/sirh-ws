@@ -19,12 +19,9 @@ import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spgeng;
-import nc.noumea.mairie.model.bean.eae.Eae;
-import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.model.repository.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
-import nc.noumea.mairie.service.eae.IEaeCampagneService;
-import nc.noumea.mairie.service.eae.IEaesService;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
@@ -32,6 +29,8 @@ import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
+import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
+import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +46,6 @@ public class AvancementsService implements IAvancementsService {
 	private EntityManager sirhEntityManager;
 
 	@Autowired
-	private IEaesService eaesService;
-
-	@Autowired
-	private IEaeCampagneService eaeCampagneService;
-
-	@Autowired
 	private IFichePosteService fichePosteService;
 
 	@Autowired
@@ -60,6 +53,9 @@ public class AvancementsService implements IAvancementsService {
 
 	@Autowired
 	private ISirhRepository sirhRepository;
+
+	@Autowired
+	private ISirhEaeWSConsumer sirhEaeWSConsumer;
 
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
@@ -88,13 +84,13 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<String> getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
+	public ReturnMessageDto getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
 
-		List<String> result = null;
+		ReturnMessageDto result = new ReturnMessageDto();
 		Cap cap = getCap(idCap);
 
 		if (cap == null)
-			return new ArrayList<String>();
+			return result;
 
 		List<Spgeng> corps = getCorpsForCadreEmploi(idCadreEmploi);
 		List<Integer> agentsIds = new ArrayList<Integer>();
@@ -105,7 +101,7 @@ public class AvancementsService implements IAvancementsService {
 			agentsIds.addAll(agents);
 		}
 
-		result = eaesService.getEaesGedIdsForAgents(agentsIds, getAnnee());
+		result = sirhEaeWSConsumer.getEaesGedIdsForAgents(agentsIds, getAnnee());
 
 		return result;
 	}
@@ -198,12 +194,13 @@ public class AvancementsService implements IAvancementsService {
 		for (AvancementFonctionnaire avct : avancements) {
 			Integer valeurAvisEAE = null;
 			if (avisEae) {
-				EaeCampagne campEnCours = eaeCampagneService.getEaeCampagneOuverte();
+				CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
 
-				Eae eaeAgent = eaesService.findEaeByAgentAndYear(avct.getAgent().getIdAgent(), campEnCours.getAnnee()
-						.toString());
+				ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(),
+						campagneEnCours.getAnnee());
 				try {
-					String avisSHD = eaeAgent.getEaeEvaluation().getAvisShd();
+					String avisSHD = sirhEaeWSConsumer.getAvisSHDEae(Integer.valueOf(eaeAgent.getInfos().get(0)))
+							.getInfos().get(0);
 					switch (avisSHD) {
 						case "Durée minimale":
 							valeurAvisEAE = 1;
