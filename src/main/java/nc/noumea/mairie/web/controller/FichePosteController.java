@@ -3,8 +3,8 @@ package nc.noumea.mairie.web.controller;
 import java.text.ParseException;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;

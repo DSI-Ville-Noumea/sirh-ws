@@ -2,7 +2,7 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 
 public class AvancementItemDto {
 

@@ -1,6 +1,6 @@
 package nc.noumea.mairie.web.dto;
 
-import nc.noumea.mairie.model.bean.FormationAgent;
+import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 
 public class FormationDto {
 

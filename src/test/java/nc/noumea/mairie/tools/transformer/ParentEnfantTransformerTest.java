@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.Enfant;
-import nc.noumea.mairie.model.bean.ParentEnfant;
 import nc.noumea.mairie.model.bean.Sicomm;
+import nc.noumea.mairie.model.bean.sirh.Enfant;
+import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

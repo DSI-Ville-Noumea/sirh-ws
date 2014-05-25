@@ -4,15 +4,15 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
-import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

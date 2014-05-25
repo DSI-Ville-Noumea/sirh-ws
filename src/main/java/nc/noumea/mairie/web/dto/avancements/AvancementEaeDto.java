@@ -2,8 +2,8 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.AvancementDetache;
-import nc.noumea.mairie.model.bean.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.web.dto.GradeDto;
 
 public class AvancementEaeDto {

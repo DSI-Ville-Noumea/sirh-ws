@@ -2,7 +2,7 @@ package nc.noumea.mairie.web.dto;
 
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
 
 public class AutreAdministrationAgentDto {
 

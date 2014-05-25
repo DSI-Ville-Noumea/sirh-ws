@@ -1,6 +1,6 @@
 package nc.noumea.mairie.tools.transformer;
 
-import nc.noumea.mairie.model.bean.SituationFamiliale;
+import nc.noumea.mairie.model.bean.sirh.SituationFamiliale;
 import flexjson.transformer.AbstractTransformer;
 
 public class SituationFamilialeTransformer extends AbstractTransformer {
