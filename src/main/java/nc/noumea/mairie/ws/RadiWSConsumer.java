@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nc.noumea.mairie.web.dto.LightUserDto;
+import nc.noumea.mairie.ws.dto.LightUserDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

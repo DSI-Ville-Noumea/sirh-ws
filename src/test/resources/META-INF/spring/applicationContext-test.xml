@@ -37,38 +37,18 @@
 		The most commonly used annotation is @Autowired, which instructs Spring to 
 		dependency inject an object into your class. -->
 	<context:component-scan base-package="nc.noumea.mairie">
-		<!-- <context:exclude-filter expression=".*_Roo_.*"
-			type="regex" /> -->
+		<!-- <context:exclude-filter expression=".*_Roo_.*" type="regex" /> -->
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
 			type="annotation" />
 	</context:component-scan>
 
-	<bean id="eaeDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:eaetest;MODE=Oracle;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
-    </bean> 
-
-	<bean id="sirhDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:sirhtest;MODE=DB2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
-    </bean> 
-
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
-		id="eaeTransactionManager">
-		<property name="entityManagerFactory" ref="eaeEntityManagerFactory" />
-	</bean>
-	<tx:annotation-driven mode="aspectj"
-		transaction-manager="eaeTransactionManager" />
-	<bean
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		id="eaeEntityManagerFactory">
-		<property name="persistenceXmlLocation" value="/META-INF/persistence.xml" />
-		<property name="persistenceUnitName" value="eaePersistenceUnit" />
-		<property name="dataSource" ref="eaeDataSource" />
+	<bean id="sirhDataSource"
+		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="driverClass" value="org.h2.Driver" />
+		<property name="url"
+			value="jdbc:h2:mem:sirhtest;MODE=DB2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
 	</bean>
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
@@ -84,12 +64,14 @@
 		<property name="persistenceUnitName" value="sirhPersistenceUnit" />
 		<property name="dataSource" ref="sirhDataSource" />
 	</bean>
-	
+
 	<bean class="java.lang.String" id="reportServerPath" />
-	
+
 	<bean class="java.lang.String" id="reportingBaseUrl" />
-	
+
 	<bean class="java.lang.String" id="ptgWsBaseUrl" />
-	
+
 	<bean class="java.lang.String" id="radiWsBaseUrl" />
+
+	<bean class="java.lang.String" id="eaeWsBaseUrl" />
 </beans>

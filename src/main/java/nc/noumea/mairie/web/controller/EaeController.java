@@ -6,13 +6,13 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.model.bean.eae.EaeCampagne;
 import nc.noumea.mairie.service.ISiservService;
-import nc.noumea.mairie.service.eae.IEaeCampagneService;
-import nc.noumea.mairie.service.eae.IEaesService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.ReturnMessageDto;
+import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
+import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -32,12 +32,6 @@ import flexjson.JSONSerializer;
 public class EaeController {
 
 	@Autowired
-	private IEaesService eaeService;
-
-	@Autowired
-	private IEaeCampagneService eaeCampagneService;
-
-	@Autowired
 	private IAgentService agentSrv;
 
 	@Autowired
@@ -45,6 +39,9 @@ public class EaeController {
 
 	@Autowired
 	private ISiservService siservSrv;
+
+	@Autowired
+	private ISirhEaeWSConsumer sirhEaeWSConsumer;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -74,16 +71,15 @@ public class EaeController {
 		if (ag == null) {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
-
-		if (campagneEnCours == null)
+		CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
+		if (campagneEnCours == null || campagneEnCours.getIdCampagneEae() == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
-		
-		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3, null);
-		Integer nbEae = eaeService.compterlistIdEaeByCampagneAndAgent(campagneEnCours.getIdCampagneEae(), listAgentsId,
-				ag.getIdAgent());
 
-		if (nbEae == 0) {
+		List<Integer> listAgentsId = fpSrv.getListSubAgents(ag.getIdAgent(), 3, null);
+		ReturnMessageDto nbEae = sirhEaeWSConsumer.compterlistIdEaeByCampagneAndAgent(
+				campagneEnCours.getIdCampagneEae(), listAgentsId, ag.getIdAgent());
+
+		if (nbEae == null || nbEae.getInfos().get(0).equals("0")) {
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 		}
 
@@ -106,8 +102,8 @@ public class EaeController {
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 		}
 
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
-		if (campagneEnCours == null)
+		CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
+		if (campagneEnCours == null || campagneEnCours.getIdCampagneEae() == null)
 			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
 
 		// on veut la liste des agents du service
@@ -128,8 +124,8 @@ public class EaeController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 
-		EaeCampagne campagneEnCours = eaeCampagneService.getEaeCampagneOuverte();
-		if (campagneEnCours == null)
+		CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
+		if (campagneEnCours == null || campagneEnCours.getIdCampagneEae() == null)
 			return new ResponseEntity<String>(headers, HttpStatus.UNAUTHORIZED);
 
 		String jsonResult = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)

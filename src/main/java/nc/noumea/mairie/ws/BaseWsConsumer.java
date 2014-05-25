@@ -37,7 +37,7 @@ public abstract class BaseWsConsumer {
 
 		try {
 			if (isPost)
-				if (postContent != null)
+				if (postContent == null)
 					response = webResource.accept(MediaType.APPLICATION_JSON_VALUE).post(ClientResponse.class);
 				else
 					response = webResource.accept(MediaType.APPLICATION_JSON_VALUE).post(ClientResponse.class,
@@ -76,7 +76,7 @@ public abstract class BaseWsConsumer {
 
 		String output = response.getEntity(String.class);
 
-		result = new JSONDeserializer<T>().deserializeInto(output, result);
+		result = new JSONDeserializer<T>().use(Date.class, new MSDateTransformer()).deserializeInto(output, result);
 
 		return result;
 	}
