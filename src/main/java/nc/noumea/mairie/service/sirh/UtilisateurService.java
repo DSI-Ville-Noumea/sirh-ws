@@ -8,9 +8,9 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Utilisateur;
-import nc.noumea.mairie.web.dto.LightUserDto;
 import nc.noumea.mairie.web.dto.ReturnMessageDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
+import nc.noumea.mairie.ws.dto.LightUserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

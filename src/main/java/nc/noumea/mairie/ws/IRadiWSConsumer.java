@@ -1,6 +1,6 @@
 package nc.noumea.mairie.ws;
 
-import nc.noumea.mairie.web.dto.LightUserDto;
+import nc.noumea.mairie.ws.dto.LightUserDto;
 
 public interface IRadiWSConsumer {
 
