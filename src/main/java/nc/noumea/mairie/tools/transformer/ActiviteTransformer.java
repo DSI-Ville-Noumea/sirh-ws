@@ -1,6 +1,6 @@
 package nc.noumea.mairie.tools.transformer;
 
-import nc.noumea.mairie.model.bean.Activite;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 import flexjson.transformer.AbstractTransformer;
 
 public class ActiviteTransformer extends AbstractTransformer {

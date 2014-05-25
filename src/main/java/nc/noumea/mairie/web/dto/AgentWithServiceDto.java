@@ -1,7 +1,7 @@
 package nc.noumea.mairie.web.dto;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AgentRecherche;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
 public class AgentWithServiceDto extends AgentDto {
 	private String service;

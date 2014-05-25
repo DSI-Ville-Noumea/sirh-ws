@@ -1,9 +1,9 @@
 package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
-import nc.noumea.mairie.model.bean.AutreAdministration;
-import nc.noumea.mairie.model.bean.AutreAdministrationAgent;
-import nc.noumea.mairie.model.pk.AutreAdministrationAgentPK;
+import nc.noumea.mairie.model.bean.sirh.AutreAdministration;
+import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

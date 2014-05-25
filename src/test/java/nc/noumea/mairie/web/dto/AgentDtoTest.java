@@ -2,8 +2,8 @@ package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AgentRecherche;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
 import org.junit.Test;
 

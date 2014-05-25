@@ -10,11 +10,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Affectation;
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.AgentRecherche;
-import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.SiservService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;

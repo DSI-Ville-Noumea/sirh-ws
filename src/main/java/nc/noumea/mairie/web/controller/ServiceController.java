@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Agent;
 import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.tools.ServiceTreeNode;

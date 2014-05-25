@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Agent;
-import nc.noumea.mairie.model.bean.Contact;
-import nc.noumea.mairie.model.bean.FichePoste;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.SpSold;
 import nc.noumea.mairie.model.bean.Spcong;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Contact;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
