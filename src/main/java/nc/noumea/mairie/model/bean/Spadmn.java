@@ -13,6 +13,11 @@ import nc.noumea.mairie.model.pk.SpadmnId;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spadmn {
 
+	@Override
+	public String toString() {
+		return "Spadmn [id=" + id + ", datfin=" + datfin + ", cdpadm=" + cdpadm + "]";
+	}
+
 	@EmbeddedId
 	private SpadmnId id;
 

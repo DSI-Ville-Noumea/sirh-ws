@@ -26,6 +26,14 @@ import nc.noumea.mairie.model.bean.sirh.Deliberation;
 @NamedQuery(name = "getSpgengFromCadreEmploi", query = "select s from Spgeng s JOIN FETCH s.filiere LEFT JOIN FETCH s.deliberationTerritoriale LEFT JOIN FETCH s.deliberationCommunale JOIN FETCH s.cadreEmploiGrade where s.cadreEmploiGrade.idCadreEmploi = :idCadreEmploi")
 public class Spgeng {
 
+	@Override
+	public String toString() {
+		return "Spgeng [cdgeng=" + cdgeng + ", liGrad=" + liGrad + ", cadreEmploiGrade=" + cadreEmploiGrade
+				+ ", texteCapCadreEmploi=" + texteCapCadreEmploi + ", cdcadr=" + cdcadr + ", filiere=" + filiere
+				+ ", caps=" + caps + ", deliberationTerritoriale=" + deliberationTerritoriale
+				+ ", deliberationCommunale=" + deliberationCommunale + "]";
+	}
+
 	@Id
 	@Column(name = "CDGENG", columnDefinition = "char")
 	private String cdgeng;
