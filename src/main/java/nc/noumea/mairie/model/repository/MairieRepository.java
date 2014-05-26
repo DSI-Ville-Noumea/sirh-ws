@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spmtsr;
 
@@ -144,5 +145,18 @@ public class MairieRepository implements IMairieRepository {
 			return result.get(0);
 
 		return null;
+	}
+	
+	@Override
+	public List<Spbhor> getListSpbhor() {
+		
+		return sirhEntityManager.createNamedQuery("Spbhor.whereCdTauxNotZero", Spbhor.class)
+				.getResultList();
+	}
+	
+	@Override
+	public Spbhor getSpbhorById(Integer idSpbhor) {
+		
+		return sirhEntityManager.find(Spbhor.class, idSpbhor);
 	}
 }
