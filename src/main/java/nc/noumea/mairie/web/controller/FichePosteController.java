@@ -11,6 +11,7 @@ import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.SpbhorDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,5 +186,35 @@ public class FichePosteController {
 		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.doc\"", fp.getIdFichePoste()));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/listeSpbhor", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListSpbhor() {
+
+		List<SpbhorDto> result = fpSrv.getListSpbhorDto();
+		
+		if (result == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String jsonResult = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/spbhorById", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getSpbhorById(@RequestParam("idSpbhor") int idSpbhor) {
+
+		SpbhorDto result = fpSrv.getSpbhorDtoById(idSpbhor);
+		
+		if (result == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String jsonResult = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 }
