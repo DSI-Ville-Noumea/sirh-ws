@@ -306,4 +306,54 @@ public class SiservServiceTest {
 		assertEquals("T", result.getServi());
 
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getDirectionPourEAE_returnSiserv() {
+		// Given
+		Siserv s = new Siserv();
+		s.setServi("T");
+		List<Siserv> listServ = new ArrayList<>();
+		listServ.add(s);
+		TypedQuery<Siserv> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listServ);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siserv.class))).thenReturn(mockQuery);
+
+		SiservService siservService = new SiservService();
+		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Siserv result = siservService.getDirectionPourEAE("DDCA");
+
+		// Then
+		assertEquals("T", result.getServi());
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getDirectionPourEAE_DAG_returnSiserv() {
+		// Given
+		Siserv s = new Siserv();
+		s.setServi("T");
+		List<Siserv> listServ = new ArrayList<>();
+		listServ.add(s);
+		TypedQuery<Siserv> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listServ);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siserv.class))).thenReturn(mockQuery);
+
+		SiservService siservService = new SiservService();
+		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Siserv result = siservService.getDirectionPourEAE("DAGA");
+
+		// Then
+		assertEquals("T", result.getServi());
+
+	}
 }
