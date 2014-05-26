@@ -261,6 +261,9 @@ public class MairieRepositoryTest {
 		Spadmn result = repository.chercherPositionAdmAgentAncienne(5138);
 
 		assertNotNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -376,15 +379,15 @@ public class MairieRepositoryTest {
 	public void getListSpmtsr_return1result() {
 
 		SpmtsrId spmtsrId = new SpmtsrId();
-			spmtsrId.setNomatr(5138);
-			spmtsrId.setDatdeb(2010);
-			spmtsrId.setServi("service");
-		
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(2010);
+		spmtsrId.setServi("service");
+
 		Spmtsr spmtsr = new Spmtsr();
-			spmtsr.setId(spmtsrId);
-			spmtsr.setCdecol(1);
-			spmtsr.setDatfin(2014);
-			spmtsr.setRefarr(1);
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
 		sirhPersistenceUnit.persist(spmtsr);
 
 		List<Spmtsr> result = repository.getListSpmtsr(5138);
@@ -401,15 +404,15 @@ public class MairieRepositoryTest {
 	public void getListSpmtsr_returnNoResult() {
 
 		SpmtsrId spmtsrId = new SpmtsrId();
-			spmtsrId.setNomatr(5138);
-			spmtsrId.setDatdeb(2010);
-			spmtsrId.setServi("service");
-		
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(2010);
+		spmtsrId.setServi("service");
+
 		Spmtsr spmtsr = new Spmtsr();
-			spmtsr.setId(spmtsrId);
-			spmtsr.setCdecol(1);
-			spmtsr.setDatfin(2014);
-			spmtsr.setRefarr(1);
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
 		sirhPersistenceUnit.persist(spmtsr);
 
 		List<Spmtsr> result = repository.getListSpmtsr(5145);
