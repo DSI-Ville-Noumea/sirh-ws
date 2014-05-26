@@ -442,7 +442,8 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()) {
+		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
+				&& !"".equals(avct.getGrade().getCdTava().trim())) {
 			MotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
