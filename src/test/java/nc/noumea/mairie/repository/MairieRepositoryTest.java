@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spcatg;
 import nc.noumea.mairie.model.bean.Spgeng;
@@ -711,4 +712,62 @@ public class MairieRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListSpbhor_2results() {
+		
+		Spbhor hor1 = new Spbhor();
+		hor1.setCdThor(1);
+		hor1.setTaux(0.0);
+		sirhPersistenceUnit.persist(hor1);
+		
+		Spbhor hor2 = new Spbhor();
+		hor2.setCdThor(2);
+		hor2.setTaux(1.0);
+		sirhPersistenceUnit.persist(hor2);
+		
+		Spbhor hor3 = new Spbhor();
+		hor3.setCdThor(3);
+		hor3.setTaux(0.9);
+		sirhPersistenceUnit.persist(hor3);
+		
+		Spbhor hor4 = new Spbhor();
+		hor4.setCdThor(4);
+		hor4.setTaux(0.1);
+		sirhPersistenceUnit.persist(hor4);
+		
+		List<Spbhor> result = repository.getListSpbhor();
+		
+		assertEquals(2, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getSpbhorById_oneResult() {
+		
+		Spbhor hor1 = new Spbhor();
+		hor1.setCdThor(1);
+		hor1.setTaux(0.0);
+		sirhPersistenceUnit.persist(hor1);
+		
+		Spbhor result = repository.getSpbhorById(1);
+		
+		assertNotNull(result);
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getSpbhorById_noResult() {
+		
+		Spbhor hor1 = new Spbhor();
+		hor1.setCdThor(1);
+		hor1.setTaux(0.0);
+		sirhPersistenceUnit.persist(hor1);
+		
+		Spbhor result = repository.getSpbhorById(2);
+		
+		assertNull(result);
+	}
+	
 }

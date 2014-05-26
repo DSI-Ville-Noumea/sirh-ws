@@ -1,9 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,10 +11,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
-import nc.noumea.mairie.service.sirh.FichePosteService;
+import nc.noumea.mairie.model.repository.IMairieRepository;
+import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 
@@ -290,5 +289,42 @@ public class FichePosteServiceTest {
 			assertEquals(refDto1.getLibelle(), r.getLibelle());
 
 		}
+	}
+	
+	@Test
+	public void getListSpbhorDto() {
+		
+		Spbhor hor1 = new Spbhor();
+		Spbhor hor2 = new Spbhor();
+		
+		List<Spbhor> listSpbhor = new ArrayList<Spbhor>();
+		listSpbhor.add(hor1);
+		listSpbhor.add(hor2);
+		
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.getListSpbhor()).thenReturn(listSpbhor);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
+		
+		List<SpbhorDto> result = ficheService.getListSpbhorDto();
+		
+		assertEquals(2, result.size());
+	}
+	
+	@Test
+	public void getSpbhorById() {
+		
+		Spbhor hor1 = new Spbhor();
+		
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.getSpbhorById(1)).thenReturn(hor1);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
+		
+		SpbhorDto result = ficheService.getSpbhorDtoById(1);
+		
+		assertNotNull(result);
 	}
 }

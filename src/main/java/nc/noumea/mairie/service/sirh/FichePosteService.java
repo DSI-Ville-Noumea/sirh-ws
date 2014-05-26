@@ -13,7 +13,10 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.dao.IFichePosteDao;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 
@@ -37,6 +40,9 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IAgentService agentSrv;
+	
+	@Autowired
+	private IMairieRepository mairieRepository;
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
@@ -363,5 +369,28 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		return fp;
+	}
+	
+	@Override
+	public List<SpbhorDto> getListSpbhorDto() {
+
+		List<SpbhorDto> listResult = new ArrayList<SpbhorDto>();
+		
+		List<Spbhor> listOfPartialTimes = mairieRepository.getListSpbhor();
+
+		if(null != listOfPartialTimes) {
+			for(Spbhor hor : listOfPartialTimes) {
+				SpbhorDto dto = new SpbhorDto(hor);
+				listResult.add(dto);
+			}
+		}
+		return listResult;
+	}
+	
+	@Override
+	public SpbhorDto getSpbhorDtoById(Integer idSpbhor) {
+		
+		Spbhor result = mairieRepository.getSpbhorById(idSpbhor);
+		return new SpbhorDto(result);
 	}
 }
