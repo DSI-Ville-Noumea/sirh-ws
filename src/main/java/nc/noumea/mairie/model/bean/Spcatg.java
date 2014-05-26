@@ -12,6 +12,11 @@ import javax.validation.constraints.NotNull;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spcatg {
 
+	@Override
+	public String toString() {
+		return "Spcatg [codeCategorie=" + codeCategorie + ", libelleCategorie=" + libelleCategorie + "]";
+	}
+
 	@Id
 	@Column(name = "CDCATE", columnDefinition = "numeric")
 	private Integer codeCategorie;

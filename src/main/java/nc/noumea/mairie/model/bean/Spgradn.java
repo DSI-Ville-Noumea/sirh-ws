@@ -94,6 +94,14 @@ public class Spgradn {
 		this.gradeGenerique = gradeGenerique;
 	}
 
+	@Override
+	public String toString() {
+		return "Spgradn [cdgrad=" + cdgrad + ", liGrad=" + liGrad + ", gradeInitial=" + gradeInitial
+				+ ", gradeGenerique=" + gradeGenerique + ", barem=" + barem + ", classe=" + classe + ", echelon="
+				+ echelon + ", dureeMinimum=" + dureeMinimum + ", dureeMoyenne=" + dureeMoyenne + ", dureeMaximum="
+				+ dureeMaximum + ", cdTava=" + cdTava + "]";
+	}
+
 	public Spbarem getBarem() {
 		return barem;
 	}
