@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -660,5 +661,25 @@ public class AgentController {
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite),
 				HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "agent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
+		
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent agent = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+		
+		if (agent == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+		
+		String jsonResult = Agent.getSerializerAgentForEae().serialize(agent);
+		
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 }
