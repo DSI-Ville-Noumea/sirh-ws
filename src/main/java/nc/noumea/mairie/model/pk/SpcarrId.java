@@ -8,6 +8,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class SpcarrId implements Serializable {
 
+	@Override
+	public String toString() {
+		return "SpcarrId [nomatr=" + nomatr + ", datdeb=" + datdeb + "]";
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Override

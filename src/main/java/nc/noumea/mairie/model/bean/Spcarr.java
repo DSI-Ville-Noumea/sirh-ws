@@ -26,6 +26,12 @@ import nc.noumea.mairie.model.pk.SpcarrId;
 })
 public class Spcarr {
 
+	@Override
+	public String toString() {
+		return "Spcarr [id=" + id + ", categorie=" + categorie + ", dateFin=" + dateFin + ", dateArrete=" + dateArrete
+				+ ", referenceArrete=" + referenceArrete + ", modReg=" + modReg + ", grade=" + grade + "]";
+	}
+
 	@EmbeddedId
 	private SpcarrId id;
 
