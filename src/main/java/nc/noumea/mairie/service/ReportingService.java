@@ -125,15 +125,31 @@ public class ReportingService implements IReportingService {
 
 		return sb.toString();
 	}
-	
+
 	@Override
 	public byte[] getFichePosteSIRHReportAsByteArray(int idFichePoste) throws Exception {
-		
+
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
-		
+
 		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "DOC");
-		
+
+		return readResponseAsByteArray(response, map);
+	}
+
+	@Override
+	public byte[] getNoteServiceSIRHReportAsByteArray(int idAffectation, String typeNoteService) throws Exception {
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("idAffectation", String.valueOf(idAffectation));
+		ClientResponse response = null;
+		if (typeNoteService != null) {
+			map.put("typeNoteService", typeNoteService);
+			response = createAndFireRequest(map, "noteService.rptdesign", "DOC");
+		} else {
+			response = createAndFireRequest(map, "noteServiceInterne.rptdesign", "DOC");
+		}
+
 		return readResponseAsByteArray(response, map);
 	}
 }
