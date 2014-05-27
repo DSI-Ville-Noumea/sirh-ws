@@ -248,6 +248,7 @@ public class AgentServiceTest {
 		Agent ag1 = new Agent();
 		ag1.setIdAgent(9005138);
 		ag1.setNomUsage("NOM USAGE");
+		ag1.setTitre("0");
 		Siserv serv1 = new Siserv();
 		serv1.setServi("DDAA");
 		serv1.setLiServ("TEST");

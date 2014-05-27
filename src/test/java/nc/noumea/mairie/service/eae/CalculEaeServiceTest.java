@@ -363,6 +363,7 @@ public class CalculEaeServiceTest {
 		agent.setPrenomUsage("prenomUsage");
 		agent.setNomUsage("nomUsage");
 		agent.setIdAgent(1);
+		agent.setTitre("0");
 
 		List<Integer> listNoMatr = new ArrayList<Integer>();
 		listNoMatr.add(1);
@@ -507,6 +508,7 @@ public class CalculEaeServiceTest {
 		agent.setPrenomUsage("prenomUsage");
 		agent.setNomUsage("nomUsage");
 		agent.setIdAgent(1);
+		agent.setTitre("0");
 
 		List<Integer> listNoMatr = new ArrayList<Integer>();
 		listNoMatr.add(1);
