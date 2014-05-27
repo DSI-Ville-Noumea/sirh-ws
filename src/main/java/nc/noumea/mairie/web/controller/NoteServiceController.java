@@ -16,6 +16,9 @@ import nc.noumea.mairie.web.dto.TitrePosteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,8 +52,8 @@ public class NoteServiceController {
 			@RequestParam("typeNoteService") String typeNoteService) throws ParseException {
 
 		logger.debug(
-				"entered GET [noteService/xml/getNoteServiceSIRH] => getNoteServiceSIRH with parameter idAffectation = {} ",
-				idAffectation);
+				"entered GET [noteService/xml/getNoteServiceSIRH] => getNoteServiceSIRH with parameter idAffectation = {} and typeNoteService = {} ",
+				idAffectation, typeNoteService);
 
 		Affectation aff = affSrv.getAffectationById(idAffectation);
 		NoteServiceDto dto = new NoteServiceDto();
@@ -73,33 +76,70 @@ public class NoteServiceController {
 		return new ModelAndView("xmlView", "object", dto);
 	}
 
-	/*
-	 * @ResponseBody
-	 * 
-	 * @RequestMapping(value = "/downloadNoteServiceSIRH", method =
-	 * RequestMethod.GET)
-	 * 
-	 * @Transactional(readOnly = true) public ResponseEntity<byte[]>
-	 * downloadNoteServiceSIRH(@RequestParam("idAffectation") int idAffectation)
-	 * throws ParseException {
-	 * 
-	 * Affectation aff = affSrv.getAffectationById(idAffectation);
-	 * 
-	 * if (aff == null) return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-	 * 
-	 * byte[] responseData = null;
-	 * 
-	 * try { responseData =
-	 * reportingService.getNoteServiceSIRHReportAsByteArray(idFichePoste); }
-	 * catch (Exception e) { logger.error(e.getMessage(), e); return new
-	 * ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR); }
-	 * 
-	 * HttpHeaders headers = new HttpHeaders(); headers.add("Content-Type",
-	 * "application/doc"); headers.add("Content-Disposition",
-	 * String.format("attachment; filename=\"FP_%s.doc\"",
-	 * fp.getIdFichePoste()));
-	 * 
-	 * return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
-	 * }
-	 */
+	@ResponseBody
+	@RequestMapping(value = "/downloadNoteServiceSIRH", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadNoteServiceSIRH(@RequestParam("idAffectation") int idAffectation,
+			@RequestParam("typeNoteService") String typeNoteService) throws ParseException {
+
+		logger.debug(
+				"entered GET [noteService/downloadNoteServiceSIRH] => downloadNoteServiceSIRH with parameter idAffectation = {} and typeNoteService = {} ",
+				idAffectation, typeNoteService);
+
+		Affectation aff = affSrv.getAffectationById(idAffectation);
+
+		if (aff == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+
+		byte[] responseData = null;
+
+		try {
+			responseData = reportingService.getNoteServiceSIRHReportAsByteArray(idAffectation, typeNoteService);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/doc");
+		headers.add(
+				"Content-Disposition",
+				String.format("attachment; filename=\"NS_%s_%s.doc\"", aff.getIdAffectation(),
+						typeNoteService.toUpperCase()));
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/downloadNoteServiceInterneSIRH", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadNoteServiceInterneSIRH(@RequestParam("idAffectation") int idAffectation)
+			throws ParseException {
+
+		logger.debug(
+				"entered GET [noteService/downloadNoteServiceInterneSIRH] => downloadNoteServiceInterneSIRH with parameter idAffectation = {} ",
+				idAffectation);
+
+		Affectation aff = affSrv.getAffectationById(idAffectation);
+
+		if (aff == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+
+		byte[] responseData = null;
+
+		try {
+			responseData = reportingService.getNoteServiceSIRHReportAsByteArray(idAffectation, null);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/doc");
+		headers.add("Content-Disposition",
+				String.format("attachment; filename=\"NS_%s_%s.doc\"", aff.getIdAffectation(), "INTERNE"));
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
+
 }
