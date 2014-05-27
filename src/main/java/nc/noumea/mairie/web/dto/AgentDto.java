@@ -8,6 +8,7 @@ public class AgentDto {
 	private String nom;
 	private String prenom;
 	private Integer idAgent;
+	private String civilite;
 
 	private FichePosteDto fichePoste;
 
@@ -19,6 +20,7 @@ public class AgentDto {
 			nom = agent.getDisplayNom();
 			prenom = agent.getDisplayPrenom();
 			idAgent = agent.getIdAgent();
+			civilite = agent.getTitre();
 		}
 	}
 
@@ -68,6 +70,14 @@ public class AgentDto {
 			return false;
 		}
 		return this.idAgent.equals(((AgentDto) obj).getIdAgent());
+	}
+
+	public String getCivilite() {
+		return civilite;
+	}
+
+	public void setCivilite(String civilite) {
+		this.civilite = civilite;
 	}
 
 }

@@ -16,6 +16,7 @@ public class AgentDtoTest {
 		ag.setIdAgent(9005138);
 		ag.setNomUsage("TITI");
 		ag.setPrenomUsage("Nono");
+		ag.setTitre("0");
 
 		// When
 		AgentDto dto = new AgentDto(ag);
@@ -24,6 +25,7 @@ public class AgentDtoTest {
 		assertEquals(ag.getDisplayNom(), dto.getNom());
 		assertEquals(ag.getDisplayPrenom(), dto.getPrenom());
 		assertEquals(ag.getIdAgent(), dto.getIdAgent());
+		assertEquals(ag.getTitre(), dto.getCivilite());
 	}
 
 	@Test
@@ -38,6 +40,7 @@ public class AgentDtoTest {
 		assertNull(dto.getNom());
 		assertNull(dto.getPrenom());
 		assertNull(dto.getIdAgent());
+		assertNull(dto.getCivilite());
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.dto;
 
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
@@ -18,6 +19,12 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public AgentWithServiceDto(AgentRecherche ag) {
 		super(ag);
+	}
+
+	public AgentWithServiceDto(Agent agent, Siserv service) {
+		super(agent);
+		this.service = service.getLiServ().trim();
+		this.codeService = service.getServi();
 	}
 
 	public String getService() {
