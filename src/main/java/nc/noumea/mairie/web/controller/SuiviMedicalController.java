@@ -9,9 +9,10 @@ import nc.noumea.mairie.model.bean.sirh.SuiviMedical;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.ISuiviMedicalService;
+import nc.noumea.mairie.web.dto.AccompagnementVMDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ConvocationVMDto;
-import nc.noumea.mairie.web.dto.ListConvocationVMDto;
+import nc.noumea.mairie.web.dto.ListVMDto;
 import nc.noumea.mairie.web.dto.MedecinDto;
 
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class SuiviMedicalController {
 				"entered GET [suiviMedical/xml/getConvocationSIRH] => getXmlConvocationSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ",
 				csvIdSuiviMedical, typePopulation);
 
-		ListConvocationVMDto listDto = new ListConvocationVMDto();
+		ListVMDto listDto = new ListVMDto();
 		listDto.setTypePopulation(typePopulation);
 		if (csvIdSuiviMedical != null) {
 
@@ -75,6 +76,57 @@ public class SuiviMedicalController {
 
 				ConvocationVMDto dto = new ConvocationVMDto(sm, agDto, medDto);
 				listDto.getConvocations().add(dto);
+			}
+		}
+
+		return new ModelAndView("xmlView", "object", listDto);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/xml/getLettreAccompagnementSIRH", produces = "application/xml", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ModelAndView getXmlLettreAccompagnementSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
+			@RequestParam("typePopulation") String typePopulation) throws ParseException {
+
+		logger.debug(
+				"entered GET [suiviMedical/xml/getLettreAccompagnementSIRH] => getXmlLettreAccompagnementSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ",
+				csvIdSuiviMedical, typePopulation);
+
+		ListVMDto listDto = new ListVMDto();
+		listDto.setTypePopulation(typePopulation);
+		if (csvIdSuiviMedical != null) {
+
+			List<Integer> suiviMedIds = new ArrayList<Integer>();
+			for (String id : csvIdSuiviMedical.split(",")) {
+				suiviMedIds.add(Integer.valueOf(id));
+			}
+
+			for (Integer idSuivi : suiviMedIds) {
+				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
+
+				Siserv service = siservSrv.getService(sm.getCodeService());
+				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
+				agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv.getDirection(
+						service.getServi()).getLiServ());
+
+				Siserv servResponsable = null;
+				AgentWithServiceDto agRespDto = null;
+				if (service.getServi().endsWith("AA")) {
+					service = null;
+				} else {
+					String codeServResp = service.getServi().substring(0, service.getServi().length() - 1) + "A";
+					servResponsable = siservSrv.getService(codeServResp);
+
+					agRespDto = new AgentWithServiceDto(null, servResponsable);
+					agRespDto.setDirection(siservSrv.getDirection(servResponsable.getServi()) == null ? "" : siservSrv
+							.getDirection(servResponsable.getServi()).getLiServ());
+				}
+
+				AccompagnementVMDto dto = new AccompagnementVMDto(agRespDto);
+				ConvocationVMDto convocDto = new ConvocationVMDto(sm, agDto, null);
+
+				dto.getAgents().add(convocDto);
+				listDto.getAccompagnements().add(dto);
 			}
 		}
 
@@ -112,48 +164,6 @@ public class SuiviMedicalController {
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
 
-	// @ResponseBody
-	// @RequestMapping(value = "/xml/getLettreAccompagnementSIRH", produces =
-	// "application/xml", method = RequestMethod.GET)
-	// @Transactional(readOnly = true)
-	// public ModelAndView
-	// getXmlLettreAccompagnementSIRH(@RequestParam("idAffectation") int
-	// idAffectation,
-	// @RequestParam("typeNoteService") String typeNoteService) throws
-	// ParseException {
-	//
-	// logger.debug(
-	// "entered GET [suiviMedical/xml/getLettreAccompagnementSIRH] => getXmlLettreAccompagnementSIRH with parameter idAffectation = {} and typeNoteService = {} ",
-	// idAffectation, typeNoteService);
-	//
-	// Affectation aff = affSrv.getAffectationById(idAffectation);
-	// NoteServiceDto dto = new NoteServiceDto();
-	// if (aff != null) {
-	// AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent(),
-	// aff.getFichePoste().getService());
-	// agDto.setDirection(siservSrv.getDirection(aff.getFichePoste().getService().getServi())
-	// == null ? ""
-	// :
-	// siservSrv.getDirection(aff.getFichePoste().getService().getServi()).getLiServ());
-	// TitrePosteDto titrePoste = new TitrePosteDto(aff.getFichePoste());
-	//
-	// Contrat contrat =
-	// contratSrv.getContratBetweenDate(aff.getAgent().getIdAgent(), new
-	// Date());
-	// Integer dureePeriodeEssai = null;
-	// if (contrat != null && contrat.getDateFinPeriodeEssai() != null) {
-	// dureePeriodeEssai =
-	// contratSrv.getNbJoursPeriodeEssai(contrat.getDateDebutContrat(),
-	// contrat.getDateFinPeriodeEssai());
-	// }
-	//
-	// dto = new NoteServiceDto(aff, agDto, titrePoste, dureePeriodeEssai,
-	// contrat, typeNoteService);
-	// }
-	//
-	// return new ModelAndView("xmlView", "object", dto);
-	// }
-	//
 	//
 	// @ResponseBody
 	// @RequestMapping(value = "/downloadLettreAccompagnementSIRH", method =

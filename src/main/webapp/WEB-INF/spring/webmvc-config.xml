@@ -21,7 +21,7 @@
 				<value>nc.noumea.mairie.web.dto.avancements.ArreteDto</value>
 				<value>nc.noumea.mairie.web.dto.avancements.ArreteListDto</value>
 				<value>nc.noumea.mairie.web.dto.NoteServiceDto</value>
-				<value>nc.noumea.mairie.web.dto.ListConvocationVMDto</value>			
+				<value>nc.noumea.mairie.web.dto.ListVMDto</value>			
 			</list>
 		</property>
 	</bean>
