@@ -8,6 +8,7 @@ public class AgentWithServiceDto extends AgentDto {
 	private String service;
 	private String codeService;
 	private String direction;
+	private String signature;
 
 	public AgentWithServiceDto() {
 		super();
@@ -23,8 +24,9 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public AgentWithServiceDto(Agent agent, Siserv service) {
 		super(agent);
-		this.service = service.getLiServ().trim();
+		this.service = service.getLiServ();
 		this.codeService = service.getServi();
+		this.signature = service.getSignature();
 	}
 
 	public String getService() {
@@ -49,6 +51,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setDirection(String direction) {
 		this.direction = direction;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 
 }

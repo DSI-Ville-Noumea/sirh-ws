@@ -46,6 +46,10 @@ public class SuiviMedical {
 	@Column(name = "HEURE_PROCHAINE_VISITE")
 	private String heureProchaineVisite;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_MOTIF_VM", referencedColumnName = "ID_MOTIF_VM")
+	private MotifVM motif;
+
 	public Agent getAgent() {
 		return agent;
 	}
@@ -100,5 +104,13 @@ public class SuiviMedical {
 
 	public void setHeureProchaineVisite(String heureProchaineVisite) {
 		this.heureProchaineVisite = heureProchaineVisite;
+	}
+
+	public MotifVM getMotif() {
+		return motif;
+	}
+
+	public void setMotif(MotifVM motif) {
+		this.motif = motif;
 	}
 }
