@@ -164,43 +164,36 @@ public class SuiviMedicalController {
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
 
-	//
-	// @ResponseBody
-	// @RequestMapping(value = "/downloadLettreAccompagnementSIRH", method =
-	// RequestMethod.GET)
-	// @Transactional(readOnly = true)
-	// public ResponseEntity<byte[]>
-	// downloadLettreAccompagnementSIRH(@RequestParam("idAffectation") int
-	// idAffectation)
-	// throws ParseException {
-	//
-	// logger.debug(
-	// "entered GET [suiviMedical/downloadLettreAccompagnementSIRH] => downloadLettreAccompagnementSIRHs with parameter idAffectation = {} ",
-	// idAffectation);
-	//
-	// Affectation aff = affSrv.getAffectationById(idAffectation);
-	//
-	// if (aff == null)
-	// return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-	//
-	// byte[] responseData = null;
-	//
-	// try {
-	// responseData =
-	// reportingService.getNoteServiceSIRHReportAsByteArray(idAffectation,
-	// null);
-	// } catch (Exception e) {
-	// logger.error(e.getMessage(), e);
-	// return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-	// }
-	//
-	// HttpHeaders headers = new HttpHeaders();
-	// headers.add("Content-Type", "application/doc");
-	// headers.add("Content-Disposition",
-	// String.format("attachment; filename=\"NS_%s_%s.doc\"",
-	// aff.getIdAffectation(), "INTERNE"));
-	//
-	// return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
-	// }
+	@ResponseBody
+	@RequestMapping(value = "/downloadLettreAccompagnementSIRH", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadLettreAccompagnementSIRH(
+			@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
+			@RequestParam("typePopulation") String typePopulation, @RequestParam("mois") String mois,
+			@RequestParam("annee") String annee) throws ParseException {
+
+		logger.debug(
+				"entered GET [suiviMedical/downloadLettreAccompagnementSIRH] => downloadLettreAccompagnementSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} and mois = {} and annee = {} ",
+				csvIdSuiviMedical, typePopulation, mois, annee);
+
+		if (csvIdSuiviMedical == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+
+		byte[] responseData = null;
+
+		try {
+			responseData = reportingService.getAccompagnementSIRHReportAsByteArray(csvIdSuiviMedical, typePopulation);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/doc");
+		headers.add("Content-Disposition", String.format(
+				"attachment; filename=\"SM_Lettre_Accompagnement_%s_%s_%s.doc\"", typePopulation, mois, annee));
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
 
 }
