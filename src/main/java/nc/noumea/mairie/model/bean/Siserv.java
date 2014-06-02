@@ -33,6 +33,9 @@ public class Siserv {
 	@Column(name = "DEPEND", columnDefinition = "char")
 	private String parentSigle;
 
+	@Column(name = "LI22", columnDefinition = "char")
+	private String signature;
+
 	@Transient
 	private String division;
 
@@ -115,6 +118,14 @@ public class Siserv {
 
 	public void setSection(String section) {
 		this.section = section;
+	}
+
+	public String getSignature() {
+		return signature == null ? "" : signature.trim();
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 
 }
