@@ -163,4 +163,16 @@ public class ReportingService implements IReportingService {
 
 		return readResponseAsByteArray(response, map);
 	}
+
+	@Override
+	public byte[] getAccompagnementSIRHReportAsByteArray(String csvIdSuiviMedical, String typePopulation)
+			throws Exception {
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("csvIdSuiviMedical", csvIdSuiviMedical);
+		map.put("typePopulation", typePopulation);
+		ClientResponse response = createAndFireRequest(map, "accompagnementSM.rptdesign", "DOC");
+
+		return readResponseAsByteArray(response, map);
+	}
 }
