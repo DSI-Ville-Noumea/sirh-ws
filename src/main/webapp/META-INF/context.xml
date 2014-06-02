@@ -67,6 +67,6 @@
 	<!-- WS EAE -->
 	<Environment name="EAE_WS_BASE_URL" type="java.lang.String"
 		description="SIRH EAE WS url pour la gestion des EAEs/Avancements"
-		value="http://localhost:8090/sirh-eae-ws/" override="false" />
+		value="http://***REMOVED***:8085/sirh-eae-ws/" override="false" />
 
 </Context>
