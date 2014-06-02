@@ -8,10 +8,11 @@ public class ConvocationVMDto {
 
 	private Integer idSuiviMedical;
 	private Integer nbVisitesRatees;
-	private AgentWithServiceDto agent;
+	private AgentWithServiceDto agentConvoque;
 	private MedecinDto medecin;
 	private Date dateVisite;
 	private String heureVisite;
+	private String motif;
 
 	public ConvocationVMDto() {
 	}
@@ -19,10 +20,11 @@ public class ConvocationVMDto {
 	public ConvocationVMDto(SuiviMedical sm, AgentWithServiceDto agDto, MedecinDto med) {
 		this.idSuiviMedical = sm.getIdSuiviMedical();
 		this.nbVisitesRatees = sm.getNbVisitesRatees();
-		this.agent = agDto;
+		this.agentConvoque = agDto;
 		this.medecin = med;
 		this.dateVisite = sm.getDateProchaineVisite();
 		this.heureVisite = sm.getHeureProchaineVisite();
+		this.motif = sm.getMotif() == null ? null : sm.getMotif().getLibMotifVisiteMedicale();
 	}
 
 	public Integer getIdSuiviMedical() {
@@ -39,14 +41,6 @@ public class ConvocationVMDto {
 
 	public void setNbVisitesRatees(Integer nbVisitesRatees) {
 		this.nbVisitesRatees = nbVisitesRatees;
-	}
-
-	public AgentWithServiceDto getAgent() {
-		return agent;
-	}
-
-	public void setAgent(AgentWithServiceDto agent) {
-		this.agent = agent;
 	}
 
 	public MedecinDto getMedecin() {
@@ -71,6 +65,22 @@ public class ConvocationVMDto {
 
 	public void setHeureVisite(String heureVisite) {
 		this.heureVisite = heureVisite;
+	}
+
+	public AgentWithServiceDto getAgentConvoque() {
+		return agentConvoque;
+	}
+
+	public void setAgentConvoque(AgentWithServiceDto agentConvoque) {
+		this.agentConvoque = agentConvoque;
+	}
+
+	public String getMotif() {
+		return motif;
+	}
+
+	public void setMotif(String motif) {
+		this.motif = motif;
 	}
 
 }

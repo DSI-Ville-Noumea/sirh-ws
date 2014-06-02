@@ -6,14 +6,17 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ListConvocationVMDto {
+public class ListVMDto {
 
 	private List<ConvocationVMDto> convocations;
 
+	private List<AccompagnementVMDto> accompagnements;
+
 	private String typePopulation;
 
-	public ListConvocationVMDto() {
+	public ListVMDto() {
 		convocations = new ArrayList<ConvocationVMDto>();
+		accompagnements = new ArrayList<AccompagnementVMDto>();
 	}
 
 	public List<ConvocationVMDto> getConvocations() {
@@ -30,5 +33,13 @@ public class ListConvocationVMDto {
 
 	public void setTypePopulation(String typePopulation) {
 		this.typePopulation = typePopulation;
+	}
+
+	public List<AccompagnementVMDto> getAccompagnements() {
+		return accompagnements;
+	}
+
+	public void setAccompagnements(List<AccompagnementVMDto> accompagnements) {
+		this.accompagnements = accompagnements;
 	}
 }
