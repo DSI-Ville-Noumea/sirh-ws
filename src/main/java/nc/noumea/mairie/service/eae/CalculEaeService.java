@@ -53,44 +53,42 @@ public class CalculEaeService implements ICalculEaeService {
 
 		CalculEaeInfosDto dto = new CalculEaeInfosDto();
 
-		if(null != affectation) {
-			
+		if (null != affectation) {
+
 			dto.setDateDebut(affectation.getDateDebutAff());
 			dto.setDateFin(affectation.getDateFinAff());
 
 			Siserv direction = siservSrv.getDirectionPourEAE(affectation.getFichePoste().getService().getServi());
 			affectation.getFichePoste().getService().setDirection(direction == null ? "" : direction.getLiServ());
-			
+
 			Siserv section = siservSrv.getSection(affectation.getFichePoste().getService().getServi());
 			affectation.getFichePoste().getService().setSection(section == null ? "" : section.getLiServ());
-	
+
 			TitrePosteDto titrePoste = new TitrePosteDto();
-				titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
-			
+			titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
+
 			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste());
-				fichePostePrincipale.setTitrePoste(titrePoste);
-			
+			fichePostePrincipale.setTitrePoste(titrePoste);
+
 			dto.setFichePostePrincipale(fichePostePrincipale);
-			if(null != affectation.getFichePosteSecondaire()) {
+			if (null != affectation.getFichePosteSecondaire()) {
 				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire());
 				dto.setFichePosteSecondaire(fichePosteSecondaire);
 			}
-			
-			if(null != affectation.getFichePoste().getSuperieurHierarchique()) {
+
+			if (null != affectation.getFichePoste().getSuperieurHierarchique()) {
 				FichePoste fichePosteSuperieur = affectation.getFichePoste().getSuperieurHierarchique();
-				FichePosteDto fichePosteResponsable = new FichePosteDto(
-						fichePosteSuperieur.getService(), 
-						fichePosteSuperieur.getIdFichePoste(), 
-						fichePosteSuperieur.getAgent());
+				FichePosteDto fichePosteResponsable = new FichePosteDto(fichePosteSuperieur.getService(),
+						fichePosteSuperieur.getIdFichePoste(), fichePosteSuperieur.getAgent());
 				if (null != fichePosteSuperieur.getTitrePoste()) {
 					TitrePosteDto titrePosteResponable = new TitrePosteDto();
-						titrePosteResponable.setLibTitrePoste(fichePosteSuperieur.getTitrePoste().getLibTitrePoste());
+					titrePosteResponable.setLibTitrePoste(fichePosteSuperieur.getTitrePoste().getLibTitrePoste());
 					fichePosteResponsable.setTitrePoste(titrePosteResponable);
 				}
 				dto.setFichePosteResponsable(fichePosteResponsable);
 			}
 		}
-		
+
 		Agent agent = sirhRepository.getAgent(idAgent);
 
 		if (null != agent) {
@@ -102,11 +100,12 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setCarriereFonctionnaireAncienne(spCarrService.getCarriereFonctionnaireAncienne(agent.getNomatr()));
 			dto.setCarriereActive(spCarrService.getCarriereActive(agent.getNomatr()));
 		}
-		
+
 		return dto;
 	}
 
-	private List<DiplomeDto> getListDiplomeDto(Integer idAgent) {
+	@Override
+	public List<DiplomeDto> getListDiplomeDto(Integer idAgent) {
 		List<DiplomeDto> listDiplomeDto = new ArrayList<DiplomeDto>();
 		List<DiplomeAgent> lstDiplome = sirhRepository.getListDiplomeByAgent(idAgent);
 		if (null != lstDiplome) {
@@ -127,13 +126,13 @@ public class CalculEaeService implements ICalculEaeService {
 		if (null != listSpmtsr) {
 			for (Spmtsr spMtsr : listSpmtsr) {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
-				
+
 				Siserv direction = siservSrv.getDirectionPourEAE(spMtsr.getId().getServi());
 				parcoursProDto.setDirection(direction == null ? "" : direction.getLiServ());
-				
+
 				Siserv service = siservSrv.getService(spMtsr.getId().getServi());
 				parcoursProDto.setService(service == null ? "" : service.getLiServ());
-				
+
 				listParcoursPro.add(parcoursProDto);
 			}
 		}
@@ -166,8 +165,8 @@ public class CalculEaeService implements ICalculEaeService {
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
 				CalculEaeInfosDto dto = new CalculEaeInfosDto();
-					dto.setDateDebut(affectation.getDateDebutAff());
-					dto.setDateFin(affectation.getDateFinAff());
+				dto.setDateDebut(affectation.getDateDebutAff());
+				dto.setDateFin(affectation.getDateFinAff());
 				listDto.add(dto);
 			}
 		}
@@ -185,8 +184,8 @@ public class CalculEaeService implements ICalculEaeService {
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
 				CalculEaeInfosDto dto = new CalculEaeInfosDto();
-					dto.setDateDebut(affectation.getDateDebutAff());
-					dto.setDateFin(affectation.getDateFinAff());
+				dto.setDateDebut(affectation.getDateDebutAff());
+				dto.setDateFin(affectation.getDateFinAff());
 				listDto.add(dto);
 			}
 		}

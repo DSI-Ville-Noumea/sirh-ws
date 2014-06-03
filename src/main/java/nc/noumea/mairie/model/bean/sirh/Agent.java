@@ -68,6 +68,18 @@ public class Agent {
 		return res;
 	}
 
+	@Transient
+	public Integer getNbEnfantsACharge() {
+		List<ParentEnfant> res = new ArrayList<ParentEnfant>();
+
+		for (ParentEnfant pe : getParentEnfants()) {
+			if (pe.isEnfantACharge())
+				res.add(pe);
+		}
+
+		return res.size();
+	}
+
 	@NotNull
 	@Column(name = "NOMATR")
 	private Integer nomatr;
@@ -87,6 +99,10 @@ public class Agent {
 
 	@Column(name = "PRENOM")
 	private String prenom;
+
+	@NotNull
+	@Column(name = "NATIONALITE")
+	private String nationalite;
 
 	@NotNull
 	@Column(name = "CIVILITE")
@@ -117,7 +133,8 @@ public class Agent {
 	@Column(name = "DATE_DERNIERE_EMBAUCHE")
 	@Temporal(TemporalType.DATE)
 	private Date dateDerniereEmbauche;
-	
+
+	@NotNull
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_SITUATION_FAMILIALE", referencedColumnName = "ID_SITUATION")
 	private SituationFamiliale situationFamiliale;
@@ -234,11 +251,11 @@ public class Agent {
 				.transform(new StringTrimTransformer(), String.class).exclude("*");
 		return serializer;
 	}
-	
+
 	public static JSONSerializer getSerializerAgentForEae() {
-		JSONSerializer serializer = new JSONSerializer().include("idAgent").include("nomatr").include("nomPatronymique")
-				.include("nomMarital").include("nomUsage").include("prenom").include("prenomUsage")
-				.include("dateNaissance").include("dateDerniereEmbauche")
+		JSONSerializer serializer = new JSONSerializer().include("idAgent").include("nomatr")
+				.include("nomPatronymique").include("nomMarital").include("nomUsage").include("prenom")
+				.include("prenomUsage").include("dateNaissance").include("dateDerniereEmbauche")
 				.transform(new MSDateTransformer(), Date.class)
 				.transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new SituationFamilialeTransformer(), SituationFamiliale.class)
@@ -614,5 +631,13 @@ public class Agent {
 
 	public void setDateDerniereEmbauche(Date dateDerniereEmbauche) {
 		this.dateDerniereEmbauche = dateDerniereEmbauche;
+	}
+
+	public String getNationalite() {
+		return nationalite;
+	}
+
+	public void setNationalite(String nationalite) {
+		this.nationalite = nationalite;
 	}
 }
