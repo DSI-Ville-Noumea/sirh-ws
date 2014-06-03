@@ -53,4 +53,21 @@ public class ContratService implements IContratService {
 		return (int) ((aTimeAutreDate - aTimeUneDate) / 86400000);
 	}
 
+	@Override
+	public Contrat getContratById(Integer idContrat) {
+		logger.debug("Entrée fonction getContratById with id = {}", idContrat);
+
+		Contrat res = null;
+		TypedQuery<Contrat> query = sirhEntityManager.createQuery(
+				"select c from Contrat c where c.idContrat=:idContrat", Contrat.class);
+		query.setParameter("idContrat", idContrat);
+
+		List<Contrat> lfp = query.getResultList();
+		if (lfp != null && lfp.size() > 0) {
+			res = lfp.get(0);
+		}
+
+		return res;
+	}
+
 }
