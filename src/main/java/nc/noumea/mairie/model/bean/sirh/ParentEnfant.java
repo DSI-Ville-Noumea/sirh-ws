@@ -60,6 +60,10 @@ public class ParentEnfant {
 		this.enfant = enfant;
 	}
 
+	public boolean isEnfantACharge() {
+		return enfantACharge;
+	}
+
 	public void setEnfantACharge(Boolean enfantACharge) {
 		this.enfantACharge = enfantACharge;
 	}

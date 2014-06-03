@@ -9,4 +9,6 @@ public interface IContratService {
 	public Contrat getContratBetweenDate(Integer idAgent, Date dateRecherche);
 
 	public Integer getNbJoursPeriodeEssai(Date dateDebutContrat, Date dateFinPeriodeEssai);
+
+	public Contrat getContratById(Integer idContrat);
 }
