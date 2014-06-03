@@ -78,6 +78,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.SuiviMedical</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Medecin</class>
 		<class>nc.noumea.mairie.model.bean.sirh.MotifVM</class>
+		<class>nc.noumea.mairie.model.bean.Sibanq</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

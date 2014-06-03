@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,6 +28,25 @@ public class AffectationService implements IAffectationService {
 		TypedQuery<Affectation> query = sirhEntityManager.createQuery(
 				"select aff from Affectation aff where aff.idAffectation=:idAffectation", Affectation.class);
 		query.setParameter("idAffectation", idAffectation);
+
+		List<Affectation> lfp = query.getResultList();
+		if (lfp != null && lfp.size() > 0) {
+			res = lfp.get(0);
+		}
+
+		return res;
+	}
+
+	@Override
+	public Affectation getAffectationActiveByIdAgent(Integer idAgent) {
+
+		Affectation res = null;
+		TypedQuery<Affectation> query = sirhEntityManager
+				.createQuery(
+						"select aff from Affectation aff where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff = '01/01/0001' or aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
+						Affectation.class);
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("dateJour", new Date());
 
 		List<Affectation> lfp = query.getResultList();
 		if (lfp != null && lfp.size() > 0) {
