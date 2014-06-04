@@ -16,4 +16,6 @@ public interface IReportingService {
 	byte[] getConvocationSIRHReportAsByteArray(String csvIdSuiviMedical, String typePopulation) throws Exception;
 
 	byte[] getAccompagnementSIRHReportAsByteArray(String csvIdSuiviMedical, String typePopulation) throws Exception;
+
+	byte[] getContratSIRHReportAsByteArray(Integer idAgent, Integer idContrat) throws Exception;
 }
