@@ -24,6 +24,9 @@ import nc.noumea.mairie.web.dto.FichePosteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,36 +119,34 @@ public class ContratController {
 
 		return new ModelAndView("xmlView", "object", contratDto);
 	}
-	// @ResponseBody
-	// @RequestMapping(value = "/downloadContratSIRH", method =
-	// RequestMethod.GET)
-	// @Transactional(readOnly = true)
-	// public ResponseEntity<byte[]>
-	// downloadContratSIRH(@RequestParam("idAgent") Integer idAgent) throws
-	// ParseException {
-	//
-	// logger.debug("entered GET [contrat/downloadContratSIRH] => downloadContratSIRH with parameter idAgent = {} ",
-	// idAgent);
-	//
-	// if (idAgent == null)
-	// return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
-	//
-	// byte[] responseData = null;
-	//
-	// try {
-	// responseData = reportingService.getContratSIRHReportAsByteArray(idAgent);
-	// } catch (Exception e) {
-	// logger.error(e.getMessage(), e);
-	// return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-	// }
-	//
-	// HttpHeaders headers = new HttpHeaders();
-	// headers.add("Content-Type", "application/doc");
-	// headers.add("Content-Disposition",
-	// String.format("attachment; filename=\"SM_Convocation_%s_%s_%s.doc\"",
-	// typePopulation, mois, annee));
-	//
-	// return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
-	// }
+
+	@ResponseBody
+	@RequestMapping(value = "/downloadContratSIRH", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> downloadContratSIRH(@RequestParam("idAgent") Integer idAgent,
+			@RequestParam("idContrat") Integer idContrat) throws ParseException {
+
+		logger.debug(
+				"entered GET [contrat/downloadContratSIRH] => downloadContratSIRH with parameter idAgent = {} and idContrat = {}",
+				idAgent, idContrat);
+
+		if (idAgent == null || idContrat == null)
+			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+
+		byte[] responseData = null;
+
+		try {
+			responseData = reportingService.getContratSIRHReportAsByteArray(idAgent, idContrat);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/doc");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"C_%s.doc\"", idContrat));
+
+		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
 
 }
