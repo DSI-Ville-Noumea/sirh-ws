@@ -10,6 +10,7 @@ import nc.noumea.mairie.model.bean.sirh.Contrat;
 @XmlRootElement
 public class ContratDto {
 	private Integer idContrat;
+	private Integer idMotif;
 	private AgentDto agent;
 	private FichePosteDto fichePoste;
 	private Date dateDebutContrat;
@@ -21,6 +22,7 @@ public class ContratDto {
 	public ContratDto(Contrat contrat, AgentDto agDto, FichePosteDto fpDto, Integer nbJoursPeriodeEssai,
 			List<DiplomeDto> listeDip) {
 		this.idContrat = contrat.getIdContrat();
+		this.idMotif = contrat.getIdMotif();
 		this.agent = agDto;
 		this.fichePoste = fpDto;
 		this.dateDebutContrat = contrat.getDateDebutContrat();
@@ -96,5 +98,13 @@ public class ContratDto {
 
 	public void setListeDiplomes(List<DiplomeDto> listeDiplomes) {
 		this.listeDiplomes = listeDiplomes;
+	}
+
+	public Integer getIdMotif() {
+		return idMotif;
+	}
+
+	public void setIdMotif(Integer idMotif) {
+		this.idMotif = idMotif;
 	}
 }

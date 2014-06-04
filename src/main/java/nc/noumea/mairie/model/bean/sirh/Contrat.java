@@ -41,6 +41,10 @@ public class Contrat {
 	@JoinColumn(name = "ID_AGENT", referencedColumnName = "ID_AGENT")
 	private Agent agent;
 
+	@NotNull
+	@Column(name = "ID_MOTIF")
+	private Integer idMotif;
+
 	public Agent getAgent() {
 		return agent;
 	}
@@ -79,5 +83,13 @@ public class Contrat {
 
 	public void setDateFinPeriodeEssai(Date dateFinPeriodeEssai) {
 		this.dateFinPeriodeEssai = dateFinPeriodeEssai;
+	}
+
+	public Integer getIdMotif() {
+		return idMotif;
+	}
+
+	public void setIdMotif(Integer idMotif) {
+		this.idMotif = idMotif;
 	}
 }
