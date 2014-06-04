@@ -175,4 +175,15 @@ public class ReportingService implements IReportingService {
 
 		return readResponseAsByteArray(response, map);
 	}
+
+	@Override
+	public byte[] getContratSIRHReportAsByteArray(Integer idAgent, Integer idContrat) throws Exception {
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("idAgent", idAgent.toString());
+		map.put("idContrat", idContrat.toString());
+		ClientResponse response = createAndFireRequest(map, "contrat.rptdesign", "DOC");
+
+		return readResponseAsByteArray(response, map);
+	}
 }
