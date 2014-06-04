@@ -57,7 +57,7 @@ public class AgentDto {
 			this.numRue = agent.getNumRue();
 			this.bisTer = agent.getBisTer();
 			if (agent.getVoie() == null) {
-				this.nomRue = agent.getRueNonNoumea().trim();
+				this.nomRue = agent.getAdresseComplementaire().trim();
 			} else {
 				this.nomRue = agent.getVoie().getLiVoie().trim();
 			}
