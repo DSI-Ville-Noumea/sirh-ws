@@ -23,7 +23,9 @@ import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -662,24 +664,44 @@ public class AgentController {
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite),
 				HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "agent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent agent = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-		
+
 		if (agent == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		
+
 		String jsonResult = Agent.getSerializerAgentForEae().serialize(agent);
-		
+
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "getAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAgentOtherProject(@RequestParam(value = "idAgent", required = true) Integer idAgent)
+			throws ParseException {
+
+		Agent agent = agentSrv.getAgent(idAgent);
+
+		if (agent == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+		AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+
 	}
 }
