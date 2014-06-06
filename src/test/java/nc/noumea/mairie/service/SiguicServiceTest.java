@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,6 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Siguic;
 import nc.noumea.mairie.model.pk.SiguicId;
-import nc.noumea.mairie.service.SiguicService;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -49,6 +49,35 @@ public class SiguicServiceTest {
 		assertEquals(id.getCodeBanque(), result.getId().getCodeBanque());
 		assertEquals(id.getCodeGuichet(), result.getId().getCodeGuichet());
 		assertEquals("LIB GUICHET", result.getLiGuic());
+
+	}
+
+	@Test
+	public void getBanque_returnNull() {
+		// Given
+		SiguicId id = new SiguicId();
+		id.setCodeBanque(1);
+		id.setCodeGuichet(2);
+
+		Siguic g1 = new Siguic();
+		g1.setId(id);
+		g1.setLiGuic("LIB GUICHET");
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Siguic> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Siguic>());
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Siguic.class))).thenReturn(mockQuery);
+
+		SiguicService service = new SiguicService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Siguic result = service.getBanque(1, 1);
+
+		// Then
+		assertNull(result);
 
 	}
 }
