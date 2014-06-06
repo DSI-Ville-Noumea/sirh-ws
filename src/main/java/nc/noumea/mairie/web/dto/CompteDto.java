@@ -13,10 +13,12 @@ public class CompteDto {
 
 	public CompteDto(Agent ag, Sibanq banque) {
 		super();
-		this.codeBanque = ag.getCodeBanque();
-		this.codeGuichet = ag.getCodeGuichet();
-		this.numCompte = ag.getNumCompte().trim();
-		this.rib = ag.getRib();
+		if (ag != null) {
+			this.codeBanque = ag.getCodeBanque();
+			this.codeGuichet = ag.getCodeGuichet();
+			this.numCompte = ag.getNumCompte().trim();
+			this.rib = ag.getRib();
+		}
 		this.libelleBanque = banque != null ? banque.getLiBanque().trim() : null;
 	}
 
