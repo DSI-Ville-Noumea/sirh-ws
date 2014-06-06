@@ -13,70 +13,67 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
+import nc.noumea.mairie.model.bean.sirh.SuiviMedical;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class ContratServiceTest {
+public class SuiviMedicalServiceTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getContratBetweenDate_returnNull() {
+	public void getSuiviMedicalById_returnNull() {
 		// Given
-		int idAgent = 1;
-		Date dateDeb = new Date();
+		int id = 1;
 
-		TypedQuery<Contrat> mockQuery = Mockito.mock(TypedQuery.class);
+		TypedQuery<SuiviMedical> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(null);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Contrat.class))).thenReturn(mockQuery);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(SuiviMedical.class))).thenReturn(mockQuery);
 
-		ContratService service = new ContratService();
+		SuiviMedicalService service = new SuiviMedicalService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		Contrat result = service.getContratBetweenDate(idAgent, dateDeb);
+		SuiviMedical result = service.getSuiviMedicalById(id);
 
 		// Then
 		assertNull(result);
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idAgent", idAgent);
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("dateDeb", dateDeb);
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idSuiviMedical", id);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getContratBetweenDate_returnContrat() {
+	public void getSuiviMedicalById_returnContrat() {
 		// Given
-		int idAgent = 1;
-		Date dateDeb = new Date();
+		int id = 1;
 
 		Agent ag = new Agent();
-		ag.setIdAgent(idAgent);
-		Contrat c = new Contrat();
+		ag.setIdAgent(9005138);
+		SuiviMedical c = new SuiviMedical();
 		c.setAgent(ag);
-		c.setIdContrat(2);
+		c.setIdSuiviMedical(id);
 
-		TypedQuery<Contrat> mockQuery = Mockito.mock(TypedQuery.class);
+		TypedQuery<SuiviMedical> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(c));
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Contrat.class))).thenReturn(mockQuery);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(SuiviMedical.class))).thenReturn(mockQuery);
 
-		ContratService service = new ContratService();
+		SuiviMedicalService service = new SuiviMedicalService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		Contrat result = service.getContratBetweenDate(idAgent, dateDeb);
+		SuiviMedical result = service.getSuiviMedicalById(id);
 
 		// Then
 		assertNotNull(result);
-		assertEquals(c.getIdContrat(), result.getIdContrat());
+		assertEquals(c.getIdSuiviMedical(), result.getIdSuiviMedical());
 		assertEquals(c.getAgent().getIdAgent(), result.getAgent().getIdAgent());
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idAgent", idAgent);
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("dateDeb", dateDeb);
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idSuiviMedical", id);
 
 	}
 
