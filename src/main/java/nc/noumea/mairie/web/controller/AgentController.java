@@ -28,7 +28,6 @@ import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -98,20 +97,19 @@ public class AgentController {
 		return nomatr;
 	}
 
-	@RequestMapping(value = "/etatCivil", headers = "Accept=application/json")
+	@RequestMapping(value = "/etatCivil", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEtatCivil(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		if (ag.getCodeCommuneNaissFr() == null) {
@@ -122,85 +120,80 @@ public class AgentController {
 		}
 
 		String jsonResult = Agent.getSerializerForAgentEtatCivil().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/enfants", headers = "Accept=application/json")
+	@RequestMapping(value = "/enfants", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEnfants(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getParentEnfantsOrderByDateNaiss());
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/couvertureSociale", headers = "Accept=application/json")
+	@RequestMapping(value = "/couvertureSociale", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getCouvertureSociale(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = Agent.getSerializerForAgentCouvertureSociale().serialize(ag);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/banque", headers = "Accept=application/json")
+	@RequestMapping(value = "/banque", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBanque(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 		if (ag.getCodeBanque() != null && ag.getCodeGuichet() != null) {
 			ag.setBanque(siguicSrv.getBanque(ag.getCodeBanque(), ag.getCodeGuichet()).getLiGuic());
 		}
 
 		String jsonResult = Agent.getSerializerForAgentBanque().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/adresse", headers = "Accept=application/json")
+	@RequestMapping(value = "/adresse", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAdresse(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		if (ag.getVoie() == null) {
@@ -210,99 +203,93 @@ public class AgentController {
 		}
 
 		String jsonResult = Agent.getSerializerForAgentAdresse().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/contacts", headers = "Accept=application/json")
+	@RequestMapping(value = "/contacts", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getContacts(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+		
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		List<Contact> lc = contactSrv.getContactsAgent(Long.valueOf(newIdAgent));
 
 		if (lc == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = Contact.getSerializerForAgentContacts().serialize(lc);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/soldeConge", headers = "Accept=application/json")
+	@RequestMapping(value = "/soldeConge", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSoldeConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent pour avoir le nomatr
 		String nomatr = remanieNoMatrAgent(idAgent);
 
 		SpSold solde = soldeSrv.getSoldeConge(Integer.valueOf(nomatr));
 
 		if (solde == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = SpSold.getSerializerForAgentSoldeConge().serialize(solde);
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/histoCongeAll", headers = "Accept=application/json")
+	@RequestMapping(value = "/histoCongeAll", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getToutHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+		
 		// on remanie l'idAgent pour avoir le nomatr
 		String nomatr = remanieNoMatrAgent(idAgent);
 
 		List<Spcong> lcong = congSrv.getToutHistoriqueConge(Long.valueOf(nomatr));
 
 		if (lcong == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = Spcong.getSerializerForAgentHistoConge().serialize(lcong);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/histoConge", headers = "Accept=application/json")
+	@RequestMapping(value = "/histoConge", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent pour avoir le nomatr
 		String nomatr = remanieNoMatrAgent(idAgent);
 
 		List<Spcong> lcong = congSrv.getHistoriqueCongeAnnee(Long.valueOf(nomatr));
 
 		if (lcong == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		String jsonResult = Spcong.getSerializerForAgentHistoConge().serialize(lcong);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/fichePoste", headers = "Accept=application/json")
+	@RequestMapping(value = "/fichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException, java.text.ParseException {
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
@@ -313,7 +300,7 @@ public class AgentController {
 		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
 
 		if (fp == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 		fp.getService().setDirection(
 				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -327,17 +314,16 @@ public class AgentController {
 
 		String jsonResult = FichePoste.getSerializerForFichePoste().serialize(fp);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/fichePosteSecondaire", headers = "Accept=application/json")
+	@RequestMapping(value = "/fichePosteSecondaire", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getFichePosteSecondaireAgent(
 			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
@@ -348,7 +334,7 @@ public class AgentController {
 		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
 
 		if (fp == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 		fp.getService().setDirection(
 				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
@@ -362,30 +348,29 @@ public class AgentController {
 
 		String jsonResult = FichePoste.getSerializerForFichePoste().serialize(fp);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/superieurHierarchique", headers = "Accept=application/json")
+	@RequestMapping(value = "/superieurHierarchique", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSuperieurHierarchiqueAgent(
 			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
 			java.text.ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
 
 		if (agentSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -395,31 +380,30 @@ public class AgentController {
 				agentSuperieurHierarchique.getIdAgent(), dateJour);
 
 		if (fichePosteSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		agentSuperieurHierarchique.setPosition(fichePosteSuperieurHierarchique.getTitrePoste().getLibTitrePoste());
 
 		String jsonResult = Agent.getSerializerForAgentSuperieurHierarchique().serialize(agentSuperieurHierarchique);
 
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/equipe", headers = "Accept=application/json")
+	@RequestMapping(value = "/equipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent,
 			@RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
 			java.text.ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
@@ -441,7 +425,7 @@ public class AgentController {
 		}
 
 		if (listService.size() == 0) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
@@ -455,7 +439,7 @@ public class AgentController {
 				idAgentResp, listService);
 
 		if (listAgentService == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -467,7 +451,7 @@ public class AgentController {
 		}
 
 		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
-		return new ResponseEntity<String>(jsonResult, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
@@ -495,20 +479,19 @@ public class AgentController {
 		return new ResponseEntity<String>(serializer.deepSerialize(treeHeadList), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/estChef", headers = "Accept=application/json")
+	@RequestMapping(value = "/estChef", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentChefPortail(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (ag == null) {
-			return new ResponseEntity<String>(headers, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
 		final boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
@@ -523,16 +506,15 @@ public class AgentController {
 
 		String json = new JSONSerializer().exclude("*.class").serialize(o);
 
-		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/estHabiliteKiosqueRH", headers = "Accept=application/json")
+	@RequestMapping(value = "/estHabiliteKiosqueRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentHabilitePortail(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
+
 		// on remanie l'idAgent
 		String newNomatrAgent = remanieNoMatrAgent(idAgent);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -550,7 +532,7 @@ public class AgentController {
 
 		String json = new JSONSerializer().exclude("*.class").serialize(o);
 
-		return new ResponseEntity<String>(json, headers, HttpStatus.OK);
+		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
 	@ResponseBody
