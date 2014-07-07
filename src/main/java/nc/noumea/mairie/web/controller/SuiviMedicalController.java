@@ -69,8 +69,10 @@ public class SuiviMedicalController {
 				Siserv service = siservSrv.getService(sm.getCodeService());
 
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
-				agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv.getDirection(
-						service.getServi()).getLiServ());
+				if (service != null) {
+					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
+							.getDirection(service.getServi()).getLiServ());
+				}
 
 				MedecinDto medDto = new MedecinDto(sm.getMedecinSuiviMedical());
 
