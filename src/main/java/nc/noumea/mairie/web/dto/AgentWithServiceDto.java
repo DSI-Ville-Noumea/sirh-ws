@@ -24,9 +24,11 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public AgentWithServiceDto(Agent agent, Siserv service) {
 		super(agent);
-		this.service = service.getLiServ();
-		this.codeService = service.getServi();
-		this.signature = service.getSignature();
+		if (service != null) {
+			this.service = service.getLiServ();
+			this.codeService = service.getServi();
+			this.signature = service.getSignature();
+		}
 	}
 
 	public String getService() {
