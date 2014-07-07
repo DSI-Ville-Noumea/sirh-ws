@@ -107,21 +107,23 @@ public class SuiviMedicalController {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
 				Siserv service = siservSrv.getService(sm.getCodeService());
-				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
-				agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv.getDirection(
-						service.getServi()).getLiServ());
 
 				Siserv servResponsable = null;
 				AgentWithServiceDto agRespDto = null;
-				if (service.getServi().endsWith("AA")) {
-					service = null;
-				} else {
-					String codeServResp = service.getServi().substring(0, service.getServi().length() - 1) + "A";
-					servResponsable = siservSrv.getService(codeServResp);
+				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
+				if (service != null) {
+					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
+							.getDirection(service.getServi()).getLiServ());
+					if (service.getServi().endsWith("AA")) {
+						service = null;
+					} else {
+						String codeServResp = service.getServi().substring(0, service.getServi().length() - 1) + "A";
+						servResponsable = siservSrv.getService(codeServResp);
 
-					agRespDto = new AgentWithServiceDto(null, servResponsable);
-					agRespDto.setDirection(siservSrv.getDirection(servResponsable.getServi()) == null ? "" : siservSrv
-							.getDirection(servResponsable.getServi()).getLiServ());
+						agRespDto = new AgentWithServiceDto(null, servResponsable);
+						agRespDto.setDirection(siservSrv.getDirection(servResponsable.getServi()) == null ? ""
+								: siservSrv.getDirection(servResponsable.getServi()).getLiServ());
+					}
 				}
 
 				AccompagnementVMDto dto = new AccompagnementVMDto(agRespDto);
