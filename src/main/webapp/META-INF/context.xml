@@ -30,13 +30,11 @@
 	<!--  -->
 	<!-- BIRT -->
 	<!--  -->	
-	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String"
-		description="SIRH reports path on Birt" value="report/sirh-reports/"
-		override="false" />
+	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String" description="SIRH reports path on Birt" 
+		value="report/sirh-reports/" override="false" />
 
-	<Environment name="REPORTING_BASE_URL" type="java.lang.String"
-		description="BIRT report viewer base URL for SIRH reporting" value="http://***REMOVED***:8085/birt/"
-		override="false" />
+	<Environment name="REPORTING_BASE_URL" type="java.lang.String" description="BIRT report viewer base URL for SIRH reporting" 
+		value="http://***REMOVED***:8085/birt/" override="false" />
 
 	<!--  -->
 	<!-- WS PTG -->
@@ -48,7 +46,7 @@
 	<!-- WS RADI pour interroger AD -->
 	<!--  -->	
 	<Environment name="RADI_WS" type="java.lang.String" description="RADI WS url" 
-		override="false" value="http://***REMOVED***:8085/radi/" />
+		value="http://***REMOVED***:8085/radi/" override="false" />
 
 	<!--  -->
 	<!-- WS EAE -->
