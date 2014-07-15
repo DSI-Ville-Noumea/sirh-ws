@@ -13,13 +13,8 @@ import javax.persistence.PersistenceContext;
 
 import nc.noumea.mairie.model.bean.Spadmn;
 import nc.noumea.mairie.model.bean.Spbhor;
-import nc.noumea.mairie.model.bean.Spcarr;
-import nc.noumea.mairie.model.bean.Spcatg;
-import nc.noumea.mairie.model.bean.Spgeng;
-import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.pk.SpadmnId;
-import nc.noumea.mairie.model.pk.SpcarrId;
 import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 
@@ -41,209 +36,6 @@ public class MairieRepositoryTest {
 	private EntityManager sirhPersistenceUnit;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getListeCarriereActiveAvecPAAffecte_return1result() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(2010);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
-		spAdmn.setDatfin(0);
-		sirhPersistenceUnit.persist(spAdmn);
-
-		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
-
-		assertEquals(1, result.size());
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getListeCarriereActiveAvecPAAffecte_returnNoResult_badCdpadm() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(2010);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("10");
-		spAdmn.setDatfin(0);
-		sirhPersistenceUnit.persist(spAdmn);
-
-		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
-
-		assertEquals(0, result.size());
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getListeCarriereActiveAvecPAAffecte_returnNoResult_badCdcate() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(5);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(2010);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
-		spAdmn.setDatfin(0);
-		sirhPersistenceUnit.persist(spAdmn);
-
-		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
-
-		assertEquals(0, result.size());
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getListeCarriereActiveAvecPAAffecte_returnNoResult_badDateFin() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(2);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -1);
-
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(2010);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
-		spAdmn.setDatfin(new Integer(sdf.format(cal.getTime()).toString()));
-		sirhPersistenceUnit.persist(spAdmn);
-
-		List<Integer> result = repository.getListeCarriereActiveAvecPAAffecte();
-
-		assertEquals(0, result.size());
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
 
 	@Test
 	@Transactional("sirhTransactionManager")
@@ -426,351 +218,59 @@ public class MairieRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
-	public void getCarriereFonctionnaireAncienne_returnResult() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereFonctionnaireAncienne(5138);
-
-		assertNotNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereFonctionnaireAncienne_noResult_badCategorie() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(5);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereFonctionnaireAncienne(5138);
-
-		assertNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereFonctionnaireAncienne_noResult_badAgent() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setCategorie(spCatg);
-		spCarr.setDateArrete(2000);
-		spCarr.setGrade(grade);
-		spCarr.setReferenceArrete(1);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereFonctionnaireAncienne(5131);
-
-		assertNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereActive_returnResult() {
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setDateArrete(2000);
-		spCarr.setReferenceArrete(1);
-		spCarr.setCategorie(spCatg);
-		spCarr.setGrade(grade);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereActive(5138);
-
-		assertNotNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereActive_noResult_badDateFin() {
-
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -1);
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(new Integer(sdf.format(cal.getTime()).toString()));
-		spCarr.setDateArrete(2000);
-		spCarr.setReferenceArrete(1);
-		spCarr.setCategorie(spCatg);
-		spCarr.setGrade(grade);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereActive(5138);
-
-		assertNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereActive_noResult_badDateDebut() {
-
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 1);
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(new Integer(sdf.format(cal.getTime()).toString()));
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setDateArrete(2000);
-		spCarr.setReferenceArrete(1);
-		spCarr.setCategorie(spCatg);
-		spCarr.setGrade(grade);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereActive(5138);
-
-		assertNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void getCarriereActive_noResult_badAgent() {
-
-		Spcatg spCatg = new Spcatg();
-		spCatg.setCodeCategorie(1);
-		spCatg.setLibelleCategorie("libelle categorie");
-		sirhPersistenceUnit.persist(spCatg);
-
-		Spgeng gradeGenerique = new Spgeng();
-		gradeGenerique.setCdgeng("CDGENG");
-		gradeGenerique.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(gradeGenerique);
-
-		Spgradn grade = new Spgradn();
-		grade.setCdgrad("CDGRAD");
-		grade.setGradeGenerique(gradeGenerique);
-		grade.setGradeInitial("GRADE Initial");
-		grade.setLiGrad("ligrad");
-		sirhPersistenceUnit.persist(grade);
-
-		SpcarrId id = new SpcarrId();
-		id.setNomatr(5138);
-		id.setDatdeb(2010);
-		Spcarr spCarr = new Spcarr();
-		spCarr.setId(id);
-		spCarr.setDateFin(0);
-		spCarr.setDateArrete(2000);
-		spCarr.setReferenceArrete(1);
-		spCarr.setCategorie(spCatg);
-		spCarr.setGrade(grade);
-		sirhPersistenceUnit.persist(spCarr);
-
-		Spcarr result = repository.getCarriereActive(2138);
-
-		assertNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-	
-	@Test
-	@Transactional("sirhTransactionManager")
 	public void getListSpbhor_2results() {
-		
+
 		Spbhor hor1 = new Spbhor();
 		hor1.setCdThor(1);
 		hor1.setTaux(0.0);
 		sirhPersistenceUnit.persist(hor1);
-		
+
 		Spbhor hor2 = new Spbhor();
 		hor2.setCdThor(2);
 		hor2.setTaux(1.0);
 		sirhPersistenceUnit.persist(hor2);
-		
+
 		Spbhor hor3 = new Spbhor();
 		hor3.setCdThor(3);
 		hor3.setTaux(0.9);
 		sirhPersistenceUnit.persist(hor3);
-		
+
 		Spbhor hor4 = new Spbhor();
 		hor4.setCdThor(4);
 		hor4.setTaux(0.1);
 		sirhPersistenceUnit.persist(hor4);
-		
+
 		List<Spbhor> result = repository.getListSpbhor();
-		
+
 		assertEquals(2, result.size());
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getSpbhorById_oneResult() {
-		
+
 		Spbhor hor1 = new Spbhor();
 		hor1.setCdThor(1);
 		hor1.setTaux(0.0);
 		sirhPersistenceUnit.persist(hor1);
-		
+
 		Spbhor result = repository.getSpbhorById(1);
-		
+
 		assertNotNull(result);
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getSpbhorById_noResult() {
-		
+
 		Spbhor hor1 = new Spbhor();
 		hor1.setCdThor(1);
 		hor1.setTaux(0.0);
 		sirhPersistenceUnit.persist(hor1);
-		
+
 		Spbhor result = repository.getSpbhorById(2);
-		
+
 		assertNull(result);
 	}
-	
+
 }

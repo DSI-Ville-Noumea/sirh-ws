@@ -12,6 +12,7 @@ import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.repository.IMairieRepository;
+import nc.noumea.mairie.model.repository.ISpcarrRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISpCarrService;
@@ -36,6 +37,9 @@ public class CalculEaeService implements ICalculEaeService {
 
 	@Autowired
 	private IMairieRepository mairieRepository;
+
+	@Autowired
+	private ISpcarrRepository spcarrRepository;
 
 	@Autowired
 	private ISirhRepository sirhRepository;
@@ -196,7 +200,7 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public List<AgentDto> getListeAgentEligibleEAESansAffectes() {
 
-		List<Integer> listNoMatr = mairieRepository.getListeCarriereActiveAvecPA();
+		List<Integer> listNoMatr = spcarrRepository.getListeCarriereActiveAvecPA();
 
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
@@ -217,7 +221,7 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public List<AgentDto> getListeAgentEligibleEAEAffectes() {
 
-		List<Integer> listNoMatr = mairieRepository.getListeCarriereActiveAvecPAAffecte();
+		List<Integer> listNoMatr = spcarrRepository.getListeCarriereActiveAvecPAAffecte();
 
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
