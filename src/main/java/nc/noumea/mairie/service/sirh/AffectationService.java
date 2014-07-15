@@ -9,8 +9,6 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +16,6 @@ public class AffectationService implements IAffectationService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
-
-	private Logger logger = LoggerFactory.getLogger(AffectationService.class);
 
 	@Override
 	public Affectation getAffectationById(Integer idAffectation) {
