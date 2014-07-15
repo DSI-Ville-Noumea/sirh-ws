@@ -38,7 +38,7 @@ public class MSDateTransformer extends AbstractTransformer implements ObjectFact
 	}
 
 	@Override
-	public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
+	public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targe2tClass) {
 
 		Matcher matcher = msDateFormatPattern.matcher(value.toString());
 
