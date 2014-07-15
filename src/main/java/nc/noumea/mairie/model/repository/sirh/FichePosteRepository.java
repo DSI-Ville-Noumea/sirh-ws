@@ -1,4 +1,4 @@
-package nc.noumea.mairie.dao;
+package nc.noumea.mairie.model.repository.sirh;
 
 import java.util.Date;
 import java.util.Hashtable;
@@ -13,7 +13,7 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class FichePosteDao implements IFichePosteDao {
+public class FichePosteRepository implements IFichePosteRepository {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
