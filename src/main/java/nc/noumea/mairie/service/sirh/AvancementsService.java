@@ -19,7 +19,7 @@ import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
-import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
+import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
@@ -52,7 +52,7 @@ public class AvancementsService implements IAvancementsService {
 	private ISiservService siservSrv;
 
 	@Autowired
-	private ISirhRepository sirhRepository;
+	private IAvancementRepository avancementRepository;
 
 	@Autowired
 	private ISirhEaeWSConsumer sirhEaeWSConsumer;
@@ -418,7 +418,7 @@ public class AvancementsService implements IAvancementsService {
 	@Override
 	public AvancementEaeDto getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire) {
 
-		AvancementFonctionnaire avct = sirhRepository.getAvancement(idAgent, anneeAvancement, isFonctionnaire);
+		AvancementFonctionnaire avct = avancementRepository.getAvancement(idAgent, anneeAvancement, isFonctionnaire);
 
 		if (null == avct)
 			return null;
@@ -426,7 +426,7 @@ public class AvancementsService implements IAvancementsService {
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
 		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
 				&& !"".equals(avct.getGrade().getCdTava().trim())) {
-			MotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
@@ -437,7 +437,7 @@ public class AvancementsService implements IAvancementsService {
 	@Override
 	public AvancementEaeDto getAvancementDetache(Integer idAgent, Integer anneeAvancement) {
 
-		AvancementDetache avct = sirhRepository.getAvancementDetache(idAgent, anneeAvancement);
+		AvancementDetache avct = avancementRepository.getAvancementDetache(idAgent, anneeAvancement);
 
 		if (null == avct)
 			return null;
@@ -445,7 +445,7 @@ public class AvancementsService implements IAvancementsService {
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
 		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
 				&& !"".equals(avct.getGrade().getCdTava().trim())) {
-			MotifAvct motifAvct = sirhRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
