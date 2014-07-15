@@ -10,11 +10,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.dao.IFichePosteDao;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.repository.IMairieRepository;
+import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
@@ -33,7 +33,7 @@ public class FichePosteService implements IFichePosteService {
 	transient EntityManager sirhEntityManager;
 
 	@Autowired
-	private IFichePosteDao fichePosteDao;
+	private IFichePosteRepository fichePosteDao;
 
 	@Autowired
 	private ISirhPtgWSConsumer sirhPtgWSConsumer;
