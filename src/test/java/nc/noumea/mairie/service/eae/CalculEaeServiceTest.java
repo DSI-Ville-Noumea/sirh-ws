@@ -31,6 +31,7 @@ import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
@@ -169,8 +170,10 @@ public class CalculEaeServiceTest {
 		List<FormationAgent> listFormationAgent = new ArrayList<FormationAgent>();
 		listFormationAgent.add(formationAgent);
 
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
+
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
 		Mockito.when(sirhRepository.getListDiplomeByAgent(Mockito.anyInt())).thenReturn(lstDiplome);
 		Mockito.when(sirhRepository.getListFormationAgentByAnnee(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
 				listFormationAgent);
@@ -209,6 +212,7 @@ public class CalculEaeServiceTest {
 		ReflectionTestUtils.setField(calculEaeService, "spCarrService", spCarrService);
 		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
 		ReflectionTestUtils.setField(calculEaeService, "agentRepository", agentRepository);
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
 		CalculEaeInfosDto result = calculEaeService.getAffectationActiveByAgent(9005138, 2010);
 
@@ -280,12 +284,12 @@ public class CalculEaeServiceTest {
 	@Test
 	public void getListeAffectationsAgentAvecService_returnNoResult() {
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
 				.thenReturn(null);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
-		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
 
@@ -305,12 +309,12 @@ public class CalculEaeServiceTest {
 		List<Affectation> listAffectation = new ArrayList<Affectation>();
 		listAffectation.add(affectation);
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
 				.thenReturn(listAffectation);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
-		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
 
@@ -322,12 +326,12 @@ public class CalculEaeServiceTest {
 	@Test
 	public void getListeAffectationsAgentAvecFP_returnNoResult() {
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
-				null);
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt()))
+				.thenReturn(null);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
-		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecFP(9005138, 1);
 
@@ -347,12 +351,12 @@ public class CalculEaeServiceTest {
 		List<Affectation> listAffectation = new ArrayList<Affectation>();
 		listAffectation.add(affectation);
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt())).thenReturn(
-				listAffectation);
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecFP(Mockito.anyInt(), Mockito.anyInt()))
+				.thenReturn(listAffectation);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
-		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
 		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecFP(9005138, 1);
 
