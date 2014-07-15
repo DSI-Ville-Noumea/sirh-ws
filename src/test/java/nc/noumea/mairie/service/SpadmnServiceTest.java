@@ -11,8 +11,7 @@ import javax.persistence.Query;
 
 import nc.noumea.mairie.model.bean.Spadmn;
 import nc.noumea.mairie.model.pk.SpadmnId;
-import nc.noumea.mairie.model.repository.IMairieRepository;
-import nc.noumea.mairie.service.SpadmnService;
+import nc.noumea.mairie.model.repository.ISpadmnRepository;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 
 import org.junit.Test;
@@ -60,86 +59,86 @@ public class SpadmnServiceTest {
 		assertFalse(result);
 
 	}
-	
+
 	@Test
 	public void chercherPositionAdmAgentAncienne_return1result() {
-		
+
 		SpadmnId id = new SpadmnId();
-			id.setDatdeb(2000);
-			id.setNomatr(1111);
+		id.setDatdeb(2000);
+		id.setNomatr(1111);
 		Spadmn spAdm = new Spadmn();
-			spAdm.setCdpadm("CODE");
-			spAdm.setDatfin(2001);
-			spAdm.setId(id);
-		
-		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(spAdm);
-		
+		spAdm.setCdpadm("CODE");
+		spAdm.setDatfin(2001);
+		spAdm.setId(id);
+
+		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(spAdm);
+
 		SpadmnService paService = new SpadmnService();
-		ReflectionTestUtils.setField(paService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(paService, "spadmnRepository", spadmnRepository);
+
 		PositionAdmAgentDto result = paService.chercherPositionAdmAgentAncienne(1);
-		
+
 		assertNotNull(result);
-		
+
 		assertEquals("CODE", result.getCdpadm());
 		assertEquals(2000, result.getDatdeb().intValue());
 		assertEquals(2001, result.getDatfin().intValue());
 		assertEquals(1111, result.getNomatr().intValue());
 	}
-	
+
 	@Test
 	public void chercherPositionAdmAgentAncienne_returnNull() {
-		
-		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(null);
-		
+
+		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(null);
+
 		SpadmnService paService = new SpadmnService();
-		ReflectionTestUtils.setField(paService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(paService, "spadmnRepository", spadmnRepository);
+
 		PositionAdmAgentDto result = paService.chercherPositionAdmAgentAncienne(1);
-		
+
 		assertNull(result);
 	}
-	
+
 	@Test
 	public void chercherPositionAdmAgentEnCours_return1result() {
-		
+
 		SpadmnId id = new SpadmnId();
-			id.setDatdeb(2000);
-			id.setNomatr(1111);
+		id.setDatdeb(2000);
+		id.setNomatr(1111);
 		Spadmn spAdm = new Spadmn();
-			spAdm.setCdpadm("CODE");
-			spAdm.setDatfin(2001);
-			spAdm.setId(id);
-		
-		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(spAdm);
-		
+		spAdm.setCdpadm("CODE");
+		spAdm.setDatfin(2001);
+		spAdm.setId(id);
+
+		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(spAdm);
+
 		SpadmnService paService = new SpadmnService();
-		ReflectionTestUtils.setField(paService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(paService, "spadmnRepository", spadmnRepository);
+
 		PositionAdmAgentDto result = paService.chercherPositionAdmAgentEnCours(1);
-		
+
 		assertNotNull(result);
-		
+
 		assertEquals("CODE", result.getCdpadm());
 		assertEquals(2000, result.getDatdeb().intValue());
 		assertEquals(2001, result.getDatfin().intValue());
 		assertEquals(1111, result.getNomatr().intValue());
 	}
-	
+
 	@Test
 	public void chercherPositionAdmAgentEnCours_returnNull() {
-		
-		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(null);
-		
+
+		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(null);
+
 		SpadmnService paService = new SpadmnService();
-		ReflectionTestUtils.setField(paService, "mairieRepository", mairieRepository);
-		
+		ReflectionTestUtils.setField(paService, "spadmnRepository", spadmnRepository);
+
 		PositionAdmAgentDto result = paService.chercherPositionAdmAgentEnCours(1);
-		
+
 		assertNull(result);
 	}
 }
