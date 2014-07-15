@@ -13,6 +13,7 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
@@ -46,6 +47,9 @@ public class CalculEaeService implements ICalculEaeService {
 	private ISirhRepository sirhRepository;
 
 	@Autowired
+	private IAffectationRepository affectationRepository;
+
+	@Autowired
 	private IAgentRepository agentRepository;
 
 	@Autowired
@@ -57,7 +61,7 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation) {
 
-		Affectation affectation = sirhRepository.getAffectationActiveByAgent(idAgent);
+		Affectation affectation = affectationRepository.getAffectationActiveByAgent(idAgent);
 
 		CalculEaeInfosDto dto = new CalculEaeInfosDto();
 
@@ -168,7 +172,8 @@ public class CalculEaeService implements ICalculEaeService {
 
 		List<CalculEaeInfosDto> listDto = new ArrayList<CalculEaeInfosDto>();
 
-		List<Affectation> listAffectation = sirhRepository.getListeAffectationsAgentAvecService(idAgent, idService);
+		List<Affectation> listAffectation = affectationRepository.getListeAffectationsAgentAvecService(idAgent,
+				idService);
 
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
@@ -187,7 +192,8 @@ public class CalculEaeService implements ICalculEaeService {
 
 		List<CalculEaeInfosDto> listDto = new ArrayList<CalculEaeInfosDto>();
 
-		List<Affectation> listAffectation = sirhRepository.getListeAffectationsAgentAvecFP(idAgent, idFichePoste);
+		List<Affectation> listAffectation = affectationRepository
+				.getListeAffectationsAgentAvecFP(idAgent, idFichePoste);
 
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
