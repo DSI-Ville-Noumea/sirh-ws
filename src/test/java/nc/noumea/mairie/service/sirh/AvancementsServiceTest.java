@@ -26,7 +26,7 @@ import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
-import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
+import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
@@ -756,13 +756,13 @@ public class AvancementsServiceTest {
 		af.setGradeNouveau(gradeNouveau);
 		af.setGrade(grade);
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
+		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
+		Mockito.when(avancementRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
 				.thenReturn(af);
-		Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
 
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
 
@@ -789,12 +789,12 @@ public class AvancementsServiceTest {
 	@Test
 	public void getAvancement_returnNull() {
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
+		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
+		Mockito.when(avancementRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
 				.thenReturn(null);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
 
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
 
@@ -838,12 +838,12 @@ public class AvancementsServiceTest {
 		af.setGradeNouveau(gradeNouveau);
 		af.setGrade(grade);
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
-		Mockito.when(sirhRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
+		Mockito.when(avancementRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
+		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
 
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
 
@@ -869,11 +869,11 @@ public class AvancementsServiceTest {
 	@Test
 	public void getAvancementDetache_returnNull() {
 
-		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
-		Mockito.when(sirhRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
+		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
+		Mockito.when(avancementRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhRepository", sirhRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
 
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
 
