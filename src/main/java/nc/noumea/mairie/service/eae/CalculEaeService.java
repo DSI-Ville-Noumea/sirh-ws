@@ -13,6 +13,7 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
+import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISpCarrService;
@@ -43,6 +44,9 @@ public class CalculEaeService implements ICalculEaeService {
 
 	@Autowired
 	private ISirhRepository sirhRepository;
+
+	@Autowired
+	private IAgentRepository agentRepository;
 
 	@Autowired
 	private ISpadmnService spadmnService;
@@ -93,7 +97,7 @@ public class CalculEaeService implements ICalculEaeService {
 			}
 		}
 
-		Agent agent = sirhRepository.getAgent(idAgent);
+		Agent agent = agentRepository.getAgent(idAgent);
 
 		if (null != agent) {
 			dto.setListDiplome(getListDiplomeDto(idAgent));
@@ -205,7 +209,7 @@ public class CalculEaeService implements ICalculEaeService {
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
 			for (Integer noMatr : listNoMatr) {
-				Agent agent = sirhRepository.getAgentEligibleEAESansAffectes(noMatr);
+				Agent agent = agentRepository.getAgentEligibleEAESansAffectes(noMatr);
 
 				if (null != agent) {
 					AgentDto dto = new AgentDto(agent);
@@ -226,7 +230,7 @@ public class CalculEaeService implements ICalculEaeService {
 		List<AgentDto> result = new ArrayList<AgentDto>();
 		if (null != listNoMatr) {
 			for (Integer noMatr : listNoMatr) {
-				Agent agent = sirhRepository.getAgentWithListNomatr(noMatr);
+				Agent agent = agentRepository.getAgentWithListNomatr(noMatr);
 
 				if (null != agent) {
 					AgentDto dto = new AgentDto(agent);
