@@ -6,4 +6,5 @@ public interface IHolidayService {
 	
 	boolean isHoliday(Date day);
 
+	boolean isJourFerie(Date day);
 }
