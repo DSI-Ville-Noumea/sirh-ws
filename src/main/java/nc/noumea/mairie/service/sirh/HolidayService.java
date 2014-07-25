@@ -21,4 +21,12 @@ public class HolidayService implements IHolidayService {
 
 		return (q.getResultList().size() != 0);
 	}
+	
+	@Override
+	public boolean isJourFerie(Date day) {
+		TypedQuery<Integer> q = sirhEntityManager.createNamedQuery("isJourFerie", Integer.class);
+		q.setParameter("date", day);
+
+		return (q.getResultList().size() != 0);
+	}
 }
