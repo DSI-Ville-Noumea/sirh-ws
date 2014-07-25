@@ -44,4 +44,22 @@ public class UtilsController {
 		}
 
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "isJourFerie", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> isJourFerie(@RequestParam("date") @DateTimeFormat(pattern = "YYYYMMdd") Date date)
+			throws ParseException {
+
+		logger.debug("entered GET [utils/isJourFerie] => isHoliday with parameter date = {}  ", date);
+
+		boolean res = holidayService.isJourFerie(date);
+
+		if (!res) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}
+
+	}
 }
