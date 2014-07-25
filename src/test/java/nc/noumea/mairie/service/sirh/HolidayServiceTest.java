@@ -56,5 +56,45 @@ public class HolidayServiceTest {
 		// Then
 		assertEquals(false, service.isHoliday(dayTime.toDate()));
 	}
+	
+	@Test
+	public void isJourFerie_True() {
+		// Given
+		DateTime dayTime = new DateTime(2013, 4, 9, 12, 9, 34);
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Integer> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(list);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createNamedQuery("isJourFerie", Integer.class)).thenReturn(mockQuery);
+
+		HolidayService service = new HolidayService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// Then
+		assertEquals(true, service.isJourFerie(dayTime.toDate()));
+	}
+
+	@Test
+	public void isJourFerie_False() {
+		// Given
+		DateTime dayTime = new DateTime(2013, 4, 9, 12, 9, 34);
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Integer> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Integer>());
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createNamedQuery("isJourFerie", Integer.class)).thenReturn(mockQuery);
+
+		HolidayService service = new HolidayService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// Then
+		assertEquals(false, service.isJourFerie(dayTime.toDate()));
+	}
 
 }
