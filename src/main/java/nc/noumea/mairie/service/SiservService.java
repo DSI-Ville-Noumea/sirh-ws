@@ -162,7 +162,7 @@ public class SiservService implements ISiservService {
 	public Siserv getServiceAgent(Integer idAgent) {
 		String hql = "select serv from FichePoste fp ,Affectation aff , Siserv serv "
 				+ "where fp.service.servi = serv.servi and aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
-				+ "and (aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)";
+				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, Siserv.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());

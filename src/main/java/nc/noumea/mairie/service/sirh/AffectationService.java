@@ -39,7 +39,7 @@ public class AffectationService implements IAffectationService {
 		Affectation res = null;
 		TypedQuery<Affectation> query = sirhEntityManager
 				.createQuery(
-						"select aff from Affectation aff where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff = '01/01/0001' or aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
+						"select aff from Affectation aff where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
 						Affectation.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
