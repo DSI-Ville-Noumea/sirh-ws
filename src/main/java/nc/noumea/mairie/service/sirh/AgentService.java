@@ -55,7 +55,7 @@ public class AgentService implements IAgentService {
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
 								+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent "
 								+ " and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
 						Agent.class);
 		query.setParameter("codeServ", servi);
 		query.setParameter("idAgent", idAgent);
@@ -73,7 +73,7 @@ public class AgentService implements IAgentService {
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
 								+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
 								+ " and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
+								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
 						Agent.class);
 		query.setParameter("listeCodeService", listeCodeService);
 		query.setParameter("idAgent", idAgent);
@@ -90,8 +90,8 @@ public class AgentService implements IAgentService {
 		String sql = "select a.* from Affectation aff, Agent a "
 				+ "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
 				+ "( select fpAgent.id_responsable from Fiche_Poste fpAgent, Affectation aff "
-				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)) "
-				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)";
+				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)) "
+				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)";
 		Query query = sirhEntityManager.createNativeQuery(sql, Agent.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
@@ -120,7 +120,7 @@ public class AgentService implements IAgentService {
 		if (idAgents != null && idAgents.size() != 0)
 			sb.append("and aff.agent.idAgent in (:idAgents) ");
 		sb.append("and aff.dateDebutAff<=:dateJour and ");
-		sb.append("(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)");
+		sb.append("(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)");
 
 		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("dateJour", date);
@@ -175,7 +175,7 @@ public class AgentService implements IAgentService {
 		sb.append("and ag.idAgent=aff.agentrecherche.idAgent ");
 		sb.append("and pa.cdpadm in ('01', '02', '03', '04', '23', '24', '60', '61', '62', '63', '64', '65', '66') ");
 		sb.append("and pa.id.datdeb <= :dateJourMairie and (pa.datfin = 0 or pa.datfin >= :dateJourMairie) ");
-		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour) ");
+		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour) ");
 
 		// if we're restraining search with service codes
 		if (!codeService.equals(""))
