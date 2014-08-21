@@ -156,7 +156,7 @@ public class FichePoste {
 	private FichePoste remplace;
 
 	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
-	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF = '01/01/0001' or DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
+	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
 	private Set<Affectation> agent = new HashSet<Affectation>();
 
 	@Transient

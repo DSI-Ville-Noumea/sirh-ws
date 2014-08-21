@@ -28,7 +28,7 @@ public class ContratService implements IContratService {
 		TypedQuery<Contrat> query = sirhEntityManager
 				.createQuery(
 						"select c from Contrat c where c.agent.idAgent=:idAgent "
-								+ " and (c.dateDebutContrat <=:dateDeb and (c.dateFinContrat >:dateDeb or c.dateFinContrat is null or c.dateFinContrat='01/01/0001' ))",
+								+ " and (c.dateDebutContrat <=:dateDeb and (c.dateFinContrat >:dateDeb or c.dateFinContrat is null))",
 						Contrat.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateDeb", dateRecherche);

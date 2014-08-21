@@ -55,7 +55,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
 				FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
@@ -70,7 +70,7 @@ public class FichePosteService implements IFichePosteService {
 
 	@Override
 	public boolean estResponsable(Integer idAgent) {
-		String sql = "select count(fp.id_fiche_poste) as nb from fiche_poste fp inner join affectation aff on aff.id_fiche_poste = fp.id_fiche_poste where fp.id_responsable = (select fp.id_fiche_poste from affectation  a inner join fiche_poste fp on a.id_fiche_poste = fp.id_fiche_poste where a.id_agent=:idAgent and a.date_Debut_Aff<=:dateJour and (a.date_Fin_Aff is null or a.date_Fin_Aff='01/01/0001' or a.date_Fin_Aff>=:dateJour) ) and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff='01/01/0001' or aff.date_Fin_Aff>=:dateJour)";
+		String sql = "select count(fp.id_fiche_poste) as nb from fiche_poste fp inner join affectation aff on aff.id_fiche_poste = fp.id_fiche_poste where fp.id_responsable = (select fp.id_fiche_poste from affectation  a inner join fiche_poste fp on a.id_fiche_poste = fp.id_fiche_poste where a.id_agent=:idAgent and a.date_Debut_Aff<=:dateJour and (a.date_Fin_Aff is null or a.date_Fin_Aff>=:dateJour) ) and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)";
 		Query query = sirhEntityManager.createNativeQuery(sql);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
@@ -85,7 +85,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
 				FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
@@ -105,7 +105,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff='01/01/0001' or aff.dateFinAff>=:dateJour)",
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
 				String.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);

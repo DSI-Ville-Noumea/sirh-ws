@@ -47,7 +47,7 @@ public class AgentRepository implements IAgentRepository {
 		sb.append(" inner join Affectation aff on a.id_agent = aff.id_agent ");
 		sb.append(" inner join Fiche_Poste fp on aff.ID_FICHE_POSTE = fp.ID_FICHE_POSTE ");
 		sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
-		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff = '0001-01-01' or aff.date_Fin_Aff >= :dateJourSIRH ) ");
+		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
 		sb.append(" and a.nomatr = :noMatr ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString(), Agent.class);
