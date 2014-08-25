@@ -51,7 +51,7 @@ public class ArreteDto {
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation()
-						.toLowerCase();
+						.toLowerCase().replace("/cp", "/CP");
 		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = avct.getDateCap();
@@ -114,7 +114,7 @@ public class ArreteDto {
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation()
-						.toLowerCase();
+						.toLowerCase().replace("/cp", "/CP");
 		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
 				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
 		this.dateCap = null;
