@@ -69,13 +69,16 @@ public class ArreteDto {
 		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong()
 				.toLowerCase();
 
-		String classe = classeGrade == null ? "" : " " + classeGrade.getLibCla().trim();
-		String echelon = echelonGrade == null ? "" : " " + echelonGrade.getLibEch().trim();
+		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
+				+ classeGrade.getLibCla().trim();
+		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
+				+ echelonGrade.getLibEch().trim();
 		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
 
 		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
-				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'" + libelleGrade.toLowerCase()
-				: "de " + libelleGrade.toLowerCase();
+				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'"
+				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
+				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon");
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
 			String res = avct.getGradeNouveau().getBarem().getIban();
@@ -128,13 +131,16 @@ public class ArreteDto {
 
 		this.dureeAvct = "";
 
-		String classe = classeGrade == null ? "" : " " + classeGrade.getLibCla().trim();
-		String echelon = echelonGrade == null ? "" : " " + echelonGrade.getLibEch().trim();
+		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
+				+ classeGrade.getLibCla().trim();
+		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
+				+ echelonGrade.getLibEch().trim();
 		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
 
 		this.gradeLabel = libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
-				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'" + libelleGrade.toLowerCase()
-				: "de " + libelleGrade.toLowerCase();
+				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'"
+				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
+				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon");
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
 			String res = avct.getGradeNouveau().getBarem().getIban();
