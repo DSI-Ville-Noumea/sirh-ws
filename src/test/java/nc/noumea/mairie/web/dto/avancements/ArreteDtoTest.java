@@ -10,6 +10,7 @@ import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
+import nc.noumea.mairie.model.bean.Spfili;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.sirh.Agent;
@@ -120,7 +121,7 @@ public class ArreteDtoTest {
 		assertEquals(false, dto.isChangementClasse());
 		assertEquals(true, dto.isFeminin());
 		assertEquals("I", dto.getBaseReglement());
-		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -197,7 +198,7 @@ public class ArreteDtoTest {
 		assertEquals("1 mois", dto.getAcc());
 		assertEquals("5138", dto.getMatriculeAgent());
 		assertEquals("I", dto.getBaseReglement());
-		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -279,7 +280,7 @@ public class ArreteDtoTest {
 		assertEquals("", dto.getDeliberationCapText());
 		assertEquals("néant", dto.getAcc());
 		assertEquals("M", dto.getBaseReglement());
-		assertEquals("de titi nono 1", dto.getGradeLabel());
+		assertEquals("de titi, nono 1", dto.getGradeLabel());
 	}
 
 	@Test
@@ -349,7 +350,7 @@ public class ArreteDtoTest {
 		assertEquals("épuisée", dto.getAcc());
 		assertEquals("M", dto.getBaseReglement());
 		assertEquals("SN (S)", dto.getServiceAgent());
-		assertEquals("de titi nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -369,9 +370,13 @@ public class ArreteDtoTest {
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
 		barem.setIna(125);
+		
+		Spfili fili = new Spfili();
+		fili.setLibelleFili("FILIERE NONO");
 
 		Spgeng gradeGen = new Spgeng();
 		gradeGen.setCdgeng("TECH");
+		gradeGen.setFiliere(fili);
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
@@ -420,7 +425,7 @@ public class ArreteDtoTest {
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("néant", dto.getAcc());
 		assertEquals("I", dto.getBaseReglement());
-		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono 1, nono e de la filière filiere nono", dto.getGradeLabel());
 	}
 
 	@Test
@@ -492,7 +497,7 @@ public class ArreteDtoTest {
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
 		assertEquals("I", dto.getBaseReglement());
-		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
 	}
 
 	@Test
@@ -566,6 +571,6 @@ public class ArreteDtoTest {
 		assertEquals("I", dto.getBaseReglement());
 		assertEquals(null, dto.getDateCap());
 		assertEquals("", dto.getDureeAvct());
-		assertEquals("de titi nono 1 nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
 	}
 }
