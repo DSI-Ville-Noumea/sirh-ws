@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
@@ -41,6 +42,7 @@ import flexjson.JSONSerializer;
 @Entity
 @Table(name = "AGENT")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
+@NamedQuery(name = "getAgent", query = "select ag from Agent ag where ag.idAgent = :idAgent ")
 public class Agent {
 
 	@Id
