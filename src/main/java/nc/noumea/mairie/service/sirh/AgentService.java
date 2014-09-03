@@ -36,8 +36,7 @@ public class AgentService implements IAgentService {
 	public Agent getAgent(Integer id) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent",
-				Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createNamedQuery("getAgent", Agent.class);
 
 		query.setParameter("idAgent", id);
 		List<Agent> lfp = query.getResultList();

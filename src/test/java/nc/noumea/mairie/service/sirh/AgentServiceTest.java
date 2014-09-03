@@ -97,7 +97,7 @@ public class AgentServiceTest {
 		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Agent>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
+		Mockito.when(sirhEMMock.createNamedQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
 
 		AgentService service = new AgentService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
@@ -120,7 +120,7 @@ public class AgentServiceTest {
 		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(ag));
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
+		Mockito.when(sirhEMMock.createNamedQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
 
 		AgentService service = new AgentService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
