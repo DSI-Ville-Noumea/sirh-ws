@@ -23,6 +23,7 @@ import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
@@ -148,7 +149,8 @@ public class AgentController {
 
 		EtatCivilDto dto = new EtatCivilDto(ag);
 
-		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
