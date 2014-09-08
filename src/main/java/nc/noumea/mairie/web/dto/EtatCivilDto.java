@@ -1,11 +1,9 @@
 package nc.noumea.mairie.web.dto;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
-
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 public class EtatCivilDto {
 
@@ -16,13 +14,11 @@ public class EtatCivilDto {
 	private AgentGeneriqueDto agent;
 	private String sexe;
 	private String situationFamiliale;
-	@JsonSerialize(using = JsonDateSerializer.class)
-	@JsonDeserialize(using = JsonDateDeserializer.class)
 	private Date dateNaissance;
 	private String titre;
 	private String lieuNaissance;
 
-	public EtatCivilDto(Agent ag) {
+	public EtatCivilDto(Agent ag) throws ParseException {
 		super();
 		if (ag != null) {
 			this.agent = new AgentGeneriqueDto(ag);
