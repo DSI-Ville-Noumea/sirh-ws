@@ -5,7 +5,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 public class AgentGeneriqueDto {
 
 	/*
-	 * POUR LES PROJETS PTG ET ABS
+	 * POUR LES PROJETS PTG ET ABS et KIOSQUE J2EE
 	 */
 
 	private Integer idAgent;
