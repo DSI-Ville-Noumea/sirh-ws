@@ -26,6 +26,7 @@ import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.EtatCivilDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -123,6 +124,35 @@ public class AgentController {
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/getEtatCivil", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getEtatCivilOtherProject(
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		if (ag.getCodeCommuneNaissFr() == null) {
+			ag.setLieuNaissance(sivietSrv.getLieuNaissEtr(ag.getCodePaysNaissEt(), ag.getCodeCommuneNaissEt())
+					.getLibCop());
+		} else {
+			ag.setLieuNaissance(ag.getCodeCommuneNaissFr().getLibVil().trim());
+		}
+
+		EtatCivilDto dto = new EtatCivilDto(ag);
+
+		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/enfants", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
@@ -210,7 +240,7 @@ public class AgentController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getContacts(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		
+
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
@@ -249,7 +279,7 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getToutHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-		
+
 		// on remanie l'idAgent pour avoir le nomatr
 		String nomatr = remanieNoMatrAgent(idAgent);
 
