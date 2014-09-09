@@ -6,7 +6,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
-public class EtatCivilDto {
+public class ProfilAgentDto {
 
 	/*
 	 * POUR LE PROJETS KIOSQUE J2EE
@@ -20,8 +20,10 @@ public class EtatCivilDto {
 	private String lieuNaissance;
 	private AdresseAgentDto adresse;
 	private List<ContactAgentDto> listeContacts;
+	private List<EnfantDto> listeEnfants;
 
-	public EtatCivilDto(Agent ag, List<ContactAgentDto> listContact) throws ParseException {
+	public ProfilAgentDto(Agent ag, List<ContactAgentDto> listContact, List<EnfantDto> listeEnfant)
+			throws ParseException {
 		super();
 		if (ag != null) {
 			this.agent = new AgentGeneriqueDto(ag);
@@ -32,6 +34,7 @@ public class EtatCivilDto {
 			this.lieuNaissance = ag.getLieuNaissance();
 			this.adresse = new AdresseAgentDto(ag);
 			this.listeContacts = listContact;
+			this.listeEnfants = listeEnfant;
 		}
 	}
 
@@ -97,6 +100,14 @@ public class EtatCivilDto {
 
 	public void setListeContacts(List<ContactAgentDto> listeContacts) {
 		this.listeContacts = listeContacts;
+	}
+
+	public List<EnfantDto> getListeEnfants() {
+		return listeEnfants;
+	}
+
+	public void setListeEnfants(List<EnfantDto> listeEnfants) {
+		this.listeEnfants = listeEnfants;
 	}
 
 }
