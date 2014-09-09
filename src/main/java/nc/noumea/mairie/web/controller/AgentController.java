@@ -449,6 +449,47 @@ public class AgentController {
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/getSuperieurHierarchique", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getSuperieurHierarchiqueAgentOtherProject(
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
+
+		if (agentSuperieurHierarchique == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(
+				agentSuperieurHierarchique.getIdAgent(), dateJour);
+
+		if (fichePosteSuperieurHierarchique == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		agentSuperieurHierarchique.setPosition(fichePosteSuperieurHierarchique.getTitrePoste().getLibTitrePoste());
+
+		AgentWithServiceDto dto = new AgentWithServiceDto(agentSuperieurHierarchique);
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/equipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
