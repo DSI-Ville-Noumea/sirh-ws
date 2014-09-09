@@ -1,6 +1,8 @@
 package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
@@ -10,6 +12,7 @@ import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 
@@ -194,7 +197,7 @@ public class FichePosteController {
 	public ResponseEntity<String> getListSpbhor() {
 
 		List<SpbhorDto> result = fpSrv.getListSpbhorDto();
-		
+
 		if (result == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
@@ -202,19 +205,68 @@ public class FichePosteController {
 
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/spbhorById", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSpbhorById(@RequestParam("idSpbhor") int idSpbhor) {
 
 		SpbhorDto result = fpSrv.getSpbhorDtoById(idSpbhor);
-		
+
 		if (result == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		String jsonResult = new JSONSerializer().exclude("*.class").serialize(result);
 
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getFichePosteAgentOtherProject(
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+
+		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
+
+		if (fp == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+		fp.getService().setDirection(
+				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+						fp.getService().getServi()).getLiServ());
+		fp.getService().setDivision(
+				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
+						.getDivision(fp.getService().getServi()).getLiServ());
+		fp.getService().setSection(
+				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
+						fp.getService().getServi()).getLiServ());
+
+		FichePosteDto dto = new FichePosteDto(fp);
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	private String remanieIdAgent(Long idAgent) {
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2, idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		return newIdAgent;
 	}
 }
