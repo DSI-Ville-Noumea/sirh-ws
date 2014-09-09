@@ -17,6 +17,7 @@ public class EtatCivilDto {
 	private Date dateNaissance;
 	private String titre;
 	private String lieuNaissance;
+	private AdresseAgentDto adresse;
 
 	public EtatCivilDto(Agent ag) throws ParseException {
 		super();
@@ -27,6 +28,7 @@ public class EtatCivilDto {
 			this.dateNaissance = ag.getDateNaissance();
 			this.titre = ag.getTitre();
 			this.lieuNaissance = ag.getLieuNaissance();
+			this.adresse = new AdresseAgentDto(ag);
 		}
 	}
 
@@ -76,6 +78,14 @@ public class EtatCivilDto {
 
 	public void setLieuNaissance(String lieuNaissance) {
 		this.lieuNaissance = lieuNaissance;
+	}
+
+	public AdresseAgentDto getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(AdresseAgentDto adresse) {
+		this.adresse = adresse;
 	}
 
 }
