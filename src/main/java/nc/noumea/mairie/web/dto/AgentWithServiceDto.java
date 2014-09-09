@@ -9,6 +9,7 @@ public class AgentWithServiceDto extends AgentDto {
 	private String codeService;
 	private String direction;
 	private String signature;
+	private String position;
 
 	public AgentWithServiceDto() {
 		super();
@@ -16,6 +17,7 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public AgentWithServiceDto(Agent agent) {
 		super(agent);
+		this.position = agent.getPosition();
 	}
 
 	public AgentWithServiceDto(AgentRecherche ag) {
@@ -29,6 +31,7 @@ public class AgentWithServiceDto extends AgentDto {
 			this.codeService = service.getServi();
 			this.signature = service.getSignature();
 		}
+		this.position = agent.getPosition();
 	}
 
 	public String getService() {
@@ -61,6 +64,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 }
