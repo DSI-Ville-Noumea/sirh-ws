@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Sibanq;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.SpSold;
 import nc.noumea.mairie.model.bean.Spcong;
@@ -13,6 +14,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
+import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
@@ -56,6 +58,9 @@ public class AgentController {
 
 	@Autowired
 	private ISiguicService siguicSrv;
+
+	@Autowired
+	private ISibanqService sibanqSrv;
 
 	@Autowired
 	private IContactService contactSrv;
@@ -164,7 +169,12 @@ public class AgentController {
 			listeEnfant.add(dtoEnfant);
 		}
 
-		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant);
+		Sibanq banque = null;
+		if (ag.getCodeBanque() != null) {
+			banque = sibanqSrv.getBanque(ag.getCodeBanque());
+		}
+
+		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant, banque);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
