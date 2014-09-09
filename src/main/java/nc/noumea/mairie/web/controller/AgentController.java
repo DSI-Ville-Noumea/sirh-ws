@@ -12,6 +12,7 @@ import nc.noumea.mairie.model.bean.Spcong;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
@@ -28,7 +29,8 @@ import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ContactAgentDto;
-import nc.noumea.mairie.web.dto.EtatCivilDto;
+import nc.noumea.mairie.web.dto.EnfantDto;
+import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -155,7 +157,14 @@ public class AgentController {
 			listeContact.add(dtoContact);
 		}
 
-		EtatCivilDto dto = new EtatCivilDto(ag, listeContact);
+		List<ParentEnfant> lpe = ag.getParentEnfantsOrderByDateNaiss();
+		List<EnfantDto> listeEnfant = new ArrayList<EnfantDto>();
+		for (ParentEnfant pe : lpe) {
+			EnfantDto dtoEnfant = new EnfantDto(pe);
+			listeEnfant.add(dtoEnfant);
+		}
+
+		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
