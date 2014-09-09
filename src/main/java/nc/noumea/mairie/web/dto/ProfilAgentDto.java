@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Sibanq;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
 public class ProfilAgentDto {
@@ -22,8 +23,9 @@ public class ProfilAgentDto {
 	private List<ContactAgentDto> listeContacts;
 	private List<EnfantDto> listeEnfants;
 	private CompteDto compte;
+	private CouvertureSocialeDto couvertureSociale;
 
-	public ProfilAgentDto(Agent ag, List<ContactAgentDto> listContact, List<EnfantDto> listeEnfant)
+	public ProfilAgentDto(Agent ag, List<ContactAgentDto> listContact, List<EnfantDto> listeEnfant, Sibanq banque)
 			throws ParseException {
 		super();
 		if (ag != null) {
@@ -36,7 +38,8 @@ public class ProfilAgentDto {
 			this.adresse = new AdresseAgentDto(ag);
 			this.listeContacts = listContact;
 			this.listeEnfants = listeEnfant;
-			this.compte = new CompteDto(ag, null);
+			this.compte = new CompteDto(ag, banque);
+			this.couvertureSociale = new CouvertureSocialeDto(ag);
 		}
 	}
 
@@ -118,6 +121,14 @@ public class ProfilAgentDto {
 
 	public void setCompte(CompteDto compte) {
 		this.compte = compte;
+	}
+
+	public CouvertureSocialeDto getCouvertureSociale() {
+		return couvertureSociale;
+	}
+
+	public void setCouvertureSociale(CouvertureSocialeDto couvertureSociale) {
+		this.couvertureSociale = couvertureSociale;
 	}
 
 }
