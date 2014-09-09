@@ -2,6 +2,7 @@ package nc.noumea.mairie.web.dto;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
@@ -18,8 +19,9 @@ public class EtatCivilDto {
 	private String titre;
 	private String lieuNaissance;
 	private AdresseAgentDto adresse;
+	private List<ContactAgentDto> listeContacts;
 
-	public EtatCivilDto(Agent ag) throws ParseException {
+	public EtatCivilDto(Agent ag, List<ContactAgentDto> listContact) throws ParseException {
 		super();
 		if (ag != null) {
 			this.agent = new AgentGeneriqueDto(ag);
@@ -29,6 +31,7 @@ public class EtatCivilDto {
 			this.titre = ag.getTitre();
 			this.lieuNaissance = ag.getLieuNaissance();
 			this.adresse = new AdresseAgentDto(ag);
+			this.listeContacts = listContact;
 		}
 	}
 
@@ -86,6 +89,14 @@ public class EtatCivilDto {
 
 	public void setAdresse(AdresseAgentDto adresse) {
 		this.adresse = adresse;
+	}
+
+	public List<ContactAgentDto> getListeContacts() {
+		return listeContacts;
+	}
+
+	public void setListeContacts(List<ContactAgentDto> listeContacts) {
+		this.listeContacts = listeContacts;
 	}
 
 }
