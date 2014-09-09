@@ -10,6 +10,7 @@ public class CompteDto {
 	private String numCompte;
 	private Integer rib;
 	private String libelleBanque;
+	private String intituleCompte;
 
 	public CompteDto(Agent ag, Sibanq banque) {
 		super();
@@ -18,6 +19,7 @@ public class CompteDto {
 			this.codeGuichet = ag.getCodeGuichet();
 			this.numCompte = ag.getNumCompte().trim();
 			this.rib = ag.getRib();
+			this.intituleCompte = ag.getIntituleCompte();
 		}
 		this.libelleBanque = banque != null ? banque.getLiBanque().trim() : null;
 	}
@@ -60,5 +62,13 @@ public class CompteDto {
 
 	public void setLibelleBanque(String libelleBanque) {
 		this.libelleBanque = libelleBanque;
+	}
+
+	public String getIntituleCompte() {
+		return intituleCompte;
+	}
+
+	public void setIntituleCompte(String intituleCompte) {
+		this.intituleCompte = intituleCompte;
 	}
 }

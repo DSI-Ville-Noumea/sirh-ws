@@ -21,6 +21,7 @@ public class ProfilAgentDto {
 	private AdresseAgentDto adresse;
 	private List<ContactAgentDto> listeContacts;
 	private List<EnfantDto> listeEnfants;
+	private CompteDto compte;
 
 	public ProfilAgentDto(Agent ag, List<ContactAgentDto> listContact, List<EnfantDto> listeEnfant)
 			throws ParseException {
@@ -35,6 +36,7 @@ public class ProfilAgentDto {
 			this.adresse = new AdresseAgentDto(ag);
 			this.listeContacts = listContact;
 			this.listeEnfants = listeEnfant;
+			this.compte = new CompteDto(ag, null);
 		}
 	}
 
@@ -108,6 +110,14 @@ public class ProfilAgentDto {
 
 	public void setListeEnfants(List<EnfantDto> listeEnfants) {
 		this.listeEnfants = listeEnfants;
+	}
+
+	public CompteDto getCompte() {
+		return compte;
+	}
+
+	public void setCompte(CompteDto compte) {
+		this.compte = compte;
 	}
 
 }
