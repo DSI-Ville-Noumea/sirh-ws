@@ -27,6 +27,7 @@ import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.ContactAgentDto;
 import nc.noumea.mairie.web.dto.EtatCivilDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +148,14 @@ public class AgentController {
 			ag.setLieuNaissance(ag.getCodeCommuneNaissFr().getLibVil().trim());
 		}
 
-		EtatCivilDto dto = new EtatCivilDto(ag);
+		List<Contact> lc = contactSrv.getContactsAgent(Long.valueOf(newIdAgent));
+		List<ContactAgentDto> listeContact = new ArrayList<ContactAgentDto>();
+		for (Contact c : lc) {
+			ContactAgentDto dtoContact = new ContactAgentDto(c);
+			listeContact.add(dtoContact);
+		}
+
+		EtatCivilDto dto = new EtatCivilDto(ag, listeContact);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
