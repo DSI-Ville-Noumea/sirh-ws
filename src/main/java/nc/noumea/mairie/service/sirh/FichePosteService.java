@@ -52,7 +52,7 @@ public class FichePosteService implements IFichePosteService {
 
 		FichePoste res = null;
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(
-				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
+				"select fp from FichePoste fp LEFT JOIN FETCH fp.competencesFDP LEFT JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
 						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
