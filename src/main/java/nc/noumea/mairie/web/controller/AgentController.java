@@ -554,6 +554,79 @@ public class AgentController {
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/getEquipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getEquipeAgentOtherProject(
+			@RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
+			java.text.ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
+
+		List<String> listService = null;
+		if (estChef) {
+			// alors on regarde les sousService
+			// listService = siservSrv.getListServiceAgent(ag.getIdAgent(),
+			// sigleService);
+			Siserv service = siservSrv.getServiceBySigle(sigleService);
+			listService = new ArrayList<String>();
+			if (service != null)
+				listService.add(service.getServi());
+		} else {
+			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
+			listService = new ArrayList<String>();
+			if (serviceAgent != null)
+				listService.add(serviceAgent.getServi());
+		}
+
+		if (listService.size() == 0) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
+
+		Integer idAgentResp = 0;
+		if (agentSuperieurHierarchique != null) {
+			idAgentResp = agentSuperieurHierarchique.getIdAgent();
+		}
+
+		List<Agent> listAgentService = agentSrv.listAgentPlusieursServiceSansAgentSansSuperieur(ag.getIdAgent(),
+				idAgentResp, listService);
+
+		if (listAgentService == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+		for (Agent agentService : listAgentService) {
+			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
+			agentService.setPosition(titrePoste);
+		}
+
+		List<AgentWithServiceDto> dto = new ArrayList<AgentWithServiceDto>();
+		for (Agent a : listAgentService) {
+			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(a);
+			dto.add(dtoAgent);
+		}
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
