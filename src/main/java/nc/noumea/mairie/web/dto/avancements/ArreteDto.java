@@ -66,8 +66,8 @@ public class ArreteDto {
 			}
 		}
 
-		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : avct.getAvisCapEmployeur().getLibLong()
-				.toLowerCase();
+		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : getTexteDureeAvct(avct.getAvisCapEmployeur()
+				.getLibLong().toLowerCase());
 
 		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
 				+ classeGrade.getLibCla().trim();
@@ -105,6 +105,15 @@ public class ArreteDto {
 		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
 				+ fp.getService().getSigle() + ")" : "";
 
+	}
+
+	private String getTexteDureeAvct(String dureeAvct) {
+		if (dureeAvct.equals("minimum")) {
+			return "minimale";
+		} else if (dureeAvct.equals("maximum")) {
+			return "maximale";
+		}
+		return dureeAvct;
 	}
 
 	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
