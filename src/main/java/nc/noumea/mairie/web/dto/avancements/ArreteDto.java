@@ -71,9 +71,19 @@ public class ArreteDto {
 
 		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
 				+ classeGrade.getLibCla().trim();
+		if(classe.contains("1°")){
+			classe = classe.replace("1°", "1er");
+		}
 		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
 				+ echelonGrade.getLibEch().trim();
-		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
+		if(echelon.contains("1°")){
+			echelon = echelon.replace("1°", "1er");
+		}
+		String grade = avct.getGradeNouveau().getGradeInitial().trim();
+		if(grade.contains("1°")){
+			grade = grade.replace("1°", "1er");
+		}
+		String libelleGrade = grade + classe + echelon;
 
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
@@ -146,9 +156,19 @@ public class ArreteDto {
 
 		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
 				+ classeGrade.getLibCla().trim();
+		if(classe.contains("1°")){
+			classe = classe.replace("1°", "1er");
+		}
 		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
 				+ echelonGrade.getLibEch().trim();
-		String libelleGrade = avct.getGradeNouveau().getGradeInitial().trim() + classe + echelon;
+		if(echelon.contains("1°")){
+			echelon = echelon.replace("1°", "1er");
+		}
+		String grade = avct.getGradeNouveau().getGradeInitial().trim();
+		if(grade.contains("1°")){
+			grade = grade.replace("1°", "1er");
+		}
+		String libelleGrade = grade + classe + echelon;
 
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
