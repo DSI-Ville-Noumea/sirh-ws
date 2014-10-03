@@ -71,16 +71,16 @@ public class ArreteDto {
 
 		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
 				+ classeGrade.getLibCla().trim();
-		if(classe.contains("1°")){
+		if (classe.contains("1°")) {
 			classe = classe.replace("1°", "1er");
 		}
 		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
 				+ echelonGrade.getLibEch().trim();
-		if(echelon.contains("1°")){
+		if (echelon.contains("1°")) {
 			echelon = echelon.replace("1°", "1er");
 		}
 		String grade = avct.getGradeNouveau().getGradeInitial().trim();
-		if(grade.contains("1°")){
+		if (grade.contains("1°")) {
 			grade = grade.replace("1°", "1er");
 		}
 		String libelleGrade = grade + classe + echelon;
@@ -88,8 +88,9 @@ public class ArreteDto {
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
 
-		this.gradeLabel = (libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
-				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'"
+		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e")
+				|| libelleGrade.toLowerCase().startsWith("i") || libelleGrade.toLowerCase().startsWith("o")
+				|| libelleGrade.toLowerCase().startsWith("u") ? "d'"
 				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
 				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon"))
 				+ filiere;
@@ -156,16 +157,16 @@ public class ArreteDto {
 
 		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
 				+ classeGrade.getLibCla().trim();
-		if(classe.contains("1°")){
+		if (classe.contains("1°")) {
 			classe = classe.replace("1°", "1er");
 		}
 		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
 				+ echelonGrade.getLibEch().trim();
-		if(echelon.contains("1°")){
+		if (echelon.contains("1°")) {
 			echelon = echelon.replace("1°", "1er");
 		}
 		String grade = avct.getGradeNouveau().getGradeInitial().trim();
-		if(grade.contains("1°")){
+		if (grade.contains("1°")) {
 			grade = grade.replace("1°", "1er");
 		}
 		String libelleGrade = grade + classe + echelon;
@@ -173,8 +174,9 @@ public class ArreteDto {
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
 
-		this.gradeLabel = (libelleGrade.startsWith("A") || libelleGrade.startsWith("E") || libelleGrade.startsWith("I")
-				|| libelleGrade.startsWith("O") || libelleGrade.startsWith("U") ? "d'"
+		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e")
+				|| libelleGrade.toLowerCase().startsWith("i") || libelleGrade.toLowerCase().startsWith("o")
+				|| libelleGrade.toLowerCase().startsWith("u") ? "d'"
 				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
 				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon"))
 				+ filiere;
