@@ -16,11 +16,17 @@ public class ReferentRhDto {
 	}
 
 	public ReferentRhDto(ReferentRh c, Agent ag, Siserv serv) {
-		this.servi = c.getServi();
-		this.idAgentReferent = c.getIdAgentReferent();
-		this.numeroTelephone = c.getNumeroTelephone();
-		this.sigleService = serv.getSigle();
-		this.prenomAgentReferent = ag.getPrenomUsage();
+		if (c != null) {
+			this.servi = c.getServi();
+			this.idAgentReferent = c.getIdAgentReferent();
+			this.numeroTelephone = c.getNumeroTelephone();
+		}
+		if (ag != null) {
+			this.prenomAgentReferent = ag.getPrenomUsage();
+		}
+		if (serv != null) {
+			this.sigleService = serv.getSigle();
+		}
 	}
 
 	public String getServi() {
