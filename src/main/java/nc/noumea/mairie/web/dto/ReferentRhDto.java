@@ -1,20 +1,26 @@
 package nc.noumea.mairie.web.dto;
 
+import nc.noumea.mairie.model.bean.Siserv;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 
 public class ReferentRhDto {
 
 	private String servi;
+	private String sigleService;
 	private Integer idAgentReferent;
+	private String prenomAgentReferent;
 	private Integer numeroTelephone;
 
 	public ReferentRhDto() {
 	}
 
-	public ReferentRhDto(ReferentRh c) {
+	public ReferentRhDto(ReferentRh c, Agent ag, Siserv serv) {
 		this.servi = c.getServi();
 		this.idAgentReferent = c.getIdAgentReferent();
 		this.numeroTelephone = c.getNumeroTelephone();
+		this.sigleService = serv.getSigle();
+		this.prenomAgentReferent = ag.getPrenomUsage();
 	}
 
 	public String getServi() {
@@ -39,6 +45,22 @@ public class ReferentRhDto {
 
 	public void setNumeroTelephone(Integer numeroTelephone) {
 		this.numeroTelephone = numeroTelephone;
+	}
+
+	public String getSigleService() {
+		return sigleService;
+	}
+
+	public void setSigleService(String sigleService) {
+		this.sigleService = sigleService;
+	}
+
+	public String getPrenomAgentReferent() {
+		return prenomAgentReferent;
+	}
+
+	public void setPrenomAgentReferent(String prenomAgentReferent) {
+		this.prenomAgentReferent = prenomAgentReferent;
 	}
 
 }
