@@ -67,7 +67,7 @@ public class ReportingService implements IReportingService {
 
 		String reportName = isChangementClasse ? "avctChgtClasseArrete.rptdesign" : "avctDiffArrete.rptdesign";
 
-		ClientResponse response = createAndFireRequest(map, reportName, "DOC");
+		ClientResponse response = createAndFireRequest(map, reportName, "DOCX");
 
 		return readResponseAsByteArray(response, map);
 	}
@@ -132,7 +132,7 @@ public class ReportingService implements IReportingService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
 
-		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "DOC");
+		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "DOCX");
 
 		return readResponseAsByteArray(response, map);
 	}
@@ -145,9 +145,9 @@ public class ReportingService implements IReportingService {
 		ClientResponse response = null;
 		if (typeNoteService != null) {
 			map.put("typeNoteService", typeNoteService);
-			response = createAndFireRequest(map, "noteService.rptdesign", "DOC");
+			response = createAndFireRequest(map, "noteService.rptdesign", "DOCX");
 		} else {
-			response = createAndFireRequest(map, "noteServiceInterne.rptdesign", "DOC");
+			response = createAndFireRequest(map, "noteServiceInterne.rptdesign", "DOCX");
 		}
 
 		return readResponseAsByteArray(response, map);
@@ -159,7 +159,7 @@ public class ReportingService implements IReportingService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("csvIdSuiviMedical", csvIdSuiviMedical);
 		map.put("typePopulation", typePopulation);
-		ClientResponse response = createAndFireRequest(map, "convocationSM.rptdesign", "DOC");
+		ClientResponse response = createAndFireRequest(map, "convocationSM.rptdesign", "DOCX");
 
 		return readResponseAsByteArray(response, map);
 	}
@@ -171,7 +171,7 @@ public class ReportingService implements IReportingService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("csvIdSuiviMedical", csvIdSuiviMedical);
 		map.put("typePopulation", typePopulation);
-		ClientResponse response = createAndFireRequest(map, "accompagnementSM.rptdesign", "DOC");
+		ClientResponse response = createAndFireRequest(map, "accompagnementSM.rptdesign", "DOCX");
 
 		return readResponseAsByteArray(response, map);
 	}
@@ -182,7 +182,7 @@ public class ReportingService implements IReportingService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idAgent", idAgent.toString());
 		map.put("idContrat", idContrat.toString());
-		ClientResponse response = createAndFireRequest(map, "contrat.rptdesign", "DOC");
+		ClientResponse response = createAndFireRequest(map, "contrat.rptdesign", "DOCX");
 
 		return readResponseAsByteArray(response, map);
 	}
