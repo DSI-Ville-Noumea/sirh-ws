@@ -13,9 +13,11 @@ public class AvancementEaeDto {
 
 	private Date dateAvctMoy;
 	private GradeDto grade;
+	private Integer idMotifAvct;
 	
 	public AvancementEaeDto(AvancementFonctionnaire avct){
 		this.idAvct = avct.getIdAvct();
+		this.idMotifAvct = avct.getIdModifAvancement();
 		this.etat = avct.getEtat();
 		this.dateAvctMoy = avct.getDateAvctMoy();
 		if(null != avct.getGradeNouveau()) {
@@ -25,6 +27,7 @@ public class AvancementEaeDto {
 	
 	public AvancementEaeDto(AvancementDetache avct){
 		this.idAvct = avct.getIdAvct();
+		this.idMotifAvct = avct.getIdModifAvancement();
 		this.etat = avct.getEtat();
 		this.dateAvctMoy = avct.getDateAvctMoy();
 		this.grade = new GradeDto(avct.getGradeNouveau());
@@ -60,6 +63,14 @@ public class AvancementEaeDto {
 
 	public void setGrade(GradeDto grade) {
 		this.grade = grade;
+	}
+
+	public Integer getIdMotifAvct() {
+		return idMotifAvct;
+	}
+
+	public void setIdMotifAvct(Integer idMotifAvct) {
+		this.idMotifAvct = idMotifAvct;
 	}
 	
 }
