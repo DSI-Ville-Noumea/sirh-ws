@@ -353,6 +353,19 @@ public class CalculEaeService implements ICalculEaeService {
 		Spgradn gradeActuel = carr.getGrade();
 		// Si pas de grade suivant, agent non éligible
 		if (gradeActuel.getGradeSuivant() != null) {
+
+			if ((carr.getCategorie().getCodeCategorie().toString().equals("2") || carr.getCategorie()
+					.getCodeCategorie().toString().equals("18"))
+					&& gradeActuel.getDureeMoyenne() !=null && (!gradeActuel.getDureeMoyenne().toString().equals("12"))) {
+				// si stagiaire
+				// la date d'avancement est la meme +1an.
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(sdf.parse(carr.getId().getDatdeb().toString()));
+				cal2.add(Calendar.YEAR, 1);
+				return cal2.getTime();
+
+			}
+
 			// calcul BM/ACC applicables
 			int nbJoursBM = calculJourBM(gradeActuel, carr);
 			int nbJoursACC = calculJourACC(gradeActuel, carr);
@@ -366,18 +379,6 @@ public class CalculEaeService implements ICalculEaeService {
 				} else {
 					return calculDateAvctMoy(gradeActuel, carr);
 				}
-			}
-
-			if ((carr.getCategorie().getCodeCategorie().toString().equals("2") || carr.getCategorie()
-					.getCodeCategorie().toString().equals("18"))
-					&& (!gradeActuel.getDureeMoyenne().toString().equals("12"))) {
-				// si stagiaire
-				// la date d'avancement est la meme +1an.
-				Calendar cal2 = Calendar.getInstance();
-				cal2.setTime(sdf.parse(carr.getId().getDatdeb().toString()));
-				cal2.add(Calendar.YEAR, 1);
-				return cal2.getTime();
-
 			}
 		} else {
 			return null;
