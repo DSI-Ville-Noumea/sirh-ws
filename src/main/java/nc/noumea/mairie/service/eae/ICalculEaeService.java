@@ -5,6 +5,7 @@ import java.util.List;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
+import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
 
 public interface ICalculEaeService {
@@ -24,5 +25,7 @@ public interface ICalculEaeService {
 	List<AutreAdministrationAgentDto> getListeAutreAdministrationAgent(Integer idAgent);
 
 	List<DiplomeDto> getListDiplomeDto(Integer idAgent);
+
+	DateAvctDto getCalculDateAvancement(Integer idAgent);
 
 }
