@@ -11,6 +11,7 @@ import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
+import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 
 import org.slf4j.Logger;
@@ -184,5 +185,22 @@ public class CalculEaeController {
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
 				.transform(new MSDateTransformer(), Date.class).deepSerialize(result), HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/calculDateAvancement", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getCalculDateAvancement(@RequestParam("idAgent") int idAgent) {
+
+		logger.debug(
+				"entered GET [calculEae/calculDateAvancement] => getCalculDateAvancement with parameter idAgent = {} ",
+				idAgent);
+
+		DateAvctDto dto = calculEaeService.getCalculDateAvancement(idAgent);
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 }
