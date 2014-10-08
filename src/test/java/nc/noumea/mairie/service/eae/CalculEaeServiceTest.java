@@ -14,6 +14,8 @@ import java.util.Set;
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.Spcatg;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
@@ -27,6 +29,7 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.pk.SpcarrId;
 import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
@@ -41,8 +44,10 @@ import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.CarriereDto;
+import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -576,5 +581,178 @@ public class CalculEaeServiceTest {
 		List<AgentDto> result = calculEaeService.getListeAgentEligibleEAEAffectes();
 
 		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void getCalculDateAvancement_returnContractuel() {
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(4);
+		SpcarrId id = new SpcarrId();
+		id.setNomatr(5138);
+		id.setDatdeb(20140101);
+		Spcarr carr = new Spcarr();
+		carr.setId(id);
+		carr.setCategorie(categorie);
+
+		PositionAdmAgentDto paDto = new PositionAdmAgentDto();
+		paDto.setCdpadm("01");
+
+		ISpcarrRepository spcarrRepository = Mockito.mock(ISpcarrRepository.class);
+		Mockito.when(spcarrRepository.getCarriereActive(5138)).thenReturn(carr);
+
+		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(5138)).thenReturn(paDto);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "spcarrRepository", spcarrRepository);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+
+		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
+
+		assertEquals(new DateTime(2016, 1, 1, 0, 0, 0, 0).toDate(), result.getDateAvct());
+	}
+
+	@Test
+	public void getCalculDateAvancement_returnStagiaire() {
+		Spgradn gradeSuivant = new Spgradn();
+		gradeSuivant.setCdgrad("suiv");
+		Spgradn grade = new Spgradn();
+		grade.setCdgrad("grade");
+		grade.setGradeSuivant(gradeSuivant);
+		grade.setDureeMoyenne(24);
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(18);
+		SpcarrId id = new SpcarrId();
+		id.setNomatr(5138);
+		id.setDatdeb(20140101);
+		Spcarr carr = new Spcarr();
+		carr.setId(id);
+		carr.setCategorie(categorie);
+		carr.setGrade(grade);
+
+		PositionAdmAgentDto paDto = new PositionAdmAgentDto();
+		paDto.setCdpadm("01");
+
+		List<Spcarr> list = new ArrayList<>();
+		list.add(carr);
+
+		ISpcarrRepository spcarrRepository = Mockito.mock(ISpcarrRepository.class);
+		Mockito.when(spcarrRepository.getCarriereActive(5138)).thenReturn(carr);
+		Mockito.when(spcarrRepository.listerCarriereAvecGradeEtStatut(5138, "grade", 18)).thenReturn(list);
+
+		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(5138)).thenReturn(paDto);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "spcarrRepository", spcarrRepository);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+
+		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
+
+		assertEquals(new DateTime(2015, 1, 1, 0, 0, 0, 0).toDate(), result.getDateAvct());
+	}
+
+	@Test
+	public void getCalculDateAvancement_returnFonctionnaire() {
+		Spgradn gradeSuivant = new Spgradn();
+		gradeSuivant.setCdgrad("suiv");
+		Spgradn grade = new Spgradn();
+		grade.setCdgrad("grade");
+		grade.setGradeSuivant(gradeSuivant);
+		grade.setDureeMoyenne(20);
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(20);
+		SpcarrId id = new SpcarrId();
+		id.setNomatr(5138);
+		id.setDatdeb(20140101);
+		Spcarr carr = new Spcarr();
+		carr.setId(id);
+		carr.setCategorie(categorie);
+		carr.setGrade(grade);
+		carr.setAccAnnee(0);
+		carr.setAccMois(0);
+		carr.setAccJour(0);
+		carr.setBmAnnee(0);
+		carr.setBmMois(0);
+		carr.setBmJour(0);
+
+		PositionAdmAgentDto paDto = new PositionAdmAgentDto();
+		paDto.setCdpadm("01");
+
+		List<Spcarr> list = new ArrayList<>();
+		list.add(carr);
+
+		ISpcarrRepository spcarrRepository = Mockito.mock(ISpcarrRepository.class);
+		Mockito.when(spcarrRepository.getCarriereActive(5138)).thenReturn(carr);
+		Mockito.when(spcarrRepository.listerCarriereAvecGradeEtStatut(5138, "grade", 20)).thenReturn(list);
+
+		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(5138)).thenReturn(paDto);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "spcarrRepository", spcarrRepository);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+
+		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
+
+		assertEquals(new DateTime(2015, 9, 1, 0, 0, 0, 0).toDate(), result.getDateAvct());
+	}
+
+	@Test
+	public void getCalculDateAvancement_returnNotEligible() {
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(3);
+		SpcarrId id = new SpcarrId();
+		id.setNomatr(5138);
+		id.setDatdeb(20140101);
+		Spcarr carr = new Spcarr();
+		carr.setId(id);
+		carr.setCategorie(categorie);
+
+		PositionAdmAgentDto paDto = new PositionAdmAgentDto();
+		paDto.setCdpadm("01");
+
+		ISpcarrRepository spcarrRepository = Mockito.mock(ISpcarrRepository.class);
+		Mockito.when(spcarrRepository.getCarriereActive(5138)).thenReturn(carr);
+
+		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(5138)).thenReturn(paDto);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "spcarrRepository", spcarrRepository);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+
+		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
+
+		assertNull(result.getDateAvct());
+	}
+
+	@Test
+	public void getCalculDateAvancement_returnNotPAEligible() {
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(3);
+		SpcarrId id = new SpcarrId();
+		id.setNomatr(5138);
+		id.setDatdeb(20140101);
+		Spcarr carr = new Spcarr();
+		carr.setId(id);
+		carr.setCategorie(categorie);
+
+		PositionAdmAgentDto paDto = new PositionAdmAgentDto();
+		paDto.setCdpadm("DA");
+
+		ISpcarrRepository spcarrRepository = Mockito.mock(ISpcarrRepository.class);
+		Mockito.when(spcarrRepository.getCarriereActive(5138)).thenReturn(carr);
+
+		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
+		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(5138)).thenReturn(paDto);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "spcarrRepository", spcarrRepository);
+		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
+
+		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
+
+		assertNull(result.getDateAvct());
 	}
 }
