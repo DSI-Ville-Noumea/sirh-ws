@@ -13,4 +13,6 @@ public interface ISpcarrRepository {
 	Spcarr getCarriereFonctionnaireAncienne(Integer noMatr);
 
 	Spcarr getCarriereActive(Integer noMatr);
+
+	List<Spcarr> listerCarriereAvecGradeEtStatut(Integer nomatr, String cdgrad, Integer codeCategorie);
 }

@@ -97,4 +97,23 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Spcarr> listerCarriereAvecGradeEtStatut(Integer nomatr, String cdgrad, Integer codeCategorie) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(" select carr.* from Spcarr carr ");
+		sb.append(" where carr.CDGRAD = :cdGrad ");
+		sb.append(" and carr.NOMATR = :nomatr ");
+		sb.append(" and carr.CDCATE = :cdCate ");
+
+		Query query = sirhEntityManager.createNativeQuery(sb.toString(), Spcarr.class);
+
+		query.setParameter("cdGrad", cdgrad);
+		query.setParameter("nomatr", nomatr);
+		query.setParameter("cdCate", codeCategorie);
+
+		return query.getResultList();
+	}
 }
