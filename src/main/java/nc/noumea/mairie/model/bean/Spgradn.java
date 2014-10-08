@@ -31,37 +31,47 @@ public class Spgradn {
 	private String gradeInitial;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@NotFound(action=NotFoundAction.IGNORE)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODGRG", referencedColumnName = "CDGENG")
 	private Spgeng gradeGenerique;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@NotFound(action=NotFoundAction.IGNORE)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "IBAN", referencedColumnName = "IBAN")
 	private Spbarem barem;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@NotFound(action=NotFoundAction.IGNORE)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODCLA", referencedColumnName = "CODCLA")
 	private Spclas classe;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@NotFound(action=NotFoundAction.IGNORE)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "CODECH", referencedColumnName = "CODECH")
 	private Speche echelon;
 
 	@Column(name = "DURMIN", columnDefinition = "numeric")
 	private Integer dureeMinimum;
-	
+
 	@Column(name = "DURMOY", columnDefinition = "numeric")
 	private Integer dureeMoyenne;
-	
+
 	@Column(name = "DURMAX", columnDefinition = "numeric")
 	private Integer dureeMaximum;
-	
+
 	@Column(name = "CDTAVA", columnDefinition = "char")
 	private String cdTava;
-	
+
+	@Column(name = "ACC", columnDefinition = "char")
+	private String acc;
+
+	@Column(name = "BM", columnDefinition = "char")
+	private String bm;
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "CDSUIV", referencedColumnName = "CDGRAD")
+	private Spgradn gradeSuivant;
+
 	public String getCdgrad() {
 		return cdgrad;
 	}
@@ -157,5 +167,29 @@ public class Spgradn {
 	public void setCdTava(String cdTava) {
 		this.cdTava = cdTava;
 	}
-	
+
+	public Spgradn getGradeSuivant() {
+		return gradeSuivant;
+	}
+
+	public void setGradeSuivant(Spgradn gradeSuivant) {
+		this.gradeSuivant = gradeSuivant;
+	}
+
+	public String getAcc() {
+		return acc;
+	}
+
+	public void setAcc(String acc) {
+		this.acc = acc;
+	}
+
+	public String getBm() {
+		return bm;
+	}
+
+	public void setBm(String bm) {
+		this.bm = bm;
+	}
+
 }
