@@ -43,7 +43,7 @@ public class SiservService implements ISiservService {
 
 		return res;
 	}
-	
+
 	@Override
 	public Siserv getDirectionPourEAE(String codeService) {
 		Siserv res = null;
@@ -57,7 +57,7 @@ public class SiservService implements ISiservService {
 			TypedQuery<Siserv> query = sirhEntityManager.createQuery(
 					"select serv from Siserv serv where servi=:codeDirection", Siserv.class);
 			query.setParameter("codeDirection", codeDirection);
-			
+
 			List<Siserv> lserv = query.getResultList();
 			for (Siserv serv : lserv)
 				res = serv;
@@ -329,12 +329,21 @@ public class SiservService implements ISiservService {
 		boolean directionFound = false;
 
 		while (!directionFound && directionAgent != null) {
-			if (directionAgent.getService().endsWith("AA"))
+			if (directionAgent.getService().substring(0, 3).equals("DAG")) {
 				directionFound = true;
-			else
+				Siserv directionDPM = getService("DAGA");
+				ServiceTreeNode node = new ServiceTreeNode();
+				node.setService(directionDPM.getServi());
+				node.setServiceLibelle(directionDPM.getLiServ().trim());
+				node.setSigle(directionDPM.getSigle().trim());
+				node.setSigleParent(directionDPM.getParentSigle().trim());
+				directionAgent = node;
+			} else if (directionAgent.getService().endsWith("AA")) {
+				directionFound = true;
+			} else {
 				directionAgent = directionAgent.getServiceParent();
+			}
 		}
-
 		return directionAgent;
 	}
 
