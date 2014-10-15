@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -559,34 +560,25 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEquipeAgentOtherProject(
 			@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
+			@RequestParam(value = "codeService", required = false) String codeService) throws ParseException,
 			java.text.ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
+		
+		List<AgentWithServiceDto> listAgent = agentSrv.listAgentsOfServices(null, new Date(), Arrays.asList(Integer.valueOf(newIdAgent)));
 
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
+		if (listAgent == null || listAgent.isEmpty()) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
+		
+		AgentWithServiceDto ag = listAgent.get(0);
 
-		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
-
-		List<String> listService = null;
-		if (estChef) {
-			// alors on regarde les sousService
-			// listService = siservSrv.getListServiceAgent(ag.getIdAgent(),
-			// sigleService);
-			Siserv service = siservSrv.getServiceBySigle(sigleService);
-			listService = new ArrayList<String>();
-			if (service != null)
-				listService.add(service.getServi());
-		} else {
-			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
-			listService = new ArrayList<String>();
-			if (serviceAgent != null)
-				listService.add(serviceAgent.getServi());
+		List<String> listService = new ArrayList<String>();
+		if(null != codeService) {
+			listService.add(codeService);
+		}else{
+			listService.add(ag.getCodeService());
 		}
 
 		if (listService.size() == 0) {
