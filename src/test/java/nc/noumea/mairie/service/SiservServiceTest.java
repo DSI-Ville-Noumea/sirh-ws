@@ -252,7 +252,7 @@ public class SiservServiceTest {
 		ReflectionTestUtils.setField(siservService, "sirhEntityManager", sirhEMMock);
 
 		// When
-		Siserv result = siservService.getServiceAgent(9005138);
+		Siserv result = siservService.getServiceAgent(9005138, null);
 
 		// Then
 		assertEquals("T", result.getServi());

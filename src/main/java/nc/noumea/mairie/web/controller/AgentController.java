@@ -36,6 +36,7 @@ import nc.noumea.mairie.web.dto.EnfantDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -519,7 +520,7 @@ public class AgentController {
 			if (service != null)
 				listService.add(service.getServi());
 		} else {
-			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
+			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent(), null);
 			listService = new ArrayList<String>();
 			if (serviceAgent != null)
 				listService.add(serviceAgent.getServi());
@@ -634,7 +635,7 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		// On récupère le noeud parent des services de la personne
-		ServiceTreeNode treeHead = siservSrv.getAgentServiceTree(ag.getIdAgent());
+		ServiceTreeNode treeHead = siservSrv.getAgentServiceTree(ag.getIdAgent(), null);
 		List<ServiceTreeNode> treeHeadList = new ArrayList<ServiceTreeNode>();
 		treeHeadList.add(treeHead);
 
@@ -745,7 +746,8 @@ public class AgentController {
 	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent) {
+	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "YYYYMMdd") Date dateAffectation) {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -757,7 +759,7 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		// On récupère le noeud parent des services de la personne
-		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent());
+		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent(), dateAffectation);
 
 		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant")
 				.exclude("*.serviceParent");
