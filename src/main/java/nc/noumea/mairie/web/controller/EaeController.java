@@ -104,7 +104,7 @@ public class EaeController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		// on veut la liste des agents du service
-		Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent());
+		Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent(), null);
 		if (serviceAgent == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 

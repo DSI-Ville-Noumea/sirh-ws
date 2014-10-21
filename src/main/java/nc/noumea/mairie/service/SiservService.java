@@ -134,7 +134,7 @@ public class SiservService implements ISiservService {
 	public List<String> getListServiceAgent(Integer idAgent, String sigleServiceParent) {
 
 		List<String> services = new ArrayList<String>();
-		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
+		String agentServiceSigle = getServiceAgent(idAgent, null).getSigle().trim();
 
 		// On récupère les sous services de l'agent
 		listSousServices(getServiceTree().get(agentServiceSigle), services);
@@ -159,15 +159,20 @@ public class SiservService implements ISiservService {
 	}
 
 	@Override
-	public Siserv getServiceAgent(Integer idAgent) {
+	public Siserv getServiceAgent(Integer idAgent, Date date) {
 		String hql = "select serv from FichePoste fp ,Affectation aff , Siserv serv "
 				+ "where fp.service.servi = serv.servi and aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, Siserv.class);
 		query.setParameter("idAgent", idAgent);
-		query.setParameter("dateJour", new Date());
-		Siserv serv = (Siserv) query.getSingleResult();
-		return serv;
+		
+		if(null != date) {
+			query.setParameter("dateJour", date);
+		}else{
+			query.setParameter("dateJour", new Date());
+		}
+		
+		return (Siserv) query.getSingleResult();
 	}
 
 	private void listSousServices(ServiceTreeNode serviceTreeNode, List<String> services) {
@@ -195,9 +200,9 @@ public class SiservService implements ISiservService {
 	}
 
 	@Override
-	public ServiceTreeNode getAgentServiceTree(Integer idAgent) {
+	public ServiceTreeNode getAgentServiceTree(Integer idAgent, Date date) {
 
-		String agentServiceSigle = getServiceAgent(idAgent).getSigle().trim();
+		String agentServiceSigle = getServiceAgent(idAgent, date).getSigle().trim();
 		ServiceTreeNode result = getServiceTree().get(agentServiceSigle);
 
 		return result;
@@ -321,9 +326,9 @@ public class SiservService implements ISiservService {
 	}
 
 	@Override
-	public ServiceTreeNode getAgentDirection(Integer idAgent) {
+	public ServiceTreeNode getAgentDirection(Integer idAgent, Date date) {
 
-		ServiceTreeNode agentService = getAgentServiceTree(idAgent);
+		ServiceTreeNode agentService = getAgentServiceTree(idAgent, date);
 
 		ServiceTreeNode directionAgent = agentService;
 		boolean directionFound = false;
