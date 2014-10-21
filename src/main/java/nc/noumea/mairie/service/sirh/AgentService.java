@@ -200,7 +200,7 @@ public class AgentService implements IAgentService {
 		List<AgentRecherche> list = query.getResultList();
 		for (AgentRecherche ag : list) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(ag);
-			Siserv service = siservSrv.getServiceAgent(ag.getIdAgent());
+			Siserv service = siservSrv.getServiceAgent(ag.getIdAgent(), null);
 
 			// on construit le dto de l'agent
 			agDto.setCodeService(service.getServi().trim());

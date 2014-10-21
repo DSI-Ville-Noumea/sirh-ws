@@ -51,8 +51,8 @@ public class AgentServiceTest {
 				mockQuery);
 
 		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getServiceAgent(9005138)).thenReturn(service);
-		Mockito.when(mockSiservService.getServiceAgent(9005131)).thenReturn(service);
+		Mockito.when(mockSiservService.getServiceAgent(9005138, null)).thenReturn(service);
+		Mockito.when(mockSiservService.getServiceAgent(9005131, null)).thenReturn(service);
 
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);

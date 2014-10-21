@@ -131,7 +131,7 @@ public class ServiceController {
 		if (ag == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent());
+		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent(), null);
 		List<ServiceTreeNode> services = siservSrv.getListSubServices(direction.getService());
 
 		String json = new JSONSerializer().exclude("*.class").exclude("*.serviceParent").exclude("*.sigleParent")
