@@ -108,12 +108,20 @@ public class AvancementsController {
 	public ModelAndView getArretes(@RequestParam("csvIdAgents") String csvIdAgents,
 			@RequestParam("isChangementClasse") boolean isChangementClasse, @RequestParam("annee") int year,
 			@RequestParam("isDetache") boolean isDetache) throws Exception {
+
+		logger.debug(
+				"entered GET [avancements/xml/getArretes] => getArretes with parameter csvIdAgents = {} and isChangementClasse = {} and annee = {} and isDetache = {}",
+				csvIdAgents, isChangementClasse, year, isDetache);
+
 		ArreteListDto arretes = new ArreteListDto();
 		if (!isDetache) {
 			arretes = avancementsService.getArretesForUsers(csvIdAgents, isChangementClasse, year);
 		} else {
 			arretes = avancementsService.getArretesDetachesForUsers(csvIdAgents, isChangementClasse, year);
 		}
+
+		logger.debug("sortie GET [avancements/xml/getArretes] => getArretes result size = {}", arretes == null
+				|| arretes.getArretes() == null ? null : arretes.getArretes().size());
 
 		return new ModelAndView("xmlView", "object", arretes);
 	}
