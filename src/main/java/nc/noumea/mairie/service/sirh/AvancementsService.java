@@ -33,6 +33,8 @@ import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,8 @@ public class AvancementsService implements IAvancementsService {
 
 	private static List<Integer> StatutsTerritoriaux = Arrays.asList(18, 20);
 	private static List<Integer> StatutsCommunaux = Arrays.asList(1, 2);
+
+	private Logger logger = LoggerFactory.getLogger(AvancementsService.class);
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
@@ -271,6 +275,7 @@ public class AvancementsService implements IAvancementsService {
 	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year)
 			throws ParseException {
 
+		logger.debug("Entrée fonction getArretesForUsers");
 		List<Integer> agentIds = new ArrayList<Integer>();
 
 		for (String id : csvIdAgents.split(",")) {
@@ -336,6 +341,8 @@ public class AvancementsService implements IAvancementsService {
 		qA.setParameter("year", year);
 
 		result = qA.getResultList();
+
+		logger.debug("Entrée requete getAvancementsForArretes size ={}", result.size());
 
 		return result;
 	}
