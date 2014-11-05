@@ -31,7 +31,7 @@ public class CarriereDto {
 			this.libelleCategorie = carr.getCategorie().getLibelleCategorie();
 		}
 		
-		if(null != carr.getGrade()){
+		if(null != carr.getGrade() && !carr.getGrade().getCdgrad().trim().equals("")){
 			grade = new GradeDto(carr.getGrade());
 		}
 	}
