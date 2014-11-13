@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn;
 
 import org.springframework.stereotype.Repository;
 
@@ -115,5 +116,21 @@ public class SpcarrRepository implements ISpcarrRepository {
 		query.setParameter("cdCate", codeCategorie);
 
 		return query.getResultList();
+	}
+
+	@Override
+	public SpcarrWithoutSpgradn getCarriereActiveWithoutGrad(Integer noMatr) {
+
+		TypedQuery<SpcarrWithoutSpgradn> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriereWithoutSpgradn",
+				SpcarrWithoutSpgradn.class);
+		qCarr.setParameter("nomatr", noMatr);
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		qCarr.setParameter("todayFormatMairie", Integer.valueOf(sdfMairie.format(new Date())));
+
+		List<SpcarrWithoutSpgradn> result = qCarr.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
+
+		return null;
 	}
 }
