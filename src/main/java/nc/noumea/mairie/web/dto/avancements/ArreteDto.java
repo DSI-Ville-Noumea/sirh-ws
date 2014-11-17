@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
@@ -13,6 +15,7 @@ import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
 import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 
+@XmlRootElement
 public class ArreteDto {
 
 	private boolean changementClasse;
