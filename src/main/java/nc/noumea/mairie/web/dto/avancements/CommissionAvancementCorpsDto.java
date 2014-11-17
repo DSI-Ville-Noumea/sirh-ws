@@ -1,7 +1,10 @@
 package nc.noumea.mairie.web.dto.avancements;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import nc.noumea.mairie.model.bean.Spgeng;
 
+@XmlRootElement
 public class CommissionAvancementCorpsDto {
 
 	private String corps;
