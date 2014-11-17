@@ -2,8 +2,11 @@ package nc.noumea.mairie.web.dto.avancements;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 
+@XmlRootElement
 public class AvancementItemDto {
 
 	private String nom;
