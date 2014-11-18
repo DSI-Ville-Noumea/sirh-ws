@@ -6,8 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.AccueilRh;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IKiosqueRhService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
@@ -38,21 +41,37 @@ public class KiosqueRHController {
 	@Autowired
 	private ISiservService siservSrv;
 
-	@RequestMapping(value = "/getListeReferentRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Autowired
+	private IAffectationService affSrv;
+
+	@RequestMapping(value = "/getReferentRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListeReferentRH() throws ParseException {
+	public ResponseEntity<String> getReferentRH(Integer idAgent) throws ParseException {
 
-		List<ReferentRh> lc = kiosqueSrv.getListeReferentRH();
-		List<ReferentRhDto> listeRef = new ArrayList<ReferentRhDto>();
-		for (ReferentRh c : lc) {
-			ReferentRhDto dto = new ReferentRhDto(c, agentSrv.getAgent(c.getIdAgentReferent()), siservSrv.getService(c
-					.getServi()));
-			listeRef.add(dto);
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		// on cherche le service de l'agent
+		Affectation aff = affSrv.getAffectationActiveByIdAgent(idAgent);
+		if (aff == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		ReferentRh lc = kiosqueSrv.getReferentRH(aff.getFichePoste().getService().getServi());
+		ReferentRhDto dto = new ReferentRhDto();
+		if (lc != null) {
+			dto = new ReferentRhDto(lc, agentSrv.getAgent(lc.getIdAgentReferent()), siservSrv.getService(lc.getServi()));
 		}
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(listeRef);
+				.deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
@@ -73,5 +92,18 @@ public class KiosqueRHController {
 				.deepSerialize(listeRef);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	private String remanieIdAgent(Integer idAgent) {
+		String newIdAgent;
+		if (idAgent.toString().length() == 6) {
+			// on remanie l'idAgent
+			String matr = idAgent.toString().substring(2, idAgent.toString().length());
+			String prefixe = idAgent.toString().substring(0, 2);
+			newIdAgent = prefixe + "0" + matr;
+		} else {
+			newIdAgent = idAgent.toString();
+		}
+		return newIdAgent;
 	}
 }

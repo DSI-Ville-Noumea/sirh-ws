@@ -6,6 +6,7 @@ import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 
 public class ReferentRhDto {
 
+	private Integer idReferentRh;
 	private String servi;
 	private String sigleService;
 	private Integer idAgentReferent;
@@ -17,6 +18,7 @@ public class ReferentRhDto {
 
 	public ReferentRhDto(ReferentRh c, Agent ag, Siserv serv) {
 		if (c != null) {
+			this.idReferentRh = c.getIdReferentRh();
 			this.servi = c.getServi();
 			this.idAgentReferent = c.getIdAgentReferent();
 			this.numeroTelephone = c.getNumeroTelephone();
@@ -67,6 +69,14 @@ public class ReferentRhDto {
 
 	public void setPrenomAgentReferent(String prenomAgentReferent) {
 		this.prenomAgentReferent = prenomAgentReferent;
+	}
+
+	public Integer getIdReferentRh() {
+		return idReferentRh;
+	}
+
+	public void setIdReferentRh(Integer idReferentRh) {
+		this.idReferentRh = idReferentRh;
 	}
 
 }
