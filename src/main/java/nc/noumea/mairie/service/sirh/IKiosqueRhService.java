@@ -7,8 +7,8 @@ import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 
 public interface IKiosqueRhService {
 
-	List<ReferentRh> getListeReferentRH();
-
 	List<AccueilRh> getListeAccueilRh();
+
+	ReferentRh getReferentRH(String codeService);
 
 }
