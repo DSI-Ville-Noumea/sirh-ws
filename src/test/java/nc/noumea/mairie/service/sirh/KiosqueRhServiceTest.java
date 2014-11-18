@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +21,9 @@ public class KiosqueRhServiceTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getListeReferentRH_returnNull() {
+	public void getReferentRH_returnNull() {
 		TypedQuery<ReferentRh> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<ReferentRh>());
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(null);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(ReferentRh.class))).thenReturn(mockQuery);
@@ -31,24 +32,25 @@ public class KiosqueRhServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<ReferentRh> result = service.getListeReferentRH();
+		ReferentRh result = service.getReferentRH("DCAA");
 
 		// Then
-
-		assertEquals(0, result.size());
+		assertNull(result);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void getListeReferentRH_returnListOf2Referent() {
+	public void getReferentRH_returnReferent() {
 		// Given
 		ReferentRh ref1 = new ReferentRh();
 		ref1.setIdAgentReferent(9005138);
+		ref1.setServi("DCAA");
 		ReferentRh ref2 = new ReferentRh();
 		ref2.setIdAgentReferent(9005139);
+		ref2.setServi(null);
 
 		TypedQuery<ReferentRh> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(ref1, ref2));
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(ref1);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(ReferentRh.class))).thenReturn(mockQuery);
@@ -57,12 +59,37 @@ public class KiosqueRhServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<ReferentRh> result = service.getListeReferentRH();
+		ReferentRh result = service.getReferentRH("DCAA");
 
 		// Then
-		assertEquals(2, result.size());
-		assertEquals(new Integer(9005138), result.get(0).getIdAgentReferent());
-		assertEquals(new Integer(9005139), result.get(1).getIdAgentReferent());
+		assertEquals(new Integer(9005138), result.getIdAgentReferent());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getReferentRH_returnReferentGlobal() {
+		// Given
+		ReferentRh ref1 = new ReferentRh();
+		ref1.setIdAgentReferent(9005138);
+		ref1.setServi("DCAA");
+		ReferentRh ref2 = new ReferentRh();
+		ref2.setIdAgentReferent(9005139);
+		ref2.setServi(null);
+
+		TypedQuery<ReferentRh> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(ref2);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(ReferentRh.class))).thenReturn(mockQuery);
+
+		KiosqueRhService service = new KiosqueRhService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// When
+		ReferentRh result = service.getReferentRH("DCAA");
+
+		// Then
+		assertEquals(new Integer(9005139), result.getIdAgentReferent());
 	}
 
 	@SuppressWarnings("unchecked")
