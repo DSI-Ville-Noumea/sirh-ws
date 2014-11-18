@@ -12,6 +12,9 @@ import javax.persistence.Table;
 public class ReferentRh {
 
 	@Id
+	@Column(name = "ID_REFERENT_RH")
+	private Integer idReferentRh;
+
 	@Column(name = "SERVI")
 	private String servi;
 
@@ -43,5 +46,13 @@ public class ReferentRh {
 
 	public void setNumeroTelephone(Integer numeroTelephone) {
 		this.numeroTelephone = numeroTelephone;
+	}
+
+	public Integer getIdReferentRh() {
+		return idReferentRh;
+	}
+
+	public void setIdReferentRh(Integer idReferentRh) {
+		this.idReferentRh = idReferentRh;
 	}
 }
