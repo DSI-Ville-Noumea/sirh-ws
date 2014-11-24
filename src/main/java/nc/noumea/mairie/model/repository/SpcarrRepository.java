@@ -133,4 +133,18 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		return null;
 	}
+
+	@Override
+	public SpcarrWithoutSpgradn getCarriereFonctionnaireAncienneGrad(Integer noMatr) {
+
+		TypedQuery<SpcarrWithoutSpgradn> qCarr = sirhEntityManager.createNamedQuery(
+				"getCarriereFonctionnaireAncienneWithoutSpgradn", SpcarrWithoutSpgradn.class);
+		qCarr.setParameter("nomatr", noMatr);
+
+		List<SpcarrWithoutSpgradn> result = qCarr.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
+
+		return null;
+	}
 }
