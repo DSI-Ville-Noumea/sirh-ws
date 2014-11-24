@@ -18,10 +18,19 @@ public class SpCarrService implements ISpCarrService {
 	public CarriereDto getCarriereFonctionnaireAncienne(Integer noMatr) {
 
 		CarriereDto dto = null;
-		Spcarr carr = spcarrRepository.getCarriereFonctionnaireAncienne(noMatr);
+		try {
+			Spcarr carr = spcarrRepository.getCarriereFonctionnaireAncienne(noMatr);
 
-		if (null != carr)
-			dto = new CarriereDto(carr);
+			if (null != carr)
+				dto = new CarriereDto(carr);
+		} catch (Exception e) {
+			// le lien n'a pas été fait avec le grade
+			// #11956
+			SpcarrWithoutSpgradn carrWithoutGrade = spcarrRepository.getCarriereFonctionnaireAncienneGrad(noMatr);
+
+			if (null != carrWithoutGrade)
+				dto = new CarriereDto(carrWithoutGrade);
+		}
 
 		return dto;
 	}
