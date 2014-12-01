@@ -20,31 +20,29 @@ import javax.validation.constraints.NotNull;
 @Table(name = "AFFECTATION")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 @NamedQueries({
-	@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
-	@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
-	@NamedQuery(name = "getAffectationActiveByAgentPourCalculEAE", query = 
-	"select a "
-	+ " from Affectation a "
-	+ " join fetch a.fichePoste fp "
-	+ " left  join fetch a.fichePosteSecondaire fpSec "
-	+ " left  join fetch fp.service serv "
-	+ " left  join fetch fp.titrePoste tp "
-	+ " left  join fetch fp.budget budget "
-	+ " left  join fetch fp.lieuPoste lieu "
-	+ " left  join fetch fp.gradePoste grade "
-	+ " left  join fetch grade.gradeGenerique gradeGen "
-	+ " left  join fetch fp.budgete budgete "
-	+ " left  join fetch fp.niveauEtude niveauEtude "
-	+ " left  join fetch fp.superieurHierarchique superieurHierarchique "
-	+ " left  join fetch superieurHierarchique.service serviceHierarchique "
-	+ " left  join fetch superieurHierarchique.agent agentHierarchique "
-	+ " left  join fetch superieurHierarchique.titrePoste titrePosteHierarchique "
-	+ " left  join fetch fp.activites "
-	+ " left join fetch fp.competencesFDP "
-	+ " left join fetch fp.ficheEmploiPrimaire "
-	+ " left join fetch fp.ficheEmploiSecondaire "
-	+ " where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)")
-})
+		@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
+		@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
+		@NamedQuery(name = "getAffectationActiveByAgentPourCalculEAE", query = "select a "
+				+ " from Affectation a "
+				+ " join fetch a.fichePoste fp "
+				+ " left  join fetch a.fichePosteSecondaire fpSec "
+				+ " left  join fetch fp.service serv "
+				+ " left  join fetch fp.titrePoste tp "
+				+ " left  join fetch fp.budget budget "
+				+ " left  join fetch fp.lieuPoste lieu "
+				+ " left  join fetch fp.gradePoste grade "
+				+ " left  join fetch grade.gradeGenerique gradeGen "
+				+ " left  join fetch fp.budgete budgete "
+				+ " left  join fetch fp.niveauEtude niveauEtude "
+				+ " left  join fetch fp.superieurHierarchique superieurHierarchique "
+				+ " left  join fetch superieurHierarchique.service serviceHierarchique "
+				+ " left  join fetch superieurHierarchique.agent agentHierarchique "
+				+ " left  join fetch superieurHierarchique.titrePoste titrePosteHierarchique "
+				+ " left  join fetch fp.activites "
+				+ " left join fetch fp.competencesFDP "
+				+ " left join fetch fp.ficheEmploiPrimaire "
+				+ " left join fetch fp.ficheEmploiSecondaire "
+				+ " where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)") })
 public class Affectation {
 
 	@Id
@@ -80,6 +78,9 @@ public class Affectation {
 
 	@Column(name = "TEMPS_TRAVAIL")
 	private String tempsTravail;
+
+	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
+	private Integer idBaseHoraireAbsence;
 
 	public Integer getIdAffectation() {
 		return idAffectation;
@@ -143,6 +144,14 @@ public class Affectation {
 
 	public void setFichePosteSecondaire(FichePoste fichePosteSecondaire) {
 		this.fichePosteSecondaire = fichePosteSecondaire;
+	}
+
+	public Integer getIdBaseHoraireAbsence() {
+		return idBaseHoraireAbsence;
+	}
+
+	public void setIdBaseHoraireAbsence(Integer idBaseHoraireAbsence) {
+		this.idBaseHoraireAbsence = idBaseHoraireAbsence;
 	}
 
 }
