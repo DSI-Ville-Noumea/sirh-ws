@@ -20,7 +20,7 @@ import org.hibernate.annotations.NotFoundAction;
 @Table(name = "SPCARR")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 @NamedQueries({
-		@NamedQuery(name = "getCurrentCarriere", query = "select carr from Spcarr carr where carr.id.nomatr = :nomatr and carr.id.datdeb <= :todayFormatMairie and (carr.dateFin = 0 or carr.dateFin >= :todayFormatMairie)"),
+		@NamedQuery(name = "getCurrentCarriere", query = "select carr from Spcarr carr where carr.id.nomatr = :nomatr and carr.id.datdeb <= :todayFormatMairie and (carr.dateFin = 0 or carr.dateFin > :todayFormatMairie)"),
 		@NamedQuery(name = "getCarriereFonctionnaireAncienne", query = "select carr from Spcarr carr where carr.id.nomatr = :nomatr and carr.categorie.codeCategorie in (1,2,6,16,17,18,19,20) "
 				+ " and carr.id.datdeb = (select min(carr2.id.datdeb) from Spcarr carr2 where carr2.id.nomatr = :nomatr and carr2.categorie.codeCategorie in (1,2,6,16,17,18,19,20) )") })
 public class Spcarr {
