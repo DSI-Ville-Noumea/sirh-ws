@@ -17,7 +17,7 @@ import nc.noumea.mairie.model.pk.SpcarrId;
 @Table(name = "SPCARR")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 @NamedQueries({
-		@NamedQuery(name = "getCurrentCarriereWithoutSpgradn", query = "select carr from SpcarrWithoutSpgradn carr where carr.id.nomatr = :nomatr and carr.id.datdeb <= :todayFormatMairie and (carr.dateFin = 0 or carr.dateFin >= :todayFormatMairie)"),
+		@NamedQuery(name = "getCurrentCarriereWithoutSpgradn", query = "select carr from SpcarrWithoutSpgradn carr where carr.id.nomatr = :nomatr and carr.id.datdeb <= :todayFormatMairie and (carr.dateFin = 0 or carr.dateFin > :todayFormatMairie)"),
 		@NamedQuery(name = "getCarriereFonctionnaireAncienneWithoutSpgradn", query = "select carr from SpcarrWithoutSpgradn carr where carr.id.nomatr = :nomatr and carr.categorie.codeCategorie in (1,2,6,16,17,18,19,20) "
 				+ " and carr.id.datdeb = (select min(carr2.id.datdeb) from SpcarrWithoutSpgradn carr2 where carr2.id.nomatr = :nomatr and carr2.categorie.codeCategorie in (1,2,6,16,17,18,19,20) )") })
 public class SpcarrWithoutSpgradn {
