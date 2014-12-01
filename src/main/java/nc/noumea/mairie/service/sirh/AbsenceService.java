@@ -32,7 +32,7 @@ public class AbsenceService implements IAbsenceService {
 
 			List<Affectation> aff = q.getResultList();
 			result = new RefTypeSaisiCongeAnnuelDto();
-			//result.setIdRefTypeSaisiCongeAnnuel(aff.get(0).getIdBaseHoraireAbsence());
+			result.setIdRefTypeSaisiCongeAnnuel(aff.get(0).getIdBaseHoraireAbsence());
 		} catch (Exception e) {
 			// on ne fait rien
 		}
