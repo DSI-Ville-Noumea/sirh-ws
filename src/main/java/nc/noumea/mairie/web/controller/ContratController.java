@@ -9,7 +9,6 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISibanqService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.eae.ICalculEaeService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
@@ -58,9 +57,6 @@ public class ContratController {
 
 	@Autowired
 	private IAgentService agSrv;
-
-	@Autowired
-	private ISiservService siservSrv;
 
 	@Autowired
 	private IReportingService reportingService;
