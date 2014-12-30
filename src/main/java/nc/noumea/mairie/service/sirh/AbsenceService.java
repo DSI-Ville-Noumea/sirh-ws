@@ -24,7 +24,7 @@ public class AbsenceService implements IAbsenceService {
 		TypedQuery<Affectation> q = sirhEntityManager
 				.createNamedQuery("getAffectationActiveByAgent", Affectation.class);
 		q.setParameter("idAgent", idAgent);
-		q.setParameter("today", new Date());
+		q.setParameter("today", date);
 		q.setMaxResults(1);
 
 		RefTypeSaisiCongeAnnuelDto result = null;
