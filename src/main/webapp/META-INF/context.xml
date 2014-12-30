@@ -39,7 +39,7 @@
 	<!--  -->
 	<!-- WS PTG -->
 	<!--  -->	
-	<Environment name="PTG_WS_BASE_URL" type="java.lang.String" description="SIRH PTG WS url pour les droits" 
+	<Environment name="SIRH_PTG_WS_URL" type="java.lang.String" description="SIRH PTG WS url pour les droits" 
 		value="http://***REMOVED***:8085/sirh-ptg-ws/" override="false" />
 
 	<!--  -->
