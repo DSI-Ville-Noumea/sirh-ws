@@ -45,7 +45,7 @@
 	<!--  -->
 	<!-- WS RADI pour interroger AD -->
 	<!--  -->	
-	<Environment name="RADI_WS" type="java.lang.String" description="RADI WS url" 
+	<Environment name="RADI_WS_URL" type="java.lang.String" description="RADI WS url" 
 		value="http://***REMOVED***:8085/radi/" override="false" />
 
 	<!--  -->
