@@ -10,6 +10,7 @@ public class AgentWithServiceDto extends AgentDto {
 	private String direction;
 	private String signature;
 	private String position;
+	private String sigleService;
 
 	public AgentWithServiceDto() {
 		super();
@@ -30,6 +31,7 @@ public class AgentWithServiceDto extends AgentDto {
 			this.service = service.getLiServ();
 			this.codeService = service.getServi();
 			this.signature = service.getSignature();
+			this.sigleService = service.getSigle();
 		}
 		this.position = agent.getPosition();
 	}
@@ -72,6 +74,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+
+	public String getSigleService() {
+		return sigleService;
+	}
+
+	public void setSigleService(String sigleService) {
+		this.sigleService = sigleService;
 	}
 
 }
