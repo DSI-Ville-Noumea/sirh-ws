@@ -136,6 +136,7 @@ public class AgentService implements IAgentService {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			agDto.setService(aff.getFichePoste().getService().getLiServ().trim());
 			agDto.setCodeService(aff.getFichePoste().getService().getServi());
+			agDto.setSigleService(aff.getFichePoste().getService().getSigle());
 			agDto.setDirection(siservSrv.getDirection(aff.getFichePoste().getService().getServi()) == null ? ""
 					: siservSrv.getDirection(aff.getFichePoste().getService().getServi()).getLiServ());
 			result.add(agDto);
