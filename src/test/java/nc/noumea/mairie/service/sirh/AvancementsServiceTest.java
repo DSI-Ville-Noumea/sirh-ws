@@ -377,7 +377,7 @@ public class AvancementsServiceTest {
 		ReturnMessageDto dto = new ReturnMessageDto();
 		dto.getInfos().addAll(listIdGed);
 		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito.mock(ISirhEaeWSConsumer.class);
-		Mockito.when(sirhEaeWSConsumer.getEaesGedIdsForAgents(listeIdAgent, 2014)).thenReturn(dto);
+		Mockito.when(sirhEaeWSConsumer.getEaesGedIdsForAgents(listeIdAgent, new DateTime().getYear())).thenReturn(dto);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);

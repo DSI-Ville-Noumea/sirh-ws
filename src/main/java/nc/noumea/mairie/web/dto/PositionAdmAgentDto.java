@@ -16,7 +16,7 @@ public class PositionAdmAgentDto {
 		this.nomatr = spAdmn.getId().getNomatr();
 		this.datdeb = spAdmn.getId().getDatdeb();
 		this.datfin = spAdmn.getDatfin();
-		this.cdpadm = spAdmn.getCdpadm();
+		this.cdpadm = spAdmn.getPositionAdministrative().getCdpAdm();
 	}
 	
 	public Integer getNomatr() {

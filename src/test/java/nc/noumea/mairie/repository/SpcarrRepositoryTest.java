@@ -16,6 +16,7 @@ import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spcatg;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.Spposa;
 import nc.noumea.mairie.model.pk.SpadmnId;
 import nc.noumea.mairie.model.pk.SpcarrId;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
@@ -72,12 +73,16 @@ public class SpcarrRepositoryTest {
 		spCarr.setReferenceArrete(1);
 		sirhPersistenceUnit.persist(spCarr);
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("58");
+		sirhPersistenceUnit.persist(spPosa);
+		
 		SpadmnId spadmnId = new SpadmnId();
 		spadmnId.setNomatr(5138);
 		spadmnId.setDatdeb(2010);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
+		spAdmn.setPositionAdministrative(spPosa); 
 		spAdmn.setDatfin(0);
 		sirhPersistenceUnit.persist(spAdmn);
 
@@ -122,12 +127,16 @@ public class SpcarrRepositoryTest {
 		spCarr.setReferenceArrete(1);
 		sirhPersistenceUnit.persist(spCarr);
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("10");
+		sirhPersistenceUnit.persist(spPosa);
+		
 		SpadmnId spadmnId = new SpadmnId();
 		spadmnId.setNomatr(5138);
 		spadmnId.setDatdeb(2010);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("10");
+		spAdmn.setPositionAdministrative(spPosa);
 		spAdmn.setDatfin(0);
 		sirhPersistenceUnit.persist(spAdmn);
 
@@ -172,12 +181,16 @@ public class SpcarrRepositoryTest {
 		spCarr.setReferenceArrete(1);
 		sirhPersistenceUnit.persist(spCarr);
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("58");
+		sirhPersistenceUnit.persist(spPosa);
+		
 		SpadmnId spadmnId = new SpadmnId();
 		spadmnId.setNomatr(5138);
 		spadmnId.setDatdeb(2010);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
+		spAdmn.setPositionAdministrative(spPosa);;
 		spAdmn.setDatfin(0);
 		sirhPersistenceUnit.persist(spAdmn);
 
@@ -225,12 +238,16 @@ public class SpcarrRepositoryTest {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, -1);
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("58");
+		sirhPersistenceUnit.persist(spPosa);
+
 		SpadmnId spadmnId = new SpadmnId();
 		spadmnId.setNomatr(5138);
 		spadmnId.setDatdeb(2010);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(spadmnId);
-		spAdmn.setCdpadm("58");
+		spAdmn.setPositionAdministrative(spPosa);
 		spAdmn.setDatfin(new Integer(sdf.format(cal.getTime()).toString()));
 		sirhPersistenceUnit.persist(spAdmn);
 
