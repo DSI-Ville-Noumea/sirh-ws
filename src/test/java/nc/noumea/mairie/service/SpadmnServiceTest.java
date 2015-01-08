@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.model.bean.Spposa;
 import nc.noumea.mairie.model.pk.SpadmnId;
 import nc.noumea.mairie.model.repository.ISpadmnRepository;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
@@ -63,13 +64,16 @@ public class SpadmnServiceTest {
 	@Test
 	public void chercherPositionAdmAgentAncienne_return1result() {
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("CODE"); 
+
 		SpadmnId id = new SpadmnId();
 		id.setDatdeb(2000);
 		id.setNomatr(1111);
 		Spadmn spAdm = new Spadmn();
-		spAdm.setCdpadm("CODE");
 		spAdm.setDatfin(2001);
 		spAdm.setId(id);
+		spAdm.setPositionAdministrative(spPosa);
 
 		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
 		Mockito.when(spadmnRepository.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(spAdm);
@@ -104,11 +108,14 @@ public class SpadmnServiceTest {
 	@Test
 	public void chercherPositionAdmAgentEnCours_return1result() {
 
+		Spposa spPosa = new Spposa();
+		spPosa.setCdpAdm("CODE"); 
+
 		SpadmnId id = new SpadmnId();
 		id.setDatdeb(2000);
 		id.setNomatr(1111);
 		Spadmn spAdm = new Spadmn();
-		spAdm.setCdpadm("CODE");
+		spAdm.setPositionAdministrative(spPosa);
 		spAdm.setDatfin(2001);
 		spAdm.setId(id);
 
