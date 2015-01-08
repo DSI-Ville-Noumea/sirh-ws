@@ -75,4 +75,23 @@ public class AffectationRepository implements IAffectationRepository {
 
 		return query.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Affectation> getListeAffectationsAgentByPeriode(Integer idAgent, Date dateDebut, Date dateFin) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select a from Affectation a "
+				+ "where a.agent.idAgent = :idAgent "
+				+ "and a.dateDebutAff <= :dateFin and (a.dateFinAff is null or a.dateFinAff >= :dateDebut) ");
+		
+		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("dateDebut", dateDebut);
+		query.setParameter("dateFin", dateFin);
+
+		return query.getResultList();
+	}
+	
 }

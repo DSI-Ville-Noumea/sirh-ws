@@ -1,8 +1,10 @@
 package nc.noumea.mairie.web.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IAbsenceService;
+import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
 import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,21 @@ public class AbsenceController {
 			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
 
 		RefTypeSaisiCongeAnnuelDto result = absenceSrv.getBaseHoraireAbsenceByAgent(idAgent, date);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/listPAPourAlimAutoCongesAnnuels", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListPAPourAlimAutoCongesAnnuels(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin) {
+
+		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAPourAlimAutoCongesAnnuels(idAgent, dateDebut, dateFin);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
 

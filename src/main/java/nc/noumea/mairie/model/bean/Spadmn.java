@@ -3,6 +3,8 @@ package nc.noumea.mairie.model.bean;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -15,7 +17,7 @@ public class Spadmn {
 
 	@Override
 	public String toString() {
-		return "Spadmn [id=" + id + ", datfin=" + datfin + ", cdpadm=" + cdpadm + "]";
+		return "Spadmn [id=" + id + ", datfin=" + datfin + ", cdpadm=" + positionAdministrative.getCdpAdm() + "]";
 	}
 
 	@EmbeddedId
@@ -23,9 +25,10 @@ public class Spadmn {
 
 	@Column(name = "DATFIN", columnDefinition = "numeric")
 	private Integer datfin;
-
-	@Column(name = "CDPADM", columnDefinition = "char")
-	private String cdpadm;
+	
+	@OneToOne
+	@JoinColumn(name = "CDPADM", referencedColumnName = "CDPADM")
+	private Spposa positionAdministrative;
 
 	public SpadmnId getId() {
 		return id;
@@ -43,11 +46,12 @@ public class Spadmn {
 		this.datfin = datfin;
 	}
 
-	public String getCdpadm() {
-		return cdpadm;
+	public Spposa getPositionAdministrative() {
+		return positionAdministrative;
 	}
 
-	public void setCdpadm(String cdpadm) {
-		this.cdpadm = cdpadm;
+	public void setPositionAdministrative(Spposa positionAdministrative) {
+		this.positionAdministrative = positionAdministrative;
 	}
+	
 }
