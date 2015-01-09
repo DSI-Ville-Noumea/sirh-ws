@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Spcarr;
@@ -20,4 +21,7 @@ public interface ISpcarrRepository {
 	SpcarrWithoutSpgradn getCarriereActiveWithoutGrad(Integer noMatr);
 
 	SpcarrWithoutSpgradn getCarriereFonctionnaireAncienneGrad(Integer noMatr);
+
+	List<Integer> getListeAgentsPourAlimAutoCongesAnnuels(Date datdeb,
+			Date datfin);
 }

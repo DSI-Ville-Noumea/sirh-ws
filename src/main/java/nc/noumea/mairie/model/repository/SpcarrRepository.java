@@ -147,4 +147,30 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> getListeAgentsPourAlimAutoCongesAnnuels(Date datdeb, Date datfin) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select cast(carr.nomatr as int) nomatr from Spcarr carr ");
+		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
+		sb.append(" where carr.CDCATE not in (9,10,11) ");
+		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV','SC','FI') ");
+		sb.append(" and ((pa.datdeb between :datdeb and :datfin) or (pa.datfin between :datdeb and :datfin)) ");
+		sb.append(" GROUP BY carr.nomatr ");
+		
+		// on exclut les categories 9, 10, 11
+		// qui correspondent aux adjoints + les conseillers municipaux + le  maire
+		// donc pas de routine de conges annuels pour eux
+		
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		query.setParameter("datdeb", Integer.valueOf(sdfMairie.format(datdeb)));
+		query.setParameter("datfin", Integer.valueOf(sdfMairie.format(datfin)));
+
+		return query.getResultList();
+	}
 }

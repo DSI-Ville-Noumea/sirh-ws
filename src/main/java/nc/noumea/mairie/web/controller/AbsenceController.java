@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.controller;
 import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.repository.ISpcarrRepository;
 import nc.noumea.mairie.service.sirh.IAbsenceService;
 import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
 import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
@@ -27,6 +28,9 @@ public class AbsenceController {
 	@Autowired
 	private IAbsenceService absenceSrv;
 
+	@Autowired
+	private ISpcarrRepository spcarrRepository;
+	
 	@ResponseBody
 	@RequestMapping(value = "/baseHoraire", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -50,6 +54,20 @@ public class AbsenceController {
 			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin) {
 
 		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAPourAlimAutoCongesAnnuels(idAgent, dateDebut, dateFin);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListAgentPourAlimAutoCompteursCongesAnnuels(
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin) {
+
+		List<Integer> result = spcarrRepository.getListeAgentsPourAlimAutoCongesAnnuels(dateDebut, dateFin);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
 
