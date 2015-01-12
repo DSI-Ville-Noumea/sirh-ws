@@ -2,8 +2,11 @@ package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IHolidayService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.JourDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import flexjson.JSONSerializer;
 
 @Controller
 @RequestMapping("/utils")
@@ -61,5 +66,25 @@ public class UtilsController {
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "listeJoursFeries", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListeJoursFeries(@RequestParam("dateDebut") @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
+			@RequestParam("dateFin") @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin)
+			throws ParseException {
+
+		logger.debug("entered GET [utils/listeJoursFeries] => getListeJoursFeries with parameter dateDebut = {}, dateFin = {}  ", 
+				dateDebut, dateFin);
+
+		List<JourDto> result = holidayService.getListeJoursFeries(dateDebut, dateFin);
+
+		if (result.size() == 0)
+			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 }

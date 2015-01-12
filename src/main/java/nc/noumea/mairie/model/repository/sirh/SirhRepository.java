@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository.sirh;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
+import nc.noumea.mairie.model.bean.sirh.JourFerie;
 
 import org.springframework.stereotype.Repository;
 
@@ -77,6 +79,16 @@ public class SirhRepository implements ISirhRepository {
 
 		q.setParameter("idAgent", idAgent);
 		q.setParameter("anneeFormation", anneeFormation);
+
+		return q.getResultList();
+	}
+	
+	@Override
+	public List<JourFerie> getListeJoursFeries(Date dateDebut, Date dateFin) {
+		
+		TypedQuery<JourFerie> q = sirhEntityManager.createNamedQuery("listJoursFeriesChomesByPeriode", JourFerie.class);
+		q.setParameter("dateDebut", dateDebut);
+		q.setParameter("dateFin", dateFin);
 
 		return q.getResultList();
 	}
