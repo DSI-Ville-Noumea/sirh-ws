@@ -13,9 +13,11 @@ import nc.noumea.mairie.model.bean.sirh.AutreAdministration;
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
+import nc.noumea.mairie.model.bean.sirh.JourFerie;
 import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -379,5 +381,45 @@ public class SirhRepositoryTest {
 		List<FormationAgent> result = repository.getListFormationAgentByAnnee(9005138, 2010);
 
 		assertEquals(1, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeJoursFeries_2results() {
+		
+		JourFerie jour1 = new JourFerie();
+		jour1.setIdJourFerie(1);
+		jour1.setDateJour(new DateTime(2014, 12, 25, 0, 0, 0).toDate());
+		jour1.setIdTypeJourFerie(1);
+		sirhPersistenceUnit.persist(jour1);
+		JourFerie jour2 = new JourFerie();
+		jour2.setIdJourFerie(2);
+		jour2.setDateJour(new DateTime(2014, 12, 26, 0, 0, 0).toDate());
+		jour2.setIdTypeJourFerie(2);
+		sirhPersistenceUnit.persist(jour2);
+		
+		List<JourFerie> result = repository.getListeJoursFeries(new DateTime(2014, 12, 1, 0, 0, 0).toDate(), new DateTime(2014, 12, 31, 0, 0, 0).toDate());
+		
+		assertEquals(result.size(), 2);
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeJoursFeries_badDates() {
+		
+		JourFerie jour1 = new JourFerie();
+		jour1.setIdJourFerie(1);
+		jour1.setDateJour(new DateTime(2014, 12, 25, 0, 0, 0).toDate());
+		jour1.setIdTypeJourFerie(1);
+		sirhPersistenceUnit.persist(jour1);
+		JourFerie jour2 = new JourFerie();
+		jour2.setIdJourFerie(2);
+		jour2.setDateJour(new DateTime(2014, 12, 26, 0, 0, 0).toDate());
+		jour2.setIdTypeJourFerie(2);
+		sirhPersistenceUnit.persist(jour2);
+		
+		List<JourFerie> result = repository.getListeJoursFeries(new DateTime(2014, 11, 1, 0, 0, 0).toDate(), new DateTime(2014, 11, 30, 0, 0, 0).toDate());
+		
+		assertEquals(result.size(), 0);
 	}
 }
