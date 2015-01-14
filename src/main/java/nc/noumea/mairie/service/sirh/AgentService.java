@@ -173,7 +173,7 @@ public class AgentService implements IAgentService {
 		sb.append("where  fp.idFichePoste = aff.fichePoste.idFichePoste ");
 		sb.append("and ag.nomatr=pa.id.nomatr ");
 		sb.append("and ag.idAgent=aff.agentrecherche.idAgent ");
-		sb.append("and pa.cdpadm in ('01', '02', '03', '04', '23', '24', '60', '61', '62', '63', '64', '65', '66') ");
+		sb.append("and pa.positionAdministrative.cdpAdm in ('01', '02', '03', '04', '23', '24', '60', '61', '62', '63', '64', '65', '66') ");
 		sb.append("and pa.id.datdeb <= :dateJourMairie and (pa.datfin = 0 or pa.datfin >= :dateJourMairie) ");
 		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour) ");
 
