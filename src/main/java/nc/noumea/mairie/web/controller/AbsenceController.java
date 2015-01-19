@@ -5,6 +5,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
 import nc.noumea.mairie.service.sirh.IAbsenceService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
 import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
@@ -30,7 +31,7 @@ public class AbsenceController {
 
 	@Autowired
 	private ISpcarrRepository spcarrRepository;
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/baseHoraire", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -44,7 +45,7 @@ public class AbsenceController {
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/listPAPourAlimAutoCongesAnnuels", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -53,13 +54,15 @@ public class AbsenceController {
 			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
 			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
 
-		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAPourAlimAutoCongesAnnuels(idAgent, dateDebut, dateFin);
+		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAPourAlimAutoCongesAnnuels(idAgent, dateDebut,
+				dateFin);
 
-		String json = new JSONSerializer().exclude("*.class").serialize(result);
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
