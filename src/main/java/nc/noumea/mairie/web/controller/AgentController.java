@@ -747,7 +747,7 @@ public class AgentController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "YYYYMMdd") Date dateAffectation) {
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
