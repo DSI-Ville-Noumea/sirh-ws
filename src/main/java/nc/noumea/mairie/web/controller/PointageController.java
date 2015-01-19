@@ -31,7 +31,7 @@ public class PointageController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getPrimePointageAffOfAgent(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
+			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		List<Integer> result = pointageSrv.getPrimePointagesByAgent(idAgent, date);
 
@@ -48,7 +48,7 @@ public class PointageController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBaseHoraireOfAgent(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
+			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		BaseHorairePointageDto result = pointageSrv.getBaseHorairePointageByAgent(idAgent, date);
 
