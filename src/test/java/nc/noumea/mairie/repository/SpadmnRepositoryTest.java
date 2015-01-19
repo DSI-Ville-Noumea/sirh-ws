@@ -357,6 +357,38 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherListPositionAdmAgentSurPeriodeDonnee_PAPlusGrandeQuePeriode() {
+
+		Date dateDebut = new LocalDate(2014, 2, 1).toDate();
+		Date dateFin = new LocalDate(2014, 2, 28).toDate();
+
+		SpadmnId spadmnId = new SpadmnId();
+		spadmnId.setNomatr(5138);
+		spadmnId.setDatdeb(20140101);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(spadmnId);
+		spAdmn.setDatfin(20140315);
+		sirhPersistenceUnit.persist(spAdmn);
+		
+		SpadmnId spadmnId2 = new SpadmnId();
+		spadmnId2.setNomatr(5138);
+		spadmnId2.setDatdeb(20140116);
+		Spadmn spAdmn2 = new Spadmn();
+		spAdmn2.setId(spadmnId2);
+		spAdmn2.setDatfin(0);
+		sirhPersistenceUnit.persist(spAdmn2);
+
+		List<Spadmn> result = repository.chercherListPositionAdmAgentSurPeriodeDonnee(5138, dateDebut, dateFin);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 2);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
 
 	@Test
 	@Transactional("sirhTransactionManager")
