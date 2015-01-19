@@ -83,13 +83,18 @@ public class AffectationRepository implements IAffectationRepository {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select a from Affectation a "
-				+ "where a.agent.idAgent = :idAgent "
-				+ "and a.dateDebutAff <= :dateFin and (a.dateFinAff is null or a.dateFinAff >= :dateDebut) ");
+				+ "where a.agent.idAgent = :idAgent ");
+		if(null != dateFin) {
+			sb.append("and a.dateDebutAff <= :dateFin ");
+		}
+		sb.append("and (a.dateFinAff is null or a.dateFinAff >= :dateDebut) ");
 		
 		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateDebut", dateDebut);
-		query.setParameter("dateFin", dateFin);
+		if(null != dateFin) {
+			query.setParameter("dateFin", dateFin);
+		}
 
 		return query.getResultList();
 	}
