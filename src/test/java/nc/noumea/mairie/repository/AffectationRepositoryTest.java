@@ -680,4 +680,68 @@ public class AffectationRepositoryTest {
 		
 		assertEquals(result.size(), 3);
 	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeAffectationsAgentByPeriode_3Results_withDateFinNull() {
+		
+		Date dateDebut = new LocalDate(2014, 2, 1).toDate();
+		Date dateFin = null;
+		
+		Date dateDebutAff1 = new LocalDate(2014, 1, 10).toDate();
+		Date dateFinAff1 = new LocalDate(2014, 1, 20).toDate();
+		Date dateDebutAff2 = new LocalDate(2014, 1, 21).toDate();
+		Date dateFinAff2 = new LocalDate(2014, 2, 10).toDate();
+		Date dateDebutAff3 = new LocalDate(2014, 2, 11).toDate();
+		Date dateFinAff3 = new LocalDate(2014, 2, 20).toDate();
+		Date dateDebutAff4 = new LocalDate(2014, 2, 21).toDate();
+		
+		Agent ag = new Agent();
+			ag.setIdAgent(9005138);
+			ag.setNomatr(5138);
+			ag.setPrenom("NON");
+			ag.setDateNaissance(new Date());
+			ag.setNomPatronymique("TEST");
+			ag.setNomUsage("USAGE");
+			ag.setPrenomUsage("NONO");
+			ag.setSexe("H");
+			ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		Affectation a = new Affectation(); 
+			a.setAgent(ag);
+			a.setIdAffectation(1);
+			a.setTempsTravail("tempsTravail");
+			a.setDateDebutAff(dateDebutAff1);
+			a.setDateFinAff(dateFinAff1);
+		sirhPersistenceUnit.persist(a);
+		
+		Affectation a2 = new Affectation(); 
+			a2.setAgent(ag);
+			a2.setIdAffectation(2);
+			a2.setTempsTravail("tempsTravail");
+			a2.setDateDebutAff(dateDebutAff2);
+			a2.setDateFinAff(dateFinAff2);
+		sirhPersistenceUnit.persist(a2);
+		
+		Affectation a3 = new Affectation(); 
+			a3.setAgent(ag);
+			a3.setIdAffectation(3);
+			a3.setTempsTravail("tempsTravail");
+			a3.setDateDebutAff(dateDebutAff3);
+			a3.setDateFinAff(dateFinAff3); 
+		sirhPersistenceUnit.persist(a3);
+		
+		Affectation a4 = new Affectation(); 
+			a4.setAgent(ag);
+			a4.setIdAffectation(4);
+			a4.setTempsTravail("tempsTravail");
+			a4.setDateDebutAff(dateDebutAff4);
+			a4.setDateFinAff(null); 
+		sirhPersistenceUnit.persist(a4);
+		
+		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
+		
+		assertEquals(result.size(), 3);
+	}
 }
