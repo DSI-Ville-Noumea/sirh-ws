@@ -232,9 +232,9 @@ public class AbsenceServiceTest {
 		assertEquals(result.get(2).getDateFin(), sdf.parse("20140228"));
 		assertEquals(result.get(2).getIdBaseCongeAbsence(), a3.getIdBaseHoraireAbsence());
 
-		assertEquals(result.get(2).getDateDebut(), sdf.parse("20140221"));
-		assertEquals(result.get(2).getDateFin(), sdf.parse("20140228"));
-		assertEquals(result.get(2).getIdBaseCongeAbsence(), a3.getIdBaseHoraireAbsence());
+		assertEquals(result.get(3).getDateDebut(), sdf.parse("20140221"));
+		assertEquals(result.get(3).getDateFin(), sdf.parse("20140228"));
+		assertEquals(result.get(3).getIdBaseCongeAbsence(), a3.getIdBaseHoraireAbsence());
 	}
 	
 	@Test
