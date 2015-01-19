@@ -200,9 +200,16 @@ public class AbsenceServiceTest {
 		a3.setDateFinAff(sdf.parse("20140310"));
 		a3.setIdBaseHoraireAbsence(3);
 		
+		Affectation a4 = new Affectation();
+		a4.setIdAffectation(3);
+		a4.setDateDebutAff(sdf.parse("20140221"));
+		a4.setDateFinAff(null);
+		a4.setIdBaseHoraireAbsence(3);
+		
 		listAffectation.add(a);
 		listAffectation.add(a2);
 		listAffectation.add(a3);
+		listAffectation.add(a4);
 		
 		AffectationRepository affectationRepository = Mockito.mock(AffectationRepository.class);
 		Mockito.when(affectationRepository.getListeAffectationsAgentByPeriode(9005138, dateDebutPA, dateFinPA)).thenReturn(listAffectation);
@@ -210,9 +217,9 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
 		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateFinPA);
 		
-		assertEquals(3, result.size());
+		assertEquals(4, result.size());
 		assertEquals(result.get(0).getDateDebut(), sdf.parse("20140201"));
 		assertEquals(result.get(0).getDateFin(), sdf.parse("20140210"));
 		assertEquals(result.get(0).getIdBaseCongeAbsence(), a.getIdBaseHoraireAbsence());
@@ -220,6 +227,10 @@ public class AbsenceServiceTest {
 		assertEquals(result.get(1).getDateDebut(), sdf.parse("20140211"));
 		assertEquals(result.get(1).getDateFin(), sdf.parse("20140220"));
 		assertEquals(result.get(1).getIdBaseCongeAbsence(), a2.getIdBaseHoraireAbsence());
+
+		assertEquals(result.get(2).getDateDebut(), sdf.parse("20140221"));
+		assertEquals(result.get(2).getDateFin(), sdf.parse("20140228"));
+		assertEquals(result.get(2).getIdBaseCongeAbsence(), a3.getIdBaseHoraireAbsence());
 
 		assertEquals(result.get(2).getDateDebut(), sdf.parse("20140221"));
 		assertEquals(result.get(2).getDateFin(), sdf.parse("20140228"));
@@ -257,7 +268,7 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
 		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateFinPA);
 		
 		assertEquals(0, result.size());
 	}
