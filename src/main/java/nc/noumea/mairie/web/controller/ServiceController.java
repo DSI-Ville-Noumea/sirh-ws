@@ -59,7 +59,7 @@ public class ServiceController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentService(@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
+			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		// Si la date n'est pas spécifiée, prendre la date du jour
 		if (date == null)
@@ -88,7 +88,7 @@ public class ServiceController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getServiceAgents(
 			@RequestParam(value = "codeService", required = true) String codeService,
-			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
+			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		Siserv service = siservSrv.getService(codeService);
 

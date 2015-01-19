@@ -36,7 +36,7 @@ public class AbsenceController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBaseHoraireOfAgent(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date date) {
+			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		RefTypeSaisiCongeAnnuelDto result = absenceSrv.getBaseHoraireAbsenceByAgent(idAgent, date);
 
@@ -50,8 +50,8 @@ public class AbsenceController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListPAPourAlimAutoCongesAnnuels(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
-			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin) {
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
 
 		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAPourAlimAutoCongesAnnuels(idAgent, dateDebut, dateFin);
 
@@ -64,8 +64,8 @@ public class AbsenceController {
 	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListAgentPourAlimAutoCompteursCongesAnnuels(
-			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
-			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin) {
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
 
 		List<Integer> result = spcarrRepository.getListeAgentsPourAlimAutoCongesAnnuels(dateDebut, dateFin);
 

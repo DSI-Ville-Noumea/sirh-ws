@@ -35,7 +35,7 @@ public class UtilsController {
 	@ResponseBody
 	@RequestMapping(value = "isHoliday", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> isHoliday(@RequestParam("date") @DateTimeFormat(pattern = "YYYYMMdd") Date date)
+	public ResponseEntity<String> isHoliday(@RequestParam("date") @DateTimeFormat(pattern = "yyyyMMdd") Date date)
 			throws ParseException {
 
 		logger.debug("entered GET [utils/isHoliday] => isHoliday with parameter date = {}  ", date);
@@ -53,7 +53,7 @@ public class UtilsController {
 	@ResponseBody
 	@RequestMapping(value = "isJourFerie", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> isJourFerie(@RequestParam("date") @DateTimeFormat(pattern = "YYYYMMdd") Date date)
+	public ResponseEntity<String> isJourFerie(@RequestParam("date") @DateTimeFormat(pattern = "yyyyMMdd") Date date)
 			throws ParseException {
 
 		logger.debug("entered GET [utils/isJourFerie] => isHoliday with parameter date = {}  ", date);
@@ -71,8 +71,8 @@ public class UtilsController {
 	@ResponseBody
 	@RequestMapping(value = "listeJoursFeries", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListeJoursFeries(@RequestParam("dateDebut") @DateTimeFormat(pattern = "YYYYMMdd") Date dateDebut,
-			@RequestParam("dateFin") @DateTimeFormat(pattern = "YYYYMMdd") Date dateFin)
+	public ResponseEntity<String> getListeJoursFeries(@RequestParam("dateDebut") @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam("dateFin") @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
 			throws ParseException {
 
 		logger.debug("entered GET [utils/listeJoursFeries] => getListeJoursFeries with parameter dateDebut = {}, dateFin = {}  ", 
