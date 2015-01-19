@@ -96,7 +96,7 @@ public class AbsenceService implements IAbsenceService {
 			// pour chaque PA, on regarde s'il n'y a pas plusieurs affectations avec code base different
 			// si oui, on cree un nouvel enregistrement
 			try {
-				result.addAll(findBasesCongesForPA(spAdmn, idAgent));
+				result.addAll(findBasesCongesForPA(spAdmn, idAgent, dateFin));
 			} catch (ParseException e) {
 				logger.debug("Erreur ParseException : " + e.getMessage());
 				return null;
@@ -147,12 +147,12 @@ public class AbsenceService implements IAbsenceService {
 		return new Long(Math.round(inputInterval.toPeriod().getMonths() + inputInterval.toPeriod().getYears() * 12 + jours)).intValue();
 	}
 	
-	protected List<InfosAlimAutoCongesAnnuelsDto> findBasesCongesForPA(Spadmn spAdmn, Integer idAgent) throws ParseException {
+	protected List<InfosAlimAutoCongesAnnuelsDto> findBasesCongesForPA(Spadmn spAdmn, Integer idAgent, Date dateFin) throws ParseException {
 		
 		List<InfosAlimAutoCongesAnnuelsDto> result = new ArrayList<InfosAlimAutoCongesAnnuelsDto>();
 		
 		Date dateDebutPA = sdfMairie.parse(spAdmn.getId().getDatdeb().toString());
-		Date dateFinPA = 0 != spAdmn.getDatfin() ? sdfMairie.parse(spAdmn.getDatfin().toString()) : null;
+		Date dateFinPA = 0 != spAdmn.getDatfin() ? sdfMairie.parse(spAdmn.getDatfin().toString()) : dateFin;
 		
 		List<Affectation> listAff = affectationRepository.getListeAffectationsAgentByPeriode(idAgent, dateDebutPA, dateFinPA);
 		
@@ -162,7 +162,7 @@ public class AbsenceService implements IAbsenceService {
 				InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
 				
 				dto.setDateDebut(aff.getDateDebutAff().before(dateDebutPA) ? dateDebutPA : aff.getDateDebutAff());
-				dto.setDateFin(aff.getDateFinAff().after(dateFinPA) ? dateFinPA : aff.getDateFinAff());
+				dto.setDateFin(null != aff.getDateFinAff() && aff.getDateFinAff().after(dateFinPA) ? dateFinPA : aff.getDateFinAff());
 				dto.setIdBaseCongeAbsence(aff.getIdBaseHoraireAbsence());
 				dto.setDroitConges(null != spAdmn.getPositionAdministrative().getDroitConges()
 						&& spAdmn.getPositionAdministrative().getDroitConges().trim().equals("O"));
