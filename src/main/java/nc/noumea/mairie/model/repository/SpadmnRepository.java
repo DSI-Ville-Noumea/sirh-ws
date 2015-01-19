@@ -59,7 +59,7 @@ public class SpadmnRepository implements ISpadmnRepository {
 		TypedQuery<Spadmn> q = sirhEntityManager
 				.createQuery(
 						"select a from Spadmn a where a.id.nomatr = :noMatr and "
-						+ " ( (a.id.datdeb between :datdeb and :datfin) or (a.datfin between :datdeb and :datfin)) ",
+						+ " ( (a.id.datdeb <= :datfin) and (a.datfin = 0 or a.datfin >= :datdeb )) ",
 						Spadmn.class);
 		q.setParameter("noMatr", noMatr);
 
