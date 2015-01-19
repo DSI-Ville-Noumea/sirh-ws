@@ -158,10 +158,11 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
 		sb.append(" WHERE carr.CDCATE not in (9,10,11) ");
 		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV','SC','FI') ");
-		sb.append(" and pa.datdeb <= :datdeb ");
-		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb ) ");
-		sb.append(" and pa.datdeb <= :datfin ");
-		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) ");
+		sb.append(" and ( (pa.datdeb <= :datdeb ");
+			sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
+		sb.append(" or (pa.datdeb <= :datfin ");
+		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");
+		sb.append(" GROUP BY carr.nomatr ");
 		
 		// on exclut les categories 9, 10, 11
 		// qui correspondent aux adjoints + les conseillers municipaux + le  maire
