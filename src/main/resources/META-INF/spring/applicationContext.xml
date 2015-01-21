@@ -69,4 +69,16 @@
 	<jee:jndi-lookup id="radiWsBaseUrl" jndi-name="RADI_WS_URL" expected-type="java.lang.String"/>
 	
 	<jee:jndi-lookup id="eaeWsBaseUrl" jndi-name="SIRH_EAE_WS_URL" expected-type="java.lang.String"/>
+	
+	
+	<!-- -->
+	<!-- Parametres pour savoir si une paie tourne -->
+	<!-- -->	
+	<jee:jndi-lookup id="dtaaraSchema" jndi-name="DTAARA_SCHEMA" expected-type="java.lang.String"/>
+	<jee:jndi-lookup id="dtaaraName" jndi-name="DTAARA_NAME" expected-type="java.lang.String"/>
+	<jee:jndi-lookup id="hostSgbdPaie" jndi-name="HOST_SGBD_PAYE" expected-type="java.lang.String"/>
+	<jee:jndi-lookup id="hostSgbdLogin" jndi-name="HOST_SGBD_LOGIN" expected-type="java.lang.String"/>
+	<jee:jndi-lookup id="hostSgbdPwd" jndi-name="HOST_SGBD_PWD" expected-type="java.lang.String"/>
+	
+	
 </beans>
