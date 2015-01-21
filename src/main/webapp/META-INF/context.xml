@@ -12,9 +12,9 @@
 <!-- The contents of this file will be loaded for each web application -->
 <Context reloadable="true" cookies="true">
 
-	<!--  -->
+	<!-- -->
 	<!-- DATASOURCES -->
-	<!--  -->	
+	<!-- -->
 	<Resource name="jdbc/KIOSQUE_DS1" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
 		testWhileIdle="true" testOnBorrow="true" testOnReturn="false"
@@ -27,31 +27,51 @@
 		url="***REMOVED***" />
 
 
-	<!--  -->
+	<!-- -->
 	<!-- BIRT -->
-	<!--  -->	
-	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String" description="SIRH reports path on Birt" 
-		value="report/sirh-reports/" override="false" />
+	<!-- -->
+	<Environment name="REPORTING_SERVER_SIRH_REPORT_PATH" type="java.lang.String"
+		description="SIRH reports path on Birt" value="report/sirh-reports/"
+		override="false" />
 
-	<Environment name="REPORTING_BASE_URL" type="java.lang.String" description="BIRT report viewer base URL for SIRH reporting" 
-		value="http://***REMOVED***:8085/birt/" override="false" />
+	<Environment name="REPORTING_BASE_URL" type="java.lang.String"
+		description="BIRT report viewer base URL for SIRH reporting" value="http://***REMOVED***:8085/birt/"
+		override="false" />
 
-	<!--  -->
+	<!-- -->
 	<!-- WS PTG -->
-	<!--  -->	
-	<Environment name="SIRH_PTG_WS_URL" type="java.lang.String" description="SIRH PTG WS url pour les droits" 
-		value="http://***REMOVED***:8085/sirh-ptg-ws/" override="false" />
+	<!-- -->
+	<Environment name="SIRH_PTG_WS_URL" type="java.lang.String"
+		description="SIRH PTG WS url pour les droits" value="http://***REMOVED***:8085/sirh-ptg-ws/"
+		override="false" />
 
-	<!--  -->
+	<!-- -->
 	<!-- WS RADI pour interroger AD -->
-	<!--  -->	
-	<Environment name="RADI_WS_URL" type="java.lang.String" description="RADI WS url" 
-		value="http://***REMOVED***:8085/radi/" override="false" />
+	<!-- -->
+	<Environment name="RADI_WS_URL" type="java.lang.String"
+		description="RADI WS url" value="http://***REMOVED***:8085/radi/"
+		override="false" />
 
-	<!--  -->
+	<!-- -->
 	<!-- WS EAE -->
-	<!--  -->	
-	<Environment name="SIRH_EAE_WS_URL" type="java.lang.String" description="SIRH EAE WS url pour la gestion des EAEs/Avancements"
+	<!-- -->
+	<Environment name="SIRH_EAE_WS_URL" type="java.lang.String"
+		description="SIRH EAE WS url pour la gestion des EAEs/Avancements"
 		value="http://***REMOVED***:8085/sirh-eae-ws/" override="false" />
+
+
+	<!-- -->
+	<!-- Parametres pour savoir si une paie tourne -->
+	<!-- -->
+	<Environment description="Bibliotheque de la DTAARA_CALC"
+		name="DTAARA_SCHEMA" override="false" value="PERSONNEL" type="java.lang.String" />
+	<Environment description="Nom de la DTAARA_CALC" name="DTAARA_NAME"
+		override="false" value="CALCUL" type="java.lang.String" />
+	<Environment description="parametre pour accès à la DTAARA_CALC"
+		name="HOST_SGBD_PAYE" override="false" value="***REMOVED***" type="java.lang.String" />
+	<Environment description="Login pour accès à la DTAARA_CALC"
+		name="HOST_SGBD_LOGIN" override="false" value="***REMOVED***" type="java.lang.String" />
+	<Environment description="Pws pour accès à la DTAARA_CALC"
+		name="HOST_SGBD_PWD" override="false" value="***REMOVED***" type="java.lang.String" />
 
 </Context>
