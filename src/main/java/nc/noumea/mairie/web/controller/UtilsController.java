@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IHolidayService;
+import nc.noumea.mairie.service.sirh.IPaieService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.JourDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,9 @@ public class UtilsController {
 	@Autowired
 	private IHolidayService holidayService;
 
+	@Autowired
+	private IPaieService paieService;
+
 	@ResponseBody
 	@RequestMapping(value = "isHoliday", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -49,7 +54,7 @@ public class UtilsController {
 		}
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "isJourFerie", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -67,15 +72,16 @@ public class UtilsController {
 		}
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "listeJoursFeries", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListeJoursFeries(@RequestParam("dateDebut") @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
-			@RequestParam("dateFin") @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
-			throws ParseException {
+	public ResponseEntity<String> getListeJoursFeries(
+			@RequestParam("dateDebut") @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam("dateFin") @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) throws ParseException {
 
-		logger.debug("entered GET [utils/listeJoursFeries] => getListeJoursFeries with parameter dateDebut = {}, dateFin = {}  ", 
+		logger.debug(
+				"entered GET [utils/listeJoursFeries] => getListeJoursFeries with parameter dateDebut = {}, dateFin = {}  ",
 				dateDebut, dateFin);
 
 		List<JourDto> result = holidayService.getListeJoursFeries(dateDebut, dateFin);
@@ -83,8 +89,30 @@ public class UtilsController {
 		if (result.size() == 0)
 			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(result);
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.serialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "isPaieEnCours", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> isPaieEnCours() throws ParseException {
+		logger.debug("entered GET [utils/isPaieEnCours] => isPaieEnCours ");
+		ReturnMessageDto result = new ReturnMessageDto();
+		try {
+			result = paieService.isPaieEnCours();
+		} catch (Exception e) {
+			result.getErrors().add("Une erreur technique est survenue dans la détermination du calcul de la paie.");
+			logger.error("Une erreur technique est survenue dans la détermination du calcul de la paie."
+					+ e.getMessage());
+		}
+
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
 }
