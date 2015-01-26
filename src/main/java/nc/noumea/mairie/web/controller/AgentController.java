@@ -157,6 +157,12 @@ public class AgentController {
 			ag.setLieuNaissance(ag.getCodeCommuneNaissFr().getLibVil().trim());
 		}
 
+		if (ag.getVoie() == null) {
+			ag.setRue(ag.getRueNonNoumea());
+		} else {
+			ag.setRue(ag.getVoie().getLiVoie().trim());
+		}
+
 		List<Contact> lc = contactSrv.getContactsAgent(Long.valueOf(newIdAgent));
 		List<ContactAgentDto> listeContact = new ArrayList<ContactAgentDto>();
 		for (Contact c : lc) {
@@ -566,19 +572,20 @@ public class AgentController {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
-		
-		List<AgentWithServiceDto> listAgent = agentSrv.listAgentsOfServices(null, new Date(), Arrays.asList(Integer.valueOf(newIdAgent)));
+
+		List<AgentWithServiceDto> listAgent = agentSrv.listAgentsOfServices(null, new Date(),
+				Arrays.asList(Integer.valueOf(newIdAgent)));
 
 		if (listAgent == null || listAgent.isEmpty()) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		
+
 		AgentWithServiceDto ag = listAgent.get(0);
 
 		List<String> listService = new ArrayList<String>();
-		if(null != codeService) {
+		if (null != codeService) {
 			listService.add(codeService);
-		}else{
+		} else {
 			listService.add(ag.getCodeService());
 		}
 
@@ -746,7 +753,8 @@ public class AgentController {
 	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getDirection(@RequestParam(value = "idAgent", required = true) Long idAgent,
+	public ResponseEntity<String> getDirection(
+			@RequestParam(value = "idAgent", required = true) Long idAgent,
 			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) {
 
 		// on remanie l'idAgent

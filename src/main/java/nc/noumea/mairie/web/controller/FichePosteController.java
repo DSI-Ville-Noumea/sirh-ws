@@ -269,4 +269,40 @@ public class FichePosteController {
 		}
 		return newIdAgent;
 	}
+
+	@RequestMapping(value = "/getFichePosteSecondaire", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getFichePosteSecondaireAgentOtherProject(
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String dateTemp = sdf.format(new Date());
+		Date dateJour = sdf.parse(dateTemp);
+
+		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
+
+		if (fp == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+		fp.getService().setDirection(
+				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
+						fp.getService().getServi()).getLiServ());
+		fp.getService().setDivision(
+				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
+						.getDivision(fp.getService().getServi()).getLiServ());
+		fp.getService().setSection(
+				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
+						fp.getService().getServi()).getLiServ());
+
+		FichePosteDto dto = new FichePosteDto(fp);
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }
