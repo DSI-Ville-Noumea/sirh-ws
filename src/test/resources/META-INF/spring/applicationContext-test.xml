@@ -74,4 +74,14 @@
 	<bean class="java.lang.String" id="radiWsBaseUrl" />
 
 	<bean class="java.lang.String" id="eaeWsBaseUrl" />
+
+
+	<!-- -->
+	<!-- Parametres pour savoir si une paie tourne -->
+	<!-- -->
+	<bean id="dtaaraSchema" class="java.lang.String" />
+	<bean id="dtaaraName" class="java.lang.String" />
+	<bean id="hostSgbdPaie" class="java.lang.String" />
+	<bean id="hostSgbdLogin" class="java.lang.String" />
+	<bean id="hostSgbdPwd" class="java.lang.String" />
 </beans>
