@@ -1,5 +1,7 @@
 package nc.noumea.mairie.service;
 
+import java.util.ArrayList;
+
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
@@ -51,6 +53,21 @@ public class SpCarrService implements ISpCarrService {
 
 			if (null != carrWithoutGrade)
 				dto = new CarriereDto(carrWithoutGrade);
+		}
+
+		return dto;
+	}
+
+	@Override
+	public CarriereDto getCarriereAvecGrade(Integer noMatr, String codeGrade, Integer categorie) {
+		CarriereDto dto = null;
+		// redmine #13156
+		// on regarde si il y a d'autre carrieres avec le meme grade
+		// si oui on prend la carriere plus lointaine
+		ArrayList<Spcarr> listeCarrMemeGrade = (ArrayList<Spcarr>) spcarrRepository.listerCarriereAvecGradeEtStatut(
+				noMatr, codeGrade, categorie);
+		if (listeCarrMemeGrade != null && listeCarrMemeGrade.size() > 0) {
+			dto = new CarriereDto(listeCarrMemeGrade.get(0));
 		}
 
 		return dto;

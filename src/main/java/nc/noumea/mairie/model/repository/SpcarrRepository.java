@@ -108,6 +108,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" where carr.CDGRAD = :cdGrad ");
 		sb.append(" and carr.NOMATR = :nomatr ");
 		sb.append(" and carr.CDCATE = :cdCate ");
+		sb.append(" order by carr.DATDEB ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString(), Spcarr.class);
 
@@ -147,7 +148,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> getListeAgentsPourAlimAutoCongesAnnuels(Date datdeb, Date datfin) {
@@ -159,15 +160,16 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" WHERE carr.CDCATE not in (9,10,11) ");
 		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV','SC','FI') ");
 		sb.append(" and ( (pa.datdeb <= :datdeb ");
-			sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
+		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");
 		sb.append(" GROUP BY carr.nomatr ");
-		
+
 		// on exclut les categories 9, 10, 11
-		// qui correspondent aux adjoints + les conseillers municipaux + le  maire
+		// qui correspondent aux adjoints + les conseillers municipaux + le
+		// maire
 		// donc pas de routine de conges annuels pour eux
-		
+
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
