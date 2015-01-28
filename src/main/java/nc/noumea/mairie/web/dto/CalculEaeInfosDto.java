@@ -26,6 +26,7 @@ public class CalculEaeInfosDto {
 	// mairie.Spcarr
 	CarriereDto carriereFonctionnaireAncienne;
 	CarriereDto carriereActive;
+	CarriereDto carriereAncienneDansGrade;
 	
 
 	public PositionAdmAgentDto getPositionAdmAgentEnCours() {
@@ -125,6 +126,14 @@ public class CalculEaeInfosDto {
 
 	public void setCarriereActive(CarriereDto carriereActive) {
 		this.carriereActive = carriereActive;
+	}
+
+	public CarriereDto getCarriereAncienneDansGrade() {
+		return carriereAncienneDansGrade;
+	}
+
+	public void setCarriereAncienneDansGrade(CarriereDto carriereAncienneDansGrade) {
+		this.carriereAncienneDansGrade = carriereAncienneDansGrade;
 	}
 	
 	
