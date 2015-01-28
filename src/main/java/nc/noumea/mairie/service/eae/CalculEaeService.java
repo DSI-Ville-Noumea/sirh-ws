@@ -123,6 +123,10 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setPositionAdmAgentAncienne(spadmnService.chercherPositionAdmAgentAncienne(agent.getNomatr()));
 			dto.setCarriereFonctionnaireAncienne(spCarrService.getCarriereFonctionnaireAncienne(agent.getNomatr()));
 			dto.setCarriereActive(spCarrService.getCarriereActive(agent.getNomatr()));
+			if (dto.getCarriereActive().getGrade() != null && dto.getCarriereActive().getCodeCategorie() != null) {
+				dto.setCarriereAncienneDansGrade(spCarrService.getCarriereAvecGrade(agent.getNomatr(), dto
+						.getCarriereActive().getGrade().getCodeGrade(), dto.getCarriereActive().getCodeCategorie()));
+			}
 		}
 
 		return dto;
@@ -356,7 +360,8 @@ public class CalculEaeService implements ICalculEaeService {
 
 			if ((carr.getCategorie().getCodeCategorie().toString().equals("2") || carr.getCategorie()
 					.getCodeCategorie().toString().equals("18"))
-					&& gradeActuel.getDureeMoyenne() !=null && (!gradeActuel.getDureeMoyenne().toString().equals("12"))) {
+					&& gradeActuel.getDureeMoyenne() != null
+					&& (!gradeActuel.getDureeMoyenne().toString().equals("12"))) {
 				// si stagiaire
 				// la date d'avancement est la meme +1an.
 				Calendar cal2 = Calendar.getInstance();

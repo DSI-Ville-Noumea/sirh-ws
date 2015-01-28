@@ -45,6 +45,7 @@ import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.CarriereDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
+import nc.noumea.mairie.web.dto.GradeDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 
 import org.joda.time.DateTime;
@@ -157,6 +158,7 @@ public class CalculEaeServiceTest {
 
 		CarriereDto carriereDto = new CarriereDto();
 		carriereDto.setCodeCategorie(1);
+		carriereDto.setGrade(new GradeDto(gradePoste));
 		carriereDto.setLibelleCategorie("libelleCategorie");
 		CarriereDto carriereDtoAncienne = new CarriereDto();
 		carriereDtoAncienne.setCodeCategorie(2);
