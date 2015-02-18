@@ -3,6 +3,7 @@ package nc.noumea.mairie.model.bean.sirh;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -16,6 +17,7 @@ public class AccueilRh {
 	private Integer idAccueilKiosque;
 
 	@Column(name = "TEXTE_ACCUEIL_KIOSQUE")
+	@Lob
 	private String texteAccueilKiosque;
 
 	public Integer getIdAccueilKiosque() {
