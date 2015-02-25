@@ -68,6 +68,7 @@ public class CalculEaeServiceTest {
 		Siserv service = new Siserv();
 		service.setServi("servi");
 		service.setLiServ("liServ");
+		service.setDivision("division");
 
 		Budget budget = new Budget();
 		budget.setLibelleBudget("libelleBudget");
@@ -236,7 +237,7 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePostePrincipale().getCadreEmploi(), "libelleCadreEmploi");
 		assertEquals(result.getFichePostePrincipale().getNiveauEtudes(), "libelleNiveauEtude");
 		assertEquals(result.getFichePostePrincipale().getCodeService(), "servi");
-		assertEquals(result.getFichePostePrincipale().getService(), "liServ");
+		assertEquals(result.getFichePostePrincipale().getService(), service.getDivision());
 		assertEquals(result.getFichePostePrincipale().getSection(), "section");
 		assertEquals(result.getFichePostePrincipale().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePostePrincipale().getGradePoste(), "gradeInitial");
@@ -253,7 +254,7 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePosteSecondaire().getCadreEmploi(), "libelleCadreEmploi");
 		assertEquals(result.getFichePosteSecondaire().getNiveauEtudes(), "libelleNiveauEtude");
 		assertEquals(result.getFichePosteSecondaire().getCodeService(), "servi");
-		assertEquals(result.getFichePosteSecondaire().getService(), "liServ");
+		assertEquals(result.getFichePosteSecondaire().getService(), service.getDivision());
 		assertEquals(result.getFichePosteSecondaire().getSection(), "section");
 		assertEquals(result.getFichePosteSecondaire().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePosteSecondaire().getGradePoste(), "gradeInitial");
