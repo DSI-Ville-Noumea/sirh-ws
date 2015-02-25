@@ -70,7 +70,7 @@ public class FichePosteDtoTest {
 		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
 				dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getLiServ(), dto.getService());
+		assertEquals(fp.getService().getDivision(), dto.getService());
 		assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
@@ -155,7 +155,7 @@ public class FichePosteDtoTest {
 		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
 				dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getLiServ(), dto.getService());
+		assertEquals(fp.getService().getDivision(), dto.getService());
 		assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
