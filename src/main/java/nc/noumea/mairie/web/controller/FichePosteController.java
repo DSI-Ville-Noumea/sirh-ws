@@ -135,7 +135,7 @@ public class FichePosteController {
 							fp.getService().getServi()).getLiServ());
 		}
 
-		FichePosteDto dto = new FichePosteDto(fp);
+		FichePosteDto dto = new FichePosteDto(fp, true);
 
 		return new ModelAndView("xmlView", "object", dto);
 	}

@@ -119,9 +119,9 @@ public class FichePosteDto {
 		niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude() : "";
 
 		codeService = fichePoste.getService() == null ? "" : fichePoste.getService().getServi();
-		service = fichePoste.getService() == null ? "" : fichePoste.getService().getLiServ();
+		service = fichePoste.getService() == null ? "" : fichePoste.getService().getDivision();
 
-		section = fichePoste.getService().getSection();
+		section = fichePoste.getService() == null ? "" : fichePoste.getService().getSection();
 		lieu = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? ""
 				: fichePoste.getLieuPoste().getLibelleLieu().trim();
 		gradePoste = fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? ""
