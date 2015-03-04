@@ -165,14 +165,17 @@ public class SiservService implements ISiservService {
 				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, Siserv.class);
 		query.setParameter("idAgent", idAgent);
-		
-		if(null != date) {
+
+		if (null != date) {
 			query.setParameter("dateJour", date);
-		}else{
+		} else {
 			query.setParameter("dateJour", new Date());
 		}
-		
-		return (Siserv) query.getSingleResult();
+		try {
+			return (Siserv) query.getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	private void listSousServices(ServiceTreeNode serviceTreeNode, List<String> services) {
@@ -201,11 +204,14 @@ public class SiservService implements ISiservService {
 
 	@Override
 	public ServiceTreeNode getAgentServiceTree(Integer idAgent, Date date) {
+		try {
+			String agentServiceSigle = getServiceAgent(idAgent, date).getSigle().trim();
+			ServiceTreeNode result = getServiceTree().get(agentServiceSigle);
 
-		String agentServiceSigle = getServiceAgent(idAgent, date).getSigle().trim();
-		ServiceTreeNode result = getServiceTree().get(agentServiceSigle);
-
-		return result;
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
