@@ -12,9 +12,11 @@ import javax.persistence.PersistenceContext;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
 import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
 import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,8 @@ public class AvancementRepositoryTest {
 		af.setCodeCategporie(1);
 		sirhPersistenceUnit.persist(af);
 
-		AvancementFonctionnaire result = repository.getAvancement(9005138, 2010, true);
+		AvancementFonctionnaire result = repository.getAvancement(9005138,
+				2010, true);
 
 		assertEquals(1, result.getIdAvct().intValue());
 		assertEquals(result.getCodeCategporie(), 1);
@@ -85,7 +88,8 @@ public class AvancementRepositoryTest {
 		af.setCodeCategporie(1);
 		sirhPersistenceUnit.persist(af);
 
-		AvancementFonctionnaire result = repository.getAvancement(9005138, 2012, true);
+		AvancementFonctionnaire result = repository.getAvancement(9005138,
+				2012, true);
 
 		assertNull(result);
 	}
@@ -113,7 +117,8 @@ public class AvancementRepositoryTest {
 		af.setCodeCategporie(1);
 		sirhPersistenceUnit.persist(af);
 
-		AvancementFonctionnaire result = repository.getAvancement(9003138, 2010, true);
+		AvancementFonctionnaire result = repository.getAvancement(9003138,
+				2010, true);
 
 		assertNull(result);
 	}
@@ -141,7 +146,8 @@ public class AvancementRepositoryTest {
 		af.setCodeCategporie(10);
 		sirhPersistenceUnit.persist(af);
 
-		AvancementFonctionnaire result = repository.getAvancement(9005138, 2010, true);
+		AvancementFonctionnaire result = repository.getAvancement(9005138,
+				2010, true);
 
 		assertNull(result);
 	}
@@ -169,7 +175,8 @@ public class AvancementRepositoryTest {
 		af.setCodeCategporie(10);
 		sirhPersistenceUnit.persist(af);
 
-		AvancementFonctionnaire result = repository.getAvancement(9005138, 2010, false);
+		AvancementFonctionnaire result = repository.getAvancement(9005138,
+				2010, false);
 
 		assertEquals(1, result.getIdAvct().intValue());
 		assertEquals(result.getCodeCategporie(), 10);
@@ -198,7 +205,8 @@ public class AvancementRepositoryTest {
 		ad.setAgent(ag);
 		sirhPersistenceUnit.persist(ad);
 
-		AvancementDetache result = repository.getAvancementDetache(9005138, 2010);
+		AvancementDetache result = repository.getAvancementDetache(9005138,
+				2010);
 
 		assertEquals(1, result.getIdAvct().intValue());
 		assertEquals(2010, result.getAnneeAvancement());
@@ -226,7 +234,8 @@ public class AvancementRepositoryTest {
 		ad.setAgent(ag);
 		sirhPersistenceUnit.persist(ad);
 
-		AvancementDetache result = repository.getAvancementDetache(9005138, 2011);
+		AvancementDetache result = repository.getAvancementDetache(9005138,
+				2011);
 
 		assertNull(result);
 	}
@@ -253,7 +262,8 @@ public class AvancementRepositoryTest {
 		ad.setAgent(ag);
 		sirhPersistenceUnit.persist(ad);
 
-		AvancementDetache result = repository.getAvancementDetache(9005131, 2010);
+		AvancementDetache result = repository.getAvancementDetache(9005131,
+				2010);
 
 		assertNull(result);
 	}
@@ -281,6 +291,40 @@ public class AvancementRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		MotifAvct result = repository.getMotifAvct(2);
+
+		assertNull(result);
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDateAvancementsMinimaleAncienne_return1result() {
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		sirhPersistenceUnit.persist(ag);
+
+		AvisCap avisCapEmployeur = new AvisCap();
+		avisCapEmployeur.setIdAvisCap(1);
+		avisCapEmployeur.setLibLong("Minimum");
+		sirhPersistenceUnit.persist(avisCapEmployeur);
+
+		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setIdAvct(1525);
+		avct.setAgent(ag);
+		avct.setAvisCapEmployeur(avisCapEmployeur);
+		avct.setDateAvctMini(new DateTime(2014, 1, 1, 0, 0, 0).toDate());
+		sirhPersistenceUnit.persist(avct);
+
+		Date result = repository.getDateAvancementsMinimaleAncienne(9005138);
+
+		assertNotNull(result);
+		assertEquals(new DateTime(2014, 1, 1, 0, 0, 0).toDate(), result);
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDateAvancementsMinimaleAncienne_returnNull() {
+
+		Date result = repository.getDateAvancementsMinimaleAncienne(2);
 
 		assertNull(result);
 	}
