@@ -26,6 +26,7 @@ import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
+import nc.noumea.mairie.model.repository.sirh.AvancementRepository;
 import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
@@ -49,10 +50,13 @@ public class AvancementsServiceTest {
 		int idCadreEmploi = 99;
 
 		TypedQuery<Spgeng> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Spgeng>());
+		Mockito.when(mockQuery.getResultList()).thenReturn(
+				new ArrayList<Spgeng>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class)).thenReturn(mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi",
+						Spgeng.class)).thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
@@ -62,7 +66,8 @@ public class AvancementsServiceTest {
 
 		// Then
 		assertNull(result);
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCadreEmploi", idCadreEmploi);
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter(
+				"idCadreEmploi", idCadreEmploi);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,10 +81,13 @@ public class AvancementsServiceTest {
 		g2.setCdgeng("titi");
 
 		TypedQuery<Spgeng> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(g1, g2));
+		Mockito.when(mockQuery.getResultList()).thenReturn(
+				Arrays.asList(g1, g2));
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class)).thenReturn(mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi",
+						Spgeng.class)).thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
@@ -92,48 +100,76 @@ public class AvancementsServiceTest {
 		assertEquals("toto", result.get(0).getCdgeng());
 		assertEquals("titi", result.get(1).getCdgeng());
 
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCadreEmploi", idCadreEmploi);
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter(
+				"idCadreEmploi", idCadreEmploi);
 	}
 
 	@Test
 	public void testcreateCommissionCorps_2AD_fill2AD() {
 		// Given
+		Agent ag = new Agent();
+		ag.setIdAgent(1);
 		Cap cap = new Cap();
 		Spgeng corps = new Spgeng();
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
 		avct1.setIdModifAvancement(new Integer(7));
+		avct1.setAgent(ag);
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
 		avct2.setIdModifAvancement(new Integer(7));
+		avct2.setAgent(ag);
 		List<AvancementFonctionnaire> list = Arrays.asList(avct1, avct2);
 
+		AvancementRepository sirhRepo = Mockito
+				.mock(AvancementRepository.class);
+		Mockito.when(
+				sirhRepo.getDateAvancementsMinimaleAncienne(Mockito.anyInt()))
+				.thenReturn(null);
+
 		AvancementsService service = new AvancementsService();
+		ReflectionTestUtils.setField(service, "avancementRepository", sirhRepo);
 
 		// When
-		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false);
+		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap,
+				corps, list, false);
 
 		// Then
-		assertEquals(2, dto.getAvancementsDifferencies().getAvancementsItems().size());
+		assertEquals(2, dto.getAvancementsDifferencies().getAvancementsItems()
+				.size());
 		assertEquals(0, dto.getChangementClasses().getAvancementsItems().size());
 	}
 
 	@Test
 	public void testcreateCommissionCorps_2CC_fill2CC() {
 		// Given
+		Agent ag = new Agent();
+		ag.setIdAgent(1);
 		Cap cap = new Cap();
 		Spgeng corps = new Spgeng();
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
 		avct1.setIdModifAvancement(new Integer(4));
+		avct1.setAgent(ag);
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
 		avct2.setIdModifAvancement(new Integer(4));
+		avct2.setAgent(ag);
 		List<AvancementFonctionnaire> list = Arrays.asList(avct1, avct2);
 
+		AvancementRepository sirhEMMock = Mockito
+				.mock(AvancementRepository.class);
+		Mockito.when(
+				sirhEMMock.getDateAvancementsMinimaleAncienne(Mockito.anyInt()))
+				.thenReturn(null);
+
 		AvancementsService service = new AvancementsService();
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				sirhEMMock);
 
 		// When
-		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false);
+		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap,
+				corps, list, false);
 
 		// Then
-		assertEquals(0, dto.getAvancementsDifferencies().getAvancementsItems().size());
+		assertEquals(0, dto.getAvancementsDifferencies().getAvancementsItems()
+				.size());
 		assertEquals(2, dto.getChangementClasses().getAvancementsItems().size());
 	}
 
@@ -176,8 +212,10 @@ public class AvancementsServiceTest {
 		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(cap));
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
@@ -188,7 +226,8 @@ public class AvancementsServiceTest {
 		// Then
 		assertEquals(cap, result);
 
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
+		Mockito.verify(mockQuery, Mockito.times(1))
+				.setParameter("idCap", idCap);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -198,11 +237,14 @@ public class AvancementsServiceTest {
 		int idCap = 99;
 
 		TypedQuery<Cap> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Cap>());
+		Mockito.when(mockQuery.getResultList())
+				.thenReturn(new ArrayList<Cap>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
@@ -213,7 +255,8 @@ public class AvancementsServiceTest {
 		// Then
 		assertNull(result);
 
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
+		Mockito.verify(mockQuery, Mockito.times(1))
+				.setParameter("idCap", idCap);
 	}
 
 	@Test
@@ -223,22 +266,27 @@ public class AvancementsServiceTest {
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Cap> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Cap>());
+		Mockito.when(mockQuery.getResultList())
+				.thenReturn(new ArrayList<Cap>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(idCap, 0);
+		ReturnMessageDto result = service
+				.getAvancementsEaesForCapAndCadreEmploi(idCap, 0);
 
 		// Then
 		assertEquals(0, result.getInfos().size());
 
-		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idCap", idCap);
+		Mockito.verify(mockQuery, Mockito.times(1))
+				.setParameter("idCap", idCap);
 	}
 
 	@Test
@@ -247,17 +295,21 @@ public class AvancementsServiceTest {
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Cap> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Cap>());
+		Mockito.when(mockQuery.getResultList())
+				.thenReturn(new ArrayList<Cap>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
+		CommissionAvancementDto result = service
+				.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
 
 		// Then
 		assertEquals(0, result.getCommissionsParCorps().size());
@@ -293,25 +345,42 @@ public class AvancementsServiceTest {
 		TypedQuery<Spgeng> mockQuerySpgeng = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuerySpgeng.getResultList()).thenReturn(listeSpgeng);
 		@SuppressWarnings("unchecked")
-		TypedQuery<AvancementFonctionnaire> mockQueryAvancementFonctionnaire = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQueryAvancementFonctionnaire.getResultList()).thenReturn(listeAvctFonct);
+		TypedQuery<AvancementFonctionnaire> mockQueryAvancementFonctionnaire = Mockito
+				.mock(TypedQuery.class);
+		Mockito.when(mockQueryAvancementFonctionnaire.getResultList())
+				.thenReturn(listeAvctFonct);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
-		Mockito.when(sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class)).thenReturn(mockQuerySpgeng);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AvancementFonctionnaire.class)))
-				.thenReturn(mockQueryAvancementFonctionnaire);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi",
+						Spgeng.class)).thenReturn(mockQuerySpgeng);
+		Mockito.when(
+				sirhEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(AvancementFonctionnaire.class))).thenReturn(
+				mockQueryAvancementFonctionnaire);
+
+		AvancementRepository sirhRepo = Mockito
+				.mock(AvancementRepository.class);
+		Mockito.when(
+				sirhRepo.getDateAvancementsMinimaleAncienne(Mockito.anyInt()))
+				.thenReturn(null);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+		ReflectionTestUtils.setField(service, "avancementRepository", sirhRepo);
 
 		// When
-		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
+		CommissionAvancementDto result = service
+				.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
 
 		// Then
 		assertEquals(1, result.getCommissionsParCorps().size());
-		assertEquals(sp1.getCdgeng(), result.getCommissionsParCorps().get(0).getCorps());
+		assertEquals(sp1.getCdgeng(), result.getCommissionsParCorps().get(0)
+				.getCorps());
 	}
 
 	@Test
@@ -320,17 +389,21 @@ public class AvancementsServiceTest {
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Cap> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Cap>());
+		Mockito.when(mockQuery.getResultList())
+				.thenReturn(new ArrayList<Cap>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
+		ReturnMessageDto result = service
+				.getAvancementsEaesForCapAndCadreEmploi(1, 0);
 
 		// Then
 		assertEquals(0, result.getInfos().size());
@@ -368,23 +441,34 @@ public class AvancementsServiceTest {
 		Mockito.when(mockQueryIdAgent.getResultList()).thenReturn(listeIdAgent);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class)).thenReturn(
-				mockQuery);
-		Mockito.when(sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class)).thenReturn(mockQuerySpgeng);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Integer.class))).thenReturn(
-				mockQueryIdAgent);
+		Mockito.when(
+				sirhEMMock.createNamedQuery(
+						"getCapWithEmployeursAndRepresentants", Cap.class))
+				.thenReturn(mockQuery);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getSpgengFromCadreEmploi",
+						Spgeng.class)).thenReturn(mockQuerySpgeng);
+		Mockito.when(
+				sirhEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(Integer.class)))
+				.thenReturn(mockQueryIdAgent);
 
 		ReturnMessageDto dto = new ReturnMessageDto();
 		dto.getInfos().addAll(listIdGed);
-		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito.mock(ISirhEaeWSConsumer.class);
-		Mockito.when(sirhEaeWSConsumer.getEaesGedIdsForAgents(listeIdAgent, new DateTime().getYear())).thenReturn(dto);
+		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito
+				.mock(ISirhEaeWSConsumer.class);
+		Mockito.when(
+				sirhEaeWSConsumer.getEaesGedIdsForAgents(listeIdAgent,
+						new DateTime().getYear())).thenReturn(dto);
 
 		AvancementsService service = new AvancementsService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
-		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer", sirhEaeWSConsumer);
+		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer",
+				sirhEaeWSConsumer);
 
 		// When
-		ReturnMessageDto result = service.getAvancementsEaesForCapAndCadreEmploi(1, 0);
+		ReturnMessageDto result = service
+				.getAvancementsEaesForCapAndCadreEmploi(1, 0);
 
 		// Then
 		assertEquals(1, result.getInfos().size());
@@ -433,27 +517,44 @@ public class AvancementsServiceTest {
 		ReturnMessageDto dto1 = new ReturnMessageDto();
 		dto1.getInfos().add("1");
 
-		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito.mock(ISirhEaeWSConsumer.class);
+		ISirhEaeWSConsumer sirhEaeWSConsumer = Mockito
+				.mock(ISirhEaeWSConsumer.class);
 		Mockito.when(sirhEaeWSConsumer.getAvisSHDEae(1)).thenReturn(msg1);
 		Mockito.when(sirhEaeWSConsumer.getAvisSHDEae(2)).thenReturn(msg2);
-		Mockito.when(sirhEaeWSConsumer.getEaeCampagneOuverte()).thenReturn(campagne);
-		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005138, 2014)).thenReturn(dto1);
-		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005131, 2014)).thenReturn(dto2);
+		Mockito.when(sirhEaeWSConsumer.getEaeCampagneOuverte()).thenReturn(
+				campagne);
+		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005138, 2014))
+				.thenReturn(dto1);
+		Mockito.when(sirhEaeWSConsumer.findEaeByAgentAndYear(9005131, 2014))
+				.thenReturn(dto2);
+
+		AvancementRepository sirhEMMock = Mockito
+				.mock(AvancementRepository.class);
+		Mockito.when(
+				sirhEMMock.getDateAvancementsMinimaleAncienne(Mockito.anyInt()))
+				.thenReturn(null);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer", sirhEaeWSConsumer);
+		ReflectionTestUtils.setField(service, "sirhEaeWSConsumer",
+				sirhEaeWSConsumer);
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				sirhEMMock);
 
 		// When
-		CommissionAvancementCorpsDto result = service.createCommissionCorps(cap, sp1, listeAvctFonct, true);
+		CommissionAvancementCorpsDto result = service.createCommissionCorps(
+				cap, sp1, listeAvctFonct, true);
 
 		// Then
 		assertEquals(cap.getRefCap(), result.getChangementClasses().getCap());
-		assertEquals(cap.getRefCap(), result.getAvancementsDifferencies().getCap());
+		assertEquals(cap.getRefCap(), result.getAvancementsDifferencies()
+				.getCap());
 		assertEquals(1, result.getAvancementsDifferencies().getNbAgents());
 		assertEquals(1, result.getChangementClasses().getNbAgents());
-		assertEquals(1, result.getChangementClasses().getAvancementsItems().size());
+		assertEquals(1, result.getChangementClasses().getAvancementsItems()
+				.size());
 		assertEquals(1, result.getAvancementsDifferencies().getNbAgents());
-		assertEquals(1, result.getAvancementsDifferencies().getAvancementsItems().size());
+		assertEquals(1, result.getAvancementsDifferencies()
+				.getAvancementsItems().size());
 	}
 
 	@Test
@@ -531,27 +632,39 @@ public class AvancementsServiceTest {
 		TypedQuery<Spcarr> mockQuerySpcarr = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuerySpcarr.getSingleResult()).thenReturn(carr);
 		@SuppressWarnings("unchecked")
-		TypedQuery<AvancementFonctionnaire> mockQueryAvct = Mockito.mock(TypedQuery.class);
+		TypedQuery<AvancementFonctionnaire> mockQueryAvct = Mockito
+				.mock(TypedQuery.class);
 		Mockito.when(mockQueryAvct.getResultList()).thenReturn(listeAvctFonct);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Integer> mockQueryFDP = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQueryFDP.getResultList()).thenReturn(listId);
 		@SuppressWarnings("unchecked")
-		TypedQuery<FichePoste> mockQueryFDPFiche = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQueryFDPFiche.getResultList()).thenReturn(new ArrayList<FichePoste>());
+		TypedQuery<FichePoste> mockQueryFDPFiche = Mockito
+				.mock(TypedQuery.class);
+		Mockito.when(mockQueryFDPFiche.getResultList()).thenReturn(
+				new ArrayList<FichePoste>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AvancementFonctionnaire.class)))
-				.thenReturn(mockQueryAvct);
-		Mockito.when(sirhEMMock.createNamedQuery("getCurrentCarriere", Spcarr.class)).thenReturn(mockQuerySpcarr);
+		Mockito.when(
+				sirhEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(AvancementFonctionnaire.class))).thenReturn(
+				mockQueryAvct);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getCurrentCarriere", Spcarr.class))
+				.thenReturn(mockQuerySpcarr);
 
 		EntityManager sirhFDPEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhFDPEMMock.createNamedQuery("getCurrentAffectation", Integer.class)).thenReturn(mockQueryFDP);
-		Mockito.when(sirhFDPEMMock.createQuery(Mockito.anyString(), Mockito.eq(FichePoste.class))).thenReturn(
+		Mockito.when(
+				sirhFDPEMMock.createNamedQuery("getCurrentAffectation",
+						Integer.class)).thenReturn(mockQueryFDP);
+		Mockito.when(
+				sirhFDPEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(FichePoste.class))).thenReturn(
 				mockQueryFDPFiche);
 
 		FichePosteService fpMock = new FichePosteService();
-		ReflectionTestUtils.setField(fpMock, "sirhEntityManager", sirhFDPEMMock);
+		ReflectionTestUtils
+				.setField(fpMock, "sirhEntityManager", sirhFDPEMMock);
 		Mockito.when(fpMock.getFichePosteById(listId.get(0))).thenReturn(null);
 		Mockito.when(fpMock.getFichePosteById(listId.get(0))).thenReturn(null);
 
@@ -560,39 +673,48 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "fichePosteService", fpMock);
 
 		// When
-		ArreteListDto result = service.getArretesForUsers("9005138,9005131", false, 2013);
+		ArreteListDto result = service.getArretesForUsers("9005138,9005131",
+				false, 2013);
 
 		// Then
 		assertEquals(2, result.getArretes().size());
-		assertEquals("Madame Prenom 1 NOM 1", result.getArretes().get(0).getNomComplet());
-		assertEquals("de grade initial", result.getArretes().get(0).getGradeLabel());
-		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0).getAcc());
+		assertEquals("Madame Prenom 1 NOM 1", result.getArretes().get(0)
+				.getNomComplet());
+		assertEquals("de grade initial", result.getArretes().get(0)
+				.getGradeLabel());
+		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0)
+				.getAcc());
 		assertEquals(2013, result.getArretes().get(0).getAnnee());
 		assertEquals("REG", result.getArretes().get(0).getBaseReglement());
 		assertNull(result.getArretes().get(0).getDateArrete());
 		assertEquals("1er mars 2011", result.getArretes().get(0).getDateAvct());
 		assertNull(result.getArretes().get(0).getDateCap());
-		assertEquals("lib long avis employeur", result.getArretes().get(0).getDureeAvct());
+		assertEquals("lib long avis employeur", result.getArretes().get(0)
+				.getDureeAvct());
 		assertEquals("20", result.getArretes().get(0).getIna().toString());
 		assertEquals("iban", result.getArretes().get(0).getIb());
 		assertEquals("5138", result.getArretes().get(0).getMatriculeAgent());
 
-		assertEquals("Monsieur Prenom 2 NOM 2", result.getArretes().get(1).getNomComplet());
-		assertEquals("de grade initial", result.getArretes().get(1).getGradeLabel());
+		assertEquals("Monsieur Prenom 2 NOM 2", result.getArretes().get(1)
+				.getNomComplet());
+		assertEquals("de grade initial", result.getArretes().get(1)
+				.getGradeLabel());
 		assertEquals("1 mois, 2 jours ", result.getArretes().get(1).getAcc());
 		assertEquals(2014, result.getArretes().get(1).getAnnee());
 		assertEquals("REG", result.getArretes().get(1).getBaseReglement());
 		assertNull(result.getArretes().get(1).getDateArrete());
 		assertEquals("14 avril 2010", result.getArretes().get(1).getDateAvct());
 		assertNull(result.getArretes().get(1).getDateCap());
-		assertEquals("lib long avis employeur", result.getArretes().get(1).getDureeAvct());
+		assertEquals("lib long avis employeur", result.getArretes().get(1)
+				.getDureeAvct());
 		assertEquals("20", result.getArretes().get(1).getIna().toString());
 		assertEquals("iban", result.getArretes().get(1).getIb());
 		assertEquals("5131", result.getArretes().get(1).getMatriculeAgent());
 	}
 
 	@Test
-	public void getArretesDetachesForUsers_returnArreteListDto() throws ParseException {
+	public void getArretesDetachesForUsers_returnArreteListDto()
+			throws ParseException {
 		// Given
 		int idAgent1 = 9005138;
 		int idAgent2 = 9005131;
@@ -660,27 +782,39 @@ public class AvancementsServiceTest {
 		TypedQuery<Spcarr> mockQuerySpcarr = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuerySpcarr.getSingleResult()).thenReturn(carr);
 		@SuppressWarnings("unchecked")
-		TypedQuery<AvancementDetache> mockQueryAvct = Mockito.mock(TypedQuery.class);
+		TypedQuery<AvancementDetache> mockQueryAvct = Mockito
+				.mock(TypedQuery.class);
 		Mockito.when(mockQueryAvct.getResultList()).thenReturn(listeAvctDetach);
 		@SuppressWarnings("unchecked")
 		TypedQuery<Integer> mockQueryFDP = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQueryFDP.getResultList()).thenReturn(listId);
 		@SuppressWarnings("unchecked")
-		TypedQuery<FichePoste> mockQueryFDPFiche = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQueryFDPFiche.getResultList()).thenReturn(new ArrayList<FichePoste>());
+		TypedQuery<FichePoste> mockQueryFDPFiche = Mockito
+				.mock(TypedQuery.class);
+		Mockito.when(mockQueryFDPFiche.getResultList()).thenReturn(
+				new ArrayList<FichePoste>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AvancementDetache.class))).thenReturn(
+		Mockito.when(
+				sirhEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(AvancementDetache.class))).thenReturn(
 				mockQueryAvct);
-		Mockito.when(sirhEMMock.createNamedQuery("getCurrentCarriere", Spcarr.class)).thenReturn(mockQuerySpcarr);
+		Mockito.when(
+				sirhEMMock.createNamedQuery("getCurrentCarriere", Spcarr.class))
+				.thenReturn(mockQuerySpcarr);
 
 		EntityManager sirhFDPEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhFDPEMMock.createNamedQuery("getCurrentAffectation", Integer.class)).thenReturn(mockQueryFDP);
-		Mockito.when(sirhFDPEMMock.createQuery(Mockito.anyString(), Mockito.eq(FichePoste.class))).thenReturn(
+		Mockito.when(
+				sirhFDPEMMock.createNamedQuery("getCurrentAffectation",
+						Integer.class)).thenReturn(mockQueryFDP);
+		Mockito.when(
+				sirhFDPEMMock.createQuery(Mockito.anyString(),
+						Mockito.eq(FichePoste.class))).thenReturn(
 				mockQueryFDPFiche);
 
 		FichePosteService fpMock = new FichePosteService();
-		ReflectionTestUtils.setField(fpMock, "sirhEntityManager", sirhFDPEMMock);
+		ReflectionTestUtils
+				.setField(fpMock, "sirhEntityManager", sirhFDPEMMock);
 		Mockito.when(fpMock.getFichePosteById(listId.get(0))).thenReturn(null);
 		Mockito.when(fpMock.getFichePosteById(listId.get(0))).thenReturn(null);
 
@@ -689,13 +823,17 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "fichePosteService", fpMock);
 
 		// When
-		ArreteListDto result = service.getArretesDetachesForUsers("9005138,9005131", false, 2013);
+		ArreteListDto result = service.getArretesDetachesForUsers(
+				"9005138,9005131", false, 2013);
 
 		// Then
 		assertEquals(2, result.getArretes().size());
-		assertEquals("Madame Prenom 1 NOM 1", result.getArretes().get(0).getNomComplet());
-		assertEquals("de grade initial", result.getArretes().get(0).getGradeLabel());
-		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0).getAcc());
+		assertEquals("Madame Prenom 1 NOM 1", result.getArretes().get(0)
+				.getNomComplet());
+		assertEquals("de grade initial", result.getArretes().get(0)
+				.getGradeLabel());
+		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0)
+				.getAcc());
 		assertEquals(2013, result.getArretes().get(0).getAnnee());
 		assertEquals("REG", result.getArretes().get(0).getBaseReglement());
 		assertNull(result.getArretes().get(0).getDateArrete());
@@ -706,8 +844,10 @@ public class AvancementsServiceTest {
 		assertEquals("iban", result.getArretes().get(0).getIb());
 		assertEquals("5138", result.getArretes().get(0).getMatriculeAgent());
 
-		assertEquals("Monsieur Prenom 2 NOM 2", result.getArretes().get(1).getNomComplet());
-		assertEquals("de grade initial", result.getArretes().get(1).getGradeLabel());
+		assertEquals("Monsieur Prenom 2 NOM 2", result.getArretes().get(1)
+				.getNomComplet());
+		assertEquals("de grade initial", result.getArretes().get(1)
+				.getGradeLabel());
 		assertEquals("1 mois, 2 jours ", result.getArretes().get(1).getAcc());
 		assertEquals(2014, result.getArretes().get(1).getAnnee());
 		assertEquals("REG", result.getArretes().get(1).getBaseReglement());
@@ -756,13 +896,17 @@ public class AvancementsServiceTest {
 		af.setGradeNouveau(gradeNouveau);
 		af.setGrade(grade);
 
-		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
-		Mockito.when(avancementRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
-				.thenReturn(af);
-		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+		IAvancementRepository avancementRepository = Mockito
+				.mock(IAvancementRepository.class);
+		Mockito.when(
+				avancementRepository.getAvancement(Mockito.anyInt(),
+						Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(af);
+		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt()))
+				.thenReturn(motifAvct);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				avancementRepository);
 
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
 
@@ -789,12 +933,16 @@ public class AvancementsServiceTest {
 	@Test
 	public void getAvancement_returnNull() {
 
-		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
-		Mockito.when(avancementRepository.getAvancement(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean()))
-				.thenReturn(null);
+		IAvancementRepository avancementRepository = Mockito
+				.mock(IAvancementRepository.class);
+		Mockito.when(
+				avancementRepository.getAvancement(Mockito.anyInt(),
+						Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(
+				null);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				avancementRepository);
 
 		AvancementEaeDto result = service.getAvancement(1, 1, true);
 
@@ -838,12 +986,17 @@ public class AvancementsServiceTest {
 		af.setGradeNouveau(gradeNouveau);
 		af.setGrade(grade);
 
-		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
-		Mockito.when(avancementRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(af);
-		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt())).thenReturn(motifAvct);
+		IAvancementRepository avancementRepository = Mockito
+				.mock(IAvancementRepository.class);
+		Mockito.when(
+				avancementRepository.getAvancementDetache(Mockito.anyInt(),
+						Mockito.anyInt())).thenReturn(af);
+		Mockito.when(avancementRepository.getMotifAvct(Mockito.anyInt()))
+				.thenReturn(motifAvct);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				avancementRepository);
 
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
 
@@ -869,11 +1022,15 @@ public class AvancementsServiceTest {
 	@Test
 	public void getAvancementDetache_returnNull() {
 
-		IAvancementRepository avancementRepository = Mockito.mock(IAvancementRepository.class);
-		Mockito.when(avancementRepository.getAvancementDetache(Mockito.anyInt(), Mockito.anyInt())).thenReturn(null);
+		IAvancementRepository avancementRepository = Mockito
+				.mock(IAvancementRepository.class);
+		Mockito.when(
+				avancementRepository.getAvancementDetache(Mockito.anyInt(),
+						Mockito.anyInt())).thenReturn(null);
 
 		AvancementsService service = new AvancementsService();
-		ReflectionTestUtils.setField(service, "avancementRepository", avancementRepository);
+		ReflectionTestUtils.setField(service, "avancementRepository",
+				avancementRepository);
 
 		AvancementEaeDto result = service.getAvancementDetache(1, 1);
 

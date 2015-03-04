@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository.sirh;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,7 +22,8 @@ public class AvancementRepository implements IAvancementRepository {
 	private EntityManager sirhEntityManager;
 
 	@Override
-	public AvancementFonctionnaire getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire) {
+	public AvancementFonctionnaire getAvancement(Integer idAgent,
+			Integer anneeAvancement, boolean isFonctionnaire) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT avct FROM AvancementFonctionnaire avct ");
@@ -31,8 +33,8 @@ public class AvancementRepository implements IAvancementRepository {
 			sb.append(" AND (avct.codeCategporie = 1 or avct.codeCategporie = 2 or avct.codeCategporie = 18 or avct.codeCategporie = 20) ");
 		}
 
-		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(),
-				AvancementFonctionnaire.class);
+		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("anneeAvancement", anneeAvancement);
 		qA.setParameter("idAgent", idAgent);
 
@@ -44,7 +46,8 @@ public class AvancementRepository implements IAvancementRepository {
 	}
 
 	@Override
-	public AvancementDetache getAvancementDetache(Integer idAgent, Integer anneeAvancement) {
+	public AvancementDetache getAvancementDetache(Integer idAgent,
+			Integer anneeAvancement) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT avct, grade FROM AvancementDetache avct ");
@@ -79,7 +82,8 @@ public class AvancementRepository implements IAvancementRepository {
 		sb.append("select a from MotifAvct a ");
 		sb.append(" WHERE a.idMotifAvct = :idMotifAvct ");
 
-		Query query = sirhEntityManager.createQuery(sb.toString(), MotifAvct.class);
+		Query query = sirhEntityManager.createQuery(sb.toString(),
+				MotifAvct.class);
 		query.setParameter("idMotifAvct", idMotifAvct);
 
 		@SuppressWarnings("unchecked")
@@ -89,5 +93,26 @@ public class AvancementRepository implements IAvancementRepository {
 			return null;
 
 		return result.get(0);
+	}
+
+	@Override
+	public Date getDateAvancementsMinimaleAncienne(Integer idAgent) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("SELECT avct.dateAvctMini FROM AvancementFonctionnaire avct ");
+		sb.append("where avct.agent.idAgent = :idAgent ");
+		sb.append("and avct.avisCapEmployeur.idAvisCap = 1 ");
+		sb.append("and avct.anneeAvancement = (select max(avct2.anneeAvancement) FROM AvancementFonctionnaire avct2 where avct2.avisCapEmployeur.idAvisCap = 1) ");
+
+		TypedQuery<Date> qA = sirhEntityManager.createQuery(sb.toString(),
+				Date.class);
+		qA.setParameter("idAgent", idAgent);
+		try {
+			return qA.getSingleResult();
+		} catch (Exception e) {
+			// rien trouvé
+			return null;
+		}
 	}
 }

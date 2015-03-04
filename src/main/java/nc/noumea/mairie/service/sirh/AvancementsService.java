@@ -62,8 +62,8 @@ public class AvancementsService implements IAvancementsService {
 	private ISirhEaeWSConsumer sirhEaeWSConsumer;
 
 	@Override
-	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
-			boolean capVDN) {
+	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(
+			int idCap, int idCadreEmploi, boolean avisEAE, boolean capVDN) {
 
 		CommissionAvancementDto result = new CommissionAvancementDto();
 		Cap cap = getCap(idCap);
@@ -74,13 +74,15 @@ public class AvancementsService implements IAvancementsService {
 		List<Spgeng> corps = getCorpsForCadreEmploi(idCadreEmploi);
 
 		for (Spgeng corp : corps) {
-			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(),
-					corp.getCdgeng(), getStatutFromCap(cap), capVDN);
+			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(
+					getAnnee(), cap.getIdCap(), corp.getCdgeng(),
+					getStatutFromCap(cap), capVDN);
 
 			if (avcts.size() == 0)
 				continue;
 
-			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, avisEAE);
+			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap,
+					corp, avcts, avisEAE);
 			result.getCommissionsParCorps().add(comCorps);
 		}
 
@@ -88,7 +90,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public ReturnMessageDto getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi) {
+	public ReturnMessageDto getAvancementsEaesForCapAndCadreEmploi(int idCap,
+			int idCadreEmploi) {
 
 		ReturnMessageDto result = new ReturnMessageDto();
 		Cap cap = getCap(idCap);
@@ -100,19 +103,21 @@ public class AvancementsService implements IAvancementsService {
 		List<Integer> agentsIds = new ArrayList<Integer>();
 
 		for (Spgeng corp : corps) {
-			List<Integer> agents = getAgentsIdsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(),
-					getStatutFromCap(cap));
+			List<Integer> agents = getAgentsIdsForCommission(getAnnee(),
+					cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap));
 			agentsIds.addAll(agents);
 		}
 
-		result = sirhEaeWSConsumer.getEaesGedIdsForAgents(agentsIds, getAnnee());
+		result = sirhEaeWSConsumer
+				.getEaesGedIdsForAgents(agentsIds, getAnnee());
 
 		return result;
 	}
 
 	@Override
-	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps,
-			List<Integer> codesCategories, boolean capVDN) {
+	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee,
+			int idCap, String corps, List<Integer> codesCategories,
+			boolean capVDN) {
 
 		List<AvancementFonctionnaire> result = null;
 
@@ -133,8 +138,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and spgeng.cdgeng = :cdgeng ");
 		sb.append("order by avct.grade.gradeInitial desc , avct.agent.nomUsage asc ");
 
-		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(),
-				AvancementFonctionnaire.class);
+		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("codesCategories", codesCategories);
 		qA.setParameter("annee", annee);
 		qA.setParameter("idCap", idCap);
@@ -146,7 +151,8 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public List<Integer> getAgentsIdsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories) {
+	public List<Integer> getAgentsIdsForCommission(int annee, int idCap,
+			String corps, List<Integer> codesCategories) {
 
 		List<Integer> result = null;
 
@@ -162,7 +168,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("and ca.idCap = :idCap ");
 		sb.append("and spgeng.cdgeng = :cdgeng");
 
-		TypedQuery<Integer> qA = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		TypedQuery<Integer> qA = sirhEntityManager.createQuery(sb.toString(),
+				Integer.class);
 		qA.setParameter("codesCategories", codesCategories);
 		qA.setParameter("annee", annee);
 		qA.setParameter("idCap", idCap);
@@ -178,7 +185,8 @@ public class AvancementsService implements IAvancementsService {
 
 		List<Spgeng> result = null;
 
-		TypedQuery<Spgeng> qCorps = sirhEntityManager.createNamedQuery("getSpgengFromCadreEmploi", Spgeng.class);
+		TypedQuery<Spgeng> qCorps = sirhEntityManager.createNamedQuery(
+				"getSpgengFromCadreEmploi", Spgeng.class);
 		qCorps.setParameter("idCadreEmploi", idCadreEmploi);
 		result = qCorps.getResultList();
 
@@ -188,60 +196,75 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng,
-			List<AvancementFonctionnaire> avancements, boolean avisEae) {
+	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap,
+			Spgeng spgeng, List<AvancementFonctionnaire> avancements,
+			boolean avisEae) {
 
-		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(spgeng);
-		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng, getAnnee()));
+		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(
+				spgeng);
+		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng,
+				getAnnee()));
 		result.setChangementClasses(new AvancementsDto(cap, spgeng, getAnnee()));
 
 		for (AvancementFonctionnaire avct : avancements) {
 			Integer valeurAvisEAE = null;
 			if (avisEae) {
-				CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
+				CampagneEaeDto campagneEnCours = sirhEaeWSConsumer
+						.getEaeCampagneOuverte();
 
-				ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(),
-						campagneEnCours.getAnnee());
+				ReturnMessageDto eaeAgent = sirhEaeWSConsumer
+						.findEaeByAgentAndYear(avct.getAgent().getIdAgent(),
+								campagneEnCours.getAnnee());
 				try {
-					String avisSHD = sirhEaeWSConsumer.getAvisSHDEae(Integer.valueOf(eaeAgent.getInfos().get(0)))
+					String avisSHD = sirhEaeWSConsumer
+							.getAvisSHDEae(
+									Integer.valueOf(eaeAgent.getInfos().get(0)))
 							.getInfos().get(0);
 					switch (avisSHD) {
-						case "Durée minimale":
-							valeurAvisEAE = 1;
-							break;
-						case "Durée moyenne":
-							valeurAvisEAE = 2;
-							break;
-						case "Durée maximale":
-							valeurAvisEAE = 3;
-							break;
-						case "Favorable":
-							valeurAvisEAE = 4;
-							break;
-						case "Défavorable":
-							valeurAvisEAE = 5;
-							break;
+					case "Durée minimale":
+						valeurAvisEAE = 1;
+						break;
+					case "Durée moyenne":
+						valeurAvisEAE = 2;
+						break;
+					case "Durée maximale":
+						valeurAvisEAE = 3;
+						break;
+					case "Favorable":
+						valeurAvisEAE = 4;
+						break;
+					case "Défavorable":
+						valeurAvisEAE = 5;
+						break;
 					}
 				} catch (Exception e) {
 					// aucune evaluation trouvé
 				}
 			}
 
-			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae, valeurAvisEAE);
+			// redmine #19991 : on cherche le derniere avancement minimale
+
+			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae,
+					valeurAvisEAE,
+					avancementRepository
+							.getDateAvancementsMinimaleAncienne(avct.getAgent()
+									.getIdAgent()));
 
 			switch (avct.getIdModifAvancement()) {
 
-				case 7:
-					result.getAvancementsDifferencies().getAvancementsItems().add(aItem);
-					break;
+			case 7:
+				result.getAvancementsDifferencies().getAvancementsItems()
+						.add(aItem);
+				break;
 
-				case 6:
-					result.getAvancementsDifferencies().getAvancementsItems().add(aItem);
-					break;
+			case 6:
+				result.getAvancementsDifferencies().getAvancementsItems()
+						.add(aItem);
+				break;
 
-				case 4:
-					result.getChangementClasses().getAvancementsItems().add(aItem);
-					break;
+			case 4:
+				result.getChangementClasses().getAvancementsItems().add(aItem);
+				break;
 			}
 		}
 		result.getAvancementsDifferencies().updateNbAgents();
@@ -261,7 +284,8 @@ public class AvancementsService implements IAvancementsService {
 	@Override
 	public Cap getCap(int idCap) {
 
-		TypedQuery<Cap> qCap = sirhEntityManager.createNamedQuery("getCapWithEmployeursAndRepresentants", Cap.class);
+		TypedQuery<Cap> qCap = sirhEntityManager.createNamedQuery(
+				"getCapWithEmployeursAndRepresentants", Cap.class);
 		qCap.setParameter("idCap", idCap);
 		List<Cap> qR = qCap.getResultList();
 
@@ -272,8 +296,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public ArreteListDto getArretesForUsers(String csvIdAgents, boolean isChangmentClasse, int year)
-			throws ParseException {
+	public ArreteListDto getArretesForUsers(String csvIdAgents,
+			boolean isChangmentClasse, int year) throws ParseException {
 
 		logger.debug("Entrée fonction getArretesForUsers");
 		List<Integer> agentIds = new ArrayList<Integer>();
@@ -283,37 +307,52 @@ public class AvancementsService implements IAvancementsService {
 		}
 
 		// requete
-		List<AvancementFonctionnaire> avcts = getAvancementsForArretes(agentIds, year);
+		List<AvancementFonctionnaire> avcts = getAvancementsForArretes(
+				agentIds, year);
 
 		ArreteListDto arretes = new ArreteListDto();
 
 		for (AvancementFonctionnaire avct : avcts) {
 
-			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
-					.getIdAgent(), new DateTime().toDate());
+			Integer fpId = fichePosteService
+					.getIdFichePostePrimaireAgentAffectationEnCours(avct
+							.getAgent().getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
-					: avct.getGradeNouveau().getClasse();
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+			Spclas classeGrade = avct.getGradeNouveau() == null
+					|| avct.getGradeNouveau().getClasse() == null ? null : avct
+					.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null
+					|| avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
 			if (fp != null) {
-				fp.getService().setDirection(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getLiServ());
-				fp.getService().setDirectionSigle(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getSigle());
+				fp.getService()
+						.setDirection(
+								siservSrv.getDirection(fp.getService()
+										.getServi()) == null ? "" : siservSrv
+										.getDirection(
+												fp.getService().getServi())
+										.getLiServ());
+				fp.getService()
+						.setDirectionSigle(
+								siservSrv.getDirection(fp.getService()
+										.getServi()) == null ? "" : siservSrv
+										.getDirection(
+												fp.getService().getServi())
+										.getSigle());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
-			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
+			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime()
+					.toDate()));
+			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery(
+					"getCurrentCarriere", Spcarr.class);
 			qCarr.setParameter("nomatr", avct.getAgent().getNomatr());
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade,
+					echelonGrade);
 			arretes.getArretes().add(dto);
 		}
 
@@ -321,7 +360,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<AvancementFonctionnaire> getAvancementsForArretes(List<Integer> agentIds, int year) {
+	public List<AvancementFonctionnaire> getAvancementsForArretes(
+			List<Integer> agentIds, int year) {
 
 		List<AvancementFonctionnaire> result = null;
 		StringBuilder sb = new StringBuilder();
@@ -335,14 +375,15 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("where avct.anneeAvancement = :year ");
 		sb.append("and ag.idAgent IN (:agentIds) ");
 
-		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(sb.toString(),
-				AvancementFonctionnaire.class);
+		TypedQuery<AvancementFonctionnaire> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementFonctionnaire.class);
 		qA.setParameter("agentIds", agentIds);
 		qA.setParameter("year", year);
 
 		result = qA.getResultList();
 
-		logger.debug("Entrée requete getAvancementsForArretes size ={}", result.size());
+		logger.debug("Entrée requete getAvancementsForArretes size ={}",
+				result.size());
 
 		return result;
 	}
@@ -352,8 +393,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public ArreteListDto getArretesDetachesForUsers(String csvIdAgents, boolean isChangementClasse, int year)
-			throws ParseException {
+	public ArreteListDto getArretesDetachesForUsers(String csvIdAgents,
+			boolean isChangementClasse, int year) throws ParseException {
 
 		List<Integer> agentIds = new ArrayList<Integer>();
 
@@ -362,37 +403,52 @@ public class AvancementsService implements IAvancementsService {
 		}
 
 		// requete
-		List<AvancementDetache> avcts = getAvancementsDetacheForArretes(agentIds, year);
+		List<AvancementDetache> avcts = getAvancementsDetacheForArretes(
+				agentIds, year);
 
 		ArreteListDto arretes = new ArreteListDto();
 
 		for (AvancementDetache avct : avcts) {
 
-			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent()
-					.getIdAgent(), new DateTime().toDate());
+			Integer fpId = fichePosteService
+					.getIdFichePostePrimaireAgentAffectationEnCours(avct
+							.getAgent().getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
-					: avct.getGradeNouveau().getClasse();
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+			Spclas classeGrade = avct.getGradeNouveau() == null
+					|| avct.getGradeNouveau().getClasse() == null ? null : avct
+					.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null
+					|| avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
 
 			if (fp != null) {
-				fp.getService().setDirection(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getLiServ());
-				fp.getService().setDirectionSigle(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getSigle());
+				fp.getService()
+						.setDirection(
+								siservSrv.getDirection(fp.getService()
+										.getServi()) == null ? "" : siservSrv
+										.getDirection(
+												fp.getService().getServi())
+										.getLiServ());
+				fp.getService()
+						.setDirectionSigle(
+								siservSrv.getDirection(fp.getService()
+										.getServi()) == null ? "" : siservSrv
+										.getDirection(
+												fp.getService().getServi())
+										.getSigle());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime().toDate()));
-			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery("getCurrentCarriere", Spcarr.class);
+			int dateFormatMairie = Integer.valueOf(sdf.format(new DateTime()
+					.toDate()));
+			TypedQuery<Spcarr> qCarr = sirhEntityManager.createNamedQuery(
+					"getCurrentCarriere", Spcarr.class);
 			qCarr.setParameter("nomatr", avct.getAgent().getNomatr());
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade,
+					echelonGrade);
 			arretes.getArretes().add(dto);
 		}
 
@@ -400,7 +456,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<AvancementDetache> getAvancementsDetacheForArretes(List<Integer> agentIds, int year) {
+	public List<AvancementDetache> getAvancementsDetacheForArretes(
+			List<Integer> agentIds, int year) {
 
 		List<AvancementDetache> result = null;
 		StringBuilder sb = new StringBuilder();
@@ -413,7 +470,8 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("where avct.anneeAvancement = :year ");
 		sb.append("and ag.idAgent IN (:agentIds) ");
 
-		TypedQuery<AvancementDetache> qA = sirhEntityManager.createQuery(sb.toString(), AvancementDetache.class);
+		TypedQuery<AvancementDetache> qA = sirhEntityManager.createQuery(
+				sb.toString(), AvancementDetache.class);
 		qA.setParameter("agentIds", agentIds);
 		qA.setParameter("year", year);
 
@@ -423,17 +481,22 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public AvancementEaeDto getAvancement(Integer idAgent, Integer anneeAvancement, boolean isFonctionnaire) {
+	public AvancementEaeDto getAvancement(Integer idAgent,
+			Integer anneeAvancement, boolean isFonctionnaire) {
 
-		AvancementFonctionnaire avct = avancementRepository.getAvancement(idAgent, anneeAvancement, isFonctionnaire);
+		AvancementFonctionnaire avct = avancementRepository.getAvancement(
+				idAgent, anneeAvancement, isFonctionnaire);
 
 		if (null == avct)
 			return null;
 
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
+		if (null != dto.getGrade() && null != avct.getGrade()
+				&& null != avct.getGrade().getCdTava()
 				&& !"".equals(avct.getGrade().getCdTava().trim())) {
-			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			MotifAvct motifAvct = avancementRepository
+					.getMotifAvct(new Integer(avct.getGrade().getCdTava()
+							.trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
@@ -442,17 +505,22 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public AvancementEaeDto getAvancementDetache(Integer idAgent, Integer anneeAvancement) {
+	public AvancementEaeDto getAvancementDetache(Integer idAgent,
+			Integer anneeAvancement) {
 
-		AvancementDetache avct = avancementRepository.getAvancementDetache(idAgent, anneeAvancement);
+		AvancementDetache avct = avancementRepository.getAvancementDetache(
+				idAgent, anneeAvancement);
 
 		if (null == avct)
 			return null;
 
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
+		if (null != dto.getGrade() && null != avct.getGrade()
+				&& null != avct.getGrade().getCdTava()
 				&& !"".equals(avct.getGrade().getCdTava().trim())) {
-			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
+			MotifAvct motifAvct = avancementRepository
+					.getMotifAvct(new Integer(avct.getGrade().getCdTava()
+							.trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
 			}
