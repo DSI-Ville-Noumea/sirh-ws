@@ -12,6 +12,7 @@ public class AvancementItemDto {
 	private String nom;
 	private String prenom;
 	private String grade;
+	private Date dateAncienAvancementMinimale;
 	private Date datePrevisionnelleAvancement;
 	private String classement;
 
@@ -24,7 +25,7 @@ public class AvancementItemDto {
 
 	}
 
-	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE, Integer valeurAvisEAE) {
+	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE, Integer valeurAvisEAE, Date dateAncienAvancementMinimale) {
 
 		if (avct.getAgent() != null) {
 			this.nom = avct.getAgent().getDisplayNom();
@@ -33,6 +34,8 @@ public class AvancementItemDto {
 
 		if (avct.getGrade() != null)
 			this.grade = avct.getGrade().getGradeInitial().trim();
+		
+		this.dateAncienAvancementMinimale = dateAncienAvancementMinimale;
 
 		this.datePrevisionnelleAvancement = avct.getDateAvctMoy();
 		this.classement = avct.getOrdreMerite();
@@ -150,5 +153,12 @@ public class AvancementItemDto {
 
 	public void setDureeMax(boolean dureeMax) {
 		this.dureeMax = dureeMax;
+	}
+	public Date getDateAncienAvancementMinimale() {
+		return dateAncienAvancementMinimale;
+	}
+
+	public void setDateAncienAvancementMinimale(Date dateAncienAvancementMinimale) {
+		this.dateAncienAvancementMinimale = dateAncienAvancementMinimale;
 	}
 }
