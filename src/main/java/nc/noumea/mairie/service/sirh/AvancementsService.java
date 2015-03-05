@@ -243,7 +243,6 @@ public class AvancementsService implements IAvancementsService {
 			}
 
 			// redmine #19991 : on cherche le derniere avancement minimale
-
 			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae,
 					valeurAvisEAE,
 					avancementRepository
