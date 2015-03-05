@@ -103,7 +103,7 @@ public class AvancementRepository implements IAvancementRepository {
 		sb.append("SELECT avct.dateAvctMini FROM AvancementFonctionnaire avct ");
 		sb.append("where avct.agent.idAgent = :idAgent ");
 		sb.append("and avct.avisCapEmployeur.idAvisCap = 1 ");
-		sb.append("and avct.anneeAvancement = (select max(avct2.anneeAvancement) FROM AvancementFonctionnaire avct2 where avct2.avisCapEmployeur.idAvisCap = 1) ");
+		sb.append("and avct.anneeAvancement = (select max(avct2.anneeAvancement) FROM AvancementFonctionnaire avct2 where avct2.avisCapEmployeur.idAvisCap = 1 and avct2.agent.idAgent = :idAgent ) ");
 
 		TypedQuery<Date> qA = sirhEntityManager.createQuery(sb.toString(),
 				Date.class);
