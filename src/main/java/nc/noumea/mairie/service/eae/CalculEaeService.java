@@ -356,7 +356,9 @@ public class CalculEaeService implements ICalculEaeService {
 
 		Spgradn gradeActuel = carr.getGrade();
 		// Si pas de grade suivant, agent non éligible
-		if (gradeActuel.getGradeSuivant() != null) {
+		if (gradeActuel.getGradeSuivant() != null
+				&& null != gradeActuel.getGradeSuivant().getCdgrad()
+				&& !"".equals(gradeActuel.getGradeSuivant().getCdgrad().trim())) {
 
 			if ((carr.getCategorie().getCodeCategorie().toString().equals("2") || carr.getCategorie()
 					.getCodeCategorie().toString().equals("18"))

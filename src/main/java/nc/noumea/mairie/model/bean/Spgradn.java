@@ -69,6 +69,7 @@ public class Spgradn {
 	private String bm;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(name = "CDSUIV", referencedColumnName = "CDGRAD")
 	private Spgradn gradeSuivant;
 
