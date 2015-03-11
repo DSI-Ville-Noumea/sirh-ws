@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 
 import org.springframework.stereotype.Repository;
@@ -39,5 +41,28 @@ public class FichePosteRepository implements IFichePosteRepository {
 		}
 
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TitrePoste> getListeTitrePosteChefService() {
+		String sql = "select t.* from TitrePoste t where t.libTitrePoste like :lib";
+
+		Query query = sirhEntityManager.createNativeQuery(sql, TitrePoste.class);
+		query.setParameter("lib", "%CHEF%SERVICE%");
+
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TitrePoste> getListeTitrePosteDirecteur() {
+		String sql = "select t.* from TitrePoste t where t.libTitrePoste like :lib or t.libTitrePoste like :lib2";
+
+		Query query = sirhEntityManager.createNativeQuery(sql, TitrePoste.class);
+		query.setParameter("lib", "%DIRECTEUR%");
+		query.setParameter("lib2", "%DIRECTRICE%");
+
+		return query.getResultList();
 	}
 }
