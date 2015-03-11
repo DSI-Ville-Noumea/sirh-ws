@@ -11,7 +11,5 @@ public interface IAffectationService {
 
 	public Affectation getAffectationActiveByIdAgent(Integer idAgent);
 
-	public List<Integer> getListChefsService();
-
 	public EasyVistaDto getChefServiceAgent(Affectation aff, EasyVistaDto result);
 }
