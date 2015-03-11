@@ -66,11 +66,10 @@ public class AffectationService implements IAffectationService {
 		return res;
 	}
 
-	@Override
 	public List<Integer> getListChefsService() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("select a.agent.nomatr from Affectation a ");
+		sb.append("select a.agent.idAgent from Affectation a ");
 		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
 		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib");
 		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
@@ -84,24 +83,20 @@ public class AffectationService implements IAffectationService {
 	public EasyVistaDto getChefServiceAgent(Affectation aff, EasyVistaDto result) {
 
 		// si l'agent est chef de service alors on retourne lui-meme
-		List<TitrePoste> titrePosteChefService = fdpRepo.getListeTitrePosteChefService();
-		if (aff.getFichePoste().getTitrePoste() != null
-				&& titrePosteChefService.contains(aff.getFichePoste().getTitrePoste())) {
+		List<Integer> agentChefServiceId = getListChefsService();
+		if (agentChefServiceId.contains(aff.getAgent().getIdAgent())) {
 			result.setNomatrChef(aff.getAgent().getNomatr());
 			return result;
 		}
 
 		// si l'agent est directeur alors on retourne lui-meme
-		List<TitrePoste> titrePosteDirecteur = fdpRepo.getListeTitrePosteDirecteur();
-		if (aff.getFichePoste().getTitrePoste() != null
-				&& titrePosteDirecteur.contains(aff.getFichePoste().getTitrePoste())) {
+		List<Integer> agentDirecteurId = getListDirecteur();
+		if (agentDirecteurId.contains(aff.getAgent().getIdAgent())) {
 			result.setNomatrChef(aff.getAgent().getNomatr());
 			return result;
 		}
 
 		// si autre agent alors on cherche son chef de service
-		// on cherche tous les chefs de service
-		List<Integer> agentChefServiceId = getListChefsService();
 		List<Integer> agentIds = fpSrv.getListShdAgents(aff.getAgent().getIdAgent(), 6);
 		for (Integer idAgent : agentIds) {
 			if (agentChefServiceId.contains(idAgent)) {
@@ -111,5 +106,19 @@ public class AffectationService implements IAffectationService {
 			}
 		}
 		return result;
+	}
+
+	private List<Integer> getListDirecteur() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.agent.idAgent from Affectation a ");
+		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
+		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib or a.fichePoste.titrePoste.libTitrePoste like :lib2");
+		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		query.setParameter("today", new Date());
+		query.setParameter("lib", "%DIRECTEUR%");
+		query.setParameter("lib2", "%DIRECTRICE%");
+
+		return query.getResultList();
 	}
 }
