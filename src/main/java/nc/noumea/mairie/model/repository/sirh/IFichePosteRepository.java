@@ -10,8 +10,4 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 public interface IFichePosteRepository {
 
 	Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today);
-
-	List<TitrePoste> getListeTitrePosteChefService();
-
-	List<TitrePoste> getListeTitrePosteDirecteur();
 }
