@@ -33,4 +33,26 @@ public class TitrePoste {
 	public void setLibTitrePoste(String libTitrePoste) {
 		this.libTitrePoste = libTitrePoste;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TitrePoste other = (TitrePoste) obj;
+		if (idTitrePoste == null) {
+			if (other.idTitrePoste != null)
+				return false;
+		} else if (!idTitrePoste.equals(other.idTitrePoste))
+			return false;
+		if (libTitrePoste == null) {
+			if (other.libTitrePoste != null)
+				return false;
+		} else if (!libTitrePoste.equals(other.libTitrePoste))
+			return false;
+		return true;
+	}
 }
