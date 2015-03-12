@@ -75,28 +75,56 @@ public class AffectationRepository implements IAffectationRepository {
 
 		return query.getResultList();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Affectation> getListeAffectationsAgentByPeriode(Integer idAgent, Date dateDebut, Date dateFin) {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select a from Affectation a "
-				+ "where a.agent.idAgent = :idAgent ");
-		if(null != dateFin) {
+		sb.append("select a from Affectation a " + "where a.agent.idAgent = :idAgent ");
+		if (null != dateFin) {
 			sb.append("and a.dateDebutAff <= :dateFin ");
 		}
 		sb.append("and (a.dateFinAff is null or a.dateFinAff >= :dateDebut) ");
-		
+
 		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateDebut", dateDebut);
-		if(null != dateFin) {
+		if (null != dateFin) {
 			query.setParameter("dateFin", dateFin);
 		}
 
 		return query.getResultList();
 	}
-	
+
+	@Override
+	public List<Integer> getListChefsService() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.agent.idAgent from Affectation a ");
+		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
+		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib");
+		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		query.setParameter("today", new Date());
+		query.setParameter("lib", "%CHEF%SERVICE%");
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Integer> getListDirecteur() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.agent.idAgent from Affectation a ");
+		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
+		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib or a.fichePoste.titrePoste.libTitrePoste like :lib2");
+		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		query.setParameter("today", new Date());
+		query.setParameter("lib", "%DIRECTEUR%");
+		query.setParameter("lib2", "%DIRECTRICE%");
+
+		return query.getResultList();
+	}
+
 }
