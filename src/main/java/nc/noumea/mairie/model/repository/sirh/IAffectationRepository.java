@@ -15,4 +15,8 @@ public interface IAffectationRepository {
 
 	List<Affectation> getListeAffectationsAgentByPeriode(Integer idAgent,
 			Date dateDebut, Date dateFin);
+
+	List<Integer> getListChefsService();
+
+	List<Integer> getListDirecteur();
 }

@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
-import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.ws.dto.EasyVistaDto;
 
@@ -24,6 +24,9 @@ public class AffectationService implements IAffectationService {
 
 	@Autowired
 	private IFichePosteRepository fdpRepo;
+
+	@Autowired
+	private IAffectationRepository affRepo;
 
 	@Autowired
 	private IFichePosteService fpSrv;
@@ -66,31 +69,18 @@ public class AffectationService implements IAffectationService {
 		return res;
 	}
 
-	public List<Integer> getListChefsService() {
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("select a.agent.idAgent from Affectation a ");
-		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
-		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib");
-		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
-		query.setParameter("today", new Date());
-		query.setParameter("lib", "%CHEF%SERVICE%");
-
-		return query.getResultList();
-	}
-
 	@Override
 	public EasyVistaDto getChefServiceAgent(Affectation aff, EasyVistaDto result) {
 
 		// si l'agent est chef de service alors on retourne lui-meme
-		List<Integer> agentChefServiceId = getListChefsService();
+		List<Integer> agentChefServiceId = affRepo.getListChefsService();
 		if (agentChefServiceId.contains(aff.getAgent().getIdAgent())) {
 			result.setNomatrChef(aff.getAgent().getNomatr());
 			return result;
 		}
 
 		// si l'agent est directeur alors on retourne lui-meme
-		List<Integer> agentDirecteurId = getListDirecteur();
+		List<Integer> agentDirecteurId = affRepo.getListDirecteur();
 		if (agentDirecteurId.contains(aff.getAgent().getIdAgent())) {
 			result.setNomatrChef(aff.getAgent().getNomatr());
 			return result;
@@ -105,20 +95,9 @@ public class AffectationService implements IAffectationService {
 				return result;
 			}
 		}
+		if (result.getNomatrChef() == null) {
+			result.getErrors().add("Aucun chef de service trouvé.");
+		}
 		return result;
-	}
-
-	private List<Integer> getListDirecteur() {
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("select a.agent.idAgent from Affectation a ");
-		sb.append("where a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today) ");
-		sb.append("and a.fichePoste.titrePoste.libTitrePoste like :lib or a.fichePoste.titrePoste.libTitrePoste like :lib2");
-		TypedQuery<Integer> query = sirhEntityManager.createQuery(sb.toString(), Integer.class);
-		query.setParameter("today", new Date());
-		query.setParameter("lib", "%DIRECTEUR%");
-		query.setParameter("lib2", "%DIRECTRICE%");
-
-		return query.getResultList();
 	}
 }
