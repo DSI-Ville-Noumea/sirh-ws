@@ -28,7 +28,7 @@ public class SpprimId implements Serializable {
 	public Integer nomatr;
 
 	@NotNull
-	@Column(name = "NORUBR", columnDefinition = "char")
+	@Column(name = "NORUBR", columnDefinition = "numeric")
 	public Integer norubr;
 
 	@Column(name = "DATDEB", columnDefinition = "numeric")
