@@ -50,20 +50,20 @@ public class EasyVistaController {
 		Agent ag = agentSrv.getAgent(newIdAgent);
 		if (ag == null) {
 			result.getErrors().add("L'agent ne fait pas parti du système d'information.");
-			return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
+			return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 		}
 
 		// on cherche si l'agent a une affectation active
 		Affectation aff = affectationSrv.getAffectationActiveByIdAgent(newIdAgent);
 		if (aff == null) {
 			result.getErrors().add("L'agent n'a pas d'affectation active.");
-			return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
+			return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 		}
 
 		// on traite le cas
 		result = primeSrv.getChefServiceAgent(aff, result);
 
-		return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 	}
 
 	private Integer getIdAgentWithNomatr(Integer nomatr) {
