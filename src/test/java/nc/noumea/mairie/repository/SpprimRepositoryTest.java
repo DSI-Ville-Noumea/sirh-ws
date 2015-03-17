@@ -39,7 +39,7 @@ public class SpprimRepositoryTest {
 		Spprim prime = new Spprim();
 		prime.setId(id);
 		prime.setDatfin(0);
-		prime.setMontantPrime(48);
+		prime.setMontantPrime(48.0);
 		sirhPersistenceUnit.persist(prime);
 
 		List<Integer> result = repository.getListChefsService();
@@ -59,7 +59,7 @@ public class SpprimRepositoryTest {
 		Spprim prime = new Spprim();
 		prime.setId(id);
 		prime.setDatfin(20140525);
-		prime.setMontantPrime(48);
+		prime.setMontantPrime(48.0);
 		sirhPersistenceUnit.persist(prime);
 
 		List<Integer> result = repository.getListChefsService();
@@ -78,7 +78,7 @@ public class SpprimRepositoryTest {
 		Spprim prime = new Spprim();
 		prime.setId(id);
 		prime.setDatfin(0);
-		prime.setMontantPrime(88);
+		prime.setMontantPrime(88.0);
 		sirhPersistenceUnit.persist(prime);
 
 		List<Integer> result = repository.getListDirecteur();
@@ -98,7 +98,7 @@ public class SpprimRepositoryTest {
 		Spprim prime = new Spprim();
 		prime.setId(id);
 		prime.setDatfin(20140606);
-		prime.setMontantPrime(88);
+		prime.setMontantPrime(88.0);
 		sirhPersistenceUnit.persist(prime);
 
 		List<Integer> result = repository.getListDirecteur();

@@ -21,8 +21,8 @@ public class Spprim {
 	public Integer datfin;
 
 	@NotNull
-	@Column(name = "MTPRI", columnDefinition = "numeric")
-	public Integer montantPrime;
+	@Column(name = "MTPRI", columnDefinition = "decimal")
+	public double montantPrime;
 
 	public SpprimId getId() {
 		return id;
@@ -40,11 +40,11 @@ public class Spprim {
 		this.datfin = datfin;
 	}
 
-	public Integer getMontantPrime() {
+	public double getMontantPrime() {
 		return montantPrime;
 	}
 
-	public void setMontantPrime(Integer montantPrime) {
+	public void setMontantPrime(double montantPrime) {
 		this.montantPrime = montantPrime;
 	}
 

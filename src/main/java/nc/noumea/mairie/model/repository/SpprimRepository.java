@@ -28,7 +28,7 @@ public class SpprimRepository implements ISpprimRepository {
 
 		TypedQuery<Spprim> q = sirhEntityManager.createQuery(sb.toString(), Spprim.class);
 		q.setParameter("norubr", 7079);
-		q.setParameter("montantPrime", 48);
+		q.setParameter("montantPrime", 48.0);
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		q.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
@@ -50,7 +50,7 @@ public class SpprimRepository implements ISpprimRepository {
 
 		TypedQuery<Spprim> q = sirhEntityManager.createQuery(sb.toString(), Spprim.class);
 		q.setParameter("norubr", 7079);
-		q.setParameter("montantPrime", 88);
+		q.setParameter("montantPrime", 88.0);
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		q.setParameter("dateJourMairie", Integer.valueOf(sdfMairie.format(new Date())));
