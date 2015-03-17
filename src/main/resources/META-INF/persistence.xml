@@ -85,6 +85,7 @@
 		<class>nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AccueilRh</class> 
 		<class>nc.noumea.mairie.model.bean.Spposa</class>
+		<class>nc.noumea.mairie.model.bean.Spprim</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

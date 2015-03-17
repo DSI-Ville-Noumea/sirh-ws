@@ -2,6 +2,7 @@ package nc.noumea.mairie.web.controller;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.service.ISpprimService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.ws.dto.EasyVistaDto;
@@ -25,6 +26,9 @@ public class EasyVistaController {
 	private IAgentService agentSrv;
 
 	@Autowired
+	private ISpprimService primeSrv;
+
+	@Autowired
 	private IAffectationService affectationSrv;
 
 	/**
@@ -33,10 +37,10 @@ public class EasyVistaController {
 	 * @param nomatr
 	 * @return
 	 */
-	@RequestMapping(value = "/agent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/chefAgent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentService(@RequestParam(value = "nomatr", required = true) Integer nomatr) {
+	public ResponseEntity<String> getChefServiceAgent(@RequestParam(value = "nomatr", required = true) Integer nomatr) {
 		EasyVistaDto result = new EasyVistaDto();
 
 		// on récupere l'idAgent à partir du nomatr
@@ -57,7 +61,7 @@ public class EasyVistaController {
 		}
 
 		// on traite le cas
-		result = affectationSrv.getChefServiceAgent(aff, result);
+		result = primeSrv.getChefServiceAgent(aff, result);
 
 		return new ResponseEntity<String>(new JSONSerializer().serialize(result), HttpStatus.OK);
 	}

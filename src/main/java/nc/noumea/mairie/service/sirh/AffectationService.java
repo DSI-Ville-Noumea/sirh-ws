@@ -8,10 +8,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
-import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
-import nc.noumea.mairie.ws.dto.EasyVistaDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,37 +65,5 @@ public class AffectationService implements IAffectationService {
 		}
 
 		return res;
-	}
-
-	@Override
-	public EasyVistaDto getChefServiceAgent(Affectation aff, EasyVistaDto result) {
-
-		// si l'agent est chef de service alors on retourne lui-meme
-		List<Integer> agentChefServiceId = affRepo.getListChefsService();
-		if (agentChefServiceId.contains(aff.getAgent().getIdAgent())) {
-			result.setNomatrChef(aff.getAgent().getNomatr());
-			return result;
-		}
-
-		// si l'agent est directeur alors on retourne lui-meme
-		List<Integer> agentDirecteurId = affRepo.getListDirecteur();
-		if (agentDirecteurId.contains(aff.getAgent().getIdAgent())) {
-			result.setNomatrChef(aff.getAgent().getNomatr());
-			return result;
-		}
-
-		// si autre agent alors on cherche son chef de service
-		List<Integer> agentIds = fpSrv.getListShdAgents(aff.getAgent().getIdAgent(), 6);
-		for (Integer idAgent : agentIds) {
-			if (agentChefServiceId.contains(idAgent)) {
-				Agent ag = agentSrv.getAgent(idAgent);
-				result.setNomatrChef(ag.getNomatr());
-				return result;
-			}
-		}
-		if (result.getNomatrChef() == null) {
-			result.getErrors().add("Aucun chef de service trouvé.");
-		}
-		return result;
 	}
 }
