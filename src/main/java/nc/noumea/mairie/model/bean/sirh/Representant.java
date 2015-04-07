@@ -3,6 +3,8 @@ package nc.noumea.mairie.model.bean.sirh;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -20,6 +22,10 @@ public class Representant {
 
 	@Column(name = "PRENOM_REPRESENTANT")
 	private String prenom;
+
+	@OneToOne
+	@JoinColumn(name = "ID_TYPE_REPRESENTANT", referencedColumnName = "ID_TYPE_REPRESENTANT")
+	private TypeRepresentant typeRepresentant;
 
 	public Integer getIdRepresentant() {
 		return idRepresentant;
@@ -43,5 +49,13 @@ public class Representant {
 
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+
+	public TypeRepresentant getTypeRepresentant() {
+		return typeRepresentant;
+	}
+
+	public void setTypeRepresentant(TypeRepresentant typeRepresentant) {
+		this.typeRepresentant = typeRepresentant;
 	}
 }
