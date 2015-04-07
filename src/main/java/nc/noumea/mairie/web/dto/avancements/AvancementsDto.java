@@ -28,12 +28,14 @@ public class AvancementsDto {
 	private String president;
 
 	private List<String> employeurs;
-	private List<String> representants;
+	private List<String> representantsTitulaires;
+	private List<String> representantsSuppleants;
 
 	public AvancementsDto() {
 		avancementsItems = new ArrayList<AvancementItemDto>();
 		employeurs = new ArrayList<String>();
-		representants = new ArrayList<String>();
+		representantsTitulaires = new ArrayList<String>();
+		representantsSuppleants = new ArrayList<String>();
 	}
 
 	public AvancementsDto(Cap cap, Spgeng spgeng, int annee) {
@@ -61,8 +63,13 @@ public class AvancementsDto {
 		}
 
 		for (CapRepresentant cR : cap.getRepresentants()) {
-			getRepresentants().add(
-					String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
+			if (cR.getRepresentant().getTypeRepresentant().getLibTypeRepresentant().toUpperCase().equals("TITULAIRE")) {
+				getRepresentantsTitulaires().add(
+						String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
+			} else {
+				getRepresentantsSuppleants().add(
+						String.format("%s %s", cR.getRepresentant().getNom(), cR.getRepresentant().getPrenom()));
+			}
 		}
 	}
 
@@ -167,11 +174,19 @@ public class AvancementsDto {
 		this.employeurs = employeurs;
 	}
 
-	public List<String> getRepresentants() {
-		return representants;
+	public List<String> getRepresentantsTitulaires() {
+		return representantsTitulaires;
 	}
 
-	public void setRepresentants(List<String> representants) {
-		this.representants = representants;
+	public void setRepresentantsTitulaires(List<String> representantsTitulaires) {
+		this.representantsTitulaires = representantsTitulaires;
+	}
+
+	public List<String> getRepresentantsSuppleants() {
+		return representantsSuppleants;
+	}
+
+	public void setRepresentantsSuppleants(List<String> representantsSuppleants) {
+		this.representantsSuppleants = representantsSuppleants;
 	}
 }
