@@ -163,6 +163,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");
+		sb.append(" and carr.nomatr < 9000 ");
 		sb.append(" GROUP BY carr.nomatr ");
 
 		// on exclut les categories 9, 10, 11
