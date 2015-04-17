@@ -683,6 +683,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative = new Spposa();
 			positionAdministrative.setCdpAdm("01");
+			positionAdministrative.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative);
 		
 		SpadmnId idAdmn = new SpadmnId();
@@ -723,6 +724,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative = new Spposa();
 			positionAdministrative.setCdpAdm("01");
+			positionAdministrative.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative);
 		
 		SpadmnId idAdmn = new SpadmnId();
@@ -750,6 +752,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative2 = new Spposa();
 			positionAdministrative2.setCdpAdm("65");
+			positionAdministrative2.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative2);
 		
 		SpadmnId idAdmn2 = new SpadmnId();
@@ -777,6 +780,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative3 = new Spposa();
 			positionAdministrative3.setCdpAdm("02");
+			positionAdministrative3.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative3);
 		
 		SpadmnId idAdmn3 = new SpadmnId();
@@ -818,6 +822,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative = new Spposa();
 			positionAdministrative.setCdpAdm("01");
+			positionAdministrative.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative);
 		
 		SpadmnId idAdmn = new SpadmnId();
@@ -845,6 +850,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative2 = new Spposa();
 			positionAdministrative2.setCdpAdm("65");
+			positionAdministrative2.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative2);
 		
 		SpadmnId idAdmn2 = new SpadmnId();
@@ -872,6 +878,7 @@ public class SpcarrRepositoryTest {
 		
 		Spposa positionAdministrative3 = new Spposa();
 			positionAdministrative3.setCdpAdm("02");
+			positionAdministrative3.setDroitConges("O");
 		sirhPersistenceUnit.persist(positionAdministrative3);
 		
 		SpadmnId idAdmn3 = new SpadmnId();
