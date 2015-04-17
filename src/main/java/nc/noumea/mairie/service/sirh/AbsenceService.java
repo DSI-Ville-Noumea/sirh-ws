@@ -96,7 +96,7 @@ public class AbsenceService implements IAbsenceService {
 			// pour chaque PA, on regarde s'il n'y a pas plusieurs affectations avec code base different
 			// si oui, on cree un nouvel enregistrement
 			try {
-				result.addAll(findBasesCongesForPA(spAdmn, idAgent, dateFin));
+				result.addAll(findBasesCongesForPA(spAdmn, idAgent, dateDebut, dateFin));
 			} catch (ParseException e) {
 				logger.debug("Erreur ParseException : " + e.getMessage());
 				return null;
@@ -147,14 +147,16 @@ public class AbsenceService implements IAbsenceService {
 		return new Long(Math.round(inputInterval.toPeriod().getMonths() + inputInterval.toPeriod().getYears() * 12 + jours)).intValue();
 	}
 	
-	protected List<InfosAlimAutoCongesAnnuelsDto> findBasesCongesForPA(Spadmn spAdmn, Integer idAgent, Date dateFin) throws ParseException {
+	protected List<InfosAlimAutoCongesAnnuelsDto> findBasesCongesForPA(Spadmn spAdmn, Integer idAgent, Date dateDebut, Date dateFin) throws ParseException {
 		
 		List<InfosAlimAutoCongesAnnuelsDto> result = new ArrayList<InfosAlimAutoCongesAnnuelsDto>();
 		
 		Date dateDebutPA = sdfMairie.parse(spAdmn.getId().getDatdeb().toString());
+		Date dateDebutRechercheAffectation = dateDebutPA.before(dateDebut) ? dateDebut : dateDebutPA;
 		Date dateFinPA = 0 != spAdmn.getDatfin() ? sdfMairie.parse(spAdmn.getDatfin().toString()) : dateFin;
+		Date dateFinRechercheAffectation = dateFinPA.before(dateFin) ? dateFinPA : dateFin;
 		
-		List<Affectation> listAff = affectationRepository.getListeAffectationsAgentByPeriode(idAgent, dateDebutPA, dateFinPA);
+		List<Affectation> listAff = affectationRepository.getListeAffectationsAgentByPeriode(idAgent, dateDebutRechercheAffectation, dateFinRechercheAffectation);
 		
 		if(null != listAff) {
 			for(Affectation aff : listAff) {
