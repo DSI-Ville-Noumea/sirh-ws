@@ -13,10 +13,10 @@ public class CentreFormation {
 
 	@Id
 	@Column(name = "ID_CENTRE_FORMATION")
-	public Integer idCentreFormation;
+	private Integer idCentreFormation;
 	
 	@Column(name = "LIB_CENTRE_FORMATION")
-	public String libCentreFormation;
+	private String libCentreFormation;
 
 	public Integer getIdCentreFormation() {
 		return idCentreFormation;
