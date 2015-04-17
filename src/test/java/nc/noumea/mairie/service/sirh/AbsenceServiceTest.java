@@ -217,7 +217,7 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
 		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateFinPA);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateDebutPA, dateFinPA);
 		
 		assertEquals(4, result.size());
 		assertEquals(result.get(0).getDateDebut(), sdf.parse("20140201"));
@@ -268,7 +268,7 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
 		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateFinPA);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.findBasesCongesForPA(spAdmn, 9005138, dateDebutPA, dateFinPA);
 		
 		assertEquals(0, result.size());
 	}
@@ -838,6 +838,65 @@ public class AbsenceServiceTest {
 		assertEquals(sdf.parse("20140201"), result.get(0).getDateDebut());
 		assertEquals(sdf.parse("20140228"), result.get(0).getDateFin());
 		assertEquals(9005138, result.get(0).getIdAgent().intValue());
+		assertEquals(a.getIdBaseHoraireAbsence(), result.get(0).getIdBaseCongeAbsence());
+	}
+	
+	// #15074 cas concret rencontre en QUALIF : agent 9002189
+	@Test
+	public void getListPAPourAlimAutoCongesAnnuels_casConcretRecette() throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateDebut = sdf.parse("20150301");
+		Date dateFin = sdf.parse("20150331");
+		
+		Spposa positionAdministrative = new Spposa();
+		positionAdministrative.setDroitConges("O");
+		positionAdministrative.setDuree(0);
+		
+		SpadmnId id = new SpadmnId();
+		id.setDatdeb(19990628);
+		id.setNomatr(2189);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(id);
+		spAdmn.setDatfin(20151101);
+		spAdmn.setPositionAdministrative(positionAdministrative);
+		
+		List<Spadmn> listPA = new ArrayList<Spadmn>();
+		listPA.add(spAdmn);
+		
+		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(2189, dateDebut, dateFin)).thenReturn(listPA);
+		
+		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
+		Mockito.when(sdfMairie.parse("19990628")).thenReturn(dateDebut);
+		Mockito.when(sdfMairie.parse("20151101")).thenReturn(dateFin);
+		
+		HelperService helper = Mockito.mock(HelperService.class); 
+		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(new Integer(5138));
+		
+		Affectation a = new Affectation();
+		a.setIdAffectation(1);
+		a.setDateDebutAff(sdf.parse("20130101"));
+		a.setDateFinAff(null);
+		a.setIdBaseHoraireAbsence(1);
+		
+		List<Affectation> listAffectation = new ArrayList<Affectation>();
+		listAffectation.add(a);
+		
+		AffectationRepository affectationRepository = Mockito.mock(AffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentByPeriode(9002189, sdf.parse("20150301"), sdf.parse("20150331"))).thenReturn(listAffectation);
+		
+		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
+		ReflectionTestUtils.setField(service, "helper", helper);
+		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
+		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
+		
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAPourAlimAutoCongesAnnuels(9002189, dateDebut, dateFin);
+		
+		assertEquals(1, result.size());
+		assertEquals(sdf.parse("20150301"), result.get(0).getDateDebut());
+		assertEquals(sdf.parse("20150331"), result.get(0).getDateFin());
+		assertEquals(9002189, result.get(0).getIdAgent().intValue());
 		assertEquals(a.getIdBaseHoraireAbsence(), result.get(0).getIdBaseCongeAbsence());
 	}
 }
