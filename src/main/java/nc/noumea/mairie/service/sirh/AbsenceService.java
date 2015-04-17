@@ -163,8 +163,8 @@ public class AbsenceService implements IAbsenceService {
 				
 				InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
 				
-				dto.setDateDebut(aff.getDateDebutAff().before(dateDebutPA) ? dateDebutPA : aff.getDateDebutAff());
-				dto.setDateFin(null == aff.getDateFinAff() ? dateFinPA : aff.getDateFinAff().after(dateFinPA) ? dateFinPA : aff.getDateFinAff());
+				dto.setDateDebut(dateDebutRechercheAffectation.after(aff.getDateDebutAff()) ? dateDebutRechercheAffectation : aff.getDateDebutAff());
+				dto.setDateFin(null == aff.getDateFinAff() ? dateFinRechercheAffectation : aff.getDateFinAff().after(dateFinRechercheAffectation) ? dateFinRechercheAffectation : aff.getDateFinAff());
 				dto.setIdBaseCongeAbsence(aff.getIdBaseHoraireAbsence());
 				dto.setDroitConges(null != spAdmn.getPositionAdministrative().getDroitConges()
 						&& spAdmn.getPositionAdministrative().getDroitConges().trim().equals("O"));

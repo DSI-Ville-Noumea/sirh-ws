@@ -157,8 +157,8 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		sb.append("select cast(carr.nomatr as int) nomatr from Spcarr carr ");
 		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
+		sb.append(" inner join SPPOSA posa on pa.CDPADM = posa.CDPADM and posa.DROITC <> 'N' ");
 		sb.append(" WHERE carr.CDCATE not in (9,10,11) ");
-		sb.append(" and pa.cdpadm not in('CA','DC','DE','FC','LI','RF','RT','RV','SC','FI') ");
 		sb.append(" and ( (pa.datdeb <= :datdeb ");
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");

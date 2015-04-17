@@ -43,6 +43,7 @@
 		<class>nc.noumea.mairie.model.bean.SIVIET</class>
 		<class>nc.noumea.mairie.model.bean.Sivoie</class>
 		<class>nc.noumea.mairie.model.bean.Spadmn</class>
+		<class>nc.noumea.mairie.model.pk.SpadmnId</class>
 		<class>nc.noumea.mairie.model.bean.Spbhor</class>
 		<class>nc.noumea.mairie.model.bean.Spbarem</class>
 		<class>nc.noumea.mairie.model.bean.Spcarr</class>
