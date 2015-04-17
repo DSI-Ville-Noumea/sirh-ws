@@ -24,6 +24,7 @@ import nc.noumea.mairie.model.repository.sirh.AffectationRepository;
 import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
 import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -737,7 +738,7 @@ public class AbsenceServiceTest {
 		positionAdministrative.setDuree(12);
 		
 		SpadmnId id = new SpadmnId();
-		id.setDatdeb(20140201);
+		id.setDatdeb(20140101);
 		id.setNomatr(5138);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(id);
@@ -753,6 +754,7 @@ public class AbsenceServiceTest {
 		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
 		Mockito.when(sdfMairie.parse("20140201")).thenReturn(dateDebut);
 		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFin);
+		Mockito.when(sdfMairie.parse("20140101")).thenReturn(new DateTime(2014,1,1,0,0,0).toDate());
 		
 		HelperService helper = Mockito.mock(HelperService.class); 
 		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(new Integer(5138));
@@ -795,11 +797,11 @@ public class AbsenceServiceTest {
 		positionAdministrative.setDuree(12);
 		
 		SpadmnId id = new SpadmnId();
-		id.setDatdeb(20140201);
+		id.setDatdeb(20140121);
 		id.setNomatr(5138);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(id);
-		spAdmn.setDatfin(20140228);
+		spAdmn.setDatfin(20140305);
 		spAdmn.setPositionAdministrative(positionAdministrative);
 		
 		List<Spadmn> listPA = new ArrayList<Spadmn>();
@@ -811,6 +813,8 @@ public class AbsenceServiceTest {
 		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
 		Mockito.when(sdfMairie.parse("20140201")).thenReturn(dateDebut);
 		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFin);
+		Mockito.when(sdfMairie.parse("20140121")).thenReturn(new DateTime(2014,1,21,0,0,0).toDate());
+		Mockito.when(sdfMairie.parse("20140305")).thenReturn(new DateTime(2014,3,5,0,0,0).toDate());
 		
 		HelperService helper = Mockito.mock(HelperService.class); 
 		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(new Integer(5138));
@@ -868,11 +872,11 @@ public class AbsenceServiceTest {
 		Mockito.when(spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(2189, dateDebut, dateFin)).thenReturn(listPA);
 		
 		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
-		Mockito.when(sdfMairie.parse("19990628")).thenReturn(dateDebut);
-		Mockito.when(sdfMairie.parse("20151101")).thenReturn(dateFin);
+		Mockito.when(sdfMairie.parse("19990628")).thenReturn(new DateTime(1999,6,28,0,0,0).toDate());
+		Mockito.when(sdfMairie.parse("20151101")).thenReturn(new DateTime(2015,11,1,0,0,0).toDate());
 		
 		HelperService helper = Mockito.mock(HelperService.class); 
-		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(new Integer(5138));
+		Mockito.when(helper.getMairieMatrFromIdAgent(9002189)).thenReturn(new Integer(2189));
 		
 		Affectation a = new Affectation();
 		a.setIdAffectation(1);
@@ -897,6 +901,65 @@ public class AbsenceServiceTest {
 		assertEquals(sdf.parse("20150301"), result.get(0).getDateDebut());
 		assertEquals(sdf.parse("20150331"), result.get(0).getDateFin());
 		assertEquals(9002189, result.get(0).getIdAgent().intValue());
+		assertEquals(a.getIdBaseHoraireAbsence(), result.get(0).getIdBaseCongeAbsence());
+	}
+	
+	// #15074 cas concret rencontre en QUALIF : agent 9005609
+	@Test
+	public void getListPAPourAlimAutoCongesAnnuels_casConcretRecette_5609() throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateDebut = sdf.parse("20150301");
+		Date dateFin = sdf.parse("20150331");
+		
+		Spposa positionAdministrative = new Spposa();
+		positionAdministrative.setDroitConges("O");
+		positionAdministrative.setDuree(0);
+		
+		SpadmnId id = new SpadmnId();
+		id.setDatdeb(20140721);
+		id.setNomatr(5609);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(id);
+		spAdmn.setDatfin(20150302);
+		spAdmn.setPositionAdministrative(positionAdministrative);
+		
+		List<Spadmn> listPA = new ArrayList<Spadmn>();
+		listPA.add(spAdmn);
+		
+		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(5609, dateDebut, dateFin)).thenReturn(listPA);
+		
+		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
+		Mockito.when(sdfMairie.parse("20140721")).thenReturn(new DateTime(2014,7,21,0,0,0).toDate());
+		Mockito.when(sdfMairie.parse("20150302")).thenReturn(new DateTime(2015,3,2,0,0,0).toDate());
+		
+		HelperService helper = Mockito.mock(HelperService.class); 
+		Mockito.when(helper.getMairieMatrFromIdAgent(9005609)).thenReturn(new Integer(5609));
+		
+		Affectation a = new Affectation();
+		a.setIdAffectation(1);
+		a.setDateDebutAff(sdf.parse("20140721"));
+		a.setDateFinAff(sdf.parse("20150301"));
+		a.setIdBaseHoraireAbsence(1);
+		
+		List<Affectation> listAffectation = new ArrayList<Affectation>();
+		listAffectation.add(a);
+		
+		AffectationRepository affectationRepository = Mockito.mock(AffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentByPeriode(9005609, sdf.parse("20150301"), sdf.parse("20150302"))).thenReturn(listAffectation);
+		
+		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
+		ReflectionTestUtils.setField(service, "helper", helper);
+		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
+		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
+		
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAPourAlimAutoCongesAnnuels(9005609, dateDebut, dateFin);
+		
+		assertEquals(1, result.size());
+		assertEquals(sdf.parse("20150301"), result.get(0).getDateDebut());
+		assertEquals(sdf.parse("20150301"), result.get(0).getDateFin());
+		assertEquals(9005609, result.get(0).getIdAgent().intValue());
 		assertEquals(a.getIdBaseHoraireAbsence(), result.get(0).getIdBaseCongeAbsence());
 	}
 }
