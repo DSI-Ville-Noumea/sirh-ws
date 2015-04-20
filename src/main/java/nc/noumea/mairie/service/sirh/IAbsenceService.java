@@ -13,4 +13,6 @@ public interface IAbsenceService {
 	List<InfosAlimAutoCongesAnnuelsDto> getListPAPourAlimAutoCongesAnnuels(
 			Integer idAgent, Date dateDebut, Date dateFin);
 
+	RefTypeSaisiCongeAnnuelDto getOldBaseHoraireAbsenceByAgent(Integer idAgent);
+
 }
