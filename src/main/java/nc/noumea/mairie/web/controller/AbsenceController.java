@@ -33,6 +33,19 @@ public class AbsenceController {
 	private ISpcarrRepository spcarrRepository;
 
 	@ResponseBody
+	@RequestMapping(value = "/oldBaseHoraire", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getOldBaseHoraireOfAgent(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent) {
+
+		RefTypeSaisiCongeAnnuelDto result = absenceSrv.getOldBaseHoraireAbsenceByAgent(idAgent);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/baseHoraire", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBaseHoraireOfAgent(
