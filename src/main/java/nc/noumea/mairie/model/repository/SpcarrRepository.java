@@ -162,7 +162,11 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" and ( (pa.datdeb <= :datdeb ");
 		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");
-		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");
+		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");	
+		sb.append(" and ( (carr.datdeb <= :datdeb ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datdeb )) ");
+		sb.append(" or (carr.datdeb <= :datfin ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datfin ) )) ");
 		sb.append(" and carr.nomatr < 9000 ");
 		sb.append(" GROUP BY carr.nomatr ");
 
