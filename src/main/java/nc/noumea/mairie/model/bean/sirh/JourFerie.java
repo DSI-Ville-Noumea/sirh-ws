@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
 	@NamedQuery(name = "isJourHoliday", query = "select 1 from JourFerie where dateJour = :date"),
 	@NamedQuery(name = "isJourFerie", query = "select 1 from JourFerie where dateJour = :date and idTypeJourFerie = 1"),
-	@NamedQuery(name = "listJoursFeriesChomesByPeriode", query = "select a from JourFerie a where a.dateJour between :dateDebut and :dateFin ")
+	@NamedQuery(name = "listJoursFeriesChomesByPeriode", query = "select a from JourFerie a where a.dateJour between :dateDebut and :dateFin order a.dateJour asc ")
 })
 public class JourFerie {
 
