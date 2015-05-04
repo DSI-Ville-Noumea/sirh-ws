@@ -52,34 +52,46 @@ public class SpadmnRepository implements ISpadmnRepository {
 
 		return null;
 	}
-	
+
 	@Override
 	public List<Spadmn> chercherListPositionAdmAgentSurPeriodeDonnee(Integer noMatr, Date dateDebut, Date dateFin) {
 
-		TypedQuery<Spadmn> q = sirhEntityManager
-				.createQuery(
-						"select a from Spadmn a where a.id.nomatr = :noMatr and "
-						+ " ( (a.id.datdeb <= :datfin) and (a.datfin = 0 or a.datfin >= :datdeb )) ",
-						Spadmn.class);
+		TypedQuery<Spadmn> q = sirhEntityManager.createQuery("select a from Spadmn a where a.id.nomatr = :noMatr and "
+				+ " ( (a.id.datdeb <= :datfin) and (a.datfin = 0 or a.datfin >= :datdeb )) ", Spadmn.class);
 		q.setParameter("noMatr", noMatr);
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		q.setParameter("datdeb", Integer.valueOf(sdfMairie.format(dateDebut)));
 		q.setParameter("datfin", Integer.valueOf(sdfMairie.format(dateFin)));
-		
+
 		return q.getResultList();
 	}
-	
+
 	@Override
 	public List<Spadmn> chercherListPositionAdmAgentAncienne(Integer noMatr, Integer dateLimite) {
-		
+
 		TypedQuery<Spadmn> q = sirhEntityManager
 				.createQuery(
 						"select a from Spadmn a where a.id.nomatr = :noMatr and a.id.datdeb < :dateLimite order by a.id.datdeb desc ",
 						Spadmn.class);
 		q.setParameter("noMatr", noMatr);
 		q.setParameter("dateLimite", dateLimite);
-		
+
 		return q.getResultList();
+	}
+
+	@Override
+	public Spadmn chercherPositionAdmAgentByDateFin(Integer noMatr, Date dateFin) {
+		TypedQuery<Spadmn> q = sirhEntityManager.createQuery(
+				"select a from Spadmn a where a.id.nomatr = :noMatr and a.datfin = :dateFin )", Spadmn.class);
+		q.setParameter("noMatr", noMatr);
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		q.setParameter("dateFin", Integer.valueOf(sdfMairie.format(dateFin)));
+
+		List<Spadmn> result = q.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
+
+		return null;
 	}
 }
