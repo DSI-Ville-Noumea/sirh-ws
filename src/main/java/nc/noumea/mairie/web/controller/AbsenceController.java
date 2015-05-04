@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -77,15 +78,17 @@ public class AbsenceController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPAWithDateFin", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListAgentPourAlimAutoCompteursCongesAnnuels(
-			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
-			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
+	public ResponseEntity<String> getPAWithDateFin(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
+			throws ParseException {
 
-		List<Integer> result = spcarrRepository.getListeAgentsPourAlimAutoCongesAnnuels(dateDebut, dateFin);
+		InfosAlimAutoCongesAnnuelsDto result = absenceSrv.getPAWithDateFin(idAgent, dateFin);
 
-		String json = new JSONSerializer().exclude("*.class").serialize(result);
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
