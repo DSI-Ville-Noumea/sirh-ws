@@ -181,6 +181,7 @@ public class AbsenceService implements IAbsenceService {
 				dto.setIdBaseCongeAbsence(aff.getIdBaseHoraireAbsence());
 				dto.setDroitConges(null != spAdmn.getPositionAdministrative().getDroitConges()
 						&& spAdmn.getPositionAdministrative().getDroitConges().trim().equals("O"));
+				dto.setDureeDroitConges(spAdmn.getPositionAdministrative().getDuree());
 				dto.setIdAgent(idAgent);
 
 				result.add(dto);
@@ -207,5 +208,23 @@ public class AbsenceService implements IAbsenceService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public InfosAlimAutoCongesAnnuelsDto getPAWithDateFin(Integer idAgent, Date dateFin) throws ParseException {
+		Spadmn positionAdm = spadmnRepository.chercherPositionAdmAgentByDateFin(
+				helper.getMairieMatrFromIdAgent(idAgent), dateFin);
+		if (positionAdm == null) {
+			return new InfosAlimAutoCongesAnnuelsDto();
+		}
+		InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
+
+		dto.setDateDebut(sdfMairie.parse(positionAdm.getId().getDatdeb().toString()));
+		dto.setDateFin(sdfMairie.parse(positionAdm.getDatfin().toString()));
+		dto.setDroitConges(null != positionAdm.getPositionAdministrative().getDroitConges()
+				&& positionAdm.getPositionAdministrative().getDroitConges().trim().equals("O"));
+		dto.setDureeDroitConges(positionAdm.getPositionAdministrative().getDuree());
+		dto.setIdAgent(idAgent);
+		return dto;
 	}
 }
