@@ -992,7 +992,7 @@ public class AbsenceServiceTest {
 	}
 
 	@Test
-	public void getPAWithDateFin_Return1PA() throws ParseException {
+	public void getListPAByAgent_Return1PA() throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -1015,7 +1015,7 @@ public class AbsenceServiceTest {
 		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFinPA);
 
 		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherPositionAdmAgentByDateFin(5138, dateFinPA)).thenReturn(spAdmn);
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(Arrays.asList(spAdmn));
 
 		HelperService helper = Mockito.mock(HelperService.class);
 		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(5138);
@@ -1024,72 +1024,10 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "helper", helper);
 
-		InfosAlimAutoCongesAnnuelsDto result = service.getPAWithDateFin(9005138, dateFinPA);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAByAgent(9005138);
 
 		assertNotNull(result);
-		assertEquals(result.getDateDebut(), sdf.parse("20140201"));
-		assertEquals(result.getDateFin(), sdf.parse("20140228"));
-		assertEquals(result.getIdAgent(), new Integer(9005138));
-		assertNull(result.getIdBaseCongeAbsence());
-	}
-
-	@Test
-	public void getPAWithDateFin_noResult() throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Date dateFinPA = sdf.parse("20140228");
-
-		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherPositionAdmAgentByDateFin(5138, dateFinPA)).thenReturn(null);
-
-		HelperService helper = Mockito.mock(HelperService.class);
-		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(5138);
-
-		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
-		ReflectionTestUtils.setField(service, "helper", helper);
-
-		InfosAlimAutoCongesAnnuelsDto result = service.getPAWithDateFin(9005138, dateFinPA);
-
-		assertNotNull(result);
-		assertNull(result.getIdAgent());
-	}
-
-	@Test
-	public void getListPASurPeriode_Return1PA() throws ParseException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-		Date dateDebutPA = sdf.parse("20140201");
-		Date dateFinPA = sdf.parse("20140228");
-
-		Spposa positionAdministrative = new Spposa();
-		positionAdministrative.setDroitConges("N");
-
-		SpadmnId id = new SpadmnId();
-		id.setDatdeb(20140201);
-		id.setNomatr(5138);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(id);
-		spAdmn.setDatfin(20140228);
-		spAdmn.setPositionAdministrative(positionAdministrative);
-
-		SimpleDateFormat sdfMairie = Mockito.mock(SimpleDateFormat.class);
-		Mockito.when(sdfMairie.parse("20140201")).thenReturn(dateDebutPA);
-		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFinPA);
-
-		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(5138, dateDebutPA,dateFinPA)).thenReturn(Arrays.asList(spAdmn));
-
-		HelperService helper = Mockito.mock(HelperService.class);
-		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(5138);
-
-		ReflectionTestUtils.setField(service, "sdfMairie", sdfMairie);
-		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
-		ReflectionTestUtils.setField(service, "helper", helper);
-
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPASurPeriode(9005138,dateDebutPA, dateFinPA);
-
-		assertNotNull(result);
-		assertEquals(result.size(),1);
+		assertEquals(result.size(), 1);
 		assertEquals(result.get(0).getDateDebut(), sdf.parse("20140201"));
 		assertEquals(result.get(0).getDateFin(), sdf.parse("20140228"));
 		assertEquals(result.get(0).getIdAgent(), new Integer(9005138));
@@ -1097,13 +1035,9 @@ public class AbsenceServiceTest {
 	}
 
 	@Test
-	public void getListPASurPeriode_noResult() throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Date dateDebutPA = sdf.parse("20140201");
-		Date dateFinPA = sdf.parse("20140228");
-
+	public void getListPAByAgent_noResult() throws ParseException {
 		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(5138, dateDebutPA,dateFinPA)).thenReturn(null);
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(null);
 
 		HelperService helper = Mockito.mock(HelperService.class);
 		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(5138);
@@ -1111,9 +1045,9 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "helper", helper);
 
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPASurPeriode(9005138,dateDebutPA, dateFinPA);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAByAgent(9005138);
 
 		assertNotNull(result);
-		assertEquals(result.size(),0);
+		assertEquals(result.size(), 0);
 	}
 }
