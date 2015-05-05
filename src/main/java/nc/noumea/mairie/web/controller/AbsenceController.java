@@ -78,29 +78,12 @@ public class AbsenceController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getPAWithDateFin", method = RequestMethod.GET)
+	@RequestMapping(value = "/listPAByAgent", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getPAWithDateFin(@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
+	public ResponseEntity<String> listPAByAgent(@RequestParam(value = "idAgent", required = true) Integer idAgent)
 			throws ParseException {
 
-		InfosAlimAutoCongesAnnuelsDto result = absenceSrv.getPAWithDateFin(idAgent, dateFin);
-
-		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(result);
-
-		return new ResponseEntity<String>(json, HttpStatus.OK);
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/listPASurPeriode", method = RequestMethod.GET)
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> listPASurPeriode(@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
-			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
-			throws ParseException {
-
-		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPASurPeriode(idAgent, dateDebut, dateFin);
+		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAByAgent(idAgent);
 
 		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
