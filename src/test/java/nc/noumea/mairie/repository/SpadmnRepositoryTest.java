@@ -44,7 +44,7 @@ public class SpadmnRepositoryTest {
 		Spposa spPosa = new Spposa();
 		spPosa.setCdpAdm("58");
 		sirhPersistenceUnit.persist(spPosa);
-		
+
 		SpadmnId spadmnId = new SpadmnId();
 		spadmnId.setNomatr(5138);
 		spadmnId.setDatdeb(2010);
@@ -213,7 +213,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_0result_PABeforePeriode() {
@@ -237,7 +237,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_0result_PAAfterPeriode() {
@@ -261,7 +261,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_1result_PABeforePeriode() {
@@ -285,7 +285,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_1result_PAAfterPeriode() {
@@ -309,7 +309,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_3results() {
@@ -324,7 +324,7 @@ public class SpadmnRepositoryTest {
 		spAdmn.setId(spadmnId);
 		spAdmn.setDatfin(20140115);
 		sirhPersistenceUnit.persist(spAdmn);
-		
+
 		SpadmnId spadmnId2 = new SpadmnId();
 		spadmnId2.setNomatr(5138);
 		spadmnId2.setDatdeb(20140116);
@@ -332,7 +332,7 @@ public class SpadmnRepositoryTest {
 		spAdmn2.setId(spadmnId2);
 		spAdmn2.setDatfin(20140201);
 		sirhPersistenceUnit.persist(spAdmn2);
-		
+
 		SpadmnId spadmnId3 = new SpadmnId();
 		spadmnId3.setNomatr(5138);
 		spadmnId3.setDatdeb(20140202);
@@ -340,7 +340,7 @@ public class SpadmnRepositoryTest {
 		spAdmn3.setId(spadmnId3);
 		spAdmn3.setDatfin(20140220);
 		sirhPersistenceUnit.persist(spAdmn3);
-		
+
 		SpadmnId spadmnId4 = new SpadmnId();
 		spadmnId4.setNomatr(5138);
 		spadmnId4.setDatdeb(20140221);
@@ -357,7 +357,7 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherListPositionAdmAgentSurPeriodeDonnee_PAPlusGrandeQuePeriode() {
@@ -372,7 +372,7 @@ public class SpadmnRepositoryTest {
 		spAdmn.setId(spadmnId);
 		spAdmn.setDatfin(20140315);
 		sirhPersistenceUnit.persist(spAdmn);
-		
+
 		SpadmnId spadmnId2 = new SpadmnId();
 		spadmnId2.setNomatr(5138);
 		spadmnId2.setDatdeb(20140116);
@@ -443,7 +443,7 @@ public class SpadmnRepositoryTest {
 		spAdmn.setId(spadmnId);
 		spAdmn.setDatfin(20140115);
 		sirhPersistenceUnit.persist(spAdmn);
-		
+
 		SpadmnId spadmnId2 = new SpadmnId();
 		spadmnId2.setNomatr(5138);
 		spadmnId2.setDatdeb(20140116);
@@ -451,7 +451,7 @@ public class SpadmnRepositoryTest {
 		spAdmn2.setId(spadmnId2);
 		spAdmn2.setDatfin(20140131);
 		sirhPersistenceUnit.persist(spAdmn2);
-		
+
 		SpadmnId spadmnId3 = new SpadmnId();
 		spadmnId3.setNomatr(5138);
 		spadmnId3.setDatdeb(20140201);
@@ -459,7 +459,7 @@ public class SpadmnRepositoryTest {
 		spAdmn3.setId(spadmnId3);
 		spAdmn3.setDatfin(20140214);
 		sirhPersistenceUnit.persist(spAdmn3);
-		
+
 		SpadmnId spadmnId4 = new SpadmnId();
 		spadmnId4.setNomatr(5138);
 		spadmnId4.setDatdeb(20140215);
@@ -472,59 +472,6 @@ public class SpadmnRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(result.size(), 3);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void chercherPositionAdmAgentByDateFin_return1result() {
-		Date dateFin = new LocalDate(2014, 2, 28).toDate();
-
-		Spposa spPosa = new Spposa();
-		spPosa.setCdpAdm("58");
-		sirhPersistenceUnit.persist(spPosa);
-		
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(20100101);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setPositionAdministrative(spPosa);
-		spAdmn.setDatfin(20140228);
-		sirhPersistenceUnit.persist(spAdmn);
-
-		Spadmn result = repository.chercherPositionAdmAgentByDateFin(5138,dateFin);
-
-		assertNotNull(result);
-
-		sirhPersistenceUnit.flush();
-		sirhPersistenceUnit.clear();
-	}
-
-	@Test
-	@Transactional("sirhTransactionManager")
-	public void chercherPositionAdmAgentByDateFin_returnNoResult() {
-		Date dateFin = new LocalDate(2014, 2, 28).toDate();
-
-		Spposa spPosa = new Spposa();
-		spPosa.setCdpAdm("58");
-		sirhPersistenceUnit.persist(spPosa);
-
-		SpadmnId spadmnId = new SpadmnId();
-		spadmnId.setNomatr(5138);
-		spadmnId.setDatdeb(2010);
-		Spadmn spAdmn = new Spadmn();
-		spAdmn.setId(spadmnId);
-		spAdmn.setPositionAdministrative(spPosa);
-		spAdmn.setDatfin(0);
-		sirhPersistenceUnit.persist(spAdmn);
-
-		Spadmn result = repository.chercherPositionAdmAgentByDateFin(5138,dateFin);
-
-		assertNull(result);
 
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
