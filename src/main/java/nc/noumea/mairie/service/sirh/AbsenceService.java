@@ -227,4 +227,33 @@ public class AbsenceService implements IAbsenceService {
 		dto.setIdAgent(idAgent);
 		return dto;
 	}
+
+	@Override
+	public List<InfosAlimAutoCongesAnnuelsDto> getListPASurPeriode(Integer idAgent, Date dateDebut, Date dateFin)
+			throws ParseException {
+
+		List<InfosAlimAutoCongesAnnuelsDto> result = new ArrayList<InfosAlimAutoCongesAnnuelsDto>();
+
+		List<Spadmn> listSpAdmn = spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(
+				helper.getMairieMatrFromIdAgent(idAgent), dateDebut, dateFin);
+
+		if (null == listSpAdmn) {
+			return result;
+		}
+
+		for (Spadmn spAdmn : listSpAdmn) {
+			InfosAlimAutoCongesAnnuelsDto res = new InfosAlimAutoCongesAnnuelsDto();
+			res.setIdAgent(idAgent);
+			res.setDateDebut(sdfMairie.parse(spAdmn.getId().getDatdeb().toString()));
+			res.setDateFin(0 != spAdmn.getDatfin() ? sdfMairie.parse(spAdmn.getDatfin().toString()) : null);
+			res.setDroitConges(null != spAdmn.getPositionAdministrative().getDroitConges()
+					&& spAdmn.getPositionAdministrative().getDroitConges().trim().equals("O"));
+			res.setDureeDroitConges(spAdmn.getPositionAdministrative().getDuree());
+
+			result.add(res);
+
+		}
+
+		return result;
+	}
 }
