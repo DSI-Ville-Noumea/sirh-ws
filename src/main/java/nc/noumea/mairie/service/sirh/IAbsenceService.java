@@ -15,9 +15,6 @@ public interface IAbsenceService {
 
 	RefTypeSaisiCongeAnnuelDto getOldBaseHoraireAbsenceByAgent(Integer idAgent);
 
-	InfosAlimAutoCongesAnnuelsDto getPAWithDateFin(Integer idAgent, Date dateFin) throws ParseException;
-
-	List<InfosAlimAutoCongesAnnuelsDto> getListPASurPeriode(Integer idAgent, Date dateDebut, Date dateFin)
-			throws ParseException;
+	List<InfosAlimAutoCongesAnnuelsDto> getListPAByAgent(Integer idAgent) throws ParseException;
 
 }

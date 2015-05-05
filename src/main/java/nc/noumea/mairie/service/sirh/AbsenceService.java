@@ -211,47 +211,26 @@ public class AbsenceService implements IAbsenceService {
 	}
 
 	@Override
-	public InfosAlimAutoCongesAnnuelsDto getPAWithDateFin(Integer idAgent, Date dateFin) throws ParseException {
-		Spadmn positionAdm = spadmnRepository.chercherPositionAdmAgentByDateFin(
-				helper.getMairieMatrFromIdAgent(idAgent), dateFin);
-		if (positionAdm == null) {
-			return new InfosAlimAutoCongesAnnuelsDto();
-		}
-		InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
-
-		dto.setDateDebut(sdfMairie.parse(positionAdm.getId().getDatdeb().toString()));
-		dto.setDateFin(sdfMairie.parse(positionAdm.getDatfin().toString()));
-		dto.setDroitConges(null != positionAdm.getPositionAdministrative().getDroitConges()
-				&& positionAdm.getPositionAdministrative().getDroitConges().trim().equals("O"));
-		dto.setDureeDroitConges(positionAdm.getPositionAdministrative().getDuree());
-		dto.setIdAgent(idAgent);
-		return dto;
-	}
-
-	@Override
-	public List<InfosAlimAutoCongesAnnuelsDto> getListPASurPeriode(Integer idAgent, Date dateDebut, Date dateFin)
-			throws ParseException {
+	public List<InfosAlimAutoCongesAnnuelsDto> getListPAByAgent(Integer idAgent) throws ParseException {
 
 		List<InfosAlimAutoCongesAnnuelsDto> result = new ArrayList<InfosAlimAutoCongesAnnuelsDto>();
 
-		List<Spadmn> listSpAdmn = spadmnRepository.chercherListPositionAdmAgentSurPeriodeDonnee(
-				helper.getMairieMatrFromIdAgent(idAgent), dateDebut, dateFin);
+		List<Spadmn> listSpAdmn = spadmnRepository.chercherListPositionAdmAgentAncienne(helper.getMairieMatrFromIdAgent(idAgent),null);
 
-		if (null == listSpAdmn) {
-			return result;
-		}
+		if (null != listSpAdmn) {
+			for (Spadmn pa : listSpAdmn) {
 
-		for (Spadmn spAdmn : listSpAdmn) {
-			InfosAlimAutoCongesAnnuelsDto res = new InfosAlimAutoCongesAnnuelsDto();
-			res.setIdAgent(idAgent);
-			res.setDateDebut(sdfMairie.parse(spAdmn.getId().getDatdeb().toString()));
-			res.setDateFin(0 != spAdmn.getDatfin() ? sdfMairie.parse(spAdmn.getDatfin().toString()) : null);
-			res.setDroitConges(null != spAdmn.getPositionAdministrative().getDroitConges()
-					&& spAdmn.getPositionAdministrative().getDroitConges().trim().equals("O"));
-			res.setDureeDroitConges(spAdmn.getPositionAdministrative().getDuree());
+				InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
 
-			result.add(res);
+				dto.setDateDebut(sdfMairie.parse(pa.getId().getDatdeb().toString()));
+				dto.setDateFin(pa.getDatfin()==0 ? null : sdfMairie.parse(pa.getDatfin().toString()));
+				dto.setDroitConges(null != pa.getPositionAdministrative().getDroitConges()
+						&& pa.getPositionAdministrative().getDroitConges().trim().equals("O"));
+				dto.setDureeDroitConges(pa.getPositionAdministrative().getDuree());
+				dto.setIdAgent(idAgent);
 
+				result.add(dto);
+			}
 		}
 
 		return result;
