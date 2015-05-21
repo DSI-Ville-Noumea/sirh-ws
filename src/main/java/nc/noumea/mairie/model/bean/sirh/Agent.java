@@ -28,13 +28,8 @@ import javax.validation.constraints.NotNull;
 import nc.noumea.mairie.model.bean.Sicomm;
 import nc.noumea.mairie.model.bean.Sivoie;
 import nc.noumea.mairie.tools.transformer.AgentDelegataireTransformer;
-import nc.noumea.mairie.tools.transformer.AgentToAdresseTransformer;
-import nc.noumea.mairie.tools.transformer.AgentToBanqueTransformer;
-import nc.noumea.mairie.tools.transformer.AgentToEquipeTransformer;
-import nc.noumea.mairie.tools.transformer.AgentToHierarchiqueTransformer;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
-import nc.noumea.mairie.tools.transformer.ParentEnfantTransformer;
 import nc.noumea.mairie.tools.transformer.SituationFamilialeTransformer;
 import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
 import flexjson.JSONSerializer;
@@ -237,23 +232,6 @@ public class Agent {
 		return getNomUsage();
 	}
 
-	public static JSONSerializer getSerializerForAgentSuperieurHierarchique() {
-		JSONSerializer serializer = new JSONSerializer().transform(new AgentToHierarchiqueTransformer(), Agent.class)
-				.transform(new StringTrimTransformer(), String.class);
-		return serializer;
-	}
-
-	public static JSONSerializer getSerializerForAgentEtatCivil() {
-		JSONSerializer serializer = new JSONSerializer().include("nomatr").include("nomPatronymique")
-				.include("nomMarital").include("nomUsage").include("prenom").include("sexe")
-				.include("situationFamiliale").include("dateNaissance").include("situationFamiliale").include("titre")
-				.include("lieuNaissance").transform(new MSDateTransformer(), Date.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new SituationFamilialeTransformer(), SituationFamiliale.class)
-				.transform(new StringTrimTransformer(), String.class).exclude("*");
-		return serializer;
-	}
-
 	public static JSONSerializer getSerializerAgentForEae() {
 		JSONSerializer serializer = new JSONSerializer().include("idAgent").include("nomatr")
 				.include("nomPatronymique").include("nomMarital").include("nomUsage").include("prenom")
@@ -265,46 +243,8 @@ public class Agent {
 		return serializer;
 	}
 
-	public static JSONSerializer getSerializerForAgentCouvertureSociale() {
-		JSONSerializer serializer = new JSONSerializer().include("numCafat").include("numRuamm").include("numMutuelle")
-				.include("numCre").include("numIrcafex").include("numClr")
-				.transform(new StringTrimTransformer(), String.class).exclude("*");
-
-		return serializer;
-	}
-
-	public static JSONSerializer getSerializerForAgentBanque() {
-		JSONSerializer serializer = new JSONSerializer().transform(new AgentToBanqueTransformer(), Agent.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class).exclude("*");
-
-		return serializer;
-	}
-
-	public static JSONSerializer getSerializerForAgentAdresse() {
-		JSONSerializer serializer = new JSONSerializer().transform(new AgentToAdresseTransformer(), Agent.class)
-				.transform(new StringTrimTransformer(), String.class);
-		return serializer;
-	}
-
-	public static JSONSerializer getSerializerForEnfantAgent() {
-		JSONSerializer serializer = new JSONSerializer().transform(new ParentEnfantTransformer(), ParentEnfant.class)
-				.transform(new MSDateTransformer(), Date.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class);
-		return serializer;
-	}
-
 	public static JSONSerializer getSerializerForAgentDelegataire() {
 		JSONSerializer serializer = new JSONSerializer().transform(new AgentDelegataireTransformer(), Agent.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class);
-
-		return serializer;
-	}
-
-	public static JSONSerializer getSerializerForAgentEquipeFichePoste() {
-		JSONSerializer serializer = new JSONSerializer().transform(new AgentToEquipeTransformer(), Agent.class)
 				.transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new StringTrimTransformer(), String.class);
 

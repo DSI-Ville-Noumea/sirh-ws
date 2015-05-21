@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Sibanq;
-import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.model.bean.SpSold;
-import nc.noumea.mairie.model.bean.Spcong;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
@@ -19,9 +16,7 @@ import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
-import nc.noumea.mairie.service.ISoldeService;
 import nc.noumea.mairie.service.ISpadmnService;
-import nc.noumea.mairie.service.ISpcongService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
@@ -68,12 +63,6 @@ public class AgentController {
 	private IContactService contactSrv;
 
 	@Autowired
-	private ISoldeService soldeSrv;
-
-	@Autowired
-	private ISpcongService congSrv;
-
-	@Autowired
 	private IFichePosteService fpSrv;
 
 	@Autowired
@@ -107,32 +96,6 @@ public class AgentController {
 			nomatr = idAgent.toString().substring(3, idAgent.toString().length());
 		}
 		return nomatr;
-	}
-
-	@RequestMapping(value = "/etatCivil", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEtatCivil(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		if (ag.getCodeCommuneNaissFr() == null) {
-			ag.setLieuNaissance(sivietSrv.getLieuNaissEtr(ag.getCodePaysNaissEt(), ag.getCodeCommuneNaissEt())
-					.getLibCop());
-		} else {
-			ag.setLieuNaissance(ag.getCodeCommuneNaissFr().getLibVil().trim());
-		}
-
-		String jsonResult = Agent.getSerializerForAgentEtatCivil().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getEtatCivil", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
@@ -190,273 +153,6 @@ public class AgentController {
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/enfants", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEnfants(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = Agent.getSerializerForEnfantAgent().serialize(ag.getParentEnfantsOrderByDateNaiss());
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/couvertureSociale", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getCouvertureSociale(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = Agent.getSerializerForAgentCouvertureSociale().serialize(ag);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/banque", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getBanque(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-		if (ag.getCodeBanque() != null && ag.getCodeGuichet() != null) {
-			ag.setBanque(siguicSrv.getBanque(ag.getCodeBanque(), ag.getCodeGuichet()).getLiGuic());
-		}
-
-		String jsonResult = Agent.getSerializerForAgentBanque().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/adresse", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAdresse(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		if (ag.getVoie() == null) {
-			ag.setRue(ag.getRueNonNoumea());
-		} else {
-			ag.setRue(ag.getVoie().getLiVoie().trim());
-		}
-
-		String jsonResult = Agent.getSerializerForAgentAdresse().serialize(ag);
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/contacts", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getContacts(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		List<Contact> lc = contactSrv.getContactsAgent(Long.valueOf(newIdAgent));
-
-		if (lc == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = Contact.getSerializerForAgentContacts().serialize(lc);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/soldeConge", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSoldeConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent pour avoir le nomatr
-		String nomatr = remanieNoMatrAgent(idAgent);
-
-		SpSold solde = soldeSrv.getSoldeConge(Integer.valueOf(nomatr));
-
-		if (solde == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = SpSold.getSerializerForAgentSoldeConge().serialize(solde);
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/histoCongeAll", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getToutHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent pour avoir le nomatr
-		String nomatr = remanieNoMatrAgent(idAgent);
-
-		List<Spcong> lcong = congSrv.getToutHistoriqueConge(Long.valueOf(nomatr));
-
-		if (lcong == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = Spcong.getSerializerForAgentHistoConge().serialize(lcong);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/histoConge", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getHistoConge(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException {
-
-		// on remanie l'idAgent pour avoir le nomatr
-		String nomatr = remanieNoMatrAgent(idAgent);
-
-		List<Spcong> lcong = congSrv.getHistoriqueCongeAnnee(Long.valueOf(nomatr));
-
-		if (lcong == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		String jsonResult = Spcong.getSerializerForAgentHistoConge().serialize(lcong);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/fichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getFichePosteAgent(@RequestParam(value = "idAgent", required = true) Long idAgent)
-			throws ParseException, java.text.ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-
-		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
-
-		if (fp == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-		fp.getService().setDirection(
-				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-						fp.getService().getServi()).getLiServ());
-		fp.getService().setDivision(
-				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-						.getDivision(fp.getService().getServi()).getLiServ());
-		fp.getService().setSection(
-				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-						fp.getService().getServi()).getLiServ());
-
-		String jsonResult = FichePoste.getSerializerForFichePoste().serialize(fp);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/fichePosteSecondaire", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getFichePosteSecondaireAgent(
-			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
-			java.text.ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-
-		FichePoste fp = fpSrv.getFichePosteSecondaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
-
-		if (fp == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-		fp.getService().setDirection(
-				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-						fp.getService().getServi()).getLiServ());
-		fp.getService().setDivision(
-				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-						.getDivision(fp.getService().getServi()).getLiServ());
-		fp.getService().setSection(
-				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-						fp.getService().getServi()).getLiServ());
-
-		String jsonResult = FichePoste.getSerializerForFichePoste().serialize(fp);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/superieurHierarchique", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSuperieurHierarchiqueAgent(
-			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException,
-			java.text.ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
-
-		if (agentSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(
-				agentSuperieurHierarchique.getIdAgent(), dateJour);
-
-		if (fichePosteSuperieurHierarchique == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		agentSuperieurHierarchique.setPosition(fichePosteSuperieurHierarchique.getTitrePoste().getLibTitrePoste());
-
-		String jsonResult = Agent.getSerializerForAgentSuperieurHierarchique().serialize(agentSuperieurHierarchique);
-
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
-	}
-
 	@RequestMapping(value = "/getSuperieurHierarchique", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
@@ -496,70 +192,6 @@ public class AgentController {
 				.deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/equipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEquipeAgent(@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "sigleService", required = false) String sigleService) throws ParseException,
-			java.text.ParseException {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		boolean estChef = fpSrv.estResponsable(ag.getIdAgent());
-
-		List<String> listService = null;
-		if (estChef) {
-			// alors on regarde les sousService
-			// listService = siservSrv.getListServiceAgent(ag.getIdAgent(),
-			// sigleService);
-			Siserv service = siservSrv.getServiceBySigle(sigleService);
-			listService = new ArrayList<String>();
-			if (service != null)
-				listService.add(service.getServi());
-		} else {
-			Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent(), null);
-			listService = new ArrayList<String>();
-			if (serviceAgent != null)
-				listService.add(serviceAgent.getServi());
-		}
-
-		if (listService.size() == 0) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		Agent agentSuperieurHierarchique = agentSrv.getSuperieurHierarchiqueAgent(ag.getIdAgent());
-
-		Integer idAgentResp = 0;
-		if (agentSuperieurHierarchique != null) {
-			idAgentResp = agentSuperieurHierarchique.getIdAgent();
-		}
-
-		List<Agent> listAgentService = agentSrv.listAgentPlusieursServiceSansAgentSansSuperieur(ag.getIdAgent(),
-				idAgentResp, listService);
-
-		if (listAgentService == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-		for (Agent agentService : listAgentService) {
-			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
-			agentService.setPosition(titrePoste);
-		}
-
-		String jsonResult = Agent.getSerializerForAgentEquipeFichePoste().serialize(listAgentService);
-		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/getEquipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
