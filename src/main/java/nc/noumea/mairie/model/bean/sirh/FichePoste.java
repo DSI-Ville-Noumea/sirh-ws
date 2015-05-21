@@ -27,15 +27,9 @@ import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
-import nc.noumea.mairie.tools.transformer.ActiviteTransformer;
-import nc.noumea.mairie.tools.transformer.FichePosteTransformer;
-import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
-import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
 
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.WhereJoinTable;
-
-import flexjson.JSONSerializer;
 
 @Entity
 @Table(name = "FICHE_POSTE")
@@ -170,15 +164,6 @@ public class FichePoste {
 			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(comp.getNomCompetence());
 		}
 		return res;
-	}
-
-	public static JSONSerializer getSerializerForFichePoste() {
-		JSONSerializer serializer = new JSONSerializer().transform(new FichePosteTransformer(), FichePoste.class)
-				.transform(new ActiviteTransformer(), Activite.class)
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new StringTrimTransformer(), String.class);
-
-		return serializer;
 	}
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
