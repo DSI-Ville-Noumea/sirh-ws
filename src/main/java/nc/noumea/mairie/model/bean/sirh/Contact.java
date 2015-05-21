@@ -9,11 +9,6 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import nc.noumea.mairie.tools.transformer.NullableIntegerTransformer;
-import nc.noumea.mairie.tools.transformer.StringTrimTransformer;
-import nc.noumea.mairie.tools.transformer.TypeContactTransformer;
-import flexjson.JSONSerializer;
-
 @Entity
 @Table(name = "CONTACT")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
@@ -56,17 +51,6 @@ public class Contact {
 		} else {
 			return "non";
 		}
-	}
-
-	public static JSONSerializer getSerializerForAgentContacts() {
-
-		JSONSerializer serializer = new JSONSerializer().include("diffusable").include("prioritaire")
-				.include("typeContact").include("description")
-				.transform(new NullableIntegerTransformer(), Integer.class)
-				.transform(new TypeContactTransformer(), TypeContact.class)
-				.transform(new StringTrimTransformer(), String.class).exclude("*");
-
-		return serializer;
 	}
 
 	public Integer getIdContact() {
