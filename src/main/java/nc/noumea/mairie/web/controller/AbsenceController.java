@@ -91,4 +91,19 @@ public class AbsenceController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
+
+	@ResponseBody
+	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListAgentPourAlimAutoCompteursCongesAnnuels(
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
+
+		List<Integer> result = spcarrRepository.getListeAgentsPourAlimAutoCongesAnnuels(dateDebut, dateFin);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
 }
