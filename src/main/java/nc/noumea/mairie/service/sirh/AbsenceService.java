@@ -211,11 +211,14 @@ public class AbsenceService implements IAbsenceService {
 	}
 
 	@Override
-	public List<InfosAlimAutoCongesAnnuelsDto> getListPAByAgent(Integer idAgent) throws ParseException {
+	public List<InfosAlimAutoCongesAnnuelsDto> listPAByAgentSansFuture(Integer idAgent, Date dateFin)
+			throws ParseException {
 
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
 		List<InfosAlimAutoCongesAnnuelsDto> result = new ArrayList<InfosAlimAutoCongesAnnuelsDto>();
 
-		List<Spadmn> listSpAdmn = spadmnRepository.chercherListPositionAdmAgentAncienne(helper.getMairieMatrFromIdAgent(idAgent),null);
+		List<Spadmn> listSpAdmn = spadmnRepository.chercherListPositionAdmAgentAncienne(
+				helper.getMairieMatrFromIdAgent(idAgent), Integer.valueOf(sf.format(dateFin)));
 
 		if (null != listSpAdmn) {
 			for (Spadmn pa : listSpAdmn) {
@@ -223,7 +226,7 @@ public class AbsenceService implements IAbsenceService {
 				InfosAlimAutoCongesAnnuelsDto dto = new InfosAlimAutoCongesAnnuelsDto();
 
 				dto.setDateDebut(sdfMairie.parse(pa.getId().getDatdeb().toString()));
-				dto.setDateFin(pa.getDatfin()==0 ? null : sdfMairie.parse(pa.getDatfin().toString()));
+				dto.setDateFin(pa.getDatfin() == 0 ? null : sdfMairie.parse(pa.getDatfin().toString()));
 				dto.setDroitConges(null != pa.getPositionAdministrative().getDroitConges()
 						&& pa.getPositionAdministrative().getDroitConges().trim().equals("O"));
 				dto.setDureeDroitConges(pa.getPositionAdministrative().getDuree());

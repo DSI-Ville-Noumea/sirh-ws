@@ -78,19 +78,20 @@ public class AbsenceController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listPAByAgent", method = RequestMethod.GET)
+	@RequestMapping(value = "/listPAByAgentSansFuture", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> listPAByAgent(@RequestParam(value = "idAgent", required = true) Integer idAgent)
+	public ResponseEntity<String> listPAByAgentSansFuture(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin)
 			throws ParseException {
 
-		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.getListPAByAgent(idAgent);
+		List<InfosAlimAutoCongesAnnuelsDto> result = absenceSrv.listPAByAgentSansFuture(idAgent,dateFin);
 
 		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "/listAgentPourAlimAutoCompteursCongesAnnuels", method = RequestMethod.GET)
