@@ -1015,7 +1015,7 @@ public class AbsenceServiceTest {
 		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFinPA);
 
 		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, 20140228)).thenReturn(
 				Arrays.asList(spAdmn));
 
 		HelperService helper = Mockito.mock(HelperService.class);
