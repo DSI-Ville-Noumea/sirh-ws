@@ -992,7 +992,7 @@ public class AbsenceServiceTest {
 	}
 
 	@Test
-	public void getListPAByAgent_Return1PA() throws ParseException {
+	public void listPAByAgentSansFuture_Return1PA() throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -1015,7 +1015,8 @@ public class AbsenceServiceTest {
 		Mockito.when(sdfMairie.parse("20140228")).thenReturn(dateFinPA);
 
 		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
-		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(Arrays.asList(spAdmn));
+		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(
+				Arrays.asList(spAdmn));
 
 		HelperService helper = Mockito.mock(HelperService.class);
 		Mockito.when(helper.getMairieMatrFromIdAgent(9005138)).thenReturn(5138);
@@ -1024,7 +1025,7 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "helper", helper);
 
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAByAgent(9005138);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.listPAByAgentSansFuture(9005138, dateFinPA);
 
 		assertNotNull(result);
 		assertEquals(result.size(), 1);
@@ -1035,7 +1036,7 @@ public class AbsenceServiceTest {
 	}
 
 	@Test
-	public void getListPAByAgent_noResult() throws ParseException {
+	public void listPAByAgentSansFuture_noResult() throws ParseException {
 		SpadmnRepository spadmnRepository = Mockito.mock(SpadmnRepository.class);
 		Mockito.when(spadmnRepository.chercherListPositionAdmAgentAncienne(5138, null)).thenReturn(null);
 
@@ -1045,7 +1046,7 @@ public class AbsenceServiceTest {
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "helper", helper);
 
-		List<InfosAlimAutoCongesAnnuelsDto> result = service.getListPAByAgent(9005138);
+		List<InfosAlimAutoCongesAnnuelsDto> result = service.listPAByAgentSansFuture(9005138, new Date());
 
 		assertNotNull(result);
 		assertEquals(result.size(), 0);
