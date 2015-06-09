@@ -72,13 +72,32 @@ public class KiosqueRhService implements IKiosqueRhService {
 	@Override
 	public ReturnMessageDto getAlerteRHByAgent(Integer idAgent) {
 		// ABSENCES
-		boolean approABS = sirhAbsWSConsumer.isUserApprobateur(idAgent);
-		boolean operateurABS = sirhAbsWSConsumer.isUserOperateur(idAgent);
-		boolean viseurABS = sirhAbsWSConsumer.isUserViseur(idAgent);
+		boolean approABS = false;
+		boolean operateurABS = false;
+		boolean viseurABS = false;
+		boolean approPTG = false;
+		boolean operateurPTG = false;
+		try {
+			approABS = sirhAbsWSConsumer.isUserApprobateur(idAgent);
+		} catch (Exception e) {
+		}
+		try {
+			operateurABS = sirhAbsWSConsumer.isUserOperateur(idAgent);
+		} catch (Exception e) {
+		}
+		try {
+			viseurABS = sirhAbsWSConsumer.isUserViseur(idAgent);
+		} catch (Exception e) {
+		}
 		// POINTAGES
-		boolean approPTG = sirhPtgWSConsumer.isUserApprobateur(idAgent);
-		boolean operateurPTG = sirhPtgWSConsumer.isUserOperateur(idAgent);
-
+		try {
+			approPTG = sirhPtgWSConsumer.isUserApprobateur(idAgent);
+		} catch (Exception e) {
+		}
+		try {
+			operateurPTG = sirhPtgWSConsumer.isUserOperateur(idAgent);
+		} catch (Exception e) {
+		}
 		// on cherche si il y a des alertes
 		List<AlerteRh> listeAlerte = getListeAlerte(approABS, approPTG, operateurABS, operateurPTG, viseurABS);
 		// on construite le DTO
@@ -96,10 +115,10 @@ public class KiosqueRhService implements IKiosqueRhService {
 		sb.append("select distinct a from AlerteRh a ");
 		sb.append("where a.agent = :agent ");
 		sb.append("and (a.approbateurABS =:approABS ");
-			sb.append("or a.approbateurPTG =:approPTG ");
-			sb.append("or a.operateurABS =:operateurABS ");
-			sb.append("or a.operateurPTG =:operateurPTG ");
-			sb.append("or a.viseurABS =:viseurABS) ");
+		sb.append("or a.approbateurPTG =:approPTG ");
+		sb.append("or a.operateurABS =:operateurABS ");
+		sb.append("or a.operateurPTG =:operateurPTG ");
+		sb.append("or a.viseurABS =:viseurABS) ");
 		sb.append("and :date between a.dateDebut and a.dateFin ");
 
 		TypedQuery<AlerteRh> q = sirhEntityManager.createQuery(sb.toString(), AlerteRh.class);
