@@ -114,20 +114,30 @@ public class KiosqueRhService implements IKiosqueRhService {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select distinct a from AlerteRh a ");
 		sb.append("where a.agent = :agent ");
-		sb.append("and (a.approbateurABS =:approABS ");
-		sb.append("or a.approbateurPTG =:approPTG ");
-		sb.append("or a.operateurABS =:operateurABS ");
-		sb.append("or a.operateurPTG =:operateurPTG ");
-		sb.append("or a.viseurABS =:viseurABS) ");
+		if (approABS)
+			sb.append("or a.approbateurABS =:approABS ");
+		if (approPTG)
+			sb.append("or a.approbateurPTG =:approPTG ");
+		if (operateurABS)
+			sb.append("or a.operateurABS =:operateurABS ");
+		if (operateurPTG)
+			sb.append("or a.operateurPTG =:operateurPTG ");
+		if (viseurABS)
+			sb.append("or a.viseurABS =:viseurABS ");
 		sb.append("and :date between a.dateDebut and a.dateFin ");
 
 		TypedQuery<AlerteRh> q = sirhEntityManager.createQuery(sb.toString(), AlerteRh.class);
 		q.setParameter("agent", true);
-		q.setParameter("approABS", approABS);
-		q.setParameter("approPTG", approPTG);
-		q.setParameter("operateurABS", operateurABS);
-		q.setParameter("operateurPTG", operateurPTG);
-		q.setParameter("viseurABS", viseurABS);
+		if (approABS)
+			q.setParameter("approABS", approABS);
+		if (approPTG)
+			q.setParameter("approPTG", approPTG);
+		if (operateurABS)
+			q.setParameter("operateurABS", operateurABS);
+		if (operateurPTG)
+			q.setParameter("operateurPTG", operateurPTG);
+		if (viseurABS)
+			q.setParameter("viseurABS", viseurABS);
 		q.setParameter("date", new Date());
 
 		return q.getResultList();
