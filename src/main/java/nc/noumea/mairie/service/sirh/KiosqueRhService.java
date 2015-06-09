@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,15 +9,28 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.AccueilRh;
+import nc.noumea.mairie.model.bean.sirh.AlerteRh;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
+import nc.noumea.mairie.ws.ISirhAbsWSConsumer;
+import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
+@Repository
 public class KiosqueRhService implements IKiosqueRhService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
+
+	@Autowired
+	private ISirhAbsWSConsumer sirhAbsWSConsumer;
+
+	@Autowired
+	private ISirhPtgWSConsumer sirhPtgWSConsumer;
 
 	@Override
 	public List<AccueilRh> getListeAccueilRh() {
@@ -53,5 +67,50 @@ public class KiosqueRhService implements IKiosqueRhService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public ReturnMessageDto getAlerteRHByAgent(Integer idAgent) {
+		// ABSENCES
+		boolean approABS = sirhAbsWSConsumer.isUserApprobateur(idAgent);
+		boolean operateurABS = sirhAbsWSConsumer.isUserOperateur(idAgent);
+		boolean viseurABS = sirhAbsWSConsumer.isUserViseur(idAgent);
+		// POINTAGES
+		boolean approPTG = sirhPtgWSConsumer.isUserApprobateur(idAgent);
+		boolean operateurPTG = sirhPtgWSConsumer.isUserOperateur(idAgent);
+
+		// on cherche si il y a des alertes
+		List<AlerteRh> listeAlerte = getListeAlerte(approABS, approPTG, operateurABS, operateurPTG, viseurABS);
+		// on construite le DTO
+		ReturnMessageDto dto = new ReturnMessageDto();
+		for (AlerteRh a : listeAlerte) {
+			dto.getInfos().add(a.getTexteAlerteKiosque());
+		}
+		return dto;
+	}
+
+	@Override
+	public List<AlerteRh> getListeAlerte(boolean approABS, boolean approPTG, boolean operateurABS,
+			boolean operateurPTG, boolean viseurABS) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select distinct a from AlerteRh a ");
+		sb.append("where a.agent = :agent ");
+		sb.append("and (a.approbateurABS =:approABS ");
+			sb.append("or a.approbateurPTG =:approPTG ");
+			sb.append("or a.operateurABS =:operateurABS ");
+			sb.append("or a.operateurPTG =:operateurPTG ");
+			sb.append("or a.viseurABS =:viseurABS) ");
+		sb.append("and :date between a.dateDebut and a.dateFin ");
+
+		TypedQuery<AlerteRh> q = sirhEntityManager.createQuery(sb.toString(), AlerteRh.class);
+		q.setParameter("agent", true);
+		q.setParameter("approABS", approABS);
+		q.setParameter("approPTG", approPTG);
+		q.setParameter("operateurABS", operateurABS);
+		q.setParameter("operateurPTG", operateurPTG);
+		q.setParameter("viseurABS", viseurABS);
+		q.setParameter("date", new Date());
+
+		return q.getResultList();
 	}
 }
