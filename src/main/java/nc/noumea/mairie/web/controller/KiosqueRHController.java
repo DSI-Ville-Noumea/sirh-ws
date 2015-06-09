@@ -16,7 +16,10 @@ import nc.noumea.mairie.service.sirh.IKiosqueRhService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AccueilRhDto;
 import nc.noumea.mairie.web.dto.ReferentRhDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +46,8 @@ public class KiosqueRHController {
 
 	@Autowired
 	private IAffectationService affSrv;
+
+	private Logger logger = LoggerFactory.getLogger(KiosqueRHController.class);
 
 	@RequestMapping(value = "/getReferentRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
@@ -105,5 +110,30 @@ public class KiosqueRHController {
 			newIdAgent = idAgent.toString();
 		}
 		return newIdAgent;
+	}
+
+	@RequestMapping(value = "/getAlerteRHByAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAlerteRHByAgent(Integer idAgent) {
+
+		logger.debug("entered GET [kiosqueRH/getAlerteRHByAgent] => getAlerteRHByAgent with parameter idAgent = {}  ",
+				idAgent);
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		ReturnMessageDto res = kiosqueSrv.getAlerteRHByAgent(new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(res);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 }

@@ -46,6 +46,13 @@
 		override="false" />
 
 	<!-- -->
+	<!-- WS ABS -->
+	<!-- -->
+	<Environment name="SIRH_ABS_WS_URL" type="java.lang.String"
+		description="SIRH ABS WS url pour les droits" value="http://***REMOVED***:8085/sirh-abs-ws/"
+		override="false" />
+
+	<!-- -->
 	<!-- WS RADI pour interroger AD -->
 	<!-- -->
 	<Environment name="RADI_WS_URL" type="java.lang.String"
