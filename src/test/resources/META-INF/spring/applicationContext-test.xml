@@ -71,6 +71,8 @@
 
 	<bean class="java.lang.String" id="ptgWsBaseUrl" />
 
+	<bean class="java.lang.String" id="absWsBaseUrl" />
+
 	<bean class="java.lang.String" id="radiWsBaseUrl" />
 
 	<bean class="java.lang.String" id="eaeWsBaseUrl" />
