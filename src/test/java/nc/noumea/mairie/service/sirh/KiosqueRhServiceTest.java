@@ -194,6 +194,45 @@ public class KiosqueRhServiceTest {
 		assertEquals("texte 2", result.get(1).getTexteAlerteKiosque());
 	}
 
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeAlerte_GoodDate_returnList() {
+		// Given
+		AlerteRh ref3 = new AlerteRh();
+		ref3.setIdAlerteKiosque(3);
+		ref3.setAgent(true);
+		ref3.setTexteAlerteKiosque("texte 3");
+		ref3.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
+		ref3.setDateFin(new DateTime(2016, 6, 2, 0, 0, 0).toDate());
+		sirhPersistenceUnit.persist(ref3);
+
+		// When
+		List<AlerteRh> result = repository.getListeAlerte(true, false, true, false, false);
+
+		// Then
+		assertEquals(1, result.size());
+		assertEquals("texte 3", result.get(0).getTexteAlerteKiosque());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeAlerte_BadDate_returnEmptyList() {
+		// Given
+		AlerteRh ref3 = new AlerteRh();
+		ref3.setIdAlerteKiosque(3);
+		ref3.setAgent(true);
+		ref3.setTexteAlerteKiosque("texte 3");
+		ref3.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
+		ref3.setDateFin(new DateTime(2015, 6, 8, 0, 0, 0).toDate());
+		sirhPersistenceUnit.persist(ref3);
+
+		// When
+		List<AlerteRh> result = repository.getListeAlerte(true, false, true, false, false);
+
+		// Then
+		assertEquals(0, result.size());
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getAlerteRHByAgent_returnNull() {
