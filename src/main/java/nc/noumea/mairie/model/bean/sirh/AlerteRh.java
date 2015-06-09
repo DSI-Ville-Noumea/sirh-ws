@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "P_ALERTE_KIOSQUE")
@@ -41,9 +43,11 @@ public class AlerteRh {
 	private boolean viseurABS;
 
 	@Column(name = "DATE_DEBUT")
+	@Temporal(TemporalType.DATE)
 	private Date dateDebut;
 
 	@Column(name = "DATE_FIN")
+	@Temporal(TemporalType.DATE)
 	private Date dateFin;
 
 	public Integer getIdAlerteKiosque() {
