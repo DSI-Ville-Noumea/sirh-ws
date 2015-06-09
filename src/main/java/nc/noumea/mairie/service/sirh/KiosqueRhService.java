@@ -113,7 +113,7 @@ public class KiosqueRhService implements IKiosqueRhService {
 			boolean operateurPTG, boolean viseurABS) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select distinct a from AlerteRh a ");
-		sb.append("where a.agent = :agent ");
+		sb.append("where (a.agent = :agent ");
 		if (approABS)
 			sb.append("or a.approbateurABS =:approABS ");
 		if (approPTG)
@@ -124,7 +124,7 @@ public class KiosqueRhService implements IKiosqueRhService {
 			sb.append("or a.operateurPTG =:operateurPTG ");
 		if (viseurABS)
 			sb.append("or a.viseurABS =:viseurABS ");
-		sb.append("and :date between a.dateDebut and a.dateFin ");
+		sb.append(")and :date between a.dateDebut and a.dateFin ");
 
 		TypedQuery<AlerteRh> q = sirhEntityManager.createQuery(sb.toString(), AlerteRh.class);
 		q.setParameter("agent", true);
