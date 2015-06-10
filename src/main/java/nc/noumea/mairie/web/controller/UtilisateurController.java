@@ -1,6 +1,12 @@
 package nc.noumea.mairie.web.controller;
 
+import java.util.Date;
+
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IUtilisateurService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
@@ -25,6 +31,9 @@ public class UtilisateurController {
 
 	@Autowired
 	private IUtilisateurService utilisateurSrv;
+
+	@Autowired
+	private IAgentService agentSrv;
 
 	private String remanieIdAgent(Integer idAgent) {
 		String newIdAgent;
@@ -59,5 +68,30 @@ public class UtilisateurController {
 		} else {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getAutorisationOrganigramme", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getAutorisationOrganigramme(@RequestParam(value = "idAgent", required = true) Integer idAgent) {
+
+		logger.debug("entered GET [utilisateur/getAutorisationOrganigramme] => getAutorisationOrganigramme with parameters idAgent = {}",
+				idAgent);
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
+
+		if (ag == null) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		AccessRightOrganigrammeDto res = utilisateurSrv.getOrganigrammeAccessRight(new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(res);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 }

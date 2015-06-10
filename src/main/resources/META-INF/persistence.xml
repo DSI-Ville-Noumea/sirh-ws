@@ -87,6 +87,8 @@
 		<class>nc.noumea.mairie.model.bean.Spprim</class>
 		<class>nc.noumea.mairie.model.bean.sirh.TypeRepresentant</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AlerteRh</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.GroupeUtilisateur</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Droits</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />
