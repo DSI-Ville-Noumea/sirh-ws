@@ -75,7 +75,7 @@ public class UtilisateurService implements IUtilisateurService {
 	@Override
 	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer newIdAgent) {
 		
-		//il faut recuprere l'element id=86 (c'est le numero du bon ecran) de la table des droits et faire la mapping avec le groupe et l'utilisateur
+		//il faut recuprere l'element id_element=86 (c'est le numero du bon ecran) de la table des droits et faire la mapping avec le groupe et l'utilisateur
 		// TODO Auto-generated method stub
 		return null;
 	}
