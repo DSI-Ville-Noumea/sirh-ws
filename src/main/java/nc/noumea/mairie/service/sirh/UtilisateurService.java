@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
+import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -69,5 +70,13 @@ public class UtilisateurService implements IUtilisateurService {
 		}
 
 		return res;
+	}
+
+	@Override
+	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer newIdAgent) {
+		
+		//il faut recuprere l'element id=86 (c'est le numero du bon ecran) de la table des droits et faire la mapping avec le groupe et l'utilisateur
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
