@@ -1,8 +1,8 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -28,7 +28,7 @@ public class SpcarrWithoutSpgradn {
 				+ dateArrete + ", referenceArrete=" + referenceArrete + ", modReg=" + modReg + "]";
 	}
 
-	@EmbeddedId
+	@Id
 	private SpcarrId id;
 
 	public SpcarrWithoutSpgradn() {

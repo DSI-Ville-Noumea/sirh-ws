@@ -20,32 +20,32 @@ public class DiplomeAgent {
 
 	@Id
 	@Column(name = "ID_DIPLOME")
-	public Integer idDiplome;
+	private Integer idDiplome;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TITRE_DIPLOME", referencedColumnName = "ID_TITRE_DIPLOME")
-	public TitreDiplome titreDiplome;
+	private TitreDiplome titreDiplome;
 	
 	@Column(name = "ID_AGENT")
-	public Integer idAgent;
+	private Integer idAgent;
 	
 	@Column(name = "ID_DOCUMENT")
-	public Integer idDocument;
+	private Integer idDocument;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_SPECIALITE_DIPLOME", referencedColumnName = "ID_SPECIALITE_DIPLOME")
-	public SpecialiteDiplome specialiteDiplome;
+	private SpecialiteDiplome specialiteDiplome;
 	
 	@Column(name = "DATE_OBTENTION")
 	@Temporal(TemporalType.DATE)
-	public Date dateObtention;
+	private Date dateObtention;
 	
 	@Column(name = "NOM_ECOLE")
-	public String nomEcole;
+	private String nomEcole;
 	
 	@Column(name = "DATE_VALIDITE")
 	@Temporal(TemporalType.DATE)
-	public Date dateValidite;
+	private Date dateValidite;
 	
 	
 	public Integer getIdDiplome() {
