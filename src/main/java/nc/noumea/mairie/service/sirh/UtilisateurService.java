@@ -7,18 +7,26 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Droits;
+import nc.noumea.mairie.model.bean.sirh.DroitsElementEnum;
+import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
+import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UtilisateurService implements IUtilisateurService {
 
+	Logger logger = LoggerFactory.getLogger(UtilisateurService.class);
+	
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
 
@@ -27,6 +35,9 @@ public class UtilisateurService implements IUtilisateurService {
 
 	@Autowired
 	private IRadiWSConsumer radiWSConsumer;
+
+	@Autowired
+	private IDroitsRepository droitsRepository;
 
 	@Override
 	public Utilisateur chercherUtilisateurSIRHByLogin(String login) {
@@ -73,10 +84,48 @@ public class UtilisateurService implements IUtilisateurService {
 	}
 
 	@Override
-	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer newIdAgent) {
+	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer idAgent) {
 		
-		//il faut recuprere l'element id_element=86 (c'est le numero du bon ecran) de la table des droits et faire la mapping avec le groupe et l'utilisateur
-		// TODO Auto-generated method stub
-		return null;
+		AccessRightOrganigrammeDto result = new AccessRightOrganigrammeDto();
+		
+		// il faut recuperer l'element id_element=86 (c'est le numero du bon ecran) de la table des droits 
+		// et faire la mapping avec le groupe et l'utilisateur
+		LightUserDto user = getLoginByIdAgent(idAgent);
+		if(null == user) {
+			return result;
+		}
+		List<Droits> droits = droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName());
+		
+		if(null != droits) {
+			for(Droits droit : droits) {
+				if(TypeDroitEnum.CONSULTATION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
+					result.setVisualisation(true);
+				}
+				if(TypeDroitEnum.EDITION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
+					result.setVisualisation(true);
+					result.setEdition(true);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private LightUserDto getLoginByIdAgent(Integer idAgent) {
+		// on cherche si l'agent existe
+		Agent ag = agentSrv.getAgent(idAgent);
+		if (ag == null) {
+			logger.debug("L'agent " + idAgent + " n'existe pas.");
+			return null;
+		}
+
+		// on fait la correspondance entre le login et l'agent via RADI
+		LightUserDto user = radiWSConsumer.getAgentCompteAD(Integer.valueOf(radiWSConsumer.getNomatrWithIdAgent(idAgent)));
+		if (user == null || user.getsAMAccountName() == null) {
+			logger.debug("L'agent " + idAgent + " n'a pas de compte AD ou n'a pas son login renseigné.");
+			return null;
+		}
+
+		return user;
 	}
 }
