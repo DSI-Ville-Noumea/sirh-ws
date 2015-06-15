@@ -3,8 +3,8 @@ package nc.noumea.mairie.model.bean;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -17,7 +17,7 @@ public class Siguic implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
+	@Id
 	private SiguicId id;
 
 	@Column(name = "LIGUIC", columnDefinition = "char")

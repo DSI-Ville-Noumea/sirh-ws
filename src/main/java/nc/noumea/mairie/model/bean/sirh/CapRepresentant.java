@@ -1,8 +1,8 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PersistenceUnit;
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class CapRepresentant {
 
-	@EmbeddedId
+	@Id
 	private CapRepresentantPK capRepresentantPk;
 
 	@ManyToOne(optional = false)
