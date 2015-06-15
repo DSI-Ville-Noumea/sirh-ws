@@ -1,8 +1,8 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -14,15 +14,15 @@ import nc.noumea.mairie.model.pk.SpprimId;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spprim {
 
-	@EmbeddedId
+	@Id
 	private SpprimId id;
 
 	@Column(name = "DATFIN", columnDefinition = "numeric")
-	public Integer datfin;
+	private Integer datfin;
 
 	@NotNull
 	@Column(name = "MTPRI", columnDefinition = "decimal")
-	public double montantPrime;
+	private double montantPrime;
 
 	public SpprimId getId() {
 		return id;

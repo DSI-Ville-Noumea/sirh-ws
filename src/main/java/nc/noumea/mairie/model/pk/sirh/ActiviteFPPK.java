@@ -3,8 +3,11 @@ package nc.noumea.mairie.model.pk.sirh;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-public final class ActiviteFPPK implements Serializable {
+@Embeddable
+public class ActiviteFPPK implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "ID_ACTIVITE")

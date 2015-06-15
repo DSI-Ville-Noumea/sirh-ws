@@ -13,10 +13,10 @@ public class TitreFormation {
 
 	@Id
 	@Column(name = "ID_TITRE_FORMATION")
-	public Integer idTitreFormation;
+	private Integer idTitreFormation;
 	
 	@Column(name = "LIB_TITRE_FORMATION")
-	public String libTitreFormation;
+	private String libTitreFormation;
 
 	public Integer getIdTitreFormation() {
 		return idTitreFormation;
