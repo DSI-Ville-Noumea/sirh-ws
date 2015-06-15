@@ -2,7 +2,6 @@ package nc.noumea.mairie.web.controller;
 
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IUtilisateurService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
@@ -70,6 +69,12 @@ public class UtilisateurController {
 		}
 	}
 
+	/**
+	 * Retourne un AccessRightOrganigrammeDto avec les droits de l agent pour l organigramme
+	 * 
+	 * @param idAgent Identifiant de l agent
+	 * @return AccessRightOrganigrammeDto
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAutorisationOrganigramme", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -80,12 +85,6 @@ public class UtilisateurController {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null) {
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-		}
 
 		AccessRightOrganigrammeDto res = utilisateurSrv.getOrganigrammeAccessRight(new Integer(newIdAgent));
 

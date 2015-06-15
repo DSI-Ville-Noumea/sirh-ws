@@ -7,6 +7,7 @@
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>nc.noumea.mairie.model.bean.sirh.Activite</class>
 		<class>nc.noumea.mairie.model.bean.sirh.ActiviteFP</class>
+		<class>nc.noumea.mairie.model.pk.sirh.ActiviteFPPK</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AvancementDetache</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AvantageNature</class>
@@ -25,6 +26,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.SituationFamiliale</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Competence</class>
 		<class>nc.noumea.mairie.model.bean.sirh.CompetenceFP</class>
+		<class>nc.noumea.mairie.model.pk.sirh.CompetenceFPPK</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Contact</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Delegation</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Enfant</class>
@@ -63,6 +65,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.NatureCredit</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Utilisateur</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AutreAdministration</class>
+		<class>nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent</class>
 		<class>nc.noumea.mairie.model.bean.Spcatg</class>
 		<class>nc.noumea.mairie.model.bean.sirh.MotifAvct</class>
@@ -87,8 +90,10 @@
 		<class>nc.noumea.mairie.model.bean.Spprim</class>
 		<class>nc.noumea.mairie.model.bean.sirh.TypeRepresentant</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AlerteRh</class> 
-		<class>nc.noumea.mairie.model.bean.sirh.GroupeUtilisateur</class>
-		<class>nc.noumea.mairie.model.bean.sirh.Droits</class>
+		<class>nc.noumea.mairie.model.pk.sirh.DroitsId</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.Droits</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsElement</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsGroupe</class> 
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

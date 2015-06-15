@@ -10,6 +10,6 @@ public interface IUtilisateurService {
 
 	public ReturnMessageDto isUtilisateurSIRH(String newIdAgent);
 
-	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer newIdAgent);
+	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer idAgent);
 
 }

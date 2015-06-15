@@ -1,6 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Droits;
+import nc.noumea.mairie.model.bean.sirh.DroitsElementEnum;
+import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
+import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
+import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
 import nc.noumea.mairie.ws.RadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -169,6 +174,202 @@ public class UtilisateurServiceTest {
 
 		// Then
 		assertEquals(0, result.getErrors().size());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_agentNotExist() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(null);
 
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertFalse(result.isVisualisation());
+		assertFalse(result.isEdition());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_pasDeCompteAD() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(null);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertFalse(result.isVisualisation());
+		assertFalse(result.isEdition());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_noDroits() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(user);
+
+		List<Droits> droits = new ArrayList<Droits>();
+		
+		IDroitsRepository droitsRepository = Mockito.mock(IDroitsRepository.class);
+		Mockito.when(droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName()))
+			.thenReturn(droits);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		ReflectionTestUtils.setField(service, "droitsRepository", droitsRepository);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertFalse(result.isVisualisation());
+		assertFalse(result.isEdition());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_DroitConsultation() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(user);
+
+		Droits droitConsult = new Droits();
+		droitConsult.setIdTypeDroit(TypeDroitEnum.CONSULTATION.getIdTypeDroit());
+		
+		List<Droits> droits = new ArrayList<Droits>();
+		droits.add(droitConsult);
+		
+		IDroitsRepository droitsRepository = Mockito.mock(IDroitsRepository.class);
+		Mockito.when(droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName()))
+			.thenReturn(droits);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		ReflectionTestUtils.setField(service, "droitsRepository", droitsRepository);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertTrue(result.isVisualisation());
+		assertFalse(result.isEdition());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_DroitEdition() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(user);
+
+		Droits droitEdition = new Droits();
+		droitEdition.setIdTypeDroit(TypeDroitEnum.EDITION.getIdTypeDroit());
+		
+		List<Droits> droits = new ArrayList<Droits>();
+		droits.add(droitEdition);
+		
+		IDroitsRepository droitsRepository = Mockito.mock(IDroitsRepository.class);
+		Mockito.when(droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName()))
+			.thenReturn(droits);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		ReflectionTestUtils.setField(service, "droitsRepository", droitsRepository);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertTrue(result.isVisualisation());
+		assertTrue(result.isEdition());
+	}
+	
+	@Test
+	public void getOrganigrammeAccessRight_2DroitsConsultationEtEdition() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(user);
+
+		Droits droitConsult = new Droits();
+		droitConsult.setIdTypeDroit(TypeDroitEnum.CONSULTATION.getIdTypeDroit());
+
+		Droits droitEdition = new Droits();
+		droitEdition.setIdTypeDroit(TypeDroitEnum.EDITION.getIdTypeDroit());
+		
+		List<Droits> droits = new ArrayList<Droits>();
+		droits.add(droitConsult);
+		droits.add(droitEdition);
+		
+		IDroitsRepository droitsRepository = Mockito.mock(IDroitsRepository.class);
+		Mockito.when(droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName()))
+			.thenReturn(droits);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		ReflectionTestUtils.setField(service, "droitsRepository", droitsRepository);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertTrue(result.isVisualisation());
+		assertTrue(result.isEdition());
 	}
 }
