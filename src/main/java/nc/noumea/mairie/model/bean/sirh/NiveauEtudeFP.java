@@ -1,7 +1,7 @@
 package nc.noumea.mairie.model.bean.sirh;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -12,7 +12,7 @@ import nc.noumea.mairie.model.pk.sirh.NiveauEtudeFPPK;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class NiveauEtudeFP {
 
-	@EmbeddedId
+	@Id
 	private NiveauEtudeFPPK niveauEtudeFPPK;
 
 	public NiveauEtudeFPPK getNiveauEtudeFPPK() {

@@ -1,8 +1,8 @@
 package nc.noumea.mairie.model.bean;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -14,19 +14,19 @@ import nc.noumea.mairie.model.pk.SpmtsrId;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class Spmtsr {
 
-	@EmbeddedId
+	@Id
 	private SpmtsrId id;
 	
 	@NotNull
 	@Column(name = "REFARR", columnDefinition = "numeric")
-	public Integer refarr;
+	private Integer refarr;
 	
 	@Column(name = "DATFIN", columnDefinition = "numeric")
-	public Integer datfin;
+	private Integer datfin;
 	
 	@NotNull
 	@Column(name = "CDECOL", columnDefinition = "numeric")
-	public Integer cdecol;
+	private Integer cdecol;
 
 	public SpmtsrId getId() {
 		return id;

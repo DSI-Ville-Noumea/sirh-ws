@@ -13,13 +13,13 @@ public class TitreDiplome {
 
 	@Id
 	@Column(name = "ID_TITRE_DIPLOME")
-	public Integer idTitreDiplome;
+	private Integer idTitreDiplome;
 	
 	@Column(name = "LIB_TITRE_DIPLOME")
-	public String libTitreDiplome;
+	private String libTitreDiplome;
 	
 	@Column(name = "NIVEAU_ETUDE")
-	public String niveauEtude;
+	private String niveauEtude;
 
 	public Integer getIdTitreDiplome() {
 		return idTitreDiplome;

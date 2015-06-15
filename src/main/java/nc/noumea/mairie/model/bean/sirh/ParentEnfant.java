@@ -1,8 +1,8 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceUnit;
@@ -15,7 +15,7 @@ import nc.noumea.mairie.model.pk.sirh.ParentEnfantPK;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class ParentEnfant {
 
-	@EmbeddedId
+	@Id
 	private ParentEnfantPK parentEnfantPK;
 
 	@OneToOne

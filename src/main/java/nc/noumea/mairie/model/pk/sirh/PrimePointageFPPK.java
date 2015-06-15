@@ -3,8 +3,10 @@ package nc.noumea.mairie.model.pk.sirh;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-public final class PrimePointageFPPK implements Serializable {
+@Embeddable
+public class PrimePointageFPPK implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
