@@ -50,6 +50,9 @@ public class SuiviMedical {
 	@JoinColumn(name = "ID_MOTIF_VM", referencedColumnName = "ID_MOTIF_VM")
 	private MotifVM motif;
 
+	@Column(name = "ID_SERVICE_ADS")
+	private Integer idServiceADS;
+
 	public Agent getAgent() {
 		return agent;
 	}
@@ -112,5 +115,13 @@ public class SuiviMedical {
 
 	public void setMotif(MotifVM motif) {
 		this.motif = motif;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 }

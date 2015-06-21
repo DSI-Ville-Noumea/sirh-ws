@@ -170,6 +170,9 @@ public class FichePoste {
 	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
 	private NatureCredit natureCredit;
 
+	@Column(name = "ID_SERVICE_ADS")
+	private Integer idServiceADS;
+
 	public TitrePoste getTitrePoste() {
 		return titrePoste;
 	}
@@ -380,5 +383,13 @@ public class FichePoste {
 
 	public void setIdFichePoste(Integer idFichePoste) {
 		this.idFichePoste = idFichePoste;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 }
