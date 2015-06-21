@@ -24,6 +24,9 @@ public class ReferentRh {
 	@Column(name = "NUMERO_TELEPHONE")
 	private Integer numeroTelephone;
 
+	@Column(name = "ID_SERVICE_ADS")
+	private Integer idServiceADS;
+
 	public String getServi() {
 		return servi;
 	}
@@ -54,5 +57,13 @@ public class ReferentRh {
 
 	public void setIdReferentRh(Integer idReferentRh) {
 		this.idReferentRh = idReferentRh;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 }
