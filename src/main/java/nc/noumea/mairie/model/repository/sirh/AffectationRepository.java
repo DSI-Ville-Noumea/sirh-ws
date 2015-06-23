@@ -45,17 +45,17 @@ public class AffectationRepository implements IAffectationRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, String idService) {
+	public List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS) {
 
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select aff from Affectation aff ");
 		sb.append(" inner join aff.fichePoste fp ");
-		sb.append(" WHERE aff.agent.idAgent = :idAgent and fp.service.servi = :idService order by aff.dateDebutAff desc ");
+		sb.append(" WHERE aff.agent.idAgent = :idAgent and fp.idServiceADS = :idServiceADS order by aff.dateDebutAff desc ");
 
 		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
 		query.setParameter("idAgent", idAgent);
-		query.setParameter("idService", idService);
+		query.setParameter("idServiceADS", idServiceADS);
 
 		return query.getResultList();
 	}
@@ -105,7 +105,7 @@ public class AffectationRepository implements IAffectationRepository {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select a from Affectation a ");
-		sb.append("where a.agent.idAgent = :idAgent ");		
+		sb.append("where a.agent.idAgent = :idAgent ");
 		sb.append("order by a.dateDebutAff desc ");
 
 		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);

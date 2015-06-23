@@ -19,6 +19,8 @@ import nc.noumea.mairie.web.dto.CompteDto;
 import nc.noumea.mairie.web.dto.ContratDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,9 @@ public class ContratController {
 	@Autowired
 	private IReportingService reportingService;
 
+	@Autowired
+	private IADSWSConsumer adsWSConsumer;
+
 	@ResponseBody
 	@RequestMapping(value = "/xml/getContratSIRH", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -102,7 +107,11 @@ public class ContratController {
 		// on construit le DTO
 
 		List<DiplomeDto> listDiplomeDto = calculEaeSrv.getListDiplomeDto(idAgent);
-		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste());
+		NoeudDto service = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
+		NoeudDto direction = adsWSConsumer.getDirectionByIdService(aff.getFichePoste().getIdServiceADS());
+		NoeudDto section = adsWSConsumer.getSection(aff.getFichePoste().getIdServiceADS());
+		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction.getLabel(), service.getLabel(),
+				section.getLabel());
 		CompteDto cptDto = new CompteDto(ag, banque);
 		AgentDto agDto = new AgentDto(ag, cptDto);
 		if (ag.getCodeCommuneNaissFr() == null) {

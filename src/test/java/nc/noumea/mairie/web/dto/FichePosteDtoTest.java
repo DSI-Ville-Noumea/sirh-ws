@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 
 import nc.noumea.mairie.model.bean.Silieu;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
@@ -57,12 +56,12 @@ public class FichePosteDtoTest {
 		// Given
 		FichePoste fp = getFichePoste();
 		// When
-		FichePosteDto dto = new FichePosteDto(fp);
+		FichePosteDto dto = new FichePosteDto(fp, "", "", "");
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
-		assertEquals(fp.getService().getDirection(), dto.getDirection());
+		// assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
 		assertEquals(fp.getBudget().getLibelleBudget(), dto.getBudget());
 		assertEquals(fp.getBudgete().getLibHor(), dto.getBudgete());
@@ -70,8 +69,8 @@ public class FichePosteDtoTest {
 		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
 				dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getDivision(), dto.getService());
-		assertEquals(fp.getService().getSection(), dto.getSection());
+		// assertEquals(fp.getService().getDivision(), dto.getService());
+		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
 		assertEquals(fp.getMissions(), dto.getMissions());
@@ -142,12 +141,12 @@ public class FichePosteDtoTest {
 		fp.getPrimePointageFP().add(pp1);
 		fp.getPrimePointageFP().add(pp2);
 		// When
-		FichePosteDto dto = new FichePosteDto(fp, true);
+		FichePosteDto dto = new FichePosteDto(fp, true, "", "", "");
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
-		assertEquals(fp.getService().getDirection(), dto.getDirection());
+		// assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
 		assertEquals(fp.getBudget().getLibelleBudget(), dto.getBudget());
 		assertEquals(fp.getBudgete().getLibHor(), dto.getBudgete());
@@ -155,8 +154,8 @@ public class FichePosteDtoTest {
 		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
 				dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getDivision(), dto.getService());
-		assertEquals(fp.getService().getSection(), dto.getSection());
+		// assertEquals(fp.getService().getDivision(), dto.getService());
+		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
 		assertEquals(fp.getMissions(), dto.getMissions());
@@ -188,13 +187,13 @@ public class FichePosteDtoTest {
 	}
 
 	private FichePoste getFichePoste() {
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
-		service.setSection("SECETION SERVICE");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
+		// service.setSection("SECETION SERVICE");
 
 		TitrePoste tp = new TitrePoste();
 		tp.setLibTitrePoste("Lib nono");
@@ -240,7 +239,7 @@ public class FichePosteDtoTest {
 
 		FichePoste fp = new FichePoste();
 		fp.setIdFichePoste(1234);
-		fp.setService(service);
+		// fp.setService(service);
 		fp.setNumFP("2013/5");
 		fp.setTitrePoste(tp);
 		fp.setBudget(budget);

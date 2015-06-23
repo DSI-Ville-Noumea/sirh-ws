@@ -8,9 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Contact;
-import nc.noumea.mairie.service.sirh.ContactService;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -22,10 +20,6 @@ public class ContactServiceTest {
 	public void getContactsAgent_returnEmptyList() {
 		// Given
 		List<Contact> listeContact = new ArrayList<Contact>();
-
-		Siserv service = new Siserv();
-		service.setServi("N");
-		service.setLiServ("NONO");
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Contact> mockQuery = Mockito.mock(TypedQuery.class);
@@ -57,10 +51,6 @@ public class ContactServiceTest {
 		ag2.setDescription("TEST DESC");
 		listeContact.add(ag1);
 		listeContact.add(ag2);
-
-		Siserv service = new Siserv();
-		service.setServi("N");
-		service.setLiServ("NONO");
 
 		TypedQuery<Contact> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(listeContact);

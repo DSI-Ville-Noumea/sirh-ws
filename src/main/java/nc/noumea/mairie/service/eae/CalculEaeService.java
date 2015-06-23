@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
@@ -23,7 +22,6 @@ import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISpCarrService;
 import nc.noumea.mairie.service.ISpadmnService;
 import nc.noumea.mairie.web.dto.AgentDto;
@@ -33,18 +31,17 @@ import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.FormationDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
 import nc.noumea.mairie.web.dto.ParcoursProDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CalculEaeService implements ICalculEaeService {
-
-	@Autowired
-	private ISiservService siservSrv;
 
 	@Autowired
 	private IMairieRepository mairieRepository;
@@ -70,6 +67,9 @@ public class CalculEaeService implements ICalculEaeService {
 	@Autowired
 	private ISpCarrService spCarrService;
 
+	@Autowired
+	private IADSWSConsumer adsWSConsumer;
+
 	@Override
 	public CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation) {
 
@@ -82,27 +82,33 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setDateDebut(affectation.getDateDebutAff());
 			dto.setDateFin(affectation.getDateFinAff());
 
-			Siserv direction = siservSrv.getDirectionPourEAE(affectation.getFichePoste().getService().getServi());
-			affectation.getFichePoste().getService().setDirection(direction == null ? "" : direction.getLiServ());
-
-			Siserv section = siservSrv.getSection(affectation.getFichePoste().getService().getServi());
-			affectation.getFichePoste().getService().setSection(section == null ? "" : section.getLiServ());
+			NoeudDto service = adsWSConsumer.getNoeudByIdService(affectation.getFichePoste().getIdServiceADS());
+			NoeudDto direction = adsWSConsumer.getDirectionPourEAE(affectation.getFichePoste().getIdServiceADS());
+			NoeudDto section = adsWSConsumer.getSection(affectation.getFichePoste().getIdServiceADS());
 
 			TitrePosteDto titrePoste = new TitrePosteDto();
 			titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
 
-			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste());
+			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste(), direction.getLabel(),
+					service.getLabel(), section.getLabel());
 			fichePostePrincipale.setTitrePoste(titrePoste);
 
 			dto.setFichePostePrincipale(fichePostePrincipale);
 			if (null != affectation.getFichePosteSecondaire()) {
-				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire());
+				NoeudDto serviceSecondaire = adsWSConsumer.getNoeudByIdService(affectation.getFichePosteSecondaire()
+						.getIdServiceADS());
+				NoeudDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(affectation.getFichePosteSecondaire()
+						.getIdServiceADS());
+				NoeudDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
+						.getIdServiceADS());
+				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),
+						directionSecondaire.getLabel(), serviceSecondaire.getLabel(), sectionSecondaire.getLabel());
 				dto.setFichePosteSecondaire(fichePosteSecondaire);
 			}
 
 			if (null != affectation.getFichePoste().getSuperieurHierarchique()) {
 				FichePoste fichePosteSuperieur = affectation.getFichePoste().getSuperieurHierarchique();
-				FichePosteDto fichePosteResponsable = new FichePosteDto(fichePosteSuperieur.getService(),
+				FichePosteDto fichePosteResponsable = new FichePosteDto(fichePosteSuperieur.getIdServiceADS(),
 						fichePosteSuperieur.getIdFichePoste(), fichePosteSuperieur.getAgent());
 				if (null != fichePosteSuperieur.getTitrePoste()) {
 					TitrePosteDto titrePosteResponable = new TitrePosteDto();
@@ -155,11 +161,14 @@ public class CalculEaeService implements ICalculEaeService {
 			for (Spmtsr spMtsr : listSpmtsr) {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
 
-				Siserv direction = siservSrv.getDirectionPourEAE(spMtsr.getId().getServi());
-				parcoursProDto.setDirection(direction == null ? "" : direction.getLiServ());
+				// TODO à revoir lors reponse à #16246
+				NoeudDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getNoeudFromCodeServiceAS400(
+						spMtsr.getId().getServi()).getIdService());
+				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
 
-				Siserv service = siservSrv.getService(spMtsr.getId().getServi());
-				parcoursProDto.setService(service == null ? "" : service.getLiServ());
+				NoeudDto service = adsWSConsumer.getNoeudByIdService(adsWSConsumer.getNoeudFromCodeServiceAS400(
+						spMtsr.getId().getServi()).getIdService());
+				parcoursProDto.setService(service == null ? "" : service.getLabel());
 
 				listParcoursPro.add(parcoursProDto);
 			}
@@ -184,12 +193,12 @@ public class CalculEaeService implements ICalculEaeService {
 	}
 
 	@Override
-	public List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, String idService) {
+	public List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS) {
 
 		List<CalculEaeInfosDto> listDto = new ArrayList<CalculEaeInfosDto>();
 
 		List<Affectation> listAffectation = affectationRepository.getListeAffectationsAgentAvecService(idAgent,
-				idService);
+				idServiceADS);
 
 		if (null != listAffectation) {
 			for (Affectation affectation : listAffectation) {
@@ -356,8 +365,7 @@ public class CalculEaeService implements ICalculEaeService {
 
 		Spgradn gradeActuel = carr.getGrade();
 		// Si pas de grade suivant, agent non éligible
-		if (gradeActuel.getGradeSuivant() != null
-				&& null != gradeActuel.getGradeSuivant().getCdgrad()
+		if (gradeActuel.getGradeSuivant() != null && null != gradeActuel.getGradeSuivant().getCdgrad()
 				&& !"".equals(gradeActuel.getGradeSuivant().getCdgrad().trim())) {
 
 			if ((carr.getCategorie().getCodeCategorie().toString().equals("2") || carr.getCategorie()

@@ -14,7 +14,6 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISiguicService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.ISpadmnService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
@@ -64,9 +63,6 @@ public class AgentController {
 
 	@Autowired
 	private IFichePosteService fpSrv;
-
-	@Autowired
-	private ISiservService siservSrv;
 
 	@Autowired
 	private ISpadmnService spadmnSrv;
@@ -199,7 +195,7 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEquipeAgentOtherProject(
 			@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "codeService", required = false) String codeService) throws ParseException,
+			@RequestParam(value = "idService", required = false) Integer idService) throws ParseException,
 			java.text.ParseException {
 
 		// on remanie l'idAgent
@@ -214,11 +210,11 @@ public class AgentController {
 
 		AgentWithServiceDto ag = listAgent.get(0);
 
-		List<String> listService = new ArrayList<String>();
-		if (null != codeService) {
-			listService.add(codeService);
+		List<Integer> listService = new ArrayList<Integer>();
+		if (null != idService) {
+			listService.add(idService);
 		} else {
-			listService.add(ag.getCodeService());
+			listService.add(ag.getIdServiceADS());
 		}
 
 		if (listService.size() == 0) {
@@ -444,10 +440,9 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAgentsMairie(
 			@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
-			@RequestParam(value = "codeService", required = false, defaultValue = "") String codeService)
-			throws ParseException {
+			@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS) throws ParseException {
 
-		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, codeService);
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, idServiceADS);
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite),
 				HttpStatus.OK);

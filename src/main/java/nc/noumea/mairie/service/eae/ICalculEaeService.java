@@ -12,7 +12,7 @@ public interface ICalculEaeService {
 
 	CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation);
 
-	List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, String idService);
+	List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS);
 
 	List<CalculEaeInfosDto> getListeAffectationsAgentAvecFP(Integer idAgent, Integer idFichePoste);
 

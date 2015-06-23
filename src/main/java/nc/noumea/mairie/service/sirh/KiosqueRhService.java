@@ -41,13 +41,13 @@ public class KiosqueRhService implements IKiosqueRhService {
 	}
 
 	@Override
-	public ReferentRh getReferentRH(String codeService) {
+	public ReferentRh getReferentRH(Integer idServiceADS) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ref from ReferentRh ref ");
-		sb.append("where ref.servi = :codeService ");
+		sb.append("where ref.idServiceADS = :idServiceADS ");
 
 		TypedQuery<ReferentRh> q = sirhEntityManager.createQuery(sb.toString(), ReferentRh.class);
-		q.setParameter("codeService", codeService);
+		q.setParameter("idServiceADS", idServiceADS);
 
 		ReferentRh result = null;
 		try {

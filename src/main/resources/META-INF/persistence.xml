@@ -41,7 +41,6 @@
 		<class>nc.noumea.mairie.model.bean.Sicomm</class>
 		<class>nc.noumea.mairie.model.bean.Siguic</class>
 		<class>nc.noumea.mairie.model.bean.Silieu</class>
-		<class>nc.noumea.mairie.model.bean.Siserv</class>
 		<class>nc.noumea.mairie.model.bean.SIVIET</class>
 		<class>nc.noumea.mairie.model.bean.Sivoie</class>
 		<class>nc.noumea.mairie.model.bean.Spadmn</class>

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
@@ -19,7 +18,7 @@ import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.Deliberation;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.web.dto.avancements.ArreteDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
 
 import org.junit.Test;
 
@@ -87,12 +86,12 @@ public class ArreteDtoTest {
 		carr.setReferenceArrete(12125);
 		carr.setModReg("I");
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
 
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
@@ -103,9 +102,12 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		NoeudDto service = new NoeudDto();
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -169,12 +171,12 @@ public class ArreteDtoTest {
 		carr.setReferenceArrete(12125);
 		carr.setModReg("I");
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
 
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
@@ -185,9 +187,12 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		NoeudDto service = new NoeudDto();
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -257,12 +262,12 @@ public class ArreteDtoTest {
 		carr.setReferenceArrete(12125);
 		carr.setModReg("M");
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
 
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
@@ -271,9 +276,12 @@ public class ArreteDtoTest {
 		Speche echelonGrade = null;
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		NoeudDto service = new NoeudDto();
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals("", dto.getDeliberationLabel());
@@ -326,13 +334,6 @@ public class ArreteDtoTest {
 		avct.setNouvAccMois(0);
 		avct.setNouvAccJour(0);
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
-
 		Spclas classeGrade = null;
 
 		Speche echelonGrade = new Speche();
@@ -340,9 +341,16 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		direction.setLabel("TEST");
+		direction.setSigle("SN");
+		NoeudDto service = new NoeudDto();
+		service.setLabel("TEST DIRECTION SERV");
+		service.setSigle("S");
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
@@ -370,7 +378,7 @@ public class ArreteDtoTest {
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
 		barem.setIna(125);
-		
+
 		Spfili fili = new Spfili();
 		fili.setLibelleFili("FILIERE NONO");
 
@@ -400,12 +408,12 @@ public class ArreteDtoTest {
 		avct.setNouvAccMois(0);
 		avct.setNouvAccJour(0);
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
 
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
@@ -416,9 +424,12 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		NoeudDto service = new NoeudDto();
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(null, dto.getDateArrete());
@@ -461,13 +472,6 @@ public class ArreteDtoTest {
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
-
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
 		classeGrade.setLibCla("nono 1");
@@ -477,7 +481,14 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		direction.setSigle("SN");
+		direction.setLabel("TEST");
+		NoeudDto service = new NoeudDto();
+		service.setSigle("S");
+		service.setLabel("TEST DIRECTION SERV");
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -490,7 +501,7 @@ public class ArreteDtoTest {
 		avct.setNouvAccJour(2);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());
@@ -533,13 +544,6 @@ public class ArreteDtoTest {
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
 
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
-
 		Spclas classeGrade = new Spclas();
 		classeGrade.setCodcla("1");
 		classeGrade.setLibCla("nono 1");
@@ -549,7 +553,14 @@ public class ArreteDtoTest {
 		echelonGrade.setLibEch("Nono e");
 
 		FichePoste fp = new FichePoste();
-		fp.setService(service);
+		fp.setIdServiceADS(1);
+
+		NoeudDto direction = new NoeudDto();
+		direction.setLabel("TEST");
+		direction.setSigle("SN");
+		NoeudDto service = new NoeudDto();
+		service.setLabel("TEST DIRECTION SERV");
+		service.setSigle("S");
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -562,7 +573,7 @@ public class ArreteDtoTest {
 		avct.setNouvAccJour(2);
 
 		// When
-		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
 		// Then
 		assertEquals(2013, dto.getAnnee());

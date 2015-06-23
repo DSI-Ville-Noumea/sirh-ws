@@ -51,7 +51,7 @@ public class KiosqueRhServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		ReferentRh result = service.getReferentRH("DCAA");
+		ReferentRh result = service.getReferentRH(1);
 
 		// Then
 		assertNull(result);
@@ -63,10 +63,9 @@ public class KiosqueRhServiceTest {
 		// Given
 		ReferentRh ref1 = new ReferentRh();
 		ref1.setIdAgentReferent(9005138);
-		ref1.setServi("DCAA");
+		ref1.setIdServiceADS(1);
 		ReferentRh ref2 = new ReferentRh();
 		ref2.setIdAgentReferent(9005139);
-		ref2.setServi(null);
 
 		TypedQuery<ReferentRh> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getSingleResult()).thenReturn(ref1);
@@ -78,7 +77,7 @@ public class KiosqueRhServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		ReferentRh result = service.getReferentRH("DCAA");
+		ReferentRh result = service.getReferentRH(1);
 
 		// Then
 		assertEquals(new Integer(9005138), result.getIdAgentReferent());
@@ -90,10 +89,9 @@ public class KiosqueRhServiceTest {
 		// Given
 		ReferentRh ref1 = new ReferentRh();
 		ref1.setIdAgentReferent(9005138);
-		ref1.setServi("DCAA");
+		ref1.setIdServiceADS(1);
 		ReferentRh ref2 = new ReferentRh();
 		ref2.setIdAgentReferent(9005139);
-		ref2.setServi(null);
 
 		TypedQuery<ReferentRh> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getSingleResult()).thenReturn(ref2);
@@ -105,7 +103,7 @@ public class KiosqueRhServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		ReferentRh result = service.getReferentRH("DCAA");
+		ReferentRh result = service.getReferentRH(1);
 
 		// Then
 		assertEquals(new Integer(9005139), result.getIdAgentReferent());

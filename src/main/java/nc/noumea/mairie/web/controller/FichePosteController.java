@@ -8,13 +8,14 @@ import java.util.List;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.service.IReportingService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +49,10 @@ public class FichePosteController {
 	private IReportingService reportingService;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IAgentService agentSrv;
 
 	@Autowired
-	private IAgentService agentSrv;
+	private IADSWSConsumer adsWSConsumer;
 
 	@ResponseBody
 	@RequestMapping(value = "/rebuildFichePosteTree")
@@ -121,21 +122,17 @@ public class FichePosteController {
 	public ModelAndView getXmlFichePoste(@RequestParam("idFichePoste") int idFichePoste) throws ParseException {
 
 		FichePoste fp = fpSrv.getFichePosteById(idFichePoste);
+		FichePosteDto dto = new FichePosteDto();
+		if (fp != null && fp.getIdServiceADS() != null) {
 
-		if (fp != null) {
+			NoeudDto service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+			NoeudDto direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			NoeudDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
 
-			fp.getService().setDirection(
-					siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-							fp.getService().getServi()).getLiServ());
-			fp.getService().setDivision(
-					siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-							.getDivision(fp.getService().getServi()).getLiServ());
-			fp.getService().setSection(
-					siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-							fp.getService().getServi()).getLiServ());
+			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section.getLabel());
+		} else {
+			dto = new FichePosteDto(fp, true, "", null, null);
 		}
-
-		FichePosteDto dto = new FichePosteDto(fp, true);
 
 		return new ModelAndView("xmlView", "object", dto);
 	}
@@ -147,18 +144,13 @@ public class FichePosteController {
 
 		FichePoste fp = fpSrv.getFichePosteDetailleSIRHByIdWithRefPrime(idFichePoste);
 		FichePosteDto dto = new FichePosteDto();
-		if (fp != null) {
+		if (fp != null && fp.getIdServiceADS() != null) {
 
-			fp.getService().setDirection(
-					siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-							fp.getService().getServi()).getLiServ());
-			fp.getService().setDivision(
-					siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-							.getDivision(fp.getService().getServi()).getLiServ());
-			fp.getService().setSection(
-					siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-							fp.getService().getServi()).getLiServ());
-			dto = new FichePosteDto(fp, true);
+			NoeudDto service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+			NoeudDto direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			NoeudDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
+
+			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section.getLabel());
 		}
 
 		return new ModelAndView("xmlView", "object", dto);
@@ -239,17 +231,17 @@ public class FichePosteController {
 		if (fp == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		fp.getService().setDirection(
-				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-						fp.getService().getServi()).getLiServ());
-		fp.getService().setDivision(
-				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-						.getDivision(fp.getService().getServi()).getLiServ());
-		fp.getService().setSection(
-				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-						fp.getService().getServi()).getLiServ());
+		NoeudDto service = null;
+		NoeudDto direction = null;
+		NoeudDto section = null;
+		if (fp.getIdServiceADS() != null) {
+			service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+			direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			section = adsWSConsumer.getSection(fp.getIdServiceADS());
+		}
 
-		FichePosteDto dto = new FichePosteDto(fp);
+		FichePosteDto dto = new FichePosteDto(fp, direction == null ? "" : direction.getLabel(), service == null ? ""
+				: service.getLabel(), section == null ? "" : section.getLabel());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
@@ -288,17 +280,17 @@ public class FichePosteController {
 		if (fp == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		fp.getService().setDirection(
-				siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-						fp.getService().getServi()).getLiServ());
-		fp.getService().setDivision(
-				siservSrv.getDivision(fp.getService().getServi()) == null ? fp.getService().getLiServ() : siservSrv
-						.getDivision(fp.getService().getServi()).getLiServ());
-		fp.getService().setSection(
-				siservSrv.getSection(fp.getService().getServi()) == null ? "" : siservSrv.getSection(
-						fp.getService().getServi()).getLiServ());
+		NoeudDto service = null;
+		NoeudDto direction = null;
+		NoeudDto section = null;
+		if (fp.getIdServiceADS() != null) {
+			service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+			direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			section = adsWSConsumer.getSection(fp.getIdServiceADS());
+		}
 
-		FichePosteDto dto = new FichePosteDto(fp);
+		FichePosteDto dto = new FichePosteDto(fp, direction == null ? "" : direction.getLabel(), service == null ? ""
+				: service.getLabel(), section == null ? "" : section.getLabel());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);

@@ -24,7 +24,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.bean.Silieu;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
 
@@ -89,10 +88,6 @@ public class FichePoste {
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
 	private Spbhor reglementaire;
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SERVI", referencedColumnName = "SERVI")
-	private Siserv service;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
@@ -251,14 +246,6 @@ public class FichePoste {
 
 	public void setReglementaire(Spbhor reglementaire) {
 		this.reglementaire = reglementaire;
-	}
-
-	public Siserv getService() {
-		return service;
-	}
-
-	public void setService(Siserv service) {
-		this.service = service;
 	}
 
 	public Spgradn getGradePoste() {

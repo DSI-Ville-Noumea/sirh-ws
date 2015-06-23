@@ -9,7 +9,7 @@ public interface IAffectationRepository {
 
 	Affectation getAffectationActiveByAgent(int idAgent);
 
-	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, String idService);
+	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS);
 
 	List<Affectation> getListeAffectationsAgentAvecFP(Integer idAgent, Integer idFichePoste);
 

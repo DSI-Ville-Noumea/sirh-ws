@@ -10,12 +10,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
-import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,10 @@ public class AgentService implements IAgentService {
 	transient EntityManager sirhEntityManager;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IUtilisateurService utilisateurSrv;
 
 	@Autowired
-	private IUtilisateurService utilisateurSrv;
+	private IADSWSConsumer adsWSConsumer;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -48,15 +49,14 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Agent> listAgentServiceSansAgent(String servi, Integer idAgent) {
+	public List<Agent> listAgentServiceSansAgent(Integer idServiceADS, Integer idAgent) {
 		TypedQuery<Agent> query = sirhEntityManager
 				.createQuery(
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ " and fp.service.servi =:codeServ  and aff.agent.idAgent != :idAgent "
+								+ " and fp.idServiceADS =:idServiceADS  and aff.agent.idAgent != :idAgent "
 								+ " and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
-						Agent.class);
-		query.setParameter("codeServ", servi);
+								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", Agent.class);
+		query.setParameter("idServiceADS", idServiceADS);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
 		List<Agent> lag = query.getResultList();
@@ -66,15 +66,15 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable,
-			List<String> listeCodeService) {
+			List<Integer> listeIdServiceADS) {
 		TypedQuery<Agent> query = sirhEntityManager
 				.createQuery(
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ " and fp.service.servi in (:listeCodeService)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
+								+ " and fp.idServiceADS in (:listeIdServiceADS)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
 								+ " and aff.dateDebutAff<=:dateJour and "
 								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
 						Agent.class);
-		query.setParameter("listeCodeService", listeCodeService);
+		query.setParameter("listeIdServiceADS", listeIdServiceADS);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("idAgentResp", idAgentResponsable);
 		query.setParameter("dateJour", new Date());
@@ -105,7 +105,7 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<AgentWithServiceDto> listAgentsOfServices(List<String> servis, Date date, List<Integer> idAgents) {
+	public List<AgentWithServiceDto> listAgentsOfServices(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
@@ -113,8 +113,8 @@ public class AgentService implements IAgentService {
 		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
 		sb.append("WHERE aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
 		// if we're restraining search with service codes
-		if (servis != null && servis.size() != 0)
-			sb.append("and fp.service.servi in (:listeCodeService) ");
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			sb.append("and fp.idServiceADS in (:idServiceADS) ");
 		// if we're restraining search with idAgents...
 		if (idAgents != null && idAgents.size() != 0)
 			sb.append("and aff.agent.idAgent in (:idAgents) ");
@@ -125,8 +125,8 @@ public class AgentService implements IAgentService {
 		query.setParameter("dateJour", date);
 
 		// if we're restraining search with service codes
-		if (servis != null && servis.size() != 0)
-			query.setParameter("listeCodeService", servis);
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			query.setParameter("idServiceADS", idServiceADS);
 
 		// if we're restraining search with idAgent...
 		if (idAgents != null && idAgents.size() != 0)
@@ -134,11 +134,14 @@ public class AgentService implements IAgentService {
 
 		for (Affectation aff : query.getResultList()) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
-			agDto.setService(aff.getFichePoste().getService().getLiServ().trim());
-			agDto.setCodeService(aff.getFichePoste().getService().getServi());
-			agDto.setSigleService(aff.getFichePoste().getService().getSigle());
-			agDto.setDirection(siservSrv.getDirection(aff.getFichePoste().getService().getServi()) == null ? ""
-					: siservSrv.getDirection(aff.getFichePoste().getService().getServi()).getLiServ());
+			NoeudDto service = null;
+			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null)
+				service = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
+			NoeudDto direction = adsWSConsumer.getDirectionByIdService(aff.getFichePoste().getIdServiceADS());
+			agDto.setService(service == null ? "" : service.getLabel().trim());
+			agDto.setIdServiceADS(service == null ? null : service.getIdService());
+			agDto.setSigleService(service == null ? "" : service.getSigle());
+			agDto.setDirection(direction == null ? "" : direction.getLabel());
 			result.add(agDto);
 		}
 
@@ -163,7 +166,7 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, String codeService) {
+	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, Integer idServiceADS) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
@@ -178,8 +181,8 @@ public class AgentService implements IAgentService {
 		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour) ");
 
 		// if we're restraining search with service codes
-		if (!codeService.equals(""))
-			sb.append("and fp.service.servi= :codeService ");
+		if (idServiceADS != null)
+			sb.append("and fp.idServiceADS= :idServiceADS ");
 		// if we're restraining search with nomAgent...
 		if (!nom.equals(""))
 			sb.append("and ag.nomUsage like :nom ");
@@ -191,8 +194,8 @@ public class AgentService implements IAgentService {
 		query.setParameter("dateJour", new Date());
 
 		// if we're restraining search with service codes
-		if (!codeService.equals(""))
-			query.setParameter("codeService", codeService);
+		if (idServiceADS != null)
+			query.setParameter("idServiceADS", idServiceADS);
 
 		// if we're restraining search with nomAgent...
 		if (!nom.equals(""))
@@ -201,14 +204,39 @@ public class AgentService implements IAgentService {
 		List<AgentRecherche> list = query.getResultList();
 		for (AgentRecherche ag : list) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(ag);
-			Siserv service = siservSrv.getServiceAgent(ag.getIdAgent(), null);
+			NoeudDto service = getServiceAgent(ag.getIdAgent(), null);
 
 			// on construit le dto de l'agent
-			agDto.setCodeService(service.getServi().trim());
-			agDto.setService(service.getLiServ().trim());
+			agDto.setIdServiceADS(service == null ? null : service.getIdService());
+			agDto.setService(service == null ? null : service.getLabel().trim());
 			result.add(agDto);
 		}
 
 		return result;
+	}
+
+	@Override
+	public NoeudDto getServiceAgent(Integer idAgent, Date dateDonnee) {
+		String hql = "select fp from FichePoste fp ,Affectation aff"
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
+		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
+		query.setParameter("idAgent", idAgent);
+
+		if (null != dateDonnee) {
+			query.setParameter("dateJour", dateDonnee);
+		} else {
+			query.setParameter("dateJour", new Date());
+		}
+		try {
+			FichePoste fp = (FichePoste) query.getSingleResult();
+			if (fp.getIdServiceADS() != null) {
+				return adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

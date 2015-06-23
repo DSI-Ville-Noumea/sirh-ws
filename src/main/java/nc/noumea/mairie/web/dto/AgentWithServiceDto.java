@@ -1,12 +1,11 @@
 package nc.noumea.mairie.web.dto;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
 public class AgentWithServiceDto extends AgentDto {
 	private String service;
-	private String codeService;
+	private Integer idServiceADS;
 	private String direction;
 	private String signature;
 	private String position;
@@ -25,12 +24,12 @@ public class AgentWithServiceDto extends AgentDto {
 		super(ag);
 	}
 
-	public AgentWithServiceDto(Agent agent, Siserv service) {
+	public AgentWithServiceDto(Agent agent, NoeudDto service) {
 		super(agent);
 		if (service != null) {
-			this.service = service.getLiServ();
-			this.codeService = service.getServi();
-			this.signature = service.getSignature();
+			this.service = service.getLabel();
+			this.idServiceADS = service.getIdService();
+			this.signature = service.getLib22();
 			this.sigleService = service.getSigle();
 		}
 		this.position = agent.getPosition();
@@ -42,14 +41,6 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setService(String service) {
 		this.service = service;
-	}
-
-	public String getCodeService() {
-		return codeService;
-	}
-
-	public void setCodeService(String codeService) {
-		this.codeService = codeService;
 	}
 
 	public String getDirection() {
@@ -82,6 +73,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setSigleService(String sigleService) {
 		this.sigleService = sigleService;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 
 }

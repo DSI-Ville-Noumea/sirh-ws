@@ -127,13 +127,13 @@ public class CalculEaeController {
 	@RequestMapping(value = "/listeAffectationsAgentAvecService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAffectationsAgentAvecService(@RequestParam("idAgent") int idAgent,
-			@RequestParam("idService") String idService) {
+			@RequestParam("idServiceADS") Integer idServiceADS) {
 
 		logger.debug(
-				"entered GET [calculEae/listeAffectationsAgentAvecService] => getListeAffectationsAgentAvecService with parameter idAgent = {}, idService = {}",
-				idAgent, idService);
+				"entered GET [calculEae/listeAffectationsAgentAvecService] => getListeAffectationsAgentAvecService with parameter idAgent = {}, idServiceADS = {}",
+				idAgent, idServiceADS);
 
-		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(idAgent, idService);
+		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(idAgent, idServiceADS);
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
 				.transform(new MSDateTransformer(), Date.class).deepSerialize(result), HttpStatus.OK);

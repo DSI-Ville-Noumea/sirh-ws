@@ -10,14 +10,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.service.ISiservService;
-import nc.noumea.mairie.service.SiservService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -37,29 +36,25 @@ public class AgentServiceTest {
 		ag2.setNomUsage("TEST NOM");
 		listeAgentRecherche.add(ag1);
 		listeAgentRecherche.add(ag2);
-
-		Siserv service = new Siserv();
-		service.setServi("N");
-		service.setLiServ("NONO");
+		FichePoste fiche = new FichePoste();
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<AgentRecherche> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(listeAgentRecherche);
+		@SuppressWarnings("unchecked")
+		TypedQuery<FichePoste> mockQuery2 = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery2.getSingleResult()).thenReturn(fiche);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(AgentRecherche.class))).thenReturn(
 				mockQuery);
-
-		ISiservService mockSiservService = Mockito.mock(ISiservService.class);
-		Mockito.when(mockSiservService.getServiceAgent(9005138, null)).thenReturn(service);
-		Mockito.when(mockSiservService.getServiceAgent(9005131, null)).thenReturn(service);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(FichePoste.class))).thenReturn(mockQuery2);
 
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
-		ReflectionTestUtils.setField(agtService, "siservSrv", mockSiservService);
 
 		// When
-		List<AgentWithServiceDto> result = agtService.listAgentsEnActivite("QUIN", "");
+		List<AgentWithServiceDto> result = agtService.listAgentsEnActivite("QUIN", null);
 
 		// Then
 		assertEquals(2, result.size());
@@ -83,7 +78,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<AgentWithServiceDto> result = service.listAgentsEnActivite("", "");
+		List<AgentWithServiceDto> result = service.listAgentsEnActivite("", null);
 
 		// Then
 		assertEquals(0, result.size());
@@ -144,10 +139,6 @@ public class AgentServiceTest {
 		listeAgent.add(ag1);
 		listeAgent.add(ag2);
 
-		Siserv service = new Siserv();
-		service.setServi("N");
-		service.setLiServ("NONO");
-
 		@SuppressWarnings("unchecked")
 		TypedQuery<Agent> mockQuery = Mockito.mock(TypedQuery.class);
 		Mockito.when(mockQuery.getResultList()).thenReturn(listeAgent);
@@ -159,7 +150,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<Agent> result = agtService.listAgentServiceSansAgent("DDAA", 9005138);
+		List<Agent> result = agtService.listAgentServiceSansAgent(1, 9005138);
 
 		// Then
 		assertEquals(2, result.size());
@@ -180,12 +171,8 @@ public class AgentServiceTest {
 		listeAgent.add(ag1);
 		listeAgent.add(ag2);
 
-		Siserv service = new Siserv();
-		service.setServi("N");
-		service.setLiServ("NONO");
-
-		List<String> listService = new ArrayList<>();
-		listService.add("DDAA");
+		List<Integer> listService = new ArrayList<Integer>();
+		listService.add(1);
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Agent> mockQuery = Mockito.mock(TypedQuery.class);
@@ -241,24 +228,23 @@ public class AgentServiceTest {
 	@Test
 	public void listAgentsOfServices_returnListOfAgentWithServiceDto() {
 		// Given
-		Siserv serviceDirection = new Siserv();
-		serviceDirection.setServi("DIR");
-		serviceDirection.setLiServ("DIRECTION");
 
 		Agent ag1 = new Agent();
 		ag1.setIdAgent(9005138);
 		ag1.setNomUsage("NOM USAGE");
 		ag1.setTitre("0");
-		Siserv serv1 = new Siserv();
-		serv1.setServi("DDAA");
-		serv1.setLiServ("TEST");
+
 		FichePoste fp1 = new FichePoste();
 		fp1.setIdFichePoste(1);
 		fp1.setAnnee(2014);
-		fp1.setService(serv1);
+		fp1.setIdServiceADS(1);
 		Affectation aff1 = new Affectation();
 		aff1.setAgent(ag1);
 		aff1.setFichePoste(fp1);
+		NoeudDto noeudDirection = new NoeudDto();
+		noeudDirection.setLabel("DIRECTION");
+		NoeudDto noeud1 = new NoeudDto();
+		noeud1.setLabel("TEST");
 
 		List<Affectation> listeAffectation = new ArrayList<Affectation>();
 		listeAffectation.add(aff1);
@@ -270,12 +256,13 @@ public class AgentServiceTest {
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
 
-		SiservService siservSrvMock = Mockito.mock(SiservService.class);
-		Mockito.when(siservSrvMock.getDirection("DDAA")).thenReturn(serviceDirection);
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getNoeudByIdService(1)).thenReturn(noeud1);
+		Mockito.when(adsWSConsumer.getDirectionByIdService(1)).thenReturn(noeudDirection);
 
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
-		ReflectionTestUtils.setField(agtService, "siservSrv", siservSrvMock);
+		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 
 		// When
 		List<AgentWithServiceDto> result = agtService.listAgentsOfServices(null, new Date(), null);

@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,7 +32,7 @@ public class ServiceController {
 	private IAgentService agentSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IADSWSConsumer adsWSConsumer;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -87,16 +87,15 @@ public class ServiceController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getServiceAgents(
-			@RequestParam(value = "codeService", required = true) String codeService,
+			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
-		Siserv service = siservSrv.getService(codeService);
-
+		NoeudDto service = adsWSConsumer.getNoeudByIdService(idServiceADS);
 		// Si le service n'existe pas, on ne retourne rien
 		if (service == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		List<String> services = siservSrv.getListSubServicesSigles(codeService);
+		List<Integer> services = siservSrv.getListSubServicesSigles(codeService);
 
 		// Si la date n'est pas spécifiée, prendre la date du jour
 		if (date == null)

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 import nc.noumea.mairie.model.bean.Silieu;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spcatg;
@@ -37,7 +36,6 @@ import nc.noumea.mairie.model.repository.ISpcarrRepository;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISpCarrService;
 import nc.noumea.mairie.service.ISpadmnService;
 import nc.noumea.mairie.web.dto.AgentDto;
@@ -46,7 +44,9 @@ import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.CarriereDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.GradeDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -64,11 +64,6 @@ public class CalculEaeServiceTest {
 
 		TitrePoste titrePoste = new TitrePoste();
 		titrePoste.setLibTitrePoste("libTitrePoste");
-
-		Siserv service = new Siserv();
-		service.setServi("servi");
-		service.setLiServ("liServ");
-		service.setDivision("division");
 
 		Budget budget = new Budget();
 		budget.setLibelleBudget("libelleBudget");
@@ -91,9 +86,10 @@ public class CalculEaeServiceTest {
 
 		NiveauEtude niveauEtude = new NiveauEtude();
 		niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
+		
 
 		FichePoste superieurHierarchique = new FichePoste();
-		superieurHierarchique.setService(service);
+		superieurHierarchique.setIdServiceADS(2);
 		superieurHierarchique.setTitrePoste(titrePoste);
 		superieurHierarchique.setBudget(budget);
 		superieurHierarchique.setBudgete(budgete);
@@ -103,7 +99,7 @@ public class CalculEaeServiceTest {
 
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setSuperieurHierarchique(superieurHierarchique);
-		fichePoste.setService(service);
+		fichePoste.setIdServiceADS(2);
 		fichePoste.setTitrePoste(titrePoste);
 		fichePoste.setBudget(budget);
 		fichePoste.setBudgete(budgete);
@@ -117,7 +113,7 @@ public class CalculEaeServiceTest {
 
 		FichePoste fichePosteSecondaire = new FichePoste();
 		fichePosteSecondaire.setSuperieurHierarchique(superieurHierarchique);
-		fichePosteSecondaire.setService(service);
+		fichePosteSecondaire.setIdServiceADS(2);
 		fichePosteSecondaire.setTitrePoste(titrePoste);
 		fichePosteSecondaire.setBudget(budget);
 		fichePosteSecondaire.setBudgete(budgete);
@@ -144,13 +140,6 @@ public class CalculEaeServiceTest {
 
 		fichePoste.setAgent(agents);
 		fichePosteSecondaire.setAgent(agents);
-
-		Siserv siservDirection = new Siserv();
-		siservDirection.setLiServ("direction");
-		Siserv siservSection = new Siserv();
-		siservSection.setLiServ("section");
-		Siserv siservService = new Siserv();
-		siservService.setLiServ("liServ");
 
 		PositionAdmAgentDto positionAdmAgentDto = new PositionAdmAgentDto();
 		positionAdmAgentDto.setCdpadm("cdpadm");
@@ -189,11 +178,6 @@ public class CalculEaeServiceTest {
 		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
 		Mockito.when(agentRepository.getAgent(Mockito.anyInt())).thenReturn(agent);
 
-		ISiservService siservSrv = Mockito.mock(ISiservService.class);
-		Mockito.when(siservSrv.getDirectionPourEAE(Mockito.anyString())).thenReturn(siservDirection);
-		Mockito.when(siservSrv.getSection(Mockito.anyString())).thenReturn(siservSection);
-		Mockito.when(siservSrv.getService(Mockito.anyString())).thenReturn(siservService);
-
 		ISpadmnService spadmnService = Mockito.mock(ISpadmnService.class);
 		Mockito.when(spadmnService.chercherPositionAdmAgentEnCours(Mockito.anyInt())).thenReturn(positionAdmAgentDto);
 		Mockito.when(spadmnService.chercherPositionAdmAgentAncienne(Mockito.anyInt())).thenReturn(
@@ -213,14 +197,31 @@ public class CalculEaeServiceTest {
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
 
+
+		NoeudDto siservDirection = new NoeudDto();
+		siservDirection.setLabel("direction");
+		NoeudDto siservSection = new NoeudDto();
+		siservSection.setLabel("section");
+		NoeudDto siservService = new NoeudDto();
+		siservService.setLabel("liServ");
+		
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getNoeudByIdService(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.anyInt())).thenReturn(siservDirection);
+		Mockito.when(adsWSConsumer.getSection(Mockito.anyInt())).thenReturn(siservSection);
+		Mockito.when(adsWSConsumer.getNoeudByIdService(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getNoeudFromCodeServiceAS400(spMtsr.getId().getServi())).thenReturn(siservService);
+		
+		
+
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
-		ReflectionTestUtils.setField(calculEaeService, "siservSrv", siservSrv);
 		ReflectionTestUtils.setField(calculEaeService, "spadmnService", spadmnService);
 		ReflectionTestUtils.setField(calculEaeService, "spCarrService", spCarrService);
 		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
 		ReflectionTestUtils.setField(calculEaeService, "agentRepository", agentRepository);
 		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
+		ReflectionTestUtils.setField(calculEaeService, "adsWSConsumer", adsWSConsumer);
 
 		CalculEaeInfosDto result = calculEaeService.getAffectationActiveByAgent(9005138, 2010);
 
@@ -236,8 +237,7 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePostePrincipale().getReglementaire(), "libHorRegl");
 		assertEquals(result.getFichePostePrincipale().getCadreEmploi(), "libelleCadreEmploi");
 		assertEquals(result.getFichePostePrincipale().getNiveauEtudes(), "libelleNiveauEtude");
-		assertEquals(result.getFichePostePrincipale().getCodeService(), "servi");
-		assertEquals(result.getFichePostePrincipale().getService(), service.getDivision());
+		assertEquals(result.getFichePostePrincipale().getIdServiceADS(), new Integer(2));
 		assertEquals(result.getFichePostePrincipale().getSection(), "section");
 		assertEquals(result.getFichePostePrincipale().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePostePrincipale().getGradePoste(), "gradeInitial");
@@ -253,8 +253,8 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePosteSecondaire().getReglementaire(), "libHorRegl");
 		assertEquals(result.getFichePosteSecondaire().getCadreEmploi(), "libelleCadreEmploi");
 		assertEquals(result.getFichePosteSecondaire().getNiveauEtudes(), "libelleNiveauEtude");
-		assertEquals(result.getFichePosteSecondaire().getCodeService(), "servi");
-		assertEquals(result.getFichePosteSecondaire().getService(), service.getDivision());
+		assertEquals(result.getFichePosteSecondaire().getIdServiceADS(), new Integer(2));
+		assertEquals(result.getFichePosteSecondaire().getService(), "liServ");
 		assertEquals(result.getFichePosteSecondaire().getSection(), "section");
 		assertEquals(result.getFichePosteSecondaire().getLieu(), "libelleLieu");
 		assertEquals(result.getFichePosteSecondaire().getGradePoste(), "gradeInitial");
@@ -293,13 +293,13 @@ public class CalculEaeServiceTest {
 	public void getListeAffectationsAgentAvecService_returnNoResult() {
 
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
-		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyInt()))
 				.thenReturn(null);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
-		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
+		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, 1);
 
 		assertEquals(0, result.size());
 	}
@@ -318,13 +318,13 @@ public class CalculEaeServiceTest {
 		listAffectation.add(affectation);
 
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
-		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyString()))
+		Mockito.when(affectationRepository.getListeAffectationsAgentAvecService(Mockito.anyInt(), Mockito.anyInt()))
 				.thenReturn(listAffectation);
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
 
-		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, "codeService");
+		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(9005138, 1);
 
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).getDateDebut(), dateDebutAff);

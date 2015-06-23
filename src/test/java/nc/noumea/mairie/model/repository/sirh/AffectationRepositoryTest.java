@@ -10,11 +10,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -170,14 +168,6 @@ public class AffectationRepositoryTest {
 		ag.setTitre("Mr");
 		sirhPersistenceUnit.persist(ag);
 
-		Siserv service = new Siserv();
-		service.setLiServ("liServ");
-		service.setSigle("sigle");
-		service.setParentSigle("parentSigle");
-		service.setCodeActif("codeActif");
-		service.setServi("SERVICE1");
-		sirhPersistenceUnit.persist(service);
-
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
@@ -185,7 +175,7 @@ public class AffectationRepositoryTest {
 		fichePoste.setNumFP("numFP");
 		fichePoste.setOpi("opi");
 		fichePoste.setNfa("nfa");
-		fichePoste.setService(service);
+		fichePoste.setIdServiceADS(1);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		Affectation a = new Affectation();
@@ -197,7 +187,7 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, "SERVICE1");
+		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, 1);
 
 		assertEquals(result.size(), 1);
 	}
@@ -218,14 +208,6 @@ public class AffectationRepositoryTest {
 		ag.setTitre("Mr");
 		sirhPersistenceUnit.persist(ag);
 
-		Siserv service = new Siserv();
-		service.setLiServ("liServ");
-		service.setSigle("sigle");
-		service.setParentSigle("parentSigle");
-		service.setCodeActif("codeActif");
-		service.setServi("SERVICE1");
-		sirhPersistenceUnit.persist(service);
-
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
@@ -233,7 +215,7 @@ public class AffectationRepositoryTest {
 		fichePoste.setNumFP("numFP");
 		fichePoste.setOpi("opi");
 		fichePoste.setNfa("nfa");
-		fichePoste.setService(service);
+		fichePoste.setIdServiceADS(1);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		Affectation a = new Affectation();
@@ -245,7 +227,7 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, "SERVICE2");
+		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, 2);
 
 		assertEquals(result.size(), 0);
 	}
@@ -266,14 +248,6 @@ public class AffectationRepositoryTest {
 		ag.setTitre("Mr");
 		sirhPersistenceUnit.persist(ag);
 
-		Siserv service = new Siserv();
-		service.setLiServ("liServ");
-		service.setSigle("sigle");
-		service.setParentSigle("parentSigle");
-		service.setCodeActif("codeActif");
-		service.setServi("SERVICE1");
-		sirhPersistenceUnit.persist(service);
-
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
@@ -281,7 +255,7 @@ public class AffectationRepositoryTest {
 		fichePoste.setNumFP("numFP");
 		fichePoste.setOpi("opi");
 		fichePoste.setNfa("nfa");
-		fichePoste.setService(service);
+		fichePoste.setIdServiceADS(1);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		Affectation a = new Affectation();
@@ -293,7 +267,7 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005130, "SERVICE1");
+		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005130, 1);
 
 		assertEquals(result.size(), 0);
 	}

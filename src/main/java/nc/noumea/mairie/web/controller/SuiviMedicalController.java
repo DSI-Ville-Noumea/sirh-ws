@@ -4,16 +4,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.SuiviMedical;
 import nc.noumea.mairie.service.IReportingService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.ISuiviMedicalService;
 import nc.noumea.mairie.web.dto.AccompagnementVMDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ConvocationVMDto;
 import nc.noumea.mairie.web.dto.ListVMDto;
 import nc.noumea.mairie.web.dto.MedecinDto;
+import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +39,10 @@ public class SuiviMedicalController {
 	private ISuiviMedicalService smSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
-
-	@Autowired
 	private IReportingService reportingService;
+	
+	@Autowired
+	private IADSWSConsumer adsConsumer;
 
 	@ResponseBody
 	@RequestMapping(value = "/xml/getConvocationSIRH", produces = "application/xml", method = RequestMethod.GET)
@@ -66,12 +66,13 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				Siserv service = siservSrv.getService(sm.getCodeService());
+				NoeudDto service = adsConsumer.getNoeudByIdService(sm.getIdServiceADS());
 
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
-					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
-							.getDirection(service.getServi()).getLiServ());
+
+					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
+					agDto.setDirection(direction == null ? "" :direction.getLabel());
 				}
 
 				MedecinDto medDto = new MedecinDto(sm.getMedecinSuiviMedical());
@@ -106,14 +107,14 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				Siserv service = siservSrv.getService(sm.getCodeService());
+				NoeudDto service = adsConsumer.getNoeudByIdService(sm.getIdServiceADS());
 
-				Siserv servResponsable = null;
+				NoeudDto servResponsable = null;
 				AgentWithServiceDto agRespDto = null;
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
-					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
-							.getDirection(service.getServi()).getLiServ());
+					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
+					agDto.setDirection(direction == null ? "" : direction.getLabel());
 					if (service.getServi().endsWith("AA")) {
 						service = null;
 					} else {
