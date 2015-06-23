@@ -471,10 +471,12 @@ public class AgentController {
 	@ResponseBody
 	@RequestMapping(value = "getAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentOtherProject(@RequestParam(value = "idAgent", required = true) Integer idAgent)
+	public ResponseEntity<String> getAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
+		// on remanie l'idAgent
+        String newIdAgent = remanieIdAgent(idAgent);
 
-		Agent agent = agentSrv.getAgent(idAgent);
+		Agent agent = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
 		if (agent == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
