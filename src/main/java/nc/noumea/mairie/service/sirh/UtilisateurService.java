@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Droits;
 import nc.noumea.mairie.model.bean.sirh.DroitsElementEnum;
+import nc.noumea.mairie.model.bean.sirh.DroitsGroupeEnum;
 import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
@@ -106,6 +107,12 @@ public class UtilisateurService implements IUtilisateurService {
 					result.setEdition(true);
 				}
 			}
+		}
+		
+		//#16380 : on gere un role administrateur
+		List<Droits> droitsAdmin = droitsRepository.getDroitsByGroupeAndAgent(DroitsGroupeEnum.GROUPE_SIRH.getIdGroupe(), user.getsAMAccountName());
+		if(null != droitsAdmin && droitsAdmin.size()>0) {
+			result.setAdministrateur(true);
 		}
 		
 		return result;
