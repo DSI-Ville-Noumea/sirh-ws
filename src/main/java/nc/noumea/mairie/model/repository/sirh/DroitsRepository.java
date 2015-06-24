@@ -18,7 +18,7 @@ public class DroitsRepository implements IDroitsRepository {
 
 	@Override
 	public List<Droits> getDroitsByElementAndAgent(Integer idElement, String login) {
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("select d from Droits d ");
 		sb.append("inner join fetch d.droitsGroupe dg ");
@@ -29,6 +29,23 @@ public class DroitsRepository implements IDroitsRepository {
 
 		TypedQuery<Droits> query = sirhEntityManager.createQuery(sb.toString(), Droits.class);
 		query.setParameter("idElement", idElement);
+		query.setParameter("login", login);
+
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Droits> getDroitsByGroupeAndAgent(Integer idGroupe, String login) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select d from Droits d ");
+		sb.append("inner join fetch d.droitsGroupe dg ");
+		sb.append("inner join fetch dg.utilisateurs u ");
+		sb.append("where dg.idGroupe = :idGroupe ");
+		sb.append("and u.login = :login ");
+
+		TypedQuery<Droits> query = sirhEntityManager.createQuery(sb.toString(), Droits.class);
+		query.setParameter("idGroupe", idGroupe);
 		query.setParameter("login", login);
 
 		return query.getResultList();

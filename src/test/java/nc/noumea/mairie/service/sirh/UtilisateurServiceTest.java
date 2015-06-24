@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Droits;
 import nc.noumea.mairie.model.bean.sirh.DroitsElementEnum;
+import nc.noumea.mairie.model.bean.sirh.DroitsGroupeEnum;
 import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
@@ -192,6 +193,7 @@ public class UtilisateurServiceTest {
 		
 		assertFalse(result.isVisualisation());
 		assertFalse(result.isEdition());
+		assertFalse(result.isAdministrateur());
 	}
 	
 	@Test
@@ -219,6 +221,7 @@ public class UtilisateurServiceTest {
 		
 		assertFalse(result.isVisualisation());
 		assertFalse(result.isEdition());
+		assertFalse(result.isAdministrateur());
 	}
 	
 	@Test
@@ -253,6 +256,7 @@ public class UtilisateurServiceTest {
 		
 		assertFalse(result.isVisualisation());
 		assertFalse(result.isEdition());
+		assertFalse(result.isAdministrateur());
 	}
 	
 	@Test
@@ -291,6 +295,7 @@ public class UtilisateurServiceTest {
 		
 		assertTrue(result.isVisualisation());
 		assertFalse(result.isEdition());
+		assertFalse(result.isAdministrateur());
 	}
 	
 	@Test
@@ -329,6 +334,50 @@ public class UtilisateurServiceTest {
 		
 		assertTrue(result.isVisualisation());
 		assertTrue(result.isEdition());
+		assertFalse(result.isAdministrateur());
+	}
+
+	
+	@Test
+	public void getOrganigrammeAccessRight_DroitAdministrateur() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		
+		LightUserDto user = new LightUserDto();
+		user.setEmployeeNumber(905138);
+		user.setsAMAccountName("LOGIN");
+		
+		AgentService agentSrv = Mockito.mock(AgentService.class);
+		Mockito.when(agentSrv.getAgent(9005138)).thenReturn(ag);
+
+		RadiWSConsumer radiWSConsumer = Mockito.mock(RadiWSConsumer.class);
+		Mockito.when(radiWSConsumer.getNomatrWithIdAgent(9005138)).thenReturn("5138");
+		Mockito.when(radiWSConsumer.getAgentCompteAD(5138)).thenReturn(user);
+
+		Droits droitEdition = new Droits();
+		droitEdition.setIdTypeDroit(TypeDroitEnum.EDITION.getIdTypeDroit());
+		
+		List<Droits> droits = new ArrayList<Droits>();
+		droits.add(droitEdition);
+		
+		IDroitsRepository droitsRepository = Mockito.mock(IDroitsRepository.class);
+		Mockito.when(droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName()))
+			.thenReturn(droits);
+		Mockito.when(
+				droitsRepository.getDroitsByGroupeAndAgent(DroitsGroupeEnum.GROUPE_SIRH.getIdGroupe(),
+						user.getsAMAccountName())).thenReturn(droits);
+
+		UtilisateurService service = new UtilisateurService();
+		ReflectionTestUtils.setField(service, "agentSrv", agentSrv);
+		ReflectionTestUtils.setField(service, "radiWSConsumer", radiWSConsumer);
+		ReflectionTestUtils.setField(service, "droitsRepository", droitsRepository);
+		
+		AccessRightOrganigrammeDto result = service.getOrganigrammeAccessRight(9005138);
+		
+		assertTrue(result.isVisualisation());
+		assertTrue(result.isEdition());
+		assertTrue(result.isAdministrateur());
 	}
 	
 	@Test
@@ -371,5 +420,6 @@ public class UtilisateurServiceTest {
 		
 		assertTrue(result.isVisualisation());
 		assertTrue(result.isEdition());
+		assertFalse(result.isAdministrateur());
 	}
 }

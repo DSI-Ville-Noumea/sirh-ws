@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import nc.noumea.mairie.model.bean.sirh.Droits;
 import nc.noumea.mairie.model.bean.sirh.DroitsElement;
 import nc.noumea.mairie.model.bean.sirh.DroitsGroupe;
+import nc.noumea.mairie.model.bean.sirh.DroitsGroupeEnum;
 import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.model.pk.sirh.DroitsId;
@@ -228,6 +229,139 @@ public class DroitsRepositoryTest {
 		groupeUtilisateur.setDroits(droits);
 		
 		List<Droits> result = repository.getDroitsByElementAndAgent(10, "rebjo84");
+		
+		assertTrue(result.isEmpty());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDroitsByGroupeAndAgent_return1result() {
+		
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setIdUtilisateur(1);
+		utilisateur.setLogin("rebjo84");
+		sirhPersistenceUnit.persist(utilisateur);
+		
+		Set<Utilisateur> utilisateurs = new HashSet<Utilisateur>();
+		utilisateurs.add(utilisateur);
+		
+		DroitsElement element = new DroitsElement();
+		element.setIdElement(86);
+		element.setLibElement("libElement");
+		sirhPersistenceUnit.persist(element);
+		
+		DroitsGroupe groupeUtilisateur = new DroitsGroupe();
+		groupeUtilisateur.setIdGroupe(1);
+		groupeUtilisateur.setLibGroupe("libGroupe");
+		groupeUtilisateur.setUtilisateurs(utilisateurs);
+		sirhPersistenceUnit.persist(groupeUtilisateur);
+		
+		DroitsId idDroit = new DroitsId();
+		idDroit.setIdElement(element.getIdElement());
+		idDroit.setIdGroupe(groupeUtilisateur.getIdGroupe());
+		
+		Droits droit = new Droits();
+		droit.setId(idDroit);
+		droit.setIdTypeDroit(TypeDroitEnum.CONSULTATION.getIdTypeDroit());
+		droit.setElement(element);
+		droit.setDroitsGroupe(groupeUtilisateur);
+		sirhPersistenceUnit.persist(droit);
+		
+		Set<Droits> droits = new HashSet<Droits>();
+		droits.add(droit);
+		
+		groupeUtilisateur.setDroits(droits);
+		
+		List<Droits> result = repository.getDroitsByGroupeAndAgent(1, "rebjo84");
+		
+		assertNotNull(result);
+		assertEquals(result.get(0).getDroitsGroupe().getIdGroupe().intValue(), DroitsGroupeEnum.GROUPE_SIRH.getIdGroupe());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDroitsByGroupeAndAgent_rnoResult_becausebadLogin() {
+		
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setIdUtilisateur(1);
+		utilisateur.setLogin("rebjo84");
+		sirhPersistenceUnit.persist(utilisateur);
+		
+		Set<Utilisateur> utilisateurs = new HashSet<Utilisateur>();
+		utilisateurs.add(utilisateur);
+		
+		DroitsElement element = new DroitsElement();
+		element.setIdElement(86);
+		element.setLibElement("libElement");
+		sirhPersistenceUnit.persist(element);
+		
+		DroitsGroupe groupeUtilisateur = new DroitsGroupe();
+		groupeUtilisateur.setIdGroupe(1);
+		groupeUtilisateur.setLibGroupe("libGroupe");
+		groupeUtilisateur.setUtilisateurs(utilisateurs);
+		sirhPersistenceUnit.persist(groupeUtilisateur);
+		
+		DroitsId idDroit = new DroitsId();
+		idDroit.setIdElement(element.getIdElement());
+		idDroit.setIdGroupe(groupeUtilisateur.getIdGroupe());
+		
+		Droits droit = new Droits();
+		droit.setId(idDroit);
+		droit.setIdTypeDroit(TypeDroitEnum.CONSULTATION.getIdTypeDroit());
+		droit.setElement(element);
+		droit.setDroitsGroupe(groupeUtilisateur);
+		sirhPersistenceUnit.persist(droit);
+		
+		Set<Droits> droits = new HashSet<Droits>();
+		droits.add(droit);
+		
+		groupeUtilisateur.setDroits(droits);
+		
+		List<Droits> result = repository.getDroitsByGroupeAndAgent(1, "nicno85");
+		
+		assertTrue(result.isEmpty());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDroitsByGroupeAndAgent_rnoResult_becausebadGroupe() {
+		
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setIdUtilisateur(1);
+		utilisateur.setLogin("rebjo84");
+		sirhPersistenceUnit.persist(utilisateur);
+		
+		Set<Utilisateur> utilisateurs = new HashSet<Utilisateur>();
+		utilisateurs.add(utilisateur);
+		
+		DroitsElement element = new DroitsElement();
+		element.setIdElement(86);
+		element.setLibElement("libElement");
+		sirhPersistenceUnit.persist(element);
+		
+		DroitsGroupe groupeUtilisateur = new DroitsGroupe();
+		groupeUtilisateur.setIdGroupe(1);
+		groupeUtilisateur.setLibGroupe("libGroupe");
+		groupeUtilisateur.setUtilisateurs(utilisateurs);
+		sirhPersistenceUnit.persist(groupeUtilisateur);
+		
+		DroitsId idDroit = new DroitsId();
+		idDroit.setIdElement(element.getIdElement());
+		idDroit.setIdGroupe(groupeUtilisateur.getIdGroupe());
+		
+		Droits droit = new Droits();
+		droit.setId(idDroit);
+		droit.setIdTypeDroit(TypeDroitEnum.CONSULTATION.getIdTypeDroit());
+		droit.setElement(element);
+		droit.setDroitsGroupe(groupeUtilisateur);
+		sirhPersistenceUnit.persist(droit);
+		
+		Set<Droits> droits = new HashSet<Droits>();
+		droits.add(droit);
+		
+		groupeUtilisateur.setDroits(droits);
+		
+		List<Droits> result = repository.getDroitsByGroupeAndAgent(10, "rebjo84");
 		
 		assertTrue(result.isEmpty());
 	}
