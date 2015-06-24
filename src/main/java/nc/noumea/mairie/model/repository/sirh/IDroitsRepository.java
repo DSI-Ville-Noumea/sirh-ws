@@ -7,4 +7,6 @@ import nc.noumea.mairie.model.bean.sirh.Droits;
 public interface IDroitsRepository {
 
 	List<Droits> getDroitsByElementAndAgent(Integer idElement, String login);
+
+	List<Droits> getDroitsByGroupeAndAgent(Integer idGroupe, String login);
 }
