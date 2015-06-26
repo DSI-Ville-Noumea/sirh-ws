@@ -40,7 +40,7 @@ public class SuiviMedicalController {
 
 	@Autowired
 	private IReportingService reportingService;
-	
+
 	@Autowired
 	private IADSWSConsumer adsConsumer;
 
@@ -72,7 +72,7 @@ public class SuiviMedicalController {
 				if (service != null) {
 
 					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
-					agDto.setDirection(direction == null ? "" :direction.getLabel());
+					agDto.setDirection(direction == null ? "" : direction.getLabel());
 				}
 
 				MedecinDto medDto = new MedecinDto(sm.getMedecinSuiviMedical());
@@ -115,15 +115,15 @@ public class SuiviMedicalController {
 				if (service != null) {
 					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
 					agDto.setDirection(direction == null ? "" : direction.getLabel());
-					if (service.getServi().endsWith("AA")) {
+					if (direction != null) {
 						service = null;
 					} else {
-						String codeServResp = service.getServi().substring(0, service.getServi().length() - 1) + "A";
-						servResponsable = siservSrv.getService(codeServResp);
+						servResponsable = adsConsumer.getParentOfNoeudByIdService(service.getIdService());
 
 						agRespDto = new AgentWithServiceDto(null, servResponsable);
-						agRespDto.setDirection(siservSrv.getDirection(servResponsable.getServi()) == null ? ""
-								: siservSrv.getDirection(servResponsable.getServi()).getLiServ());
+						NoeudDto directionResponsable = adsConsumer.getDirectionByIdService(servResponsable
+								.getIdService());
+						agRespDto.setDirection(directionResponsable == null ? "" : directionResponsable.getLabel());
 					}
 				}
 
