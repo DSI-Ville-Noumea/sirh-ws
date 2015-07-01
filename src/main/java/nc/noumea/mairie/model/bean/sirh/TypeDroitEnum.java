@@ -2,8 +2,8 @@ package nc.noumea.mairie.model.bean.sirh;
 
 public enum TypeDroitEnum {
 
-	CONSULTATION(0),
-	EDITION(1);
+	CONSULTATION(1),
+	EDITION(2);
 	
 	private Integer idTypeDroit;
 	
