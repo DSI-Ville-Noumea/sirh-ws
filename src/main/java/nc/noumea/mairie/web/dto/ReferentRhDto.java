@@ -15,7 +15,7 @@ public class ReferentRhDto {
 	public ReferentRhDto() {
 	}
 
-	public ReferentRhDto(ReferentRh c, Agent ag, NoeudDto serv) {
+	public ReferentRhDto(ReferentRh c, Agent ag, EntiteDto serv) {
 		if (c != null) {
 			this.idReferentRh = c.getIdReferentRh();
 			this.idServiceADS = c.getIdServiceADS();

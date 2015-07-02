@@ -5,7 +5,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 
 public interface IAgentService {
 
@@ -42,6 +42,6 @@ public interface IAgentService {
 
 	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, Integer idServiceADS);
 
-	public NoeudDto getServiceAgent(Integer idAgent, Date dateDonnee);
+	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee);
 
 }

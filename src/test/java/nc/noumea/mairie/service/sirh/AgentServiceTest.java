@@ -15,7 +15,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.junit.Test;
@@ -241,9 +241,9 @@ public class AgentServiceTest {
 		Affectation aff1 = new Affectation();
 		aff1.setAgent(ag1);
 		aff1.setFichePoste(fp1);
-		NoeudDto noeudDirection = new NoeudDto();
+		EntiteDto noeudDirection = new EntiteDto();
 		noeudDirection.setLabel("DIRECTION");
-		NoeudDto noeud1 = new NoeudDto();
+		EntiteDto noeud1 = new EntiteDto();
 		noeud1.setLabel("TEST");
 
 		List<Affectation> listeAffectation = new ArrayList<Affectation>();
@@ -257,8 +257,8 @@ public class AgentServiceTest {
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getNoeudByIdService(1)).thenReturn(noeud1);
-		Mockito.when(adsWSConsumer.getDirectionByIdService(1)).thenReturn(noeudDirection);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(noeud1);
+		Mockito.when(adsWSConsumer.getDirection(1)).thenReturn(noeudDirection);
 
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);

@@ -31,7 +31,7 @@ import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.FormationDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ParcoursProDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
@@ -82,9 +82,9 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setDateDebut(affectation.getDateDebutAff());
 			dto.setDateFin(affectation.getDateFinAff());
 
-			NoeudDto service = adsWSConsumer.getNoeudByIdService(affectation.getFichePoste().getIdServiceADS());
-			NoeudDto direction = adsWSConsumer.getDirectionPourEAE(affectation.getFichePoste().getIdServiceADS());
-			NoeudDto section = adsWSConsumer.getSection(affectation.getFichePoste().getIdServiceADS());
+			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePoste().getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirectionPourEAE(affectation.getFichePoste().getIdServiceADS());
+			EntiteDto section = adsWSConsumer.getSection(affectation.getFichePoste().getIdServiceADS());
 
 			TitrePosteDto titrePoste = new TitrePosteDto();
 			titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
@@ -95,11 +95,11 @@ public class CalculEaeService implements ICalculEaeService {
 
 			dto.setFichePostePrincipale(fichePostePrincipale);
 			if (null != affectation.getFichePosteSecondaire()) {
-				NoeudDto serviceSecondaire = adsWSConsumer.getNoeudByIdService(affectation.getFichePosteSecondaire()
+				EntiteDto serviceSecondaire = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
-				NoeudDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(affectation.getFichePosteSecondaire()
+				EntiteDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
-				NoeudDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
+				EntiteDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
 				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),
 						directionSecondaire.getLabel(), serviceSecondaire.getLabel(), sectionSecondaire.getLabel());
@@ -162,12 +162,12 @@ public class CalculEaeService implements ICalculEaeService {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
 
 				// TODO à revoir lors reponse à #16246
-				NoeudDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getNoeudFromCodeServiceAS400(
-						spMtsr.getId().getServi()).getIdService());
+				EntiteDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getEntiteFromCodeServiceAS400(
+						spMtsr.getId().getServi()).getIdEntite());
 				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
 
-				NoeudDto service = adsWSConsumer.getNoeudByIdService(adsWSConsumer.getNoeudFromCodeServiceAS400(
-						spMtsr.getId().getServi()).getIdService());
+				EntiteDto service = adsWSConsumer.getEntiteByIdEntite(adsWSConsumer.getEntiteFromCodeServiceAS400(
+						spMtsr.getId().getServi()).getIdEntite());
 				parcoursProDto.setService(service == null ? "" : service.getLabel());
 
 				listParcoursPro.add(parcoursProDto);

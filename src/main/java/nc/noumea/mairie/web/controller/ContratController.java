@@ -19,7 +19,7 @@ import nc.noumea.mairie.web.dto.CompteDto;
 import nc.noumea.mairie.web.dto.ContratDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
@@ -107,9 +107,9 @@ public class ContratController {
 		// on construit le DTO
 
 		List<DiplomeDto> listDiplomeDto = calculEaeSrv.getListDiplomeDto(idAgent);
-		NoeudDto service = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
-		NoeudDto direction = adsWSConsumer.getDirectionByIdService(aff.getFichePoste().getIdServiceADS());
-		NoeudDto section = adsWSConsumer.getSection(aff.getFichePoste().getIdServiceADS());
+		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+		EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
+		EntiteDto section = adsWSConsumer.getSection(aff.getFichePoste().getIdServiceADS());
 		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction.getLabel(), service.getLabel(),
 				section.getLabel());
 		CompteDto cptDto = new CompteDto(ag, banque);

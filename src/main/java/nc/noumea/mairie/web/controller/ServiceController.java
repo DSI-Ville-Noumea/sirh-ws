@@ -6,7 +6,7 @@ import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class ServiceController {
 			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
-		NoeudDto service = adsWSConsumer.getNoeudByIdService(idServiceADS);
+		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(idServiceADS);
 		// Si le service n'existe pas, on ne retourne rien
 		if (service == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

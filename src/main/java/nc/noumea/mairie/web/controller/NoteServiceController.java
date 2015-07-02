@@ -9,7 +9,7 @@ import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IContratService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.NoteServiceDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
@@ -59,9 +59,9 @@ public class NoteServiceController {
 		Affectation aff = affSrv.getAffectationById(idAffectation);
 		NoteServiceDto dto = new NoteServiceDto();
 		if (aff != null) {
-			NoeudDto serviceADS = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
+			EntiteDto serviceADS = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent(), serviceADS);
-			NoeudDto direction = adsWSConsumer.getDirectionByIdService(aff.getFichePoste().getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
 			agDto.setDirection(direction == null ? "" : direction.getLabel());
 			TitrePosteDto titrePoste = new TitrePosteDto(aff.getFichePoste());
 

@@ -1,74 +1,146 @@
 package nc.noumea.mairie.ws;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.ReferenceDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import com.sun.jersey.api.client.ClientResponse;
 
 @Service
 public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 
 	private Logger logger = LoggerFactory.getLogger(ADSWSConsumer.class);
 
+	@Autowired
+	@Qualifier("adsWsBaseUrl")
+	private String adsWsBaseUrl;
+
+	private static final String sirhAdsListeTypeEntite = "/api/typeEntite";
+	private static final String sirhAdsParentOfEntiteByTypeEntite = "/api/entite/parentOfEntiteByTypeEntite";
+	private static final String sirhAdsGetEntiteUrl = "api/entite/";
+
 	@Override
-	public NoeudDto getCurrentWholeTreeFromRoot() {
+	public EntiteDto getEntiteByIdEntite(Integer idEntite) {
+
+		if (null == idEntite) {
+			return null;
+		}
+
+		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteUrl + idEntite.toString());
+
+		Map<String, String> parameters = new HashMap<String, String>();
+
+		ClientResponse res = createAndFireGetRequest(parameters, url);
+		try {
+			return readResponse(EntiteDto.class, res, url);
+		} catch (Exception e) {
+			logger.error("L'application ADS ne repond pas." + e.getMessage());
+		}
+
+		return null;
+	}
+
+	@Override
+	public EntiteDto getDirectionPourEAE(Integer idEntite) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public NoeudDto getNoeudByIdService(Integer idService) {
+	public EntiteDto getSection(Integer idEntite) {
+		if(idEntite==null)
+			return null;
+		// on appel ADS pour connaitre la liste des types d'netité pour passer
+		// en paramètre ensuite le type "section"
+		List<ReferenceDto> listeType = getListTypeEntite();
+		ReferenceDto type = null;
+		for (ReferenceDto r : listeType) {
+			if (r.getLabel().toUpperCase().equals("SECTION")) {
+				type = r;
+				break;
+			}
+		}
+		if (type == null) {
+			return null;
+		}
+		return getParentOfEntiteByTypeEntite(idEntite, type.getId());
+	}
+
+	private EntiteDto getParentOfEntiteByTypeEntite(Integer idEntite, Integer idTypeEntite) {
+
+		String url = String.format(adsWsBaseUrl + sirhAdsParentOfEntiteByTypeEntite);
+
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("idEntite", idEntite.toString());
+		parameters.put("idTypeEntite", idTypeEntite.toString());
+
+		ClientResponse res = createAndFireGetRequest(parameters, url);
+
+		try {
+			return readResponse(EntiteDto.class, res, url);
+		} catch (Exception e) {
+			logger.error("L'application ADS ne repond pas." + e.getMessage());
+		}
+
+		return null;
+	}
+
+	@Override
+	public EntiteDto getEntiteFromCodeServiceAS400(String servi) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public NoeudDto getDirectionPourEAE(Integer idServiceADS) {
-		// TODO Auto-generated method stub
-		return null;
+	public EntiteDto getDirection(Integer idEntite) {
+		if(idEntite==null)
+			return null;
+		// on appel ADS pour connaitre la liste des types d'netité pour passer
+		// en paramètre ensuite le type "direction"
+		List<ReferenceDto> listeType = getListTypeEntite();
+		ReferenceDto type = null;
+		for (ReferenceDto r : listeType) {
+			if (r.getLabel().toUpperCase().equals("DIRECTION")) {
+				type = r;
+				break;
+			}
+		}
+		if (type == null) {
+			return null;
+		}
+		return getParentOfEntiteByTypeEntite(idEntite, type.getId());
 	}
 
 	@Override
-	public NoeudDto getSection(Integer idServiceADS) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NoeudDto getNoeudFromCodeServiceAS400(String servi) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public NoeudDto getDirectionByIdService(Integer idServiceADS) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Integer> getListIdsServiceWithEnfantsOfService(Integer idService) {
+	public List<Integer> getListIdsServiceWithEnfantsOfService(Integer idEntite) {
 
 		List<Integer> result = new ArrayList<Integer>();
 
-//		NoeudDto noeudDto = adsConsumer.getNoeudWithChildrenByIdService(idService);
-//		result.add(noeudDto.getIdService());
-//		result.addAll(getListIdsServiceEnfants(noeudDto));
+		// NoeudDto noeudDto =
+		// adsConsumer.getNoeudWithChildrenByIdService(idService);
+		// result.add(noeudDto.getIdService());
+		// result.addAll(getListIdsServiceEnfants(noeudDto));
 
 		return result;
 	}
 
-	private List<Integer> getListIdsServiceEnfants(NoeudDto noeud) {
+	private List<Integer> getListIdsServiceEnfants(EntiteDto entite) {
 
 		List<Integer> result = new ArrayList<Integer>();
 
-		if (null != noeud && null != noeud.getEnfants()) {
-			for (NoeudDto enfant : noeud.getEnfants()) {
-				result.add(enfant.getIdService());
+		if (null != entite && null != entite.getEnfants()) {
+			for (EntiteDto enfant : entite.getEnfants()) {
+				result.add(enfant.getIdEntite());
 				result.addAll(getListIdsServiceEnfants(enfant));
 			}
 		}
@@ -76,9 +148,27 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	}
 
 	@Override
-	public NoeudDto getParentOfNoeudByIdService(int idService) {
+	public EntiteDto getParentOfEntiteByIdEntite(Integer idEntite) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<ReferenceDto> getListTypeEntite() {
+
+		String url = String.format(adsWsBaseUrl + sirhAdsListeTypeEntite);
+
+		Map<String, String> parameters = new HashMap<String, String>();
+
+		ClientResponse res = createAndFireGetRequest(parameters, url);
+
+		try {
+			return readResponseAsList(ReferenceDto.class, res, url);
+		} catch (Exception e) {
+			logger.error("L'application ADS ne repond pas." + e.getMessage());
+		}
+
+		return new ArrayList<ReferenceDto>();
 	}
 
 }

@@ -14,7 +14,7 @@ import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IKiosqueRhService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AccueilRhDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ReferentRhDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -73,7 +73,7 @@ public class KiosqueRHController {
 		ReferentRh lc = kiosqueSrv.getReferentRH(aff.getFichePoste().getIdServiceADS());
 		ReferentRhDto dto = new ReferentRhDto();
 		if (lc != null) {
-			NoeudDto service = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
+			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 			dto = new ReferentRhDto(lc, agentSrv.getAgent(lc.getIdAgentReferent()), service);
 		}
 

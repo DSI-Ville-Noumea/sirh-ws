@@ -44,7 +44,7 @@ import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.CarriereDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.GradeDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -198,19 +198,19 @@ public class CalculEaeServiceTest {
 		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
 
 
-		NoeudDto siservDirection = new NoeudDto();
+		EntiteDto siservDirection = new EntiteDto();
 		siservDirection.setLabel("direction");
-		NoeudDto siservSection = new NoeudDto();
+		EntiteDto siservSection = new EntiteDto();
 		siservSection.setLabel("section");
-		NoeudDto siservService = new NoeudDto();
+		EntiteDto siservService = new EntiteDto();
 		siservService.setLabel("liServ");
 		
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getNoeudByIdService(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
 		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.anyInt())).thenReturn(siservDirection);
 		Mockito.when(adsWSConsumer.getSection(Mockito.anyInt())).thenReturn(siservSection);
-		Mockito.when(adsWSConsumer.getNoeudByIdService(Mockito.anyInt())).thenReturn(siservService);
-		Mockito.when(adsWSConsumer.getNoeudFromCodeServiceAS400(spMtsr.getId().getServi())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getEntiteFromCodeServiceAS400(spMtsr.getId().getServi())).thenReturn(siservService);
 		
 		
 

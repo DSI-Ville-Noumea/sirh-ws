@@ -38,7 +38,7 @@ public class AgentWithServiceDtoTest extends AgentDto {
 		// Siserv service = new Siserv();
 		// service.setLiServ("test service");
 		// service.setServi("DD");
-		NoeudDto service = new NoeudDto();
+		EntiteDto service = new EntiteDto();
 
 		// When
 		AgentWithServiceDto dto = new AgentWithServiceDto(ag, service);

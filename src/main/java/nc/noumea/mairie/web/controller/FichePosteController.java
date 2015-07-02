@@ -13,7 +13,7 @@ import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.FichePosteDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -125,9 +125,9 @@ public class FichePosteController {
 		FichePosteDto dto = new FichePosteDto();
 		if (fp != null && fp.getIdServiceADS() != null) {
 
-			NoeudDto service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
-			NoeudDto direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
-			NoeudDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
+			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
+			EntiteDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
 
 			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section.getLabel());
 		} else {
@@ -146,9 +146,9 @@ public class FichePosteController {
 		FichePosteDto dto = new FichePosteDto();
 		if (fp != null && fp.getIdServiceADS() != null) {
 
-			NoeudDto service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
-			NoeudDto direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
-			NoeudDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
+			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
+			EntiteDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
 
 			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section.getLabel());
 		}
@@ -231,12 +231,12 @@ public class FichePosteController {
 		if (fp == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		NoeudDto service = null;
-		NoeudDto direction = null;
-		NoeudDto section = null;
+		EntiteDto service = null;
+		EntiteDto direction = null;
+		EntiteDto section = null;
 		if (fp.getIdServiceADS() != null) {
-			service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
-			direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+			direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
 			section = adsWSConsumer.getSection(fp.getIdServiceADS());
 		}
 
@@ -280,12 +280,12 @@ public class FichePosteController {
 		if (fp == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
-		NoeudDto service = null;
-		NoeudDto direction = null;
-		NoeudDto section = null;
+		EntiteDto service = null;
+		EntiteDto direction = null;
+		EntiteDto section = null;
 		if (fp.getIdServiceADS() != null) {
-			service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
-			direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
+			service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+			direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
 			section = adsWSConsumer.getSection(fp.getIdServiceADS());
 		}
 

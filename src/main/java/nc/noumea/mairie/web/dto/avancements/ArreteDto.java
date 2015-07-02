@@ -14,7 +14,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
 import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 
 @XmlRootElement
 public class ArreteDto {
@@ -45,7 +45,7 @@ public class ArreteDto {
 	}
 
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
-			NoeudDto direction, NoeudDto service) throws ParseException {
+			EntiteDto direction, EntiteDto service) throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -130,7 +130,7 @@ public class ArreteDto {
 	}
 
 	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
-			NoeudDto direction, NoeudDto service) throws ParseException {
+			EntiteDto direction, EntiteDto service) throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();

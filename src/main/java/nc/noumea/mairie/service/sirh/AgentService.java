@@ -15,7 +15,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,12 +134,12 @@ public class AgentService implements IAgentService {
 
 		for (Affectation aff : query.getResultList()) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
-			NoeudDto service = null;
+			EntiteDto service = null;
 			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null)
-				service = adsWSConsumer.getNoeudByIdService(aff.getFichePoste().getIdServiceADS());
-			NoeudDto direction = adsWSConsumer.getDirectionByIdService(aff.getFichePoste().getIdServiceADS());
+				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
 			agDto.setService(service == null ? "" : service.getLabel().trim());
-			agDto.setIdServiceADS(service == null ? null : service.getIdService());
+			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setSigleService(service == null ? "" : service.getSigle());
 			agDto.setDirection(direction == null ? "" : direction.getLabel());
 			result.add(agDto);
@@ -204,10 +204,10 @@ public class AgentService implements IAgentService {
 		List<AgentRecherche> list = query.getResultList();
 		for (AgentRecherche ag : list) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(ag);
-			NoeudDto service = getServiceAgent(ag.getIdAgent(), null);
+			EntiteDto service = getServiceAgent(ag.getIdAgent(), null);
 
 			// on construit le dto de l'agent
-			agDto.setIdServiceADS(service == null ? null : service.getIdService());
+			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setService(service == null ? null : service.getLabel().trim());
 			result.add(agDto);
 		}
@@ -216,7 +216,7 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public NoeudDto getServiceAgent(Integer idAgent, Date dateDonnee) {
+	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee) {
 		String hql = "select fp from FichePoste fp ,Affectation aff"
 				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
@@ -231,7 +231,7 @@ public class AgentService implements IAgentService {
 		try {
 			FichePoste fp = (FichePoste) query.getSingleResult();
 			if (fp.getIdServiceADS() != null) {
-				return adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+				return adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
 			} else {
 				return null;
 			}

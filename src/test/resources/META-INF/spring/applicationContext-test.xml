@@ -77,6 +77,8 @@
 
 	<bean class="java.lang.String" id="eaeWsBaseUrl" />
 
+	<bean class="java.lang.String" id="adsWsBaseUrl" />
+
 
 	<!-- -->
 	<!-- Parametres pour savoir si une paie tourne -->

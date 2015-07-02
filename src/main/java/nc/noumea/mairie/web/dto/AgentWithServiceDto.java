@@ -24,11 +24,11 @@ public class AgentWithServiceDto extends AgentDto {
 		super(ag);
 	}
 
-	public AgentWithServiceDto(Agent agent, NoeudDto service) {
+	public AgentWithServiceDto(Agent agent, EntiteDto service) {
 		super(agent);
 		if (service != null) {
 			this.service = service.getLabel();
-			this.idServiceADS = service.getIdService();
+			this.idServiceADS = service.getIdEntite();
 			this.signature = service.getLib22();
 			this.sigleService = service.getSigle();
 		}

@@ -18,7 +18,7 @@ import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.Deliberation;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 
 import org.junit.Test;
 
@@ -104,8 +104,8 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
-		NoeudDto service = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
+		EntiteDto service = new EntiteDto();
 		// When
 		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
@@ -189,8 +189,8 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
-		NoeudDto service = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
+		EntiteDto service = new EntiteDto();
 		// When
 		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
@@ -278,8 +278,8 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
-		NoeudDto service = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
+		EntiteDto service = new EntiteDto();
 		// When
 		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
@@ -343,10 +343,10 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
 		direction.setLabel("TEST");
 		direction.setSigle("SN");
-		NoeudDto service = new NoeudDto();
+		EntiteDto service = new EntiteDto();
 		service.setLabel("TEST DIRECTION SERV");
 		service.setSigle("S");
 		// When
@@ -426,8 +426,8 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
-		NoeudDto service = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
+		EntiteDto service = new EntiteDto();
 		// When
 		ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 
@@ -483,10 +483,10 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
 		direction.setSigle("SN");
 		direction.setLabel("TEST");
-		NoeudDto service = new NoeudDto();
+		EntiteDto service = new EntiteDto();
 		service.setSigle("S");
 		service.setLabel("TEST DIRECTION SERV");
 
@@ -555,10 +555,10 @@ public class ArreteDtoTest {
 		FichePoste fp = new FichePoste();
 		fp.setIdServiceADS(1);
 
-		NoeudDto direction = new NoeudDto();
+		EntiteDto direction = new EntiteDto();
 		direction.setLabel("TEST");
 		direction.setSigle("SN");
-		NoeudDto service = new NoeudDto();
+		EntiteDto service = new EntiteDto();
 		service.setLabel("TEST DIRECTION SERV");
 		service.setSigle("S");
 

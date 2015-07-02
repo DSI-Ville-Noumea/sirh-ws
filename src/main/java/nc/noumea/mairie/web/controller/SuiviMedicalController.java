@@ -10,9 +10,9 @@ import nc.noumea.mairie.service.sirh.ISuiviMedicalService;
 import nc.noumea.mairie.web.dto.AccompagnementVMDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ConvocationVMDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ListVMDto;
 import nc.noumea.mairie.web.dto.MedecinDto;
-import nc.noumea.mairie.web.dto.NoeudDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
@@ -66,12 +66,12 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				NoeudDto service = adsConsumer.getNoeudByIdService(sm.getIdServiceADS());
+				EntiteDto service = adsConsumer.getEntiteByIdEntite(sm.getIdServiceADS());
 
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
 
-					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
+					EntiteDto direction = adsConsumer.getDirection(sm.getIdServiceADS());
 					agDto.setDirection(direction == null ? "" : direction.getLabel());
 				}
 
@@ -107,22 +107,22 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				NoeudDto service = adsConsumer.getNoeudByIdService(sm.getIdServiceADS());
+				EntiteDto service = adsConsumer.getEntiteByIdEntite(sm.getIdServiceADS());
 
-				NoeudDto servResponsable = null;
+				EntiteDto servResponsable = null;
 				AgentWithServiceDto agRespDto = null;
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
-					NoeudDto direction = adsConsumer.getDirectionByIdService(sm.getIdServiceADS());
+					EntiteDto direction = adsConsumer.getDirection(sm.getIdServiceADS());
 					agDto.setDirection(direction == null ? "" : direction.getLabel());
 					if (direction != null) {
 						service = null;
 					} else {
-						servResponsable = adsConsumer.getParentOfNoeudByIdService(service.getIdService());
+						servResponsable = adsConsumer.getParentOfEntiteByIdEntite(service.getIdEntite());
 
 						agRespDto = new AgentWithServiceDto(null, servResponsable);
-						NoeudDto directionResponsable = adsConsumer.getDirectionByIdService(servResponsable
-								.getIdService());
+						EntiteDto directionResponsable = adsConsumer.getDirection(servResponsable
+								.getIdEntite());
 						agRespDto.setDirection(directionResponsable == null ? "" : directionResponsable.getLabel());
 					}
 				}

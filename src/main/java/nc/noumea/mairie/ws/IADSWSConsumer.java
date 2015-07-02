@@ -2,23 +2,24 @@ package nc.noumea.mairie.ws;
 
 import java.util.List;
 
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.ReferenceDto;
 
 public interface IADSWSConsumer {
 
-	public NoeudDto getCurrentWholeTreeFromRoot();
+	EntiteDto getEntiteByIdEntite(Integer idEntite);
 
-	public NoeudDto getNoeudByIdService(Integer idService);
+	EntiteDto getDirectionPourEAE(Integer idEntite);
 
-	public NoeudDto getDirectionPourEAE(Integer idServiceADS);
+	EntiteDto getSection(Integer idEntite);
 
-	public NoeudDto getSection(Integer idServiceADS);
+	EntiteDto getEntiteFromCodeServiceAS400(String servi);
 
-	public NoeudDto getNoeudFromCodeServiceAS400(String servi);
+	EntiteDto getDirection(Integer idEntite);
 
-	public NoeudDto getDirectionByIdService(Integer idServiceADS);
+	List<Integer> getListIdsServiceWithEnfantsOfService(Integer idEntite);
 
-	public List<Integer> getListIdsServiceWithEnfantsOfService(Integer idService);
+	EntiteDto getParentOfEntiteByIdEntite(Integer idEntite);
 
-	public NoeudDto getParentOfNoeudByIdService(int idService);
+	List<ReferenceDto> getListTypeEntite();
 }

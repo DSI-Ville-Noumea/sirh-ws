@@ -20,7 +20,7 @@ import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
 import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
-import nc.noumea.mairie.web.dto.NoeudDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
@@ -304,11 +304,11 @@ public class AvancementsService implements IAvancementsService {
 					: avct.getGradeNouveau().getClasse();
 			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
-			NoeudDto direction = null;
-			NoeudDto service = null;
+			EntiteDto direction = null;
+			EntiteDto service = null;
 			if (fp != null && fp.getIdServiceADS() != null) {
-				direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
-				service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+				direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
+				service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -381,11 +381,11 @@ public class AvancementsService implements IAvancementsService {
 			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
 
-			NoeudDto direction = null;
-			NoeudDto service = null;
+			EntiteDto direction = null;
+			EntiteDto service = null;
 			if (fp != null && fp.getIdServiceADS() != null) {
-				direction = adsWSConsumer.getDirectionByIdService(fp.getIdServiceADS());
-				service = adsWSConsumer.getNoeudByIdService(fp.getIdServiceADS());
+				direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
+				service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

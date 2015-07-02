@@ -18,7 +18,7 @@ public class ReferentRhDtoTest {
 		// c.setServi("toto");
 		Agent ag = new Agent();
 		ag.setPrenomUsage("prenom usage");
-		NoeudDto serv = new NoeudDto();
+		EntiteDto serv = new EntiteDto();
 		serv.setSigle("sigle");
 
 		// When
@@ -36,7 +36,7 @@ public class ReferentRhDtoTest {
 		// Given
 		ReferentRh c = null;
 		Agent ag = null;
-		NoeudDto serv = null;
+		EntiteDto serv = null;
 
 		// When
 		ReferentRhDto dto = new ReferentRhDto(c, ag, serv);
