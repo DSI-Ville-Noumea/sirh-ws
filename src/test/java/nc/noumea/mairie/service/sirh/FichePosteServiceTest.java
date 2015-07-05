@@ -18,6 +18,7 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
@@ -351,10 +352,14 @@ public class FichePosteServiceTest {
 
 	@Test
 	public void getListFichePosteByIdServiceADS_Liste() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En creation");
 
 		FichePoste fiche = new FichePoste();
 		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
 
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
@@ -370,5 +375,6 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(fiche.getNumFP(), result.get(0).getNumero());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFDP());
 	}
 }

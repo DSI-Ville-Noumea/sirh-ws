@@ -86,6 +86,8 @@ public class FichePosteDto {
 		this.idFichePoste = fichePoste.getIdFichePoste();
 		this.numero = fichePoste.getNumFP();
 
+		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
+
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
 				if (null != agt.getAgent()) {

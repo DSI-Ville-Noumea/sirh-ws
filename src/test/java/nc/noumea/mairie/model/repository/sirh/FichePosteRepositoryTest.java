@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,11 @@ public class FichePosteRepositoryTest {
 		fichePoste2.setIdServiceADS(2);
 		sirhPersistenceUnit.persist(fichePoste2);
 
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("lib statut");
+		sirhPersistenceUnit.persist(statutFP);
+
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
@@ -49,6 +55,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setOpi("opi");
 		fichePoste.setNfa("nfa");
 		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		List<FichePoste> result = repository.getListFichePosteByIdServiceADS(1);
@@ -56,6 +63,7 @@ public class FichePosteRepositoryTest {
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getIdFichePoste());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
 	}
 
 	@Test
