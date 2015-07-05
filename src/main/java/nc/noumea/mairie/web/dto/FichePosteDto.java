@@ -95,9 +95,9 @@ public class FichePosteDto {
 			}
 		}
 
-		this.titre = fichePoste.getTitrePoste().getLibTitrePoste();
+		this.titre = fichePoste.getTitrePoste() == null ? "" : fichePoste.getTitrePoste().getLibTitrePoste();
 
-		this.budget = fichePoste.getBudget().getLibelleBudget();
+		this.budget = fichePoste.getBudget() == null ? "" : fichePoste.getBudget().getLibelleBudget();
 		try {
 			budgete = null == fichePoste.getBudgete() || fichePoste.getBudgete().getLibHor() == null ? "" : fichePoste
 					.getBudgete().getLibHor().trim();
@@ -112,9 +112,10 @@ public class FichePosteDto {
 			this.reglementaire = "";
 		}
 
-		this.cadreEmploi = fichePoste.getGradePoste().getGradeGenerique() == null
-				|| fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? "" : fichePoste
-				.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
+		this.cadreEmploi = fichePoste.getGradePoste() == null ? ""
+				: fichePoste.getGradePoste().getGradeGenerique() == null
+						|| fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade() == null ? ""
+						: fichePoste.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi();
 		this.niveauEtudes = fichePoste.getNiveauEtude() != null ? fichePoste.getNiveauEtude().getLibelleNiveauEtude()
 				: "";
 

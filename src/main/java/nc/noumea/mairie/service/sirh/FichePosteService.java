@@ -10,13 +10,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
-import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 
@@ -40,9 +42,12 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IAgentService agentSrv;
-	
+
 	@Autowired
 	private IMairieRepository mairieRepository;
+
+	@Autowired
+	private IADSWSConsumer adsWSConsumer;
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
@@ -55,8 +60,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp LEFT JOIN FETCH fp.competencesFDP LEFT JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
-				FichePoste.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 
@@ -85,8 +89,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
 						+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
-				FichePoste.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfp = query.getResultList();
@@ -105,8 +108,7 @@ public class FichePosteService implements IFichePosteService {
 				"select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
 						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
 						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
-				String.class);
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", String.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<String> lfp = query.getResultList();
@@ -370,27 +372,41 @@ public class FichePosteService implements IFichePosteService {
 
 		return fp;
 	}
-	
+
 	@Override
 	public List<SpbhorDto> getListSpbhorDto() {
 
 		List<SpbhorDto> listResult = new ArrayList<SpbhorDto>();
-		
+
 		List<Spbhor> listOfPartialTimes = mairieRepository.getListSpbhor();
 
-		if(null != listOfPartialTimes) {
-			for(Spbhor hor : listOfPartialTimes) {
+		if (null != listOfPartialTimes) {
+			for (Spbhor hor : listOfPartialTimes) {
 				SpbhorDto dto = new SpbhorDto(hor);
 				listResult.add(dto);
 			}
 		}
 		return listResult;
 	}
-	
+
 	@Override
 	public SpbhorDto getSpbhorDtoById(Integer idSpbhor) {
-		
+
 		Spbhor result = mairieRepository.getSpbhorById(idSpbhor);
 		return new SpbhorDto(result);
+	}
+
+	@Override
+	public List<FichePosteDto> getListFichePosteByIdServiceADS(Integer idEntite) {
+		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
+
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADS(idEntite);
+
+		for (FichePoste fp : listeFDP) {
+
+			FichePosteDto dto = new FichePosteDto(fp, "", "", "");
+			result.add(dto);
+		}
+		return result;
 	}
 }

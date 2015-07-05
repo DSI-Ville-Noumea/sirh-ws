@@ -12,8 +12,8 @@ import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
-import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -294,6 +294,22 @@ public class FichePosteController {
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/listFichePosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> listFichePosteByIdEntite(
+			@RequestParam(value = "idEntite", required = true) Integer idEntite) throws ParseException {
+
+
+		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADS(idEntite);
+		
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}

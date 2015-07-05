@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 
 public interface IFichePosteService {
@@ -33,10 +34,12 @@ public interface IFichePosteService {
 	public List<Integer> getShdAgentIdsForFichePoste(int idFichePoste, int maxDepth);
 
 	public FichePoste getFichePosteById(Integer idFichePoste);
-	
+
 	public FichePoste getFichePosteDetailleSIRHByIdWithRefPrime(Integer idFichePoste);
 
 	List<SpbhorDto> getListSpbhorDto();
 
 	SpbhorDto getSpbhorDtoById(Integer idSpbhor);
+
+	public List<FichePosteDto> getListFichePosteByIdServiceADS(Integer idEntite);
 }

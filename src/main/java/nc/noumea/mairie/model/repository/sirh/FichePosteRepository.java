@@ -7,7 +7,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 
 import org.springframework.stereotype.Repository;
@@ -39,5 +41,17 @@ public class FichePosteRepository implements IFichePosteRepository {
 		}
 
 		return result;
+	}
+
+	@Override
+	public List<FichePoste> getListFichePosteByIdServiceADS(Integer idEntite) {
+
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(
+				"select fp from FichePoste fp where fp.idServiceADS=:idServiceADS", FichePoste.class);
+		query.setParameter("idServiceADS", idEntite);
+
+		List<FichePoste> res = query.getResultList();
+
+		return res;
 	}
 }

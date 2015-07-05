@@ -1,6 +1,10 @@
 package nc.noumea.mairie.service.sirh;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +20,8 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
+import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
+import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
@@ -290,41 +296,79 @@ public class FichePosteServiceTest {
 
 		}
 	}
-	
+
 	@Test
 	public void getListSpbhorDto() {
-		
+
 		Spbhor hor1 = new Spbhor();
 		Spbhor hor2 = new Spbhor();
-		
+
 		List<Spbhor> listSpbhor = new ArrayList<Spbhor>();
 		listSpbhor.add(hor1);
 		listSpbhor.add(hor2);
-		
+
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListSpbhor()).thenReturn(listSpbhor);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
-		
+
 		List<SpbhorDto> result = ficheService.getListSpbhorDto();
-		
+
 		assertEquals(2, result.size());
 	}
-	
+
 	@Test
 	public void getSpbhorById() {
-		
+
 		Spbhor hor1 = new Spbhor();
-		
+
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getSpbhorById(1)).thenReturn(hor1);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
-		
+
 		SpbhorDto result = ficheService.getSpbhorDtoById(1);
-		
+
 		assertNotNull(result);
+	}
+
+	@Test
+	public void getListFichePosteByIdServiceADS_EmptyListe() {
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(new ArrayList<FichePoste>());
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADS(1);
+
+		assertNotNull(result);
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void getListFichePosteByIdServiceADS_Liste() {
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADS(1);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(fiche.getNumFP(), result.get(0).getNumero());
 	}
 }
