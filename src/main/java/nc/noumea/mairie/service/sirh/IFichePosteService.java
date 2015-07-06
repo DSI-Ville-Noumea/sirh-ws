@@ -6,6 +6,7 @@ import java.util.List;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IFichePosteService {
 
@@ -42,4 +43,6 @@ public interface IFichePosteService {
 	SpbhorDto getSpbhorDtoById(Integer idSpbhor);
 
 	public List<FichePosteDto> getListFichePosteByIdServiceADS(Integer idEntite);
+
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite);
 }

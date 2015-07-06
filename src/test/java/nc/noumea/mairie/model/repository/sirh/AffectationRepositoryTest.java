@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.repository.sirh;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Calendar;
@@ -717,5 +718,89 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 3);
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAffectationByIdFichePoste_returnListAffectation() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(1);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new Date());
+		a.setDateFinAff(cal.getTime());
+		a.setFichePoste(fichePoste);
+		sirhPersistenceUnit.persist(a);
+
+		List<Affectation> result = repository.getAffectationByIdFichePoste(1);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getFichePoste().getIdFichePoste());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAffectationByIdFichePoste_returnEmptyList() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(1);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new Date());
+		a.setDateFinAff(null);
+		a.setFichePoste(fichePoste);
+		sirhPersistenceUnit.persist(a);
+
+		List<Affectation> result = repository.getAffectationByIdFichePoste(2);
+
+		assertNotNull(result);
+		assertEquals(0, result.size());
 	}
 }

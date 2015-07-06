@@ -21,6 +21,7 @@ import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -42,6 +43,9 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IAgentService agentSrv;
+
+	@Autowired
+	private IAffectationService affSrv;
 
 	@Autowired
 	private IMairieRepository mairieRepository;
@@ -407,6 +411,30 @@ public class FichePosteService implements IFichePosteService {
 			FichePosteDto dto = new FichePosteDto(fp, "", "", "");
 			result.add(dto);
 		}
+		return result;
+	}
+
+	@Override
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADS(idEntite);
+		// on regarde que toutes les FDP soient en statut "En creation" et que
+		// la FDP n'est jamais été affectée à un agent
+		for (FichePoste fp : listeFDP) {
+			if (fp.getStatutFP().getIdStatutFp() != 1) {
+				result.getErrors().add("La FDP " + fp.getNumFP() + " n'est pas en statut 'En création'.");
+			}
+			if (affSrv.getAffectationByIdFichePoste(fp.getIdFichePoste()).size() > 0) {
+				result.getErrors().add("La FDP " + fp.getNumFP() + " a déjà été affectée.");
+			}
+		}
+		if (result.getErrors().size() > 0) {
+			return result;
+		}
+
+		// on crée un job de lancement de suppression des FDP
+		// TODO
 		return result;
 	}
 }

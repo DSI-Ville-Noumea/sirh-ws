@@ -66,4 +66,9 @@ public class AffectationService implements IAffectationService {
 
 		return res;
 	}
+
+	@Override
+	public List<Affectation> getAffectationByIdFichePoste(Integer idFichePoste) {
+		return affRepo.getAffectationByIdFichePoste(idFichePoste);
+	}
 }

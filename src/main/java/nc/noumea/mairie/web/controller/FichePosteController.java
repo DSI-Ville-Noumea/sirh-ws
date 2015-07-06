@@ -16,6 +16,7 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -298,15 +299,41 @@ public class FichePosteController {
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 
+	/**
+	 * Utile à ADS
+	 * 
+	 * @param idEntite
+	 * @return
+	 * @throws ParseException
+	 */
 	@RequestMapping(value = "/listFichePosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> listFichePosteByIdEntite(
 			@RequestParam(value = "idEntite", required = true) Integer idEntite) throws ParseException {
 
-
 		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADS(idEntite);
-		
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Utile à ADS lors de la suppression d'une entité
+	 * 
+	 * @param idEntite
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/deleteFichePosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> deleteFichePosteByIdEntite(
+			@RequestParam(value = "idEntite", required = true) Integer idEntite) throws ParseException {
+
+		ReturnMessageDto result = fpSrv.deleteFichePosteByIdEntite(idEntite);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

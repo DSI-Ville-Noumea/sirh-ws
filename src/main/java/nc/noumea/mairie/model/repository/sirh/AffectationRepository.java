@@ -114,4 +114,19 @@ public class AffectationRepository implements IAffectationRepository {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Affectation> getAffectationByIdFichePoste(Integer idFichePoste) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select aff from Affectation aff ");
+		sb.append(" WHERE aff.fichePoste.idFichePoste = :idFichePoste ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		return query.getResultList();
+	}
+
 }

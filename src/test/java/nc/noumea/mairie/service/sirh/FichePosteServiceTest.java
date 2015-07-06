@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
@@ -26,6 +27,7 @@ import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -376,5 +378,65 @@ public class FichePosteServiceTest {
 		assertEquals(1, result.size());
 		assertEquals(fiche.getNumFP(), result.get(0).getNumero());
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFDP());
+	}
+
+	@Test
+	public void deleteFichePosteByIdEntite_OK() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En création");
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
+
+		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
+		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(new ArrayList<Affectation>());
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
+
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1);
+
+		assertNotNull(result);
+		assertEquals(0, result.getErrors().size());
+	}
+
+	@Test
+	public void deleteFichePosteByIdEntite_Errors() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		statutFP.setLibStatut("Validée");
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
+		
+		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
+		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(new ArrayList<Affectation>());
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
+
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
 	}
 }
