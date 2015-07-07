@@ -52,9 +52,13 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	}
 
 	@Override
-	public EntiteDto getDirectionPourEAE(Integer idEntite) {
-		// TODO Auto-generated method stub
-		return null;
+	public EntiteDto getDirectionPourEAE(EntiteDto entiteDto) {
+		if (!entiteDto.getCodeServi().substring(0, 3).equals("DAG")) {
+			return getDirection(entiteDto.getIdEntite());
+		} else {
+			// cas de la DPM
+			return getEntiteByCodeServiceSISERV("DAGA");
+		}
 	}
 
 	@Override

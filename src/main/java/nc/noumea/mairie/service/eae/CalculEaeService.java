@@ -83,7 +83,7 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setDateFin(affectation.getDateFinAff());
 
 			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePoste().getIdServiceADS());
-			EntiteDto direction = adsWSConsumer.getDirectionPourEAE(affectation.getFichePoste().getIdServiceADS());
+			EntiteDto direction = adsWSConsumer.getDirectionPourEAE(service);
 			EntiteDto section = adsWSConsumer.getSection(affectation.getFichePoste().getIdServiceADS());
 
 			TitrePosteDto titrePoste = new TitrePosteDto();
@@ -97,8 +97,7 @@ public class CalculEaeService implements ICalculEaeService {
 			if (null != affectation.getFichePosteSecondaire()) {
 				EntiteDto serviceSecondaire = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
-				EntiteDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(affectation.getFichePosteSecondaire()
-						.getIdServiceADS());
+				EntiteDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(serviceSecondaire);
 				EntiteDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
 				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),
@@ -162,13 +161,12 @@ public class CalculEaeService implements ICalculEaeService {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
 
 				// TODO à revoir lors reponse à #16246
-				EntiteDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getEntiteByCodeServiceSISERV(
-						spMtsr.getId().getServi()).getIdEntite());
-				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
-
 				EntiteDto service = adsWSConsumer.getEntiteByIdEntite(adsWSConsumer.getEntiteByCodeServiceSISERV(
 						spMtsr.getId().getServi()).getIdEntite());
 				parcoursProDto.setService(service == null ? "" : service.getLabel());
+
+				EntiteDto direction = adsWSConsumer.getDirectionPourEAE(service);
+				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
 
 				listParcoursPro.add(parcoursProDto);
 			}

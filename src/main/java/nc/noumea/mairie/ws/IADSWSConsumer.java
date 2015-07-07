@@ -9,7 +9,7 @@ public interface IADSWSConsumer {
 
 	EntiteDto getEntiteByIdEntite(Integer idEntite);
 
-	EntiteDto getDirectionPourEAE(Integer idEntite);
+	EntiteDto getDirectionPourEAE(EntiteDto entiteDto);
 
 	EntiteDto getSection(Integer idEntite);
 
