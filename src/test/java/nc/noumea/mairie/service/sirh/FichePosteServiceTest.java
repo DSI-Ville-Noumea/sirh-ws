@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -338,22 +339,23 @@ public class FichePosteServiceTest {
 	}
 
 	@Test
-	public void getListFichePosteByIdServiceADS_EmptyListe() {
+	public void getListFichePosteByIdServiceADSAndStatutFDP_EmptyListe() {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(new ArrayList<FichePoste>());
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(
+				new ArrayList<FichePoste>());
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADS(1);
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
 	}
 
 	@Test
-	public void getListFichePosteByIdServiceADS_Liste() {
+	public void getListFichePosteByIdServiceADSAndStatutFDP_ListeWithNoStatut() {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		statutFP.setLibStatut("En creation");
@@ -367,12 +369,41 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(listFP);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADS(1);
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(fiche.getNumFP(), result.get(0).getNumero());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFDP());
+	}
+
+	@Test
+	public void getListFichePosteByIdServiceADSAndStatutFDP_ListeWithStatut() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En creation");
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2))).thenReturn(
+				listFP);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -395,16 +426,17 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(listFP);
 
 		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(new ArrayList<Affectation>());
+		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(
+				new ArrayList<Affectation>());
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
 
-		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1);
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138);
 
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
@@ -425,16 +457,17 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADS(1)).thenReturn(listFP);
-		
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(listFP);
+
 		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(new ArrayList<Affectation>());
+		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(
+				new ArrayList<Affectation>());
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
 
-		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1);
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138);
 
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());

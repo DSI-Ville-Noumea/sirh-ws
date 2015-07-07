@@ -2,6 +2,7 @@ package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -310,9 +311,17 @@ public class FichePosteController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> listFichePosteByIdEntite(
-			@RequestParam(value = "idEntite", required = true) Integer idEntite) throws ParseException {
+			@RequestParam(value = "idEntite", required = true) Integer idEntite,
+			@RequestParam(value = "statutFDP", required = false) String listIdStatutFDP) throws ParseException {
 
-		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADS(idEntite);
+		List<Integer> statutIds = new ArrayList<Integer>();
+		if (listIdStatutFDP != null) {
+			for (String id : listIdStatutFDP.split(",")) {
+				statutIds.add(Integer.valueOf(id));
+			}
+		}
+
+		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, statutIds);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
@@ -331,9 +340,13 @@ public class FichePosteController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> deleteFichePosteByIdEntite(
-			@RequestParam(value = "idEntite", required = true) Integer idEntite) throws ParseException {
+			@RequestParam(value = "idEntite", required = true) Integer idEntite,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
 
-		ReturnMessageDto result = fpSrv.deleteFichePosteByIdEntite(idEntite);
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.deleteFichePosteByIdEntite(idEntite, new Integer(newIdAgent));
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

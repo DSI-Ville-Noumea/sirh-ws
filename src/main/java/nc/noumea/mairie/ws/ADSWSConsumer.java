@@ -28,6 +28,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	private static final String sirhAdsListeTypeEntite = "/api/typeEntite";
 	private static final String sirhAdsParentOfEntiteByTypeEntite = "/api/entite/parentOfEntiteByTypeEntite";
 	private static final String sirhAdsGetEntiteUrl = "api/entite/";
+	private static final String sirhAdsGetEntiteByCodeServiceSISERVUrl = "api/entite/codeAs400/";
 
 	@Override
 	public EntiteDto getEntiteByIdEntite(Integer idEntite) {
@@ -58,7 +59,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 
 	@Override
 	public EntiteDto getSection(Integer idEntite) {
-		if(idEntite==null)
+		if (idEntite == null)
 			return null;
 		// on appel ADS pour connaitre la liste des types d'netité pour passer
 		// en paramètre ensuite le type "section"
@@ -76,13 +77,15 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		return getParentOfEntiteByTypeEntite(idEntite, type.getId());
 	}
 
-	private EntiteDto getParentOfEntiteByTypeEntite(Integer idEntite, Integer idTypeEntite) {
+	@Override
+	public EntiteDto getParentOfEntiteByTypeEntite(Integer idEntite, Integer idTypeEntite) {
 
 		String url = String.format(adsWsBaseUrl + sirhAdsParentOfEntiteByTypeEntite);
 
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("idEntite", idEntite.toString());
-		parameters.put("idTypeEntite", idTypeEntite.toString());
+		if (idTypeEntite != null)
+			parameters.put("idTypeEntite", idTypeEntite.toString());
 
 		ClientResponse res = createAndFireGetRequest(parameters, url);
 
@@ -96,14 +99,29 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	}
 
 	@Override
-	public EntiteDto getEntiteFromCodeServiceAS400(String servi) {
-		// TODO Auto-generated method stub
+	public EntiteDto getEntiteByCodeServiceSISERV(String serviAS400) {
+
+		if (null == serviAS400) {
+			return null;
+		}
+
+		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteByCodeServiceSISERVUrl + serviAS400);
+
+		Map<String, String> parameters = new HashMap<String, String>();
+
+		ClientResponse res = createAndFireGetRequest(parameters, url);
+		try {
+			return readResponse(EntiteDto.class, res, url);
+		} catch (Exception e) {
+			logger.error("L'application ADS ne repond pas." + e.getMessage());
+		}
+
 		return null;
 	}
 
 	@Override
 	public EntiteDto getDirection(Integer idEntite) {
-		if(idEntite==null)
+		if (idEntite == null)
 			return null;
 		// on appel ADS pour connaitre la liste des types d'netité pour passer
 		// en paramètre ensuite le type "direction"
@@ -119,38 +137,6 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 			return null;
 		}
 		return getParentOfEntiteByTypeEntite(idEntite, type.getId());
-	}
-
-	@Override
-	public List<Integer> getListIdsServiceWithEnfantsOfService(Integer idEntite) {
-
-		List<Integer> result = new ArrayList<Integer>();
-
-		// NoeudDto noeudDto =
-		// adsConsumer.getNoeudWithChildrenByIdService(idService);
-		// result.add(noeudDto.getIdService());
-		// result.addAll(getListIdsServiceEnfants(noeudDto));
-
-		return result;
-	}
-
-	private List<Integer> getListIdsServiceEnfants(EntiteDto entite) {
-
-		List<Integer> result = new ArrayList<Integer>();
-
-		if (null != entite && null != entite.getEnfants()) {
-			for (EntiteDto enfant : entite.getEnfants()) {
-				result.add(enfant.getIdEntite());
-				result.addAll(getListIdsServiceEnfants(enfant));
-			}
-		}
-		return result;
-	}
-
-	@Override
-	public EntiteDto getParentOfEntiteByIdEntite(Integer idEntite) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

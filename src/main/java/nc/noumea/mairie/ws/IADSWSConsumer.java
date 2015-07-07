@@ -13,13 +13,11 @@ public interface IADSWSConsumer {
 
 	EntiteDto getSection(Integer idEntite);
 
-	EntiteDto getEntiteFromCodeServiceAS400(String servi);
+	EntiteDto getEntiteByCodeServiceSISERV(String serviAS400);
 
 	EntiteDto getDirection(Integer idEntite);
 
-	List<Integer> getListIdsServiceWithEnfantsOfService(Integer idEntite);
-
-	EntiteDto getParentOfEntiteByIdEntite(Integer idEntite);
-
 	List<ReferenceDto> getListTypeEntite();
+
+	EntiteDto getParentOfEntiteByTypeEntite(Integer idEntite, Integer idTypeEntite);
 }

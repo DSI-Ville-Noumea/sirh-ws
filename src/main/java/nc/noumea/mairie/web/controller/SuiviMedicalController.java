@@ -118,11 +118,10 @@ public class SuiviMedicalController {
 					if (direction != null) {
 						service = null;
 					} else {
-						servResponsable = adsConsumer.getParentOfEntiteByIdEntite(service.getIdEntite());
+						servResponsable = adsConsumer.getParentOfEntiteByTypeEntite(service.getIdEntite(), null);
 
 						agRespDto = new AgentWithServiceDto(null, servResponsable);
-						EntiteDto directionResponsable = adsConsumer.getDirection(servResponsable
-								.getIdEntite());
+						EntiteDto directionResponsable = adsConsumer.getDirection(servResponsable.getIdEntite());
 						agRespDto.setDirection(directionResponsable == null ? "" : directionResponsable.getLabel());
 					}
 				}

@@ -210,7 +210,7 @@ public class CalculEaeServiceTest {
 		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.anyInt())).thenReturn(siservDirection);
 		Mockito.when(adsWSConsumer.getSection(Mockito.anyInt())).thenReturn(siservSection);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
-		Mockito.when(adsWSConsumer.getEntiteFromCodeServiceAS400(spMtsr.getId().getServi())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getEntiteByCodeServiceSISERV(spMtsr.getId().getServi())).thenReturn(siservService);
 		
 		
 

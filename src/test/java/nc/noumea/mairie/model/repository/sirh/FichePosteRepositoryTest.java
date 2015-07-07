@@ -3,6 +3,7 @@ package nc.noumea.mairie.model.repository.sirh;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -30,7 +31,7 @@ public class FichePosteRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
-	public void getListFichePosteByIdServiceADS_returnResult() {
+	public void getListFichePosteByIdServiceADSAndStatutFDP_NoStatut_returnResult() {
 
 		FichePoste fichePoste2 = new FichePoste();
 		fichePoste2.setIdFichePoste(1);
@@ -58,7 +59,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADS(1);
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -68,9 +69,83 @@ public class FichePosteRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
-	public void getListFichePosteByIdServiceADS_returnEmptyList() {
+	public void getListFichePosteByIdServiceADSAndStatutFDP_WithStatut_emptyList() {
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADS(1);
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(1);
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("lib statut");
+		sirhPersistenceUnit.persist(statutFP);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statutFP);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(2));
+
+		assertNotNull(result);
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteByIdServiceADSAndStatutFDP_WithStatut_returnResult() {
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(1);
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("lib statut");
+		sirhPersistenceUnit.persist(statutFP);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statutFP);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1));
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getIdFichePoste());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteByIdServiceADSAndStatutFDP_returnEmptyList() {
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
 
 		assertNotNull(result);
 		assertEquals(0, result.size());

@@ -42,7 +42,7 @@ public interface IFichePosteService {
 
 	SpbhorDto getSpbhorDtoById(Integer idSpbhor);
 
-	public List<FichePosteDto> getListFichePosteByIdServiceADS(Integer idEntite);
+	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP);
 
-	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite);
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent);
 }

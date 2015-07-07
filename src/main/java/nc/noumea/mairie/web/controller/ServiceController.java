@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +80,13 @@ public class ServiceController {
 		if (service == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		List<Integer> services = adsWSConsumer.getListIdsServiceWithEnfantsOfService(idServiceADS);
+		List<Integer> services = new ArrayList<Integer>();
+
+		EntiteDto serviceAgent = adsWSConsumer.getEntiteByIdEntite(idServiceADS);
+		for (EntiteDto enfant : serviceAgent.getEnfants()) {
+			if (!services.contains(enfant.getIdEntite()))
+				services.add(enfant.getIdEntite());
+		}
 
 		// Si la date n'est pas spécifiée, prendre la date du jour
 		if (date == null)

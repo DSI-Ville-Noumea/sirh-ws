@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.repository.IMairieRepository;
@@ -401,10 +402,10 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public List<FichePosteDto> getListFichePosteByIdServiceADS(Integer idEntite) {
+	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP) {
 		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
 
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADS(idEntite);
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, listStatutFDP);
 
 		for (FichePoste fp : listeFDP) {
 
@@ -415,10 +416,10 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite) {
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADS(idEntite);
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, null);
 		// on regarde que toutes les FDP soient en statut "En creation" et que
 		// la FDP n'est jamais été affectée à un agent
 		for (FichePoste fp : listeFDP) {
@@ -434,7 +435,10 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on crée un job de lancement de suppression des FDP
-		// TODO
+		for (FichePoste fp : listeFDP) {
+			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION");
+			fichePosteDao.persisEntity(job);
+		}
 		return result;
 	}
 }

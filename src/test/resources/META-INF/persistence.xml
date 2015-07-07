@@ -76,16 +76,17 @@
 		<class>nc.noumea.mairie.model.bean.sirh.Medecin</class>
 		<class>nc.noumea.mairie.model.bean.sirh.MotifVM</class>
 		<class>nc.noumea.mairie.model.bean.Sibanq</class>
-		<class>nc.noumea.mairie.model.bean.sirh.JourFerie</class>	
-		<class>nc.noumea.mairie.model.bean.sirh.BaseHorairePointage</class>	
+		<class>nc.noumea.mairie.model.bean.sirh.JourFerie</class>
+		<class>nc.noumea.mairie.model.bean.sirh.BaseHorairePointage</class>
 		<class>nc.noumea.mairie.model.bean.Spposa</class>
 		<class>nc.noumea.mairie.model.bean.Spprim</class>
 		<class>nc.noumea.mairie.model.bean.sirh.TypeRepresentant</class>
 		<class>nc.noumea.mairie.model.bean.sirh.AlerteRh</class>
-		<class>nc.noumea.mairie.model.pk.sirh.DroitsId</class> 
+		<class>nc.noumea.mairie.model.pk.sirh.DroitsId</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Droits</class>
-		<class>nc.noumea.mairie.model.bean.sirh.DroitsElement</class> 
-		<class>nc.noumea.mairie.model.bean.sirh.DroitsGroupe</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsElement</class>
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsGroupe</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActionFdpJob</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />

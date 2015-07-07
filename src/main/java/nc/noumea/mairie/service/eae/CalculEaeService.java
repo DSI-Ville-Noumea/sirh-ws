@@ -29,9 +29,9 @@ import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.FormationDto;
-import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ParcoursProDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
@@ -162,11 +162,11 @@ public class CalculEaeService implements ICalculEaeService {
 				ParcoursProDto parcoursProDto = new ParcoursProDto(spMtsr);
 
 				// TODO à revoir lors reponse à #16246
-				EntiteDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getEntiteFromCodeServiceAS400(
+				EntiteDto direction = adsWSConsumer.getDirectionPourEAE(adsWSConsumer.getEntiteByCodeServiceSISERV(
 						spMtsr.getId().getServi()).getIdEntite());
 				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
 
-				EntiteDto service = adsWSConsumer.getEntiteByIdEntite(adsWSConsumer.getEntiteFromCodeServiceAS400(
+				EntiteDto service = adsWSConsumer.getEntiteByIdEntite(adsWSConsumer.getEntiteByCodeServiceSISERV(
 						spMtsr.getId().getServi()).getIdEntite());
 				parcoursProDto.setService(service == null ? "" : service.getLabel());
 

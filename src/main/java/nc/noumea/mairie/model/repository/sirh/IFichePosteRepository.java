@@ -11,5 +11,7 @@ public interface IFichePosteRepository {
 
 	Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today);
 
-	List<FichePoste> getListFichePosteByIdServiceADS(Integer idEntite);
+	List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP);
+
+	void persisEntity(Object obj);
 }
