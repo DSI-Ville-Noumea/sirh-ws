@@ -29,7 +29,6 @@ public class AgentWithServiceDto extends AgentDto {
 		if (service != null) {
 			this.service = service.getLabel();
 			this.idServiceADS = service.getIdEntite();
-			this.signature = service.getLib22();
 			this.sigleService = service.getSigle();
 		}
 		this.position = agent.getPosition();

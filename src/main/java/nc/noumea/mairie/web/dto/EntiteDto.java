@@ -13,10 +13,8 @@ public class EntiteDto {
 	private String sigle;
 	private String label;
 	private String labelCourt;
-	private String titreChef;
 	private ReferenceDto typeEntite;
 	private String codeServi;
-	private String lib22;
 	private List<EntiteDto> enfants;
 	private EntiteDto entiteParent;
 	private EntiteDto entiteRemplacee;
@@ -68,14 +66,6 @@ public class EntiteDto {
 		this.labelCourt = labelCourt;
 	}
 
-	public String getTitreChef() {
-		return titreChef;
-	}
-
-	public void setTitreChef(String titreChef) {
-		this.titreChef = titreChef;
-	}
-
 	public ReferenceDto getTypeEntite() {
 		return typeEntite;
 	}
@@ -90,14 +80,6 @@ public class EntiteDto {
 
 	public void setCodeServi(String codeServi) {
 		this.codeServi = codeServi;
-	}
-
-	public String getLib22() {
-		return lib22;
-	}
-
-	public void setLib22(String lib22) {
-		this.lib22 = lib22;
 	}
 
 	public List<EntiteDto> getEnfants() {
