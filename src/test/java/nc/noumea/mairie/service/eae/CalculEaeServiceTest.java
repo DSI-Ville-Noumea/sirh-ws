@@ -43,8 +43,8 @@ import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
 import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
 import nc.noumea.mairie.web.dto.CarriereDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
-import nc.noumea.mairie.web.dto.GradeDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.GradeDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -86,7 +86,6 @@ public class CalculEaeServiceTest {
 
 		NiveauEtude niveauEtude = new NiveauEtude();
 		niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
-		
 
 		FichePoste superieurHierarchique = new FichePoste();
 		superieurHierarchique.setIdServiceADS(2);
@@ -197,22 +196,19 @@ public class CalculEaeServiceTest {
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
 
-
 		EntiteDto siservDirection = new EntiteDto();
 		siservDirection.setLabel("direction");
 		EntiteDto siservSection = new EntiteDto();
 		siservSection.setLabel("section");
 		EntiteDto siservService = new EntiteDto();
 		siservService.setLabel("liServ");
-		
+
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
-		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.anyInt())).thenReturn(siservDirection);
+		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.any(EntiteDto.class))).thenReturn(siservDirection);
 		Mockito.when(adsWSConsumer.getSection(Mockito.anyInt())).thenReturn(siservSection);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
 		Mockito.when(adsWSConsumer.getEntiteByCodeServiceSISERV(spMtsr.getId().getServi())).thenReturn(siservService);
-		
-		
 
 		CalculEaeService calculEaeService = new CalculEaeService();
 		ReflectionTestUtils.setField(calculEaeService, "sirhRepository", sirhRepository);
