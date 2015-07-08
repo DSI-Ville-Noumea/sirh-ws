@@ -11,7 +11,7 @@ public interface IKiosqueRhService {
 
 	List<AccueilRh> getListeAccueilRh();
 
-	ReferentRh getReferentRH(String codeService);
+	List<ReferentRh> getListReferentRH(String codeService);
 
 	ReturnMessageDto getAlerteRHByAgent(Integer idAgent);
 

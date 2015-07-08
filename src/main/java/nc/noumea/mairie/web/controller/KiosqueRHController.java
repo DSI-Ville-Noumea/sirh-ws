@@ -49,10 +49,10 @@ public class KiosqueRHController {
 
 	private Logger logger = LoggerFactory.getLogger(KiosqueRHController.class);
 
-	@RequestMapping(value = "/getReferentRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/getListReferentRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getReferentRH(Integer idAgent) throws ParseException {
+	public ResponseEntity<String> getListReferentRH(Integer idAgent) throws ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -69,10 +69,11 @@ public class KiosqueRHController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		ReferentRh lc = kiosqueSrv.getReferentRH(aff.getFichePoste().getService().getServi());
-		ReferentRhDto dto = new ReferentRhDto();
-		if (lc != null) {
-			dto = new ReferentRhDto(lc, agentSrv.getAgent(lc.getIdAgentReferent()), siservSrv.getService(lc.getServi()));
+		List<ReferentRh> lc = kiosqueSrv.getListReferentRH(aff.getFichePoste().getService().getServi());
+		List<ReferentRhDto> dto = new ArrayList<ReferentRhDto>();
+		for (ReferentRh ref : lc) {
+			dto.add(new ReferentRhDto(ref, agentSrv.getAgent(ref.getIdAgentReferent()), siservSrv.getService(ref
+					.getServi())));
 		}
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
