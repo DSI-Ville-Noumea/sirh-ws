@@ -309,9 +309,11 @@ public class SiservService implements ISiservService {
 		for (ServiceTreeNode node : hTree.values()) {
 
 			ServiceTreeNode parent = hTree.get(node.getSigleParent());
-			if (parent != node) {
-				parent.getServicesEnfant().add(node);
-				node.setServiceParent(parent);
+			if (parent != null) {
+				if (parent != node) {
+					parent.getServicesEnfant().add(node);
+					node.setServiceParent(parent);
+				}
 			}
 		}
 
