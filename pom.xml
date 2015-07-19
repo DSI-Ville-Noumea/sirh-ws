@@ -5,7 +5,7 @@
 	<groupId>nc.noumea.mairie</groupId>
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
-	<version>3.3-ORG</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>sirh-ws</name>
 	<organization>
 		<name>Mairie de Nouméa</name>
@@ -345,7 +345,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>sirhws##${project.version}</finalName>
+		<finalName>sirhws-org##${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

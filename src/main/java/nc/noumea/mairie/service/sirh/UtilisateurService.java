@@ -113,6 +113,8 @@ public class UtilisateurService implements IUtilisateurService {
 		List<Droits> droitsAdmin = droitsRepository.getDroitsByGroupeAndAgent(DroitsGroupeEnum.GROUPE_SIRH.getIdGroupe(), user.getsAMAccountName());
 		if(null != droitsAdmin && droitsAdmin.size()>0) {
 			result.setAdministrateur(true);
+			result.setVisualisation(true);
+			result.setEdition(true);
 		}
 		
 		return result;
