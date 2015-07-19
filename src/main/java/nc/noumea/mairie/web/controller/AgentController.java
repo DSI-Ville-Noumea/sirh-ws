@@ -136,7 +136,7 @@ public class AgentController {
 		List<ParentEnfant> lpe = ag.getParentEnfantsOrderByDateNaiss();
 		List<EnfantDto> listeEnfant = new ArrayList<EnfantDto>();
 		for (ParentEnfant pe : lpe) {
-			EnfantDto dtoEnfant = new EnfantDto(pe);
+			EnfantDto dtoEnfant = new EnfantDto(pe, sivietSrv);
 			listeEnfant.add(dtoEnfant);
 		}
 

@@ -17,8 +17,6 @@ import javax.validation.constraints.NotNull;
 import nc.noumea.mairie.model.bean.Sicomm;
 import nc.noumea.mairie.service.ISivietService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 @Entity
 @Table(name = "ENFANT")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
@@ -27,10 +25,6 @@ public class Enfant {
 	@Id
 	@Column(name = "ID_ENFANT")
 	private Integer idEnfant;
-
-	@Autowired
-	@Transient
-	ISivietService sivietSrv;
 
 	@NotNull
 	@Column(name = "NOM")
@@ -61,13 +55,14 @@ public class Enfant {
 	@Transient
 	private String lieuNaissance;
 
-	public String getLieuNaissance() {
+	public String getLieuNaissance(ISivietService sivietSrv) {
 		if (this.codeCommuneNaissFr != null) {
 			setLieuNaissance(this.codeCommuneNaissFr.getLibVil());
 		} else {
-			if (this.codePaysNaissEt != null && this.codeCommuneNaissEt != null) {
+			if (this.codePaysNaissEt != null && this.codeCommuneNaissEt != null && sivietSrv != null) {
 				setLieuNaissance(sivietSrv.getLieuNaissEtr(this.codePaysNaissEt.intValue(),
 						this.codeCommuneNaissEt.intValue()).getLibCop());
+
 			} else {
 				setLieuNaissance(null);
 			}

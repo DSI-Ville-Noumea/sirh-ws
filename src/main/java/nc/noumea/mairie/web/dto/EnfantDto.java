@@ -3,6 +3,7 @@ package nc.noumea.mairie.web.dto;
 import java.util.Date;
 
 import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
+import nc.noumea.mairie.service.ISivietService;
 
 public class EnfantDto {
 
@@ -17,7 +18,7 @@ public class EnfantDto {
 	private String sexe;
 	private String lieuNaissance;
 
-	public EnfantDto(ParentEnfant pe) {
+	public EnfantDto(ParentEnfant pe, ISivietService sivietService) {
 		super();
 		if (pe != null) {
 			this.dateNaissance = pe.getEnfant().getDateNaissance();
@@ -25,7 +26,7 @@ public class EnfantDto {
 			this.nom = pe.getEnfant().getNom();
 			this.prenom = pe.getEnfant().getPrenom();
 			this.sexe = pe.getEnfant().getSexe();
-			this.lieuNaissance = pe.getEnfant().getLieuNaissance();
+			this.lieuNaissance = pe.getEnfant().getLieuNaissance(sivietService);
 		}
 	}
 
