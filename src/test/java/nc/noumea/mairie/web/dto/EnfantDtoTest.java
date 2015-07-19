@@ -24,12 +24,12 @@ public class EnfantDtoTest {
 		c.setEnfantACharge(true);
 
 		// When
-		EnfantDto dto = new EnfantDto(c);
+		EnfantDto dto = new EnfantDto(c, null);
 
 		// Then
 		assertEquals(c.getEnfantACharge(), dto.getaCharge());
 		assertEquals(enfant.getDateNaissance(), dto.getDateNaissance());
-		assertEquals(enfant.getLieuNaissance(), dto.getLieuNaissance());
+		assertEquals(enfant.getLieuNaissance(null), dto.getLieuNaissance());
 		assertEquals(enfant.getNom(), dto.getNom());
 		assertEquals(enfant.getPrenom(), dto.getPrenom());
 		assertEquals(enfant.getSexe(), dto.getSexe());
@@ -41,7 +41,7 @@ public class EnfantDtoTest {
 		ParentEnfant c = null;
 
 		// When
-		EnfantDto dto = new EnfantDto(c);
+		EnfantDto dto = new EnfantDto(c, null);
 
 		// Then
 		assertNull(dto.getaCharge());
