@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class CalculEaeController {
 	@RequestMapping(value = "/affectationActiveByAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getDetailAffectationActiveByAgent(@RequestParam("idAgent") int idAgent,
-			@RequestParam("anneeFormation") int anneeFormation) {
+			@RequestParam("anneeFormation") int anneeFormation) throws NumberFormatException, ParseException {
 
 		logger.debug(
 				"entered GET [calculEae/affectationActiveByAgent] => getAffectationActiveByAgent with parameter idAgent = {}, anneeFormation = {}",

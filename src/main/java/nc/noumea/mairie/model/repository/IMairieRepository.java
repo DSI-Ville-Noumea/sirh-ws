@@ -12,4 +12,8 @@ public interface IMairieRepository {
 	List<Spbhor> getListSpbhor();
 
 	Spbhor getSpbhorById(Integer idSpbhor);
+
+	List<Spmtsr> listerSpmtsrAvecAgentAPartirDateOrderDateDeb(Integer noMatr, Integer date);
+
+	Spmtsr chercherSpmtsrAvecAgentEtDateDebut(Integer noMatr, Integer date);
 }

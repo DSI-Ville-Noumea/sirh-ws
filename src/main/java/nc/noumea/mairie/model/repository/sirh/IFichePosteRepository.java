@@ -14,4 +14,6 @@ public interface IFichePosteRepository {
 	List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP);
 
 	void persisEntity(Object obj);
+
+	FichePoste chercherFichePoste(Integer idFichePoste);
 }

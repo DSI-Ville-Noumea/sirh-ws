@@ -66,4 +66,20 @@ public class FichePosteRepository implements IFichePosteRepository {
 	public void persisEntity(Object obj) {
 		sirhEntityManager.persist(obj);
 	}
+
+	@Override
+	public FichePoste chercherFichePoste(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FichePoste fp where fp.idFichePoste=:idFichePoste ");
+
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
+		query.setParameter("idFichePoste", idFichePoste);
+		FichePoste res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
 }

@@ -129,4 +129,41 @@ public class AffectationRepository implements IAffectationRepository {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Affectation> getListeAffectationsAgentOrderByDateAsc(Integer idAgent) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select a from Affectation a ");
+		sb.append("where a.agent.idAgent = :idAgent ");
+		sb.append("order by a.dateDebutAff asc ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		query.setParameter("idAgent", idAgent);
+
+		return query.getResultList();
+	}
+
+	@Override
+	public Affectation chercherAffectationAgentAvecDateDebut(Integer idAgent, Date date) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select a from Affectation a ");
+		sb.append("where a.agent.idAgent = :idAgent ");
+		sb.append("and a.dateDebutAff = :date ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		query.setParameter("idAgent", idAgent);
+		query.setParameter("date", date);
+		Affectation res = null;
+		try {
+			res = (Affectation) query.getSingleResult();
+		} catch (Exception e) {
+		}
+
+		return res;
+	}
+
 }

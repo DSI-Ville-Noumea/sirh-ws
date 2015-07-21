@@ -2,6 +2,7 @@ package nc.noumea.mairie.model.repository.sirh;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -149,5 +150,76 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherFichePoste_returnResult() {
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(1);
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("lib statut");
+		sirhPersistenceUnit.persist(statutFP);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statutFP);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		FichePoste result = repository.chercherFichePoste(1);
+
+		assertNotNull(result);
+		assertEquals(fichePoste2.getIdFichePoste(), result.getIdFichePoste());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherFichePoste_returnNoResult() {
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(3);
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("lib statut");
+		sirhPersistenceUnit.persist(statutFP);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statutFP);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		FichePoste result = repository.chercherFichePoste(1);
+
+		assertNull(result);
 	}
 }

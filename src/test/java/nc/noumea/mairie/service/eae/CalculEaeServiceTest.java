@@ -35,6 +35,7 @@ import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
+import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.service.ISpCarrService;
 import nc.noumea.mairie.service.ISpadmnService;
@@ -45,6 +46,7 @@ import nc.noumea.mairie.web.dto.CarriereDto;
 import nc.noumea.mairie.web.dto.DateAvctDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.GradeDto;
+import nc.noumea.mairie.web.dto.ParcoursProDto;
 import nc.noumea.mairie.web.dto.PositionAdmAgentDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -753,5 +755,144 @@ public class CalculEaeServiceTest {
 		DateAvctDto result = calculEaeService.getCalculDateAvancement(9005138);
 
 		assertNull(result.getDateAvct());
+	}
+
+	@Test
+	public void getListParcoursPro() throws ParseException {
+
+		Integer idAgent = 9005138;
+
+		Agent agent = new Agent();
+		agent.setNomatr(5138);
+		agent.setIdAgent(idAgent);
+
+		TitrePoste titrePoste = new TitrePoste();
+		titrePoste.setLibTitrePoste("libTitrePoste");
+
+		Budget budget = new Budget();
+		budget.setLibelleBudget("libelleBudget");
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("libHor");
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setLibHor("libHorRegl");
+
+		CadreEmploi cadreEmploiGrade = new CadreEmploi();
+		cadreEmploiGrade.setLibelleCadreEmploi("libelleCadreEmploi");
+		Spgeng gradeGenerique = new Spgeng();
+		gradeGenerique.setCadreEmploiGrade(cadreEmploiGrade);
+
+		Spgradn gradePoste = new Spgradn();
+		gradePoste.setGradeInitial("gradeInitial");
+		gradePoste.setGradeGenerique(gradeGenerique);
+
+		Silieu lieuPoste = new Silieu();
+		lieuPoste.setLibelleLieu("libelleLieu");
+
+		NiveauEtude niveauEtude = new NiveauEtude();
+		niveauEtude.setLibelleNiveauEtude("libelleNiveauEtude");
+
+		FichePoste superieurHierarchique = new FichePoste();
+		superieurHierarchique.setIdServiceADS(2);
+		superieurHierarchique.setTitrePoste(titrePoste);
+		superieurHierarchique.setBudget(budget);
+		superieurHierarchique.setBudgete(budgete);
+		superieurHierarchique.setReglementaire(reglementaire);
+		superieurHierarchique.setGradePoste(gradePoste);
+		superieurHierarchique.setLieuPoste(lieuPoste);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(1);
+		fichePoste.setSuperieurHierarchique(superieurHierarchique);
+		fichePoste.setIdServiceADS(2);
+		fichePoste.setTitrePoste(titrePoste);
+		fichePoste.setBudget(budget);
+		fichePoste.setBudgete(budgete);
+		fichePoste.setReglementaire(reglementaire);
+		fichePoste.setGradePoste(gradePoste);
+		fichePoste.setLieuPoste(lieuPoste);
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("NumFP");
+		fichePoste.setNiveauEtude(niveauEtude);
+
+		Affectation aff2 = new Affectation();
+		aff2.setAgent(agent);
+		aff2.setFichePoste(fichePoste);
+		aff2.setDateDebutAff(new DateTime(2009, 01, 01, 0, 0, 0).toDate());
+		aff2.setDateFinAff(new DateTime(2010, 01, 01, 0, 0, 0).toDate());
+
+		Affectation aff = new Affectation();
+		aff.setAgent(agent);
+		aff.setFichePoste(fichePoste);
+		aff.setDateDebutAff(new DateTime(2010, 01, 02, 0, 0, 0).toDate());
+		aff.setDateFinAff(null);
+
+		List<Affectation> listAff = new ArrayList<Affectation>();
+		listAff.add(aff2);
+		listAff.add(aff);
+
+		IFichePosteRepository fichePosteRepository = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteRepository.chercherFichePoste(2)).thenReturn(fichePoste);
+
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getListeAffectationsAgentOrderByDateAsc(idAgent)).thenReturn(listAff);
+		Mockito.when(
+				affectationRepository.chercherAffectationAgentAvecDateDebut(idAgent,
+						new DateTime(2010, 01, 02, 0, 0, 0).toDate())).thenReturn(aff);
+
+		SpmtsrId spMtsrId = new SpmtsrId();
+		spMtsrId.setDatdeb(20080101);
+		spMtsrId.setServi("servi");
+		Spmtsr spMtsr = new Spmtsr();
+		spMtsr.setId(spMtsrId);
+		spMtsr.setDatfin(20081231);
+
+		List<Spmtsr> listSpmstr = new ArrayList<Spmtsr>();
+		listSpmstr.add(spMtsr);
+
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.listerSpmtsrAvecAgentAPartirDateOrderDateDeb(5138, 20090101)).thenReturn(
+				listSpmstr);
+
+		EntiteDto siservDirection = new EntiteDto();
+		siservDirection.setLabel("direction");
+		EntiteDto siservSection = new EntiteDto();
+		siservSection.setLabel("section");
+		EntiteDto siservService = new EntiteDto();
+		siservService.setIdEntite(1);
+		siservService.setLabel("liServ");
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.any(EntiteDto.class))).thenReturn(siservDirection);
+		Mockito.when(adsWSConsumer.getSection(Mockito.anyInt())).thenReturn(siservSection);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
+		Mockito.when(adsWSConsumer.getEntiteByCodeServiceSISERV(spMtsr.getId().getServi())).thenReturn(siservService);
+
+		CalculEaeService calculEaeService = new CalculEaeService();
+		ReflectionTestUtils.setField(calculEaeService, "affectationRepository", affectationRepository);
+		ReflectionTestUtils.setField(calculEaeService, "fichePosteRepository", fichePosteRepository);
+		ReflectionTestUtils.setField(calculEaeService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(calculEaeService, "mairieRepository", mairieRepository);
+
+		List<ParcoursProDto> result = calculEaeService.getListParcoursPro(9005138, 5138);
+
+		assertEquals(result.size(), 3);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+		assertEquals(result.get(0).getDirection(), "direction");
+		assertEquals(result.get(0).getService(), "liServ");
+		assertEquals(result.get(0).getDateDebut(), sdf.parse("20090101"));
+		assertEquals(result.get(0).getDateFin(), sdf.parse("20100101"));
+
+		assertEquals(result.get(1).getDirection(), "direction");
+		assertEquals(result.get(1).getService(), "liServ");
+		assertEquals(result.get(1).getDateDebut(), sdf.parse("20100102"));
+		assertNull(result.get(1).getDateFin());
+
+		assertEquals(result.get(2).getDirection(), "direction");
+		assertEquals(result.get(2).getService(), "liServ");
+		assertEquals(result.get(2).getDateDebut(), sdf.parse("20080101"));
+		assertEquals(result.get(2).getDateFin(), sdf.parse("20081231"));
 	}
 }

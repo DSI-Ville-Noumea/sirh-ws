@@ -16,6 +16,10 @@ import javax.validation.constraints.NotNull;
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
 public class ActionFdpJob {
 
+	public ActionFdpJob() {
+		super();
+	}
+
 	@Id
 	@Column(name = "ID_ACTION_FDP_JOB")
 	private Integer idActionFdpJob;

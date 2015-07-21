@@ -18,4 +18,8 @@ public interface IAffectationRepository {
 	List<Affectation> getListeAffectationsAgentOrderByDateDesc(Integer idAgent);
 
 	List<Affectation> getAffectationByIdFichePoste(Integer idFichePoste);
+
+	Affectation chercherAffectationAgentAvecDateDebut(Integer idAgent, Date date);
+
+	List<Affectation> getListeAffectationsAgentOrderByDateAsc(Integer idAgent);
 }
