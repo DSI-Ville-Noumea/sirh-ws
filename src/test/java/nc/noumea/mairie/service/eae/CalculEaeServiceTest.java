@@ -199,10 +199,13 @@ public class CalculEaeServiceTest {
 		Mockito.when(mairieRepository.getListSpmtsr(Mockito.anyInt())).thenReturn(listParcoursPro);
 
 		EntiteDto siservDirection = new EntiteDto();
+		siservDirection.setIdEntite(2);
 		siservDirection.setLabel("direction");
 		EntiteDto siservSection = new EntiteDto();
+		siservSection.setIdEntite(3);
 		siservSection.setLabel("section");
 		EntiteDto siservService = new EntiteDto();
+		siservService.setIdEntite(1);
 		siservService.setLabel("liServ");
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
