@@ -56,7 +56,7 @@ public class FichePosteDtoTest {
 		// Given
 		FichePoste fp = getFichePoste();
 		// When
-		FichePosteDto dto = new FichePosteDto(fp, "", "", "");
+		FichePosteDto dto = new FichePosteDto(fp, "", "", "", "sigle");
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
@@ -83,6 +83,7 @@ public class FichePosteDtoTest {
 		assertEquals(0, dto.getDelegations().size());
 		assertEquals(0, dto.getRegimesIndemnitaires().size());
 		assertEquals(0, dto.getPrimes().size());
+		assertEquals("sigle", dto.getSigle());
 	}
 
 	@Test

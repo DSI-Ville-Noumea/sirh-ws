@@ -243,7 +243,8 @@ public class FichePosteController {
 		}
 
 		FichePosteDto dto = new FichePosteDto(fp, direction == null ? "" : direction.getLabel(), service == null ? ""
-				: service.getLabel(), section == null ? "" : section.getLabel());
+				: service.getLabel(), section == null ? "" : section.getLabel(), service == null ? ""
+				: service.getSigle());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
@@ -292,7 +293,8 @@ public class FichePosteController {
 		}
 
 		FichePosteDto dto = new FichePosteDto(fp, direction == null ? "" : direction.getLabel(), service == null ? ""
-				: service.getLabel(), section == null ? "" : section.getLabel());
+				: service.getLabel(), section == null ? "" : section.getLabel(), service == null ? ""
+				: service.getSigle());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);

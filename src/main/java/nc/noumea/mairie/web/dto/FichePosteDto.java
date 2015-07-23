@@ -31,6 +31,7 @@ public class FichePosteDto {
 	private String niveauEtudes;
 	private Integer idServiceADS;
 	private String service;
+	private String sigle;
 	private String section;
 	private String lieu;
 	private String gradePoste;
@@ -81,7 +82,7 @@ public class FichePosteDto {
 		primes = new ArrayList<String>();
 	}
 
-	public FichePosteDto(FichePoste fichePoste, String direction, String service, String section) {
+	public FichePosteDto(FichePoste fichePoste, String direction, String service, String section, String sigle) {
 		this();
 		this.idFichePoste = fichePoste.getIdFichePoste();
 		this.numero = fichePoste.getNumFP();
@@ -124,6 +125,7 @@ public class FichePosteDto {
 		this.idServiceADS = fichePoste.getIdServiceADS();
 		this.direction = direction;
 		this.service = service == null ? "" : service;
+		this.sigle = sigle == null ? "" : sigle;
 		this.section = section == null ? "" : section;
 
 		this.lieu = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? ""
@@ -177,7 +179,7 @@ public class FichePosteDto {
 	}
 
 	public FichePosteDto(FichePoste fichePoste, boolean isInfosCompl, String direction, String service, String section) {
-		this(fichePoste, direction, service, section);
+		this(fichePoste, direction, service, section, null);
 		this.agent = "";
 		this.dateDebutAffectation = "";
 		this.categorie = "";
@@ -629,6 +631,14 @@ public class FichePosteDto {
 
 	public void setIdServiceADS(Integer idServiceADS) {
 		this.idServiceADS = idServiceADS;
+	}
+
+	public String getSigle() {
+		return sigle;
+	}
+
+	public void setSigle(String sigle) {
+		this.sigle = sigle;
 	}
 
 }

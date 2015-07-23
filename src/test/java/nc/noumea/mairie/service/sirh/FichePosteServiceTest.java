@@ -370,11 +370,17 @@ public class FichePosteServiceTest {
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
 
+		EntiteDto enite = new EntiteDto();
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(listFP);
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(enite);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null, false);
 
@@ -397,13 +403,20 @@ public class FichePosteServiceTest {
 
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
+		
+		EntiteDto entite = new EntiteDto();
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2))).thenReturn(
 				listFP);
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(
+				entite);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2),
 				false);
@@ -433,7 +446,8 @@ public class FichePosteServiceTest {
 		fiche.setStatutFP(statutFP);
 
 		EntiteDto enfant1 = new EntiteDto();
-		enfant1.setIdEntite(2);;
+		enfant1.setIdEntite(2);
+
 		EntiteDto entite = new EntiteDto();
 		entite.setIdEntite(1);
 		entite.getEnfants().add(enfant1);
@@ -450,6 +464,7 @@ public class FichePosteServiceTest {
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(enfant1);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
