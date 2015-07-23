@@ -410,7 +410,7 @@ public class FichePosteService implements IFichePosteService {
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
 
 		if (withEntiteChildren) {
-			EntiteDto entiteParent = adsWSConsumer.getEntiteByIdEntite(idEntite);
+			EntiteDto entiteParent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
 			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteParent);
 			if (!listeEnfant.contains(entiteParent.getIdEntite()))
 				listeEnfant.add(entiteParent.getIdEntite());

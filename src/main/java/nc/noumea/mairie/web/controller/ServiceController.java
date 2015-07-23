@@ -82,7 +82,7 @@ public class ServiceController {
 
 		List<Integer> services = new ArrayList<Integer>();
 
-		EntiteDto serviceAgent = adsWSConsumer.getEntiteByIdEntite(idServiceADS);
+		EntiteDto serviceAgent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
 		for (EntiteDto enfant : serviceAgent.getEnfants()) {
 			if (!services.contains(enfant.getIdEntite()))
 				services.add(enfant.getIdEntite());
