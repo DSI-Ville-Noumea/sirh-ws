@@ -26,6 +26,8 @@ import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.InfoEntiteDto;
+import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
@@ -403,7 +405,7 @@ public class FichePosteServiceTest {
 
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
-		
+
 		EntiteDto entite = new EntiteDto();
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
@@ -411,8 +413,7 @@ public class FichePosteServiceTest {
 				listFP);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(
-				entite);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(entite);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -540,5 +541,61 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
+	}
+
+	@Test
+	public void getInfoFDP_MultipleEnfant_Result() {
+		EntiteDto enfant1 = new EntiteDto();
+		enfant1.setIdEntite(2);
+
+		EntiteDto entite = new EntiteDto();
+		entite.setIdEntite(1);
+		entite.getEnfants().add(enfant1);
+
+		List<InfoFichePosteDto> listInfo = new ArrayList<InfoFichePosteDto>();
+		List<InfoFichePosteDto> listInfoEnfant = new ArrayList<InfoFichePosteDto>();
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1)).thenReturn(
+				listInfo);
+		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(2)).thenReturn(
+				listInfoEnfant);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		List<InfoEntiteDto> result = ficheService.getInfoFDP(1, true);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+	}
+
+	@Test
+	public void getInfoFDP_NoEnfant_Result() {
+
+		EntiteDto entite = new EntiteDto();
+		entite.setIdEntite(1);
+
+		List<InfoFichePosteDto> listInfo = new ArrayList<InfoFichePosteDto>();
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1)).thenReturn(
+				listInfo);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		List<InfoEntiteDto> result = ficheService.getInfoFDP(1, true);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
 	}
 }

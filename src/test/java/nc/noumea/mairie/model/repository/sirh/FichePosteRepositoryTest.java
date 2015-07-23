@@ -10,8 +10,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -221,5 +224,78 @@ public class FichePosteRepositoryTest {
 		FichePoste result = repository.chercherFichePoste(1);
 
 		assertNull(result);
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste_returnResult() {
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setCdThor(1);
+		reglementaire.setTaux(0.75);
+		sirhPersistenceUnit.persist(reglementaire);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		sirhPersistenceUnit.persist(statutFP);
+
+		TitrePoste titrePoste = new TitrePoste();
+		titrePoste.setIdTitrePoste(2);
+		titrePoste.setLibTitrePoste("LIB 2");
+		sirhPersistenceUnit.persist(titrePoste);
+
+		TitrePoste titrePoste2 = new TitrePoste();
+		titrePoste2.setIdTitrePoste(1);
+		titrePoste2.setLibTitrePoste("LIB 1");
+		sirhPersistenceUnit.persist(titrePoste2);
+
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setIdFichePoste(4);
+		fichePoste3.setAnnee(2010);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("numFP");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(1);
+		fichePoste3.setReglementaire(reglementaire);
+		fichePoste3.setStatutFP(statutFP);
+		fichePoste3.setTitrePoste(titrePoste2);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(3);
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(1);
+		fichePoste2.setReglementaire(reglementaire);
+		fichePoste2.setStatutFP(statutFP);
+		fichePoste2.setTitrePoste(titrePoste2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(2);
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setReglementaire(reglementaire);
+		fichePoste.setStatutFP(statutFP);
+		fichePoste.setTitrePoste(titrePoste);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		List<InfoFichePosteDto> result = repository.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(new Double(1.5), result.get(0).getTauxETP());
+		assertEquals("LIB 1", result.get(0).getTitreFDP());
+		assertEquals(new Integer(2), result.get(0).getNbFDP());
+		assertEquals(new Double(0.75), result.get(1).getTauxETP());
+		assertEquals("LIB 2", result.get(1).getTitreFDP());
+		assertEquals(new Integer(1), result.get(1).getNbFDP());
 	}
 }

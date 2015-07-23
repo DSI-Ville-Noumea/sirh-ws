@@ -15,6 +15,7 @@ import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -303,7 +304,7 @@ public class FichePosteController {
 	}
 
 	/**
-	 * Utile à ADS
+	 * Utile à ADS et organigramme
 	 * 
 	 * @param idEntite
 	 * @return
@@ -352,6 +353,29 @@ public class FichePosteController {
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		ReturnMessageDto result = fpSrv.deleteFichePosteByIdEntite(idEntite, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Utile à Organigramme
+	 * 
+	 * @param idEntite
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/getInfoFDPByEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getInfoFDPByEntite(
+			@RequestParam(value = "idEntite", required = true) Integer idEntite,
+			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren)
+			throws ParseException {
+
+		List<InfoEntiteDto> result = fpSrv.getInfoFDP(idEntite, withEntiteChildren);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

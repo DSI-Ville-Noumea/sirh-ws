@@ -19,6 +19,7 @@ import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
@@ -467,5 +468,36 @@ public class FichePosteService implements IFichePosteService {
 			fichePosteDao.persisEntity(job);
 		}
 		return result;
+	}
+
+	@Override
+	public List<InfoEntiteDto> getInfoFDP(Integer idEntite, boolean withEntiteChildren) {
+
+		List<InfoEntiteDto> result = new ArrayList<InfoEntiteDto>();
+
+		if (withEntiteChildren) {
+			EntiteDto entiteParent = adsWSConsumer.getEntiteByIdEntite(idEntite);
+			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteParent);
+
+			if (!listeEnfant.contains(entiteParent.getIdEntite()))
+				listeEnfant.add(entiteParent.getIdEntite());
+
+			for (Integer idEntiteEnfant : listeEnfant) {
+				InfoEntiteDto info = new InfoEntiteDto();
+				info.setIdEntite(idEntiteEnfant);
+				info.getListeInfoFDP().addAll(
+						fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(idEntiteEnfant));
+				result.add(info);
+			}
+
+		} else {
+			InfoEntiteDto info = new InfoEntiteDto();
+			info.setIdEntite(idEntite);
+			info.getListeInfoFDP().addAll(
+					fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(idEntite));
+			result.add(info);
+		}
+		return result;
+
 	}
 }

@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository.sirh;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 import org.springframework.stereotype.Repository;
 
@@ -80,6 +82,46 @@ public class FichePosteRepository implements IFichePosteRepository {
 		} catch (Exception e) {
 
 		}
+		return res;
+	}
+
+	@Override
+	public List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(
+			Integer idEntiteEnfant) {
+
+		List<InfoFichePosteDto> res = new ArrayList<InfoFichePosteDto>();
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select fp.titrePoste.libTitrePoste as titrePoste, count(fp.idFichePoste) as nbFiche, sum(fp.reglementaire.taux) as tauxETP ");
+		sb.append(" from FichePoste fp where fp.idServiceADS=:idServiceADS ");
+		// on ne prend que les FDP en statut "gelée" ou "validée
+		// #16786
+		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");
+		// on ne prend que les FDP reglementaire != non
+		// #16786
+		sb.append(" and fp.reglementaire.cdThor != 0 ");
+
+		// on groupe par titrePoste
+		// #16786
+		sb.append(" group by fp.titrePoste.libTitrePoste ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString());
+		query.setParameter("idServiceADS", idEntiteEnfant);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> result1 = query.getResultList();
+		for (Object[] resultElement : result1) {
+			String titrePoste = (String) resultElement[0];
+			Long nbFDP = (Long) resultElement[1];
+			Double tauxETP = (Double) resultElement[2];
+			InfoFichePosteDto info = new InfoFichePosteDto();
+			info.setNbFDP(nbFDP.intValue());
+			info.setTauxETP(tauxETP);
+			info.setTitreFDP(titrePoste);
+			res.add(info);
+		}
+
 		return res;
 	}
 }

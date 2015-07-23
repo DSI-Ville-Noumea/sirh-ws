@@ -6,6 +6,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 public interface IFichePosteRepository {
 
@@ -16,4 +17,6 @@ public interface IFichePosteRepository {
 	void persisEntity(Object obj);
 
 	FichePoste chercherFichePoste(Integer idFichePoste);
+
+	List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Integer idEntiteEnfant);
 }
