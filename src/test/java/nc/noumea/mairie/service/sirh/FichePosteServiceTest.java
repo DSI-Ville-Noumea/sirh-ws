@@ -24,8 +24,10 @@ import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -348,7 +350,7 @@ public class FichePosteServiceTest {
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null, false);
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -374,7 +376,7 @@ public class FichePosteServiceTest {
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null, false);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -403,11 +405,63 @@ public class FichePosteServiceTest {
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2));
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1, 2),
+				false);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(fiche.getNumFP(), result.get(0).getNumero());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFDP());
+	}
+
+	@Test
+	public void getListFichePosteByIdServiceADSAndStatutFDP_WithChildren_ListeWithNoStatut() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En creation");
+
+		FichePoste fiche2 = new FichePoste();
+		fiche2.setIdFichePoste(2);
+		fiche2.setNumFP("201/2");
+		fiche2.setIdServiceADS(2);
+		fiche2.setStatutFP(statutFP);
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+		fiche.setIdServiceADS(1);
+		fiche.setStatutFP(statutFP);
+
+		EntiteDto enfant1 = new EntiteDto();
+		enfant1.setIdEntite(2);;
+		EntiteDto entite = new EntiteDto();
+		entite.setIdEntite(1);
+		entite.getEnfants().add(enfant1);
+
+		List<FichePoste> listFP2 = new ArrayList<FichePoste>();
+		listFP2.add(fiche2);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(1, null)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(2, null)).thenReturn(listFP2);
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+
+		List<FichePosteDto> result = ficheService.getListFichePosteByIdServiceADSAndStatutFDP(1, null, true);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(fiche.getNumFP(), result.get(1).getNumero());
+		assertEquals(statutFP.getLibStatut(), result.get(1).getStatutFDP());
+		assertEquals(fiche2.getNumFP(), result.get(0).getNumero());
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFDP());
 	}
 

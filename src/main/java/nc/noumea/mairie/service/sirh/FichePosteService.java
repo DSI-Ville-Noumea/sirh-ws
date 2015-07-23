@@ -17,6 +17,7 @@ import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
@@ -402,15 +403,41 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP) {
+	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite,
+			List<Integer> listStatutFDP, boolean withEntiteChildren) {
 		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
+		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
 
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, listStatutFDP);
+		if (withEntiteChildren) {
+			EntiteDto entiteParent = adsWSConsumer.getEntiteByIdEntite(idEntite);
+			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteParent);
+			if (!listeEnfant.contains(entiteParent.getIdEntite()))
+				listeEnfant.add(entiteParent.getIdEntite());
+			for (Integer idEntiteEnfant : listeEnfant) {
+				listeFDP.addAll(fichePosteDao
+						.getListFichePosteByIdServiceADSAndStatutFDP(idEntiteEnfant, listStatutFDP));
+			}
+		} else {
+			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, listStatutFDP);
+		}
 
 		for (FichePoste fp : listeFDP) {
 
 			FichePosteDto dto = new FichePosteDto(fp, "", "", "");
 			result.add(dto);
+		}
+		return result;
+	}
+
+	private List<Integer> getListIdsEntiteEnfants(EntiteDto entiteDto) {
+
+		List<Integer> result = new ArrayList<Integer>();
+
+		if (null != entiteDto && null != entiteDto.getEnfants()) {
+			for (EntiteDto enfant : entiteDto.getEnfants()) {
+				result.add(enfant.getIdEntite().intValue());
+				result.addAll(getListIdsEntiteEnfants(enfant));
+			}
 		}
 		return result;
 	}

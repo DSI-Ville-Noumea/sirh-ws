@@ -312,7 +312,9 @@ public class FichePosteController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> listFichePosteByIdEntite(
 			@RequestParam(value = "idEntite", required = true) Integer idEntite,
-			@RequestParam(value = "statutFDP", required = false) String listIdStatutFDP) throws ParseException {
+			@RequestParam(value = "statutFDP", required = false) String listIdStatutFDP,
+			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren)
+			throws ParseException {
 
 		List<Integer> statutIds = new ArrayList<Integer>();
 		if (listIdStatutFDP != null) {
@@ -321,7 +323,8 @@ public class FichePosteController {
 			}
 		}
 
-		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, statutIds);
+		List<FichePosteDto> result = fpSrv.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, statutIds,
+				withEntiteChildren);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

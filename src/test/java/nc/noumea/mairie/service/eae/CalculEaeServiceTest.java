@@ -883,19 +883,20 @@ public class CalculEaeServiceTest {
 		assertEquals(result.size(), 3);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-		assertEquals(result.get(0).getDirection(), "direction");
-		assertEquals(result.get(0).getService(), "liServ");
-		assertEquals(result.get(0).getDateDebut(), sdf.parse("20090101"));
-		assertEquals(result.get(0).getDateFin(), sdf.parse("20100101"));
-
-		assertEquals(result.get(1).getDirection(), "direction");
-		assertEquals(result.get(1).getService(), "liServ");
-		assertEquals(result.get(1).getDateDebut(), sdf.parse("20100102"));
-		assertNull(result.get(1).getDateFin());
 
 		assertEquals(result.get(2).getDirection(), "direction");
 		assertEquals(result.get(2).getService(), "liServ");
 		assertEquals(result.get(2).getDateDebut(), sdf.parse("20080101"));
 		assertEquals(result.get(2).getDateFin(), sdf.parse("20081231"));
+
+		assertEquals(result.get(1).getDirection(), "direction");
+		assertEquals(result.get(1).getService(), "liServ");
+		assertEquals(result.get(1).getDateDebut(), sdf.parse("20090101"));
+		assertEquals(result.get(1).getDateFin(), sdf.parse("20100101"));
+
+		assertEquals(result.get(0).getDirection(), "direction");
+		assertEquals(result.get(0).getService(), "liServ");
+		assertEquals(result.get(0).getDateDebut(), sdf.parse("20100102"));
+		assertNull(result.get(0).getDateFin());
 	}
 }
