@@ -20,6 +20,7 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
+import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
@@ -471,31 +472,28 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public List<InfoEntiteDto> getInfoFDP(Integer idEntite, boolean withEntiteChildren) {
+	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren) {
 
-		List<InfoEntiteDto> result = new ArrayList<InfoEntiteDto>();
+		InfoEntiteDto result = new InfoEntiteDto();
 
 		if (withEntiteChildren) {
-			EntiteDto entiteParent = adsWSConsumer.getEntiteByIdEntite(idEntite);
+			EntiteDto entiteParent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
 			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteParent);
 
 			if (!listeEnfant.contains(entiteParent.getIdEntite()))
 				listeEnfant.add(entiteParent.getIdEntite());
-
-			for (Integer idEntiteEnfant : listeEnfant) {
-				InfoEntiteDto info = new InfoEntiteDto();
-				info.setIdEntite(idEntiteEnfant);
-				info.getListeInfoFDP().addAll(
-						fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(idEntiteEnfant));
-				result.add(info);
-			}
+			result.setIdEntite(idEntite);
+			List<InfoFichePosteDto> resFDP = fichePosteDao
+					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
+			result.getListeInfoFDP().addAll(resFDP);
 
 		} else {
-			InfoEntiteDto info = new InfoEntiteDto();
-			info.setIdEntite(idEntite);
-			info.getListeInfoFDP().addAll(
-					fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(idEntite));
-			result.add(info);
+			result.setIdEntite(idEntite);
+			List<Integer> listeEnfant = new ArrayList<Integer>();
+			listeEnfant.add(idEntite);
+			List<InfoFichePosteDto> resFDP = fichePosteDao
+					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
+			result.getListeInfoFDP().addAll(resFDP);
 		}
 		return result;
 

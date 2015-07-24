@@ -554,26 +554,27 @@ public class FichePosteServiceTest {
 		entite.setIdEntite(1);
 		entite.getEnfants().add(enfant1);
 
-		List<InfoFichePosteDto> listInfo = new ArrayList<InfoFichePosteDto>();
-		List<InfoFichePosteDto> listInfoEnfant = new ArrayList<InfoFichePosteDto>();
+		List<InfoFichePosteDto> listInfoParaent = new ArrayList<InfoFichePosteDto>();
+		InfoFichePosteDto listInfo1 = new InfoFichePosteDto();
+		InfoFichePosteDto listInfo2 = new InfoFichePosteDto();
+		listInfoParaent.add(listInfo1);
+		listInfoParaent.add(listInfo2);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1)).thenReturn(
-				listInfo);
-		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(2)).thenReturn(
-				listInfoEnfant);
+		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(2, 1)))
+				.thenReturn(listInfoParaent);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<InfoEntiteDto> result = ficheService.getInfoFDP(1, true);
+		InfoEntiteDto result = ficheService.getInfoFDP(1, true);
 
 		assertNotNull(result);
-		assertEquals(2, result.size());
+		assertEquals(2, result.getListeInfoFDP().size());
 	}
 
 	@Test
@@ -582,22 +583,24 @@ public class FichePosteServiceTest {
 		EntiteDto entite = new EntiteDto();
 		entite.setIdEntite(1);
 
-		List<InfoFichePosteDto> listInfo = new ArrayList<InfoFichePosteDto>();
+		List<InfoFichePosteDto> listInfoParaent = new ArrayList<InfoFichePosteDto>();
+		InfoFichePosteDto listInfo1 = new InfoFichePosteDto();
+		listInfoParaent.add(listInfo1);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1)).thenReturn(
-				listInfo);
+		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(1)))
+				.thenReturn(listInfoParaent);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		List<InfoEntiteDto> result = ficheService.getInfoFDP(1, true);
+		InfoEntiteDto result = ficheService.getInfoFDP(1, true);
 
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(1, result.getListeInfoFDP().size());
 	}
 }

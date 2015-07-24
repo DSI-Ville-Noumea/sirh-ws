@@ -87,14 +87,14 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@Override
 	public List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(
-			Integer idEntiteEnfant) {
+			List<Integer> idEntiteEnfant) {
 
 		List<InfoFichePosteDto> res = new ArrayList<InfoFichePosteDto>();
 
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select fp.titrePoste.libTitrePoste as titrePoste, count(fp.idFichePoste) as nbFiche, sum(fp.reglementaire.taux) as tauxETP ");
-		sb.append(" from FichePoste fp where fp.idServiceADS=:idServiceADS ");
+		sb.append(" from FichePoste fp where fp.idServiceADS in (:idServiceADS) ");
 		// on ne prend que les FDP en statut "gelée" ou "validée
 		// #16786
 		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");

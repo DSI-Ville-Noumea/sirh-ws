@@ -287,7 +287,8 @@ public class FichePosteRepositoryTest {
 		fichePoste.setTitrePoste(titrePoste);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<InfoFichePosteDto> result = repository.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(1);
+		List<InfoFichePosteDto> result = repository
+				.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(1));
 
 		assertNotNull(result);
 		assertEquals(2, result.size());

@@ -375,7 +375,7 @@ public class FichePosteController {
 			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren)
 			throws ParseException {
 
-		List<InfoEntiteDto> result = fpSrv.getInfoFDP(idEntite, withEntiteChildren);
+		InfoEntiteDto result = fpSrv.getInfoFDP(idEntite, withEntiteChildren);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
