@@ -67,7 +67,7 @@ public class ReportingService implements IReportingService {
 
 		String reportName = isChangementClasse ? "avctChgtClasseArrete.rptdesign" : "avctDiffArrete.rptdesign";
 
-		ClientResponse response = createAndFireRequest(map, reportName, "DOCX");
+		ClientResponse response = createAndFireRequest(map, reportName, "ODT");
 
 		return readResponseAsByteArray(response, map);
 	}
