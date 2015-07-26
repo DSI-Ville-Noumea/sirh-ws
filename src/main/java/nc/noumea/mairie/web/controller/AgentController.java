@@ -26,9 +26,11 @@ import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ContactAgentDto;
 import nc.noumea.mairie.web.dto.EnfantDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -138,8 +140,12 @@ public class AgentController {
 		if (ag.getCodeBanque() != null) {
 			banque = sibanqSrv.getBanque(ag.getCodeBanque());
 		}
-
+		
 		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant, banque);
+		
+		// id service ADS pour le kiosque RH
+		EntiteDto entite = agentSrv.getServiceAgent(idAgent.intValue(), new Date());
+		dto.setIdServiceAds(entite.getIdEntite());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
@@ -434,6 +440,24 @@ public class AgentController {
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 
+	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getDirection(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) {
+
+		EntiteDto direction = agentSrv.getDirectionOfAgent(idAgent, dateAffectation);
+
+		// Si l'agent n'existe pas, on ne retourne rien
+		if (direction == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant")
+				.exclude("*.serviceParent");
+
+		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
 	}
 }

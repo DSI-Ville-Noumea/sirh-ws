@@ -135,13 +135,15 @@ public class AgentService implements IAgentService {
 		for (Affectation aff : query.getResultList()) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
-			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null)
+			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
 				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-			EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
+				EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
+				agDto.setDirection(direction == null ? "" : direction.getLabel());
+			}
+			
 			agDto.setService(service == null ? "" : service.getLabel().trim());
 			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setSigleService(service == null ? "" : service.getSigle());
-			agDto.setDirection(direction == null ? "" : direction.getLabel());
 			result.add(agDto);
 		}
 
@@ -232,6 +234,31 @@ public class AgentService implements IAgentService {
 			FichePoste fp = (FichePoste) query.getSingleResult();
 			if (fp.getIdServiceADS() != null) {
 				return adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee) {
+		String hql = "select fp from FichePoste fp ,Affectation aff"
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
+		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
+		query.setParameter("idAgent", idAgent);
+
+		if (null != dateDonnee) {
+			query.setParameter("dateJour", dateDonnee);
+		} else {
+			query.setParameter("dateJour", new Date());
+		}
+		try {
+			FichePoste fp = (FichePoste) query.getSingleResult();
+			if (fp.getIdServiceADS() != null) {
+				return adsWSConsumer.getDirection(fp.getIdServiceADS());
 			} else {
 				return null;
 			}

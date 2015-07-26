@@ -20,7 +20,6 @@ public class EntiteDto {
 	private EntiteDto entiteRemplacee;
 
 	private Integer idStatut;
-	private String libelleStatut;
 	private Integer idAgentCreation;
 	private Date dateCreation;
 	private Integer idAgentModification;
@@ -112,14 +111,6 @@ public class EntiteDto {
 
 	public void setIdStatut(Integer idStatut) {
 		this.idStatut = idStatut;
-	}
-
-	public String getLibelleStatut() {
-		return libelleStatut;
-	}
-
-	public void setLibelleStatut(String libelleStatut) {
-		this.libelleStatut = libelleStatut;
 	}
 
 	public Integer getIdAgentCreation() {

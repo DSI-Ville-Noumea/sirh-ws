@@ -44,4 +44,6 @@ public interface IAgentService {
 
 	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee);
 
+	EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee);
+
 }
