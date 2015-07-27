@@ -11,7 +11,7 @@ import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IFichePosteService {
 
-	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour);
+	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour, boolean withCompetenceAndActivities);
 
 	public boolean estResponsable(Integer idAgent);
 

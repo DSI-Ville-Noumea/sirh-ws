@@ -60,7 +60,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "sirhEntityManager", sirhEMMock);
 
 		// When
-		FichePoste result = ficheService.getFichePostePrimaireAgentAffectationEnCours(9005138, new Date());
+		FichePoste result = ficheService.getFichePostePrimaireAgentAffectationEnCours(9005138, new Date(), true);
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), result.getIdFichePoste());

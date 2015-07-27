@@ -229,7 +229,7 @@ public class FichePosteController {
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = sdf.parse(dateTemp);
 
-		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour);
+		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour, true);
 
 		if (fp == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);

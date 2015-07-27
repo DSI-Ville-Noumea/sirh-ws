@@ -16,6 +16,7 @@ import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.ISpadmnService;
+import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
@@ -69,6 +70,9 @@ public class AgentController {
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
+	
+	@Autowired
+	private IAdsService adsService;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -178,7 +182,7 @@ public class AgentController {
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = sdf.parse(dateTemp);
 		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(
-				agentSuperieurHierarchique.getIdAgent(), dateJour);
+				agentSuperieurHierarchique.getIdAgent(), dateJour, false);
 
 		if (fichePosteSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -239,17 +243,23 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-		for (Agent agentService : listAgentService) {
-			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
-			agentService.setPosition(titrePoste);
-		}
+		Date dateJour = new Date();
 
 		List<AgentWithServiceDto> dto = new ArrayList<AgentWithServiceDto>();
-		for (Agent a : listAgentService) {
-			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(a);
+		List<EntiteDto> listEntitesDto = new ArrayList<EntiteDto>();
+		for (Agent agentService : listAgentService) {
+			FichePoste fichePoste = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(), dateJour, false);
+			
+			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(agentService);
+			dtoAgent.setPosition(null == fichePoste.getTitrePoste() ? "" : fichePoste.getTitrePoste().getLibTitrePoste());
+			
+			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntitesDto);
+			if(null != entite) {
+				dtoAgent.setIdServiceADS(fichePoste.getIdServiceADS());
+				dtoAgent.setService(entite.getLabel());
+				dtoAgent.setSigleService(entite.getSigle());
+			}
+			
 			dto.add(dtoAgent);
 		}
 
