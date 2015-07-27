@@ -144,7 +144,7 @@ public class AgentController {
 		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant, banque);
 		
 		// id service ADS pour le kiosque RH
-		EntiteDto entite = agentSrv.getServiceAgent(idAgent.intValue(), new Date());
+		EntiteDto entite = agentSrv.getServiceAgent(new Integer(newIdAgent), new Date());
 		dto.setIdServiceAds(entite.getIdEntite());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
