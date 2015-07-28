@@ -42,14 +42,14 @@
 	<!-- WS PTG -->
 	<!-- -->
 	<Environment name="SIRH_PTG_WS_URL" type="java.lang.String"
-		description="SIRH PTG WS url pour les droits" value="http://***REMOVED***:8085/sirh-ptg-ws/"
+		description="SIRH PTG WS url pour les droits" value="http://***REMOVED***:8087/sirh-ptg-ws-org/"
 		override="false" />
 
 	<!-- -->
 	<!-- WS ABS -->
 	<!-- -->
 	<Environment name="SIRH_ABS_WS_URL" type="java.lang.String"
-		description="SIRH ABS WS url pour les droits" value="http://***REMOVED***:8085/sirh-abs-ws/"
+		description="SIRH ABS WS url pour les droits" value="http://***REMOVED***:8087/sirh-abs-ws-org/"
 		override="false" />
 
 	<!-- -->
