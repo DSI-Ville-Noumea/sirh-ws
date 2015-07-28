@@ -244,9 +244,9 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee) {
-		String hql = "select fp from FichePoste fp ,Affectation aff"
+		String hql = "select fp from FichePoste fp ,Affectation aff "
 				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
-				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
+				+ "and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 
