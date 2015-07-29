@@ -61,19 +61,18 @@ public class FichePosteService implements IFichePosteService {
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
 
 	@Override
-	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour, boolean withCompetenceAndActivities) {
+	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
+			boolean withCompetenceAndActivities) {
 
 		String requete = "select fp from FichePoste fp ";
-				if(withCompetenceAndActivities) {
-					requete += "LEFT JOIN FETCH fp.competencesFDP LEFT JOIN FETCH fp.activites";
-				}
-				requete += ", Affectation aff "
-						+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
-						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
+		if (withCompetenceAndActivities) {
+			requete += "LEFT JOIN FETCH fp.competencesFDP LEFT JOIN FETCH fp.activites";
+		}
+		requete += ", Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
+				+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+				+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		FichePoste res = null;
-		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(
-				requete, FichePoste.class);
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(requete, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 
@@ -430,7 +429,7 @@ public class FichePosteService implements IFichePosteService {
 
 		for (FichePoste fp : listeFDP) {
 			EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
-			FichePosteDto dto = new FichePosteDto(fp, "", "", "", entite.getSigle());
+			FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", entite.getSigle());
 			result.add(dto);
 		}
 		return result;

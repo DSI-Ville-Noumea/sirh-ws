@@ -142,7 +142,7 @@ public class FichePosteDtoTest {
 		fp.getPrimePointageFP().add(pp1);
 		fp.getPrimePointageFP().add(pp2);
 		// When
-		FichePosteDto dto = new FichePosteDto(fp, true, "", "", "");
+		FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", null);
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());

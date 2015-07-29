@@ -178,8 +178,9 @@ public class FichePosteDto {
 		}
 	}
 
-	public FichePosteDto(FichePoste fichePoste, boolean isInfosCompl, String direction, String service, String section) {
-		this(fichePoste, direction, service, section, null);
+	public FichePosteDto(FichePoste fichePoste, boolean isInfosCompl, String direction, String service, String section,
+			String sigle) {
+		this(fichePoste, direction, service, section, sigle);
 		this.agent = "";
 		this.dateDebutAffectation = "";
 		this.categorie = "";
