@@ -219,7 +219,10 @@ public class FichePosteDto {
 
 			if (null != fichePoste.getGradePoste().getGradeGenerique()
 					&& null != fichePoste.getGradePoste().getGradeGenerique().getFiliere()) {
-				this.filiere = fichePoste.getGradePoste().getGradeGenerique().getFiliere().getLibelleFili().trim();
+				try {
+					this.filiere = fichePoste.getGradePoste().getGradeGenerique().getFiliere().getLibelleFili().trim();
+				} catch (Exception e) {
+				}
 			}
 		}
 
