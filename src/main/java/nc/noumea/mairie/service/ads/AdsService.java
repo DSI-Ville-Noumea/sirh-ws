@@ -67,7 +67,7 @@ public class AdsService implements IAdsService {
 				if(null != enfant
 						&& null != enfant.getIdEntite()
 						&& enfant.getIdEntite().equals(idServiceAds)) {
-					return entite.getSigle();
+					return enfant.getSigle();
 				}
 				result = getListIdsEntiteEnfants(enfant, idServiceAds, result);
 				if(null != result) {

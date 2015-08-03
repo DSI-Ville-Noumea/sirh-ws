@@ -35,7 +35,7 @@ public class FichePosteRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
-	public void getListFichePosteByIdServiceADSAndStatutFDP_NoStatut_returnResult() {
+	public void getListFichePosteByIdServiceADSAndStatutFDP_NoStatut_returnResults() {
 
 		FichePoste fichePoste2 = new FichePoste();
 		fichePoste2.setIdFichePoste(1);
@@ -63,11 +63,24 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setIdFichePoste(13);
+		fichePoste3.setAnnee(2010);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("numFP");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(3);
+		fichePoste3.setStatutFP(statutFP);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1,3), null);
 
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getIdFichePoste());
+		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
+		assertEquals(fichePoste3.getIdFichePoste(), result.get(1).getIdFichePoste());
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
 	}
 
@@ -101,7 +114,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(2));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(2));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -137,7 +150,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, Arrays.asList(1));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -149,7 +162,7 @@ public class FichePosteRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void getListFichePosteByIdServiceADSAndStatutFDP_returnEmptyList() {
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(1, null);
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null);
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
