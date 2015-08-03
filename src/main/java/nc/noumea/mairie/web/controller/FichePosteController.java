@@ -319,6 +319,9 @@ public class FichePosteController {
 			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren)
 			throws ParseException {
 
+		logger.debug("entered GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with idEntite = {} and statutFDP = {} and withEntiteChildren = {}",
+				idEntite, listIdStatutFDP, withEntiteChildren);
+		
 		List<Integer> statutIds = new ArrayList<Integer>();
 		if (listIdStatutFDP != null) {
 			for (String id : listIdStatutFDP.split(",")) {
@@ -331,6 +334,10 @@ public class FichePosteController {
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
+		
+		int size = null == result ? 0 : result.size();
+		
+		logger.debug("Finish GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with " + size + " results");
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}

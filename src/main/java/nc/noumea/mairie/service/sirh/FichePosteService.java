@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -16,6 +17,7 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
+import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
@@ -56,6 +58,9 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
+
+	@Autowired
+	private IAdsService adsService;
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
@@ -413,23 +418,24 @@ public class FichePosteService implements IFichePosteService {
 			List<Integer> listStatutFDP, boolean withEntiteChildren) {
 		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
-
+		
+		EntiteDto entiteRoot = null;
+		
 		if (withEntiteChildren) {
-			EntiteDto entiteParent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
-			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteParent);
-			if (!listeEnfant.contains(entiteParent.getIdEntite()))
-				listeEnfant.add(entiteParent.getIdEntite());
-			for (Integer idEntiteEnfant : listeEnfant) {
-				listeFDP.addAll(fichePosteDao
-						.getListFichePosteByIdServiceADSAndStatutFDP(idEntiteEnfant, listStatutFDP));
-			}
+			entiteRoot = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
+			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteRoot);
+			if (!listeEnfant.contains(entiteRoot.getIdEntite()))
+				listeEnfant.add(entiteRoot.getIdEntite());
+			
+				listeFDP = fichePosteDao
+						.getListFichePosteByIdServiceADSAndStatutFDP(listeEnfant, listStatutFDP);
 		} else {
-			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, listStatutFDP);
+			entiteRoot = adsWSConsumer.getEntiteByIdEntite(idEntite);
+			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), listStatutFDP);
 		}
 
 		for (FichePoste fp : listeFDP) {
-			EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
-			FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", entite.getSigle());
+			FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
 			result.add(dto);
 		}
 		return result;
@@ -452,7 +458,7 @@ public class FichePosteService implements IFichePosteService {
 	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(idEntite, null);
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), null);
 		// on regarde que toutes les FDP soient en statut "En creation" et que
 		// la FDP n'est jamais été affectée à un agent
 		for (FichePoste fp : listeFDP) {
