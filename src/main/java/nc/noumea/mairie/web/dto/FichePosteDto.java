@@ -308,6 +308,55 @@ public class FichePosteDto {
 			this.primes.add(prime.getPrimePointageFPPK().getNumRubrique() + " - " + prime.getLibelle());
 		}
 	}
+	
+	public FichePosteDto(FichePoste fichePoste, String sigle) {
+		this.idFichePoste = fichePoste.getIdFichePoste();
+		this.numero = fichePoste.getNumFP();
+
+		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
+
+		if (null != fichePoste.getAgent()) {
+			for (Affectation agt : fichePoste.getAgent()) {
+				if (null != agt.getAgent()) {
+					this.idAgent = agt.getAgent().getIdAgent();
+					break;
+				}
+			}
+		}
+
+		this.titre = fichePoste.getTitrePoste() == null ? "" : fichePoste.getTitrePoste().getLibTitrePoste();
+
+		try {
+			this.reglementaire = null == fichePoste.getReglementaire()
+					|| fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire()
+					.getLibHor().trim();
+		} catch (javax.persistence.EntityNotFoundException e) {
+			this.reglementaire = "";
+		}
+
+		this.idServiceADS = fichePoste.getIdServiceADS();
+		this.sigle = sigle == null ? "" : sigle;
+		this.gradePoste = fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? ""
+				: fichePoste.getGradePoste().getGradeInitial().trim();
+		this.agent = "";
+		this.categorie = "";
+
+		this.statutFDP = fichePoste.getStatutFP().getLibStatut();
+
+		if (null != fichePoste.getAgent()) {
+			for (Affectation agt : fichePoste.getAgent()) {
+				this.agent = agt.getAgent().getDisplayNom()
+						+ " "
+						+ agt.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
+						+ agt.getAgent().getDisplayPrenom().substring(1, agt.getAgent().getDisplayPrenom().length())
+								.toLowerCase() + " (" + agt.getAgent().getNomatr().toString() + ")";
+			}
+		}
+
+		if (null != fichePoste.getGradePoste()) {
+			this.categorie = fichePoste.getGradePoste().getGradeGenerique().getCdcadr().trim();
+		}
+	}
 
 	public String getNumero() {
 		return numero;

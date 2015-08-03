@@ -435,7 +435,7 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		for (FichePoste fp : listeFDP) {
-			FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
+			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
 			result.add(dto);
 		}
 		return result;
