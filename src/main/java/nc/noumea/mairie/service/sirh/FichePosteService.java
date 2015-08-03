@@ -418,24 +418,26 @@ public class FichePosteService implements IFichePosteService {
 			List<Integer> listStatutFDP, boolean withEntiteChildren) {
 		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
-		
+
 		EntiteDto entiteRoot = null;
-		
+
 		if (withEntiteChildren) {
 			entiteRoot = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
 			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteRoot);
 			if (!listeEnfant.contains(entiteRoot.getIdEntite()))
 				listeEnfant.add(entiteRoot.getIdEntite());
-			
-				listeFDP = fichePosteDao
-						.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(listeEnfant, listStatutFDP);
+
+			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+					listeEnfant, listStatutFDP);
 		} else {
 			entiteRoot = adsWSConsumer.getEntiteByIdEntite(idEntite);
-			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), listStatutFDP);
+			listeFDP = fichePosteDao
+					.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), listStatutFDP);
 		}
 
 		for (FichePoste fp : listeFDP) {
-			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
+			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot,
+					fp.getIdServiceADS()));
 			result.add(dto);
 		}
 		return result;
@@ -458,7 +460,8 @@ public class FichePosteService implements IFichePosteService {
 	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), null);
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite),
+				null);
 		// on regarde que toutes les FDP soient en statut "En creation" et que
 		// la FDP n'est jamais été affectée à un agent
 		for (FichePoste fp : listeFDP) {
@@ -475,9 +478,12 @@ public class FichePosteService implements IFichePosteService {
 
 		// on crée un job de lancement de suppression des FDP
 		for (FichePoste fp : listeFDP) {
-			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION");
+			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION", null);
 			fichePosteDao.persisEntity(job);
 		}
+		result.getInfos()
+				.add(listeFDP.size()
+						+ " FDP vont être supprimées. Merci d'aller regarder le resultat de cette suppression dans SIRH.");
 		return result;
 	}
 
@@ -507,5 +513,23 @@ public class FichePosteService implements IFichePosteService {
 		}
 		return result;
 
+	}
+
+	@Override
+	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+		// on cherche toutes les FDP validées
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
+				Arrays.asList(idEntiteOld), Arrays.asList(2));
+
+		// on crée un job de lancement de duplication des FDP
+		for (FichePoste fp : listeFDP) {
+			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "DUPLICATION", idEntiteNew);
+			fichePosteDao.persisEntity(job);
+		}
+		result.getInfos()
+				.add(listeFDP.size()
+						+ " FDP vont être dupliquées. Merci d'aller regarder le resultat de cette duplication dans SIRH.");
+		return result;
 	}
 }

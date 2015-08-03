@@ -389,4 +389,30 @@ public class FichePosteController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+
+	/**
+	 * Utile à ADS lors de la duplication d'une entité
+	 * 
+	 * @param idEntite
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/dupliqueFichePosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> dupliqueFichePosteByIdEntite(
+			@RequestParam(value = "idEntiteNew", required = true) Integer idEntiteNew,
+			@RequestParam(value = "idEntiteOld", required = true) Integer idEntiteOld,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.dupliqueFichePosteByIdEntite(idEntiteNew, idEntiteOld, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }

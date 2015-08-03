@@ -32,6 +32,9 @@ public class ActionFdpJob {
 	@NotNull
 	private Integer idFichePoste;
 
+	@Column(name = "ID_NEW_SERVICE_ADS")
+	private Integer idNewServiceAds;
+
 	@Column(name = "TYPE_ACTION")
 	@NotNull
 	private String typeAction;
@@ -47,10 +50,11 @@ public class ActionFdpJob {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateStatut;
 
-	public ActionFdpJob(Integer idFichePoste, Integer idAgent, String typeAction) {
+	public ActionFdpJob(Integer idFichePoste, Integer idAgent, String typeAction, Integer idNewEntite) {
 		this.idFichePoste = idFichePoste;
 		this.idAgent = idAgent;
 		this.typeAction = typeAction;
+		this.idNewServiceAds = idNewEntite;
 	}
 
 	public Integer getIdActionFdpJob() {
@@ -107,5 +111,13 @@ public class ActionFdpJob {
 
 	public void setDateStatut(Date dateStatut) {
 		this.dateStatut = dateStatut;
+	}
+
+	public Integer getIdNewServiceAds() {
+		return idNewServiceAds;
+	}
+
+	public void setIdNewServiceAds(Integer idNewServiceAds) {
+		this.idNewServiceAds = idNewServiceAds;
 	}
 }

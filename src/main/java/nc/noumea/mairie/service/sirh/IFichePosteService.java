@@ -49,4 +49,6 @@ public interface IFichePosteService {
 	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent);
 
 	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren);
+
+	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent);
 }

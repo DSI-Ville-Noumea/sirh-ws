@@ -17,6 +17,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
@@ -354,7 +355,7 @@ public class FichePosteServiceTest {
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(entite);
-		
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
@@ -383,13 +384,15 @@ public class FichePosteServiceTest {
 		EntiteDto entite = new EntiteDto();
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(
+				listFP);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(entite);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn("sigle");
+		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn(
+				"sigle");
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -422,14 +425,15 @@ public class FichePosteServiceTest {
 		EntiteDto entite = new EntiteDto();
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1, 2))).thenReturn(
-				listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1, 2)))
+				.thenReturn(listFP);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(entite);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn("sigle");
+		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn(
+				"sigle");
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -475,7 +479,9 @@ public class FichePosteServiceTest {
 		listFP.add(fiche2);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(2, 1), null)).thenReturn(listFP);
+		Mockito.when(
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(2, 1), null)).thenReturn(listFP);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
@@ -484,8 +490,10 @@ public class FichePosteServiceTest {
 		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(2)).thenReturn(enfant1);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn("sigle");
-		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn("sigle");
+		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn(
+				"sigle");
+		Mockito.when(adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entite, fiche.getIdServiceADS())).thenReturn(
+				"sigle");
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -517,7 +525,8 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(
+				listFP);
 
 		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
 		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(
@@ -531,6 +540,10 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
+		assertEquals(1, result.getInfos().size());
+		assertEquals("1 FDP vont être supprimées. Merci d'aller regarder le resultat de cette suppression dans SIRH.",
+				result.getInfos().get(0));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
 	}
 
 	@Test
@@ -548,7 +561,8 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), null)).thenReturn(
+				listFP);
 
 		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
 		Mockito.when(affectationSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(
@@ -562,6 +576,8 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(ActionFdpJob.class));
 	}
 
 	@Test
@@ -621,5 +637,36 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(1, result.getListeInfoFDP().size());
+	}
+
+	@Test
+	public void dupliqueFichePosteByIdEntite_OK() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En création");
+
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2)))
+				.thenReturn(listFP);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.dupliqueFichePosteByIdEntite(1, 2, 9005138);
+
+		assertNotNull(result);
+		assertEquals(0, result.getErrors().size());
+		assertEquals(1, result.getInfos().size());
+		assertEquals("1 FDP vont être dupliquées. Merci d'aller regarder le resultat de cette duplication dans SIRH.",
+				result.getInfos().get(0));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
 	}
 }
