@@ -475,7 +475,7 @@ public class FichePosteServiceTest {
 		listFP.add(fiche2);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2, 1), null)).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(2, 1), null)).thenReturn(listFP);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);

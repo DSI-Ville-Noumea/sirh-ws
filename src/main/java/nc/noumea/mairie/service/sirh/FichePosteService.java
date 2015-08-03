@@ -428,7 +428,7 @@ public class FichePosteService implements IFichePosteService {
 				listeEnfant.add(entiteRoot.getIdEntite());
 			
 				listeFDP = fichePosteDao
-						.getListFichePosteByIdServiceADSAndStatutFDP(listeEnfant, listStatutFDP);
+						.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(listeEnfant, listStatutFDP);
 		} else {
 			entiteRoot = adsWSConsumer.getEntiteByIdEntite(idEntite);
 			listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), listStatutFDP);

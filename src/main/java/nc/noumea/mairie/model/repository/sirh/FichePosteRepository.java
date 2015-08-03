@@ -64,6 +64,35 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		return res;
 	}
+	
+	@Override
+	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FichePoste fp "
+				+ "join fetch fp.statutFP statut "
+				+ "join fetch fp.titrePoste titre "
+				+ "join fetch fp.reglementaire reg "
+				+ "join fetch fp.gradePoste gradePoste "
+				+ "join fetch gradePoste.barem "
+				+ "join fetch gradePoste.classe "
+				+ "join fetch gradePoste.echelon "
+				+ "join fetch gradePoste.gradeGenerique "
+				+ "where fp.idServiceADS in :listIdsServiceADS ");
+		if (listStatutFDP != null && listStatutFDP.size() > 0) {
+			sb.append(" and fp.statutFP.idStatutFp in (:listStatut) ");
+		}
+
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
+		query.setParameter("listIdsServiceADS", listIdsEntite);
+		
+		if (listStatutFDP != null && listStatutFDP.size() > 0) {
+			query.setParameter("listStatut", listStatutFDP);
+		}
+
+		List<FichePoste> res = query.getResultList();
+
+		return res;
+	}
 
 	@Override
 	public void persisEntity(Object obj) {

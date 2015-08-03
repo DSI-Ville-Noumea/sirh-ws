@@ -19,4 +19,7 @@ public interface IFichePosteRepository {
 	FichePoste chercherFichePoste(Integer idFichePoste);
 
 	List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(List<Integer> idEntiteEnfant);
+
+	List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+			List<Integer> listIdsEntite, List<Integer> listStatutFDP);
 }
