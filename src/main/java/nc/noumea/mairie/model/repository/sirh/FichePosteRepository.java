@@ -10,7 +10,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
+import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
@@ -46,7 +54,8 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 
 	@Override
-	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDP(List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
+	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDP(List<Integer> listIdsEntite,
+			List<Integer> listStatutFDP) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp where fp.idServiceADS in :listIdsServiceADS ");
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
@@ -55,7 +64,7 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("listIdsServiceADS", listIdsEntite);
-		
+
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
 			query.setParameter("listStatut", listStatutFDP);
 		}
@@ -64,27 +73,23 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		return res;
 	}
-	
+
 	@Override
-	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
+	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+			List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select fp from FichePoste fp "
-				+ "left join fetch fp.statutFP statut "
-				+ "left join fetch fp.titrePoste titre "
-				+ "left join fetch fp.reglementaire reg "
-				+ "left join fetch fp.gradePoste gradePoste "
-				+ "left join fetch gradePoste.barem "
-				+ "left join fetch gradePoste.classe "
-				+ "left join fetch gradePoste.echelon "
-				+ "left join fetch gradePoste.gradeGenerique "
-				+ "where fp.idServiceADS in :listIdsServiceADS ");
+		sb.append("select fp from FichePoste fp " + "left join fetch fp.statutFP statut "
+				+ "left join fetch fp.titrePoste titre " + "left join fetch fp.reglementaire reg "
+				+ "left join fetch fp.gradePoste gradePoste " + "left join fetch gradePoste.barem "
+				+ "left join fetch gradePoste.classe " + "left join fetch gradePoste.echelon "
+				+ "left join fetch gradePoste.gradeGenerique " + "where fp.idServiceADS in :listIdsServiceADS ");
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
 			sb.append(" and fp.statutFP.idStatutFp in (:listStatut) ");
 		}
 
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("listIdsServiceADS", listIdsEntite);
-		
+
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
 			query.setParameter("listStatut", listStatutFDP);
 		}
@@ -92,11 +97,6 @@ public class FichePosteRepository implements IFichePosteRepository {
 		List<FichePoste> res = query.getResultList();
 
 		return res;
-	}
-
-	@Override
-	public void persisEntity(Object obj) {
-		sirhEntityManager.persist(obj);
 	}
 
 	@Override
@@ -151,6 +151,120 @@ public class FichePosteRepository implements IFichePosteRepository {
 			info.setTitreFDP(titrePoste);
 			res.add(info);
 		}
+
+		return res;
+	}
+
+	@Override
+	public void persisEntity(Object obj) {
+		sirhEntityManager.persist(obj);
+	}
+
+	@Override
+	public void removeEntity(Object obj) {
+		sirhEntityManager.remove(obj);
+	}
+
+	@Override
+	public List<FeFp> listerFEFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FeFp fp where fp.id.idFichePoste = :idFichePoste ");
+
+		TypedQuery<FeFp> query = sirhEntityManager.createQuery(sb.toString(), FeFp.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<FeFp> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<NiveauEtudeFP> listerNiveauEtudeFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from NiveauEtudeFP fp where fp.niveauEtudeFPPK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<NiveauEtudeFP> query = sirhEntityManager.createQuery(sb.toString(), NiveauEtudeFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<NiveauEtudeFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<ActiviteFP> listerActiviteFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from ActiviteFP fp where fp.activiteFPPK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<ActiviteFP> query = sirhEntityManager.createQuery(sb.toString(), ActiviteFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<ActiviteFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<CompetenceFP> listerCompetenceFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from CompetenceFP fp where fp.competenceFPPK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<CompetenceFP> query = sirhEntityManager.createQuery(sb.toString(), CompetenceFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<CompetenceFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<AvantageNatureFP> listerAvantageNatureFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from AvantageNatureFP fp where fp.avantageNaturePK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<AvantageNatureFP> query = sirhEntityManager.createQuery(sb.toString(), AvantageNatureFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<AvantageNatureFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<DelegationFP> listerDelegationFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from DelegationFP fp where fp.delegationFPPK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<DelegationFP> query = sirhEntityManager.createQuery(sb.toString(), DelegationFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<DelegationFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<PrimePointageFP> listerPrimePointageFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from PrimePointageFP fp where fp.idFichePoste = :idFichePoste ");
+
+		TypedQuery<PrimePointageFP> query = sirhEntityManager.createQuery(sb.toString(), PrimePointageFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<PrimePointageFP> res = query.getResultList();
+
+		return res;
+	}
+
+	@Override
+	public List<RegIndemFP> listerRegIndemFPFPAvecFP(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from RegIndemFP fp where fp.regIndemFPPK.idFichePoste = :idFichePoste ");
+
+		TypedQuery<RegIndemFP> query = sirhEntityManager.createQuery(sb.toString(), RegIndemFP.class);
+		query.setParameter("idFichePoste", idFichePoste);
+
+		List<RegIndemFP> res = query.getResultList();
 
 		return res;
 	}

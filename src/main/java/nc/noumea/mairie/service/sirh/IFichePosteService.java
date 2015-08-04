@@ -11,7 +11,8 @@ import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IFichePosteService {
 
-	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour, boolean withCompetenceAndActivities);
+	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
+			boolean withCompetenceAndActivities);
 
 	public boolean estResponsable(Integer idAgent);
 
@@ -51,4 +52,6 @@ public interface IFichePosteService {
 	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren);
 
 	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent);
+
+	public ReturnMessageDto deleteFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
 }

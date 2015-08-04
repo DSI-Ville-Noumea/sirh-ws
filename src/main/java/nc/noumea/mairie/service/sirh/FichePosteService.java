@@ -13,8 +13,18 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
+import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
+import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
@@ -26,6 +36,7 @@ import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
+import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
@@ -43,6 +54,9 @@ public class FichePosteService implements IFichePosteService {
 
 	@Autowired
 	private IFichePosteRepository fichePosteDao;
+
+	@Autowired
+	private IUtilisateurService utilisateurSrv;
 
 	@Autowired
 	private ISirhPtgWSConsumer sirhPtgWSConsumer;
@@ -531,5 +545,106 @@ public class FichePosteService implements IFichePosteService {
 				.add(listeFDP.size()
 						+ " FDP vont être dupliquées. Merci d'aller regarder le resultat de cette duplication dans SIRH.");
 		return result;
+	}
+
+	@Override
+	public ReturnMessageDto deleteFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
+		// on veirife que la FDP existe
+		if (fichePoste == null || fichePoste.getIdFichePoste() == null) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
+		}
+		// on verifie que la FDP est bien "en création"
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("1")) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
+		}
+		// on vérifie que la FDP n'est pas dejà affectée
+		List<Affectation> listAffSurFDP = affSrv.getAffectationByIdFichePoste(idFichePoste);
+		if (listAffSurFDP.size() > 0) {
+			result.getErrors().add("La FDP id " + idFichePoste + " est affectée.");
+		}
+
+		// on cherche le login de l'agent qui fait l'action
+		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
+		if (user == null || user.getsAMAccountName() == null) {
+			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
+		}
+		if (result.getErrors().size() > 0) {
+			return result;
+		}
+
+		// on supprime la FDP
+		try {
+			supprimerFDP(fichePoste, user.getsAMAccountName());
+			result.getErrors().add("La FDP id " + idFichePoste + " est supprimée.");
+		} catch (Exception e) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'a pu être suprimée.");
+		}
+
+		return result;
+	}
+
+	private void supprimerFDP(FichePoste fichePoste, String login) {
+		HistoFichePoste histo = new HistoFichePoste(fichePoste);
+		// supprimer la FDP en base (dans HISTO on sauvegarde l'action) et
+		// SPPOST
+		// supprimer les actvites, comptences...
+		ArrayList<FeFp> liensA = (ArrayList<FeFp>) fichePosteDao.listerFEFPAvecFP(fichePoste.getIdFichePoste());
+		for (FeFp lien : liensA) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<NiveauEtudeFP> niveauFPExistant = (ArrayList<NiveauEtudeFP>) fichePosteDao
+				.listerNiveauEtudeFPAvecFP(fichePoste.getIdFichePoste());
+		for (NiveauEtudeFP lien : niveauFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<ActiviteFP> activiteFPExistant = (ArrayList<ActiviteFP>) fichePosteDao
+				.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
+		for (ActiviteFP lien : activiteFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao
+				.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
+		for (CompetenceFP lien : competencesFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao
+				.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
+		for (AvantageNatureFP lien : avantagesFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<DelegationFP> delegationFPExistant = (ArrayList<DelegationFP>) fichePosteDao
+				.listerDelegationFPAvecFP(fichePoste.getIdFichePoste());
+		for (DelegationFP lien : delegationFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<PrimePointageFP> primesPointagesFPExistant = (ArrayList<PrimePointageFP>) fichePosteDao
+				.listerPrimePointageFP(fichePoste.getIdFichePoste());
+		for (PrimePointageFP lien : primesPointagesFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		ArrayList<RegIndemFP> regimesFPExistant = (ArrayList<RegIndemFP>) fichePosteDao
+				.listerRegIndemFPFPAvecFP(fichePoste.getIdFichePoste());
+		for (RegIndemFP lien : regimesFPExistant) {
+			fichePosteDao.removeEntity(lien);
+		}
+
+		// on supprime enfin la FDP
+		fichePosteDao.removeEntity(fichePoste);
+		// historisation
+		histo.setDateHisto(new Date());
+		histo.setUserHisto(login);
+		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
+		fichePosteDao.persisEntity(histo);
+
 	}
 }

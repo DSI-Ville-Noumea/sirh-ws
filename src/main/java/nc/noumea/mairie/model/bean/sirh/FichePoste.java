@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -167,6 +170,30 @@ public class FichePoste {
 
 	@Column(name = "ID_SERVICE_ADS")
 	private Integer idServiceADS;
+
+	@Column(name = "ID_SERVI", columnDefinition = "char")
+	private String idServi;
+
+	@Column(name = "ID_BASE_HORAIRE_POINTAGE")
+	private Integer idBaseHorairePointage;
+
+	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
+	private Integer idBaseHoraireAbsence;
+
+	@Column(name = "NUM_DELIBERATION")
+	private String numDeliberation;
+
+	@Column(name = "DATE_FIN_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateFinValiditeFp;
+
+	@Column(name = "DATE_DEBUT_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebutValiditeFp;
+
+	@Column(name = "DATE_DEB_APPLI_SERV")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebAppliServ;
 
 	public TitrePoste getTitrePoste() {
 		return titrePoste;
@@ -378,5 +405,61 @@ public class FichePoste {
 
 	public void setIdServiceADS(Integer idServiceADS) {
 		this.idServiceADS = idServiceADS;
+	}
+
+	public String getIdServi() {
+		return idServi;
+	}
+
+	public void setIdServi(String idServi) {
+		this.idServi = idServi;
+	}
+
+	public Integer getIdBaseHorairePointage() {
+		return idBaseHorairePointage;
+	}
+
+	public void setIdBaseHorairePointage(Integer idBaseHorairePointage) {
+		this.idBaseHorairePointage = idBaseHorairePointage;
+	}
+
+	public Integer getIdBaseHoraireAbsence() {
+		return idBaseHoraireAbsence;
+	}
+
+	public void setIdBaseHoraireAbsence(Integer idBaseHoraireAbsence) {
+		this.idBaseHoraireAbsence = idBaseHoraireAbsence;
+	}
+
+	public String getNumDeliberation() {
+		return numDeliberation;
+	}
+
+	public void setNumDeliberation(String numDeliberation) {
+		this.numDeliberation = numDeliberation;
+	}
+
+	public Date getDateFinValiditeFp() {
+		return dateFinValiditeFp;
+	}
+
+	public void setDateFinValiditeFp(Date dateFinValiditeFp) {
+		this.dateFinValiditeFp = dateFinValiditeFp;
+	}
+
+	public Date getDateDebutValiditeFp() {
+		return dateDebutValiditeFp;
+	}
+
+	public void setDateDebutValiditeFp(Date dateDebutValiditeFp) {
+		this.dateDebutValiditeFp = dateDebutValiditeFp;
+	}
+
+	public Date getDateDebAppliServ() {
+		return dateDebAppliServ;
+	}
+
+	public void setDateDebAppliServ(Date dateDebAppliServ) {
+		this.dateDebAppliServ = dateDebAppliServ;
 	}
 }

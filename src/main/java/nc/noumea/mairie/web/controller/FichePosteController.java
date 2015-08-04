@@ -319,9 +319,10 @@ public class FichePosteController {
 			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren)
 			throws ParseException {
 
-		logger.debug("entered GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with idEntite = {} and statutFDP = {} and withEntiteChildren = {}",
+		logger.debug(
+				"entered GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with idEntite = {} and statutFDP = {} and withEntiteChildren = {}",
 				idEntite, listIdStatutFDP, withEntiteChildren);
-		
+
 		List<Integer> statutIds = new ArrayList<Integer>();
 		if (listIdStatutFDP != null) {
 			for (String id : listIdStatutFDP.split(",")) {
@@ -334,10 +335,11 @@ public class FichePosteController {
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
-		
+
 		int size = null == result ? 0 : result.size();
-		
-		logger.debug("Finish GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with " + size + " results");
+
+		logger.debug("Finish GET [fichePostes/listFichePosteByIdEntite/] => listFichePosteByIdEntite with " + size
+				+ " results");
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
@@ -409,6 +411,33 @@ public class FichePosteController {
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		ReturnMessageDto result = fpSrv.dupliqueFichePosteByIdEntite(idEntiteNew, idEntiteOld, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Utile à JOBS lors de la suppression d'une entité, car il faut supprimer
+	 * les FDP associées
+	 * 
+	 * @param idFichePoste
+	 * @param idAgent
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/deleteFichePosteByIdFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> deleteFichePosteByIdFichePoste(
+			@RequestParam(value = "idFichePoste", required = true) Integer idFichePoste,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.deleteFichePosteByIdFichePoste(idFichePoste, new Integer(newIdAgent));
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);
