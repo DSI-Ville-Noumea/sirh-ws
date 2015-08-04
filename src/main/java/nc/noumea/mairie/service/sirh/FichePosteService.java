@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
@@ -640,6 +641,10 @@ public class FichePosteService implements IFichePosteService {
 
 		// on supprime enfin la FDP
 		fichePosteDao.removeEntity(fichePoste);
+		// aussi de SPPOST
+		Sppost posteAS400 = new Sppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(fichePoste.getNumFP()
+				.substring(5, histo.getNumFp().length())));
+		fichePosteDao.removeEntity(posteAS400);
 		// historisation
 		histo.setDateHisto(new Date());
 		histo.setUserHisto(login);
