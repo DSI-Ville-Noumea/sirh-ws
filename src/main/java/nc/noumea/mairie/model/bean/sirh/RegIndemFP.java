@@ -14,4 +14,12 @@ public class RegIndemFP {
 
 	@Id
 	private RegIndemFPPK regIndemFPPK;
+
+	public RegIndemFPPK getRegIndemFPPK() {
+		return regIndemFPPK;
+	}
+
+	public void setRegIndemFPPK(RegIndemFPPK regIndemFPPK) {
+		this.regIndemFPPK = regIndemFPPK;
+	}
 }

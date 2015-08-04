@@ -125,7 +125,7 @@ public class FichePoste {
 	@OrderBy("numRubrique asc")
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
 
-	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
 	@OrderBy("primePointageFPPK.numRubrique asc")
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
 

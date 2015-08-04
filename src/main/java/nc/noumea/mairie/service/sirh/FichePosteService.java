@@ -553,33 +553,34 @@ public class FichePosteService implements IFichePosteService {
 		ReturnMessageDto result = new ReturnMessageDto();
 
 		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
-		// on veirife que la FDP existe
+		// on verifie que la FDP existe
 		if (fichePoste == null || fichePoste.getIdFichePoste() == null) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
+			return result;
 		}
 		// on verifie que la FDP est bien "en création"
 		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("1")) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
+			return result;
 		}
 		// on vérifie que la FDP n'est pas dejà affectée
 		List<Affectation> listAffSurFDP = affSrv.getAffectationByIdFichePoste(idFichePoste);
 		if (listAffSurFDP.size() > 0) {
 			result.getErrors().add("La FDP id " + idFichePoste + " est affectée.");
+			return result;
 		}
 
 		// on cherche le login de l'agent qui fait l'action
 		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
 		if (user == null || user.getsAMAccountName() == null) {
 			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
-		}
-		if (result.getErrors().size() > 0) {
 			return result;
 		}
 
 		// on supprime la FDP
 		try {
 			supprimerFDP(fichePoste, user.getsAMAccountName());
-			result.getErrors().add("La FDP id " + idFichePoste + " est supprimée.");
+			result.getInfos().add("La FDP id " + idFichePoste + " est supprimée.");
 		} catch (Exception e) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'a pu être suprimée.");
 		}

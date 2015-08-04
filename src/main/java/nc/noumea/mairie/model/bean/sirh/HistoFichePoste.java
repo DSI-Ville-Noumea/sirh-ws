@@ -126,14 +126,16 @@ public class HistoFichePoste {
 		super();
 
 		this.idFichePoste = fichePoste.getIdFichePoste();
-		this.idTitrePoste = fichePoste.getTitrePoste().getIdTitrePoste();
-		this.idEntiteGeo = fichePoste.getLieuPoste().getCodeLieu().intValue();
-		this.idBudget = fichePoste.getBudget().getIdBudget();
-		this.idStatutFp = fichePoste.getStatutFP().getIdStatutFp();
-		this.idResponsable = fichePoste.getSuperieurHierarchique().getIdFichePoste();
-		this.idRemplacement = fichePoste.getRemplace().getIdFichePoste();
-		this.idCdthorBud = fichePoste.getBudgete().getCdThor();
-		this.idCdthorReg = fichePoste.getReglementaire().getCdThor();
+		this.idTitrePoste = fichePoste.getTitrePoste() == null ? null : fichePoste.getTitrePoste().getIdTitrePoste();
+		this.idEntiteGeo = fichePoste.getLieuPoste() == null ? null : fichePoste.getLieuPoste().getCodeLieu()
+				.intValue();
+		this.idBudget = fichePoste.getBudget() == null ? null : fichePoste.getBudget().getIdBudget();
+		this.idStatutFp = fichePoste.getStatutFP() == null ? null : fichePoste.getStatutFP().getIdStatutFp();
+		this.idResponsable = fichePoste.getSuperieurHierarchique() == null ? null : fichePoste
+				.getSuperieurHierarchique().getIdFichePoste();
+		this.idRemplacement = fichePoste.getRemplace() == null ? null : fichePoste.getRemplace().getIdFichePoste();
+		this.idCdthorBud = fichePoste.getBudgete() == null ? null : fichePoste.getBudgete().getCdThor();
+		this.idCdthorReg = fichePoste.getReglementaire() == null ? null : fichePoste.getReglementaire().getCdThor();
 		this.idServi = fichePoste.getIdServi();
 		this.dateFinValiditeFp = fichePoste.getDateFinValiditeFp();
 		this.dateDebutValiditeFp = fichePoste.getDateDebutValiditeFp();
@@ -141,10 +143,11 @@ public class HistoFichePoste {
 		this.nfa = fichePoste.getNfa();
 		this.missions = fichePoste.getMissions();
 		this.anneeCreation = fichePoste.getAnnee();
-		this.codeGrade = fichePoste.getGradePoste().getCdgrad();
+		this.codeGrade = fichePoste.getGradePoste() == null ? null : fichePoste.getGradePoste().getCdgrad();
 		this.numFp = fichePoste.getNumFP();
 		this.dateDebAppliServ = fichePoste.getDateDebAppliServ();
-		this.idNatureCredit = fichePoste.getNatureCredit().getIdNatureCredit();
+		this.idNatureCredit = fichePoste.getNatureCredit() == null ? null : fichePoste.getNatureCredit()
+				.getIdNatureCredit();
 		this.numDeliberation = fichePoste.getNumDeliberation();
 		this.idBaseHorairePointage = fichePoste.getIdBaseHorairePointage();
 		this.idBaseHoraireAbsence = fichePoste.getIdBaseHoraireAbsence();

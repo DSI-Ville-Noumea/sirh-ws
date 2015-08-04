@@ -246,7 +246,7 @@ public class FichePosteRepository implements IFichePosteRepository {
 	@Override
 	public List<PrimePointageFP> listerPrimePointageFP(Integer idFichePoste) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select fp from PrimePointageFP fp where fp.idFichePoste = :idFichePoste ");
+		sb.append("select fp from PrimePointageFP fp where fp.fichePoste.idFichePoste = :idFichePoste ");
 
 		TypedQuery<PrimePointageFP> query = sirhEntityManager.createQuery(sb.toString(), PrimePointageFP.class);
 		query.setParameter("idFichePoste", idFichePoste);
