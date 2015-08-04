@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
@@ -266,6 +267,23 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		List<RegIndemFP> res = query.getResultList();
 
+		return res;
+	}
+
+	@Override
+	public Sppost chercherSppost(Integer poanne, Integer ponuor) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from Sppost fp where fp.id.poanne = :poanne and fp.id.ponuor = :ponuor ");
+
+		TypedQuery<Sppost> query = sirhEntityManager.createQuery(sb.toString(), Sppost.class);
+		query.setParameter("poanne", poanne);
+		query.setParameter("ponuor", ponuor);
+		Sppost res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
 		return res;
 	}
 }

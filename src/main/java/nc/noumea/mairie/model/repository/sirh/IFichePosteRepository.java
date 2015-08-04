@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
@@ -48,4 +49,6 @@ public interface IFichePosteRepository {
 	List<PrimePointageFP> listerPrimePointageFP(Integer idFichePoste);
 
 	List<RegIndemFP> listerRegIndemFPFPAvecFP(Integer idFichePoste);
+
+	Sppost chercherSppost(Integer poanne, Integer ponuor);
 }

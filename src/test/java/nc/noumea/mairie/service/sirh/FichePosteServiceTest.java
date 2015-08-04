@@ -828,8 +828,8 @@ public class FichePosteServiceTest {
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
 		assertEquals("La FDP id 1 est supprimée.", result.getInfos().get(0));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(ActiviteFP.class));
-		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
 }

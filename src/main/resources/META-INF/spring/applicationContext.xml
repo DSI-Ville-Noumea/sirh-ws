@@ -49,7 +49,7 @@
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
 		<property name="entityManagerFactory" ref="sirhEntityManagerFactory" />
-		<qualifier value="SIRHTransactionManager"/>
+		<qualifier value="sirhTransactionManager"/>
 	</bean>
 	<tx:annotation-driven mode="aspectj"
 		transaction-manager="sirhTransactionManager" />

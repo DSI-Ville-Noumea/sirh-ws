@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FichePosteService implements IFichePosteService {
@@ -549,6 +550,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
+	@Transactional(value = "sirhTransactionManager")
 	public ReturnMessageDto deleteFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
@@ -642,10 +644,14 @@ public class FichePosteService implements IFichePosteService {
 
 		// on supprime enfin la FDP
 		fichePosteDao.removeEntity(fichePoste);
+
 		// aussi de SPPOST
-		Sppost posteAS400 = new Sppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(fichePoste.getNumFP()
-				.substring(5, histo.getNumFp().length())));
-		fichePosteDao.removeEntity(posteAS400);
+		Sppost posteAS400 = fichePosteDao.chercherSppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(
+				fichePoste.getNumFP().substring(5, histo.getNumFp().length())));
+		if (posteAS400 != null) {
+			fichePosteDao.removeEntity(posteAS400);
+		}
+
 		// historisation
 		histo.setDateHisto(new Date());
 		histo.setUserHisto(login);

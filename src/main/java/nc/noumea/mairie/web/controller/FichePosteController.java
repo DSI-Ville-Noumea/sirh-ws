@@ -429,7 +429,6 @@ public class FichePosteController {
 	 */
 	@RequestMapping(value = "/deleteFichePosteByIdFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
-	@Transactional(readOnly = true)
 	public ResponseEntity<String> deleteFichePosteByIdFichePoste(
 			@RequestParam(value = "idFichePoste", required = true) Integer idFichePoste,
 			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
