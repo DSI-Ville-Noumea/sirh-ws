@@ -58,6 +58,7 @@ public class ActionFdpJob {
 		this.idAgent = idAgent;
 		this.typeAction = typeAction;
 		this.idNewServiceAds = idNewEntite;
+		this.dateSubmission = new Date();
 	}
 
 	public Integer getIdActionFdpJob() {
