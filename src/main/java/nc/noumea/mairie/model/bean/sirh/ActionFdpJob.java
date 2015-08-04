@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
@@ -22,6 +24,7 @@ public class ActionFdpJob {
 
 	@Id
 	@Column(name = "ID_ACTION_FDP_JOB")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idActionFdpJob;
 
 	@Column(name = "ID_AGENT")
