@@ -27,6 +27,8 @@ public interface IFichePosteRepository {
 
 	void removeEntity(Object obj);
 
+	void flush();
+
 	FichePoste chercherFichePoste(Integer idFichePoste);
 
 	List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(List<Integer> idEntiteEnfant);

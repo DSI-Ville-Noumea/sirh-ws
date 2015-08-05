@@ -422,6 +422,8 @@ public class FichePosteController {
 	 * Utile à JOBS lors de la suppression d'une entité, car il faut supprimer
 	 * les FDP associées
 	 * 
+	 * Utile à SIRH lors de la suppression d'une FDP
+	 * 
 	 * @param idFichePoste
 	 * @param idAgent
 	 * @return

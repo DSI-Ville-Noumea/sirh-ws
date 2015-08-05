@@ -582,9 +582,9 @@ public class FichePosteService implements IFichePosteService {
 		// on supprime la FDP
 		try {
 			supprimerFDP(fichePoste, user.getsAMAccountName());
-			result.getInfos().add("La FDP id " + idFichePoste + " est supprimée.");
+			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est supprimée.");
 		} catch (Exception e) {
-			result.getErrors().add("La FDP id " + idFichePoste + " n'a pu être suprimée.");
+			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être suprimée.");
 		}
 
 		return result;
@@ -642,6 +642,10 @@ public class FichePosteService implements IFichePosteService {
 			fichePosteDao.removeEntity(lien);
 		}
 
+		// on actualise la FDP suite à la suppression des liens
+		fichePosteDao.flush();
+
+		fichePoste = fichePosteDao.chercherFichePoste(fichePoste.getIdFichePoste());
 		// on supprime enfin la FDP
 		fichePosteDao.removeEntity(fichePoste);
 
@@ -657,6 +661,7 @@ public class FichePosteService implements IFichePosteService {
 		histo.setUserHisto(login);
 		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
 		fichePosteDao.persisEntity(histo);
+		fichePosteDao.flush();
 
 	}
 }

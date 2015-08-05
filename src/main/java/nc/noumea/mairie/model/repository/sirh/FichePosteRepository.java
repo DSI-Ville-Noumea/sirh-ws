@@ -286,4 +286,10 @@ public class FichePosteRepository implements IFichePosteRepository {
 		}
 		return res;
 	}
+
+	@Override
+	public void flush() {
+		sirhEntityManager.flush();
+		
+	}
 }
