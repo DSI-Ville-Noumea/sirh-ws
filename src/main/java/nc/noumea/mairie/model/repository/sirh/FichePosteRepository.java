@@ -79,11 +79,16 @@ public class FichePosteRepository implements IFichePosteRepository {
 	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
 			List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select fp from FichePoste fp " + "left join fetch fp.statutFP statut "
-				+ "left join fetch fp.titrePoste titre " + "left join fetch fp.reglementaire reg "
-				+ "left join fetch fp.gradePoste gradePoste " + "left join fetch gradePoste.barem "
-				+ "left join fetch gradePoste.classe " + "left join fetch gradePoste.echelon "
-				+ "left join fetch gradePoste.gradeGenerique " + "where fp.idServiceADS in :listIdsServiceADS ");
+		sb.append("select fp from FichePoste fp ");
+		sb.append("left join fetch fp.statutFP statut ");
+		sb.append("left join fetch fp.titrePoste titre ");
+		sb.append("left join fetch fp.reglementaire reg ");
+		sb.append("left join fetch fp.gradePoste gradePoste ");
+		sb.append("left join fetch gradePoste.barem ");
+		sb.append("left join fetch gradePoste.classe ");
+		sb.append("left join fetch gradePoste.echelon ");
+		sb.append("left join fetch gradePoste.gradeGenerique ");
+		sb.append("where fp.idServiceADS in :listIdsServiceADS ");
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
 			sb.append(" and fp.statutFP.idStatutFp in (:listStatut) ");
 		}
@@ -290,6 +295,6 @@ public class FichePosteRepository implements IFichePosteRepository {
 	@Override
 	public void flush() {
 		sirhEntityManager.flush();
-		
+
 	}
 }
