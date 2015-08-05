@@ -352,8 +352,10 @@ public class FichePosteDto {
 								.toLowerCase() + " (" + agt.getAgent().getNomatr().toString() + ")";
 			}
 		}
-
-		if (null != fichePoste.getGradePoste()) {
+		
+		if (null != fichePoste.getGradePoste()
+				&& null != fichePoste.getGradePoste().getGradeGenerique()
+				&& null != fichePoste.getGradePoste().getGradeGenerique().getCdcadr()) {
 			this.categorie = fichePoste.getGradePoste().getGradeGenerique().getCdcadr().trim();
 		}
 	}
