@@ -696,37 +696,37 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 
-		// on duplique la FDP
-		try {
-			Integer numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
-			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
-		} catch (Exception e) {
-			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
-		}
+//		// on duplique la FDP
+//		try {
+//			Integer numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
+//			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
+//		} catch (Exception e) {
+//			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
+//		}
 
 		return result;
 	}
 
-	private Integer dupliquerFDP(FichePoste fichePoste, Integer idEntite, String getsAMAccountName) {
-
-		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
-		fichePDupliquee.setIdFichePoste(null);
-		fichePDupliquee.setNumFP(null);
-		// on positionne l'année sur l'année cours
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		Integer annee = cal.get(Calendar.YEAR);
-		fichePDupliquee.setAnnee(annee);
-		// on genere le numero de la FDP
-		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
-
-		// on crée la FDP en base
-		// aussi dans SPPOST
-		// on historise
-		// on crée les liens
-
-		//TODO en attentye de reponse #17455
-	}
+//	private Integer dupliquerFDP(FichePoste fichePoste, Integer idEntite, String getsAMAccountName) {
+//
+//		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
+//		fichePDupliquee.setIdFichePoste(null);
+//		fichePDupliquee.setNumFP(null);
+//		// on positionne l'année sur l'année cours
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(new Date());
+//		Integer annee = cal.get(Calendar.YEAR);
+//		fichePDupliquee.setAnnee(annee);
+//		// on genere le numero de la FDP
+//		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
+//
+//		// on crée la FDP en base
+//		// aussi dans SPPOST
+//		// on historise
+//		// on crée les liens
+//
+//		// TODO en attentye de reponse #17455
+//	}
 
 	private String createFichePosteNumber(Integer annee) {
 		// RG_PE_FP_C01
