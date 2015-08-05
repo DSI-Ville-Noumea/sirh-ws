@@ -462,4 +462,9 @@ public class FichePoste {
 	public void setDateDebAppliServ(Date dateDebAppliServ) {
 		this.dateDebAppliServ = dateDebAppliServ;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

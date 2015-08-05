@@ -297,4 +297,20 @@ public class FichePosteRepository implements IFichePosteRepository {
 		sirhEntityManager.flush();
 
 	}
+
+	@Override
+	public FichePoste chercherDerniereFichePosteByYear(Integer annee) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FichePoste fp where fp.annee = :annee order by fp.idFichePoste desc ");
+
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
+		query.setParameter("annee", annee);
+		FichePoste res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
 }

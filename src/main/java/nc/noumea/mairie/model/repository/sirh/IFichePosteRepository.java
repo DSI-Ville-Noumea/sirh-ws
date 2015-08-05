@@ -53,4 +53,6 @@ public interface IFichePosteRepository {
 	List<RegIndemFP> listerRegIndemFPFPAvecFP(Integer idFichePoste);
 
 	Sppost chercherSppost(Integer poanne, Integer ponuor);
+
+	FichePoste chercherDerniereFichePosteByYear(Integer annee);
 }

@@ -2,6 +2,7 @@ package nc.noumea.mairie.service.sirh;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Sppost;
+import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
@@ -663,5 +665,82 @@ public class FichePosteService implements IFichePosteService {
 		fichePosteDao.persisEntity(histo);
 		fichePosteDao.flush();
 
+	}
+
+	@Override
+	public ReturnMessageDto dupliqueFichePosteByIdFichePoste(Integer idFichePoste, Integer idEntite, Integer idAgent) {
+
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
+		// on verifie que la FDP existe
+		if (fichePoste == null || fichePoste.getIdFichePoste() == null) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
+			return result;
+		}
+		// on verifie que la FDP est bien "validée"
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("2")) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'validée'.");
+			return result;
+		}
+		// on verifie que l'entite est bien "prévision"
+		EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(idEntite, new ArrayList<EntiteDto>());
+		if (!entite.getIdStatut().toString().equals(String.valueOf(StatutEntiteEnum.PREVISION.getIdRefStatutEntite()))) {
+			result.getErrors().add("L'entite id " + idEntite + " n'est pas en statut 'prévision'.");
+			return result;
+		}
+		// on cherche le login de l'agent qui fait l'action
+		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
+		if (user == null || user.getsAMAccountName() == null) {
+			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
+			return result;
+		}
+
+		// on duplique la FDP
+		try {
+			Integer numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
+			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
+		} catch (Exception e) {
+			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
+		}
+
+		return result;
+	}
+
+	private Integer dupliquerFDP(FichePoste fichePoste, Integer idEntite, String getsAMAccountName) {
+
+		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
+		fichePDupliquee.setIdFichePoste(null);
+		fichePDupliquee.setNumFP(null);
+		// on positionne l'année sur l'année cours
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		Integer annee = cal.get(Calendar.YEAR);
+		fichePDupliquee.setAnnee(annee);
+		// on genere le numero de la FDP
+		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
+
+		// on crée la FDP en base
+		// aussi dans SPPOST
+		// on historise
+		// on crée les liens
+
+		//TODO en attentye de reponse #17455
+	}
+
+	private String createFichePosteNumber(Integer annee) {
+		// RG_PE_FP_C01
+		FichePoste derniereFP = null;
+		try {
+			derniereFP = fichePosteDao.chercherDerniereFichePosteByYear(annee);
+		} catch (Exception e) {
+
+		}
+
+		if (derniereFP != null && derniereFP.getIdFichePoste() != null) {
+			return (annee + "/" + String.valueOf(Integer.parseInt(derniereFP.getNumFP().substring(5)) + 1));
+		} else {
+			return (annee + "/" + String.valueOf(1));
+		}
 	}
 }

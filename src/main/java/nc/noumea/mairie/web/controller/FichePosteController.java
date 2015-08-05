@@ -445,4 +445,36 @@ public class FichePosteController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+
+	/**
+	 * Utile à JOBS lors de la duplication d'une entité, car il faut dupliquer
+	 * les FDP associées sur la nouvelle entité
+	 * 
+	 * Utile à SIRH lors de la duplication d'une FDP
+	 * 
+	 * @param idFichePoste
+	 * @param idAgent
+	 * @param idEntite
+	 *            : id de la nouvelle entite
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/dupliqueFichePosteByIdFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> dupliqueFichePosteByIdFichePoste(
+			@RequestParam(value = "idFichePoste", required = true) Integer idFichePoste,
+			@RequestParam(value = "idEntite", required = true) Integer idEntite,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.dupliqueFichePosteByIdFichePoste(idFichePoste, idEntite,
+				new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }
