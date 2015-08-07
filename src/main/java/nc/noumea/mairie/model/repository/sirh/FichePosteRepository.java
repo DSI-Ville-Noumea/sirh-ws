@@ -11,15 +11,22 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Sppost;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.AvantageNature;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
+import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
+import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
@@ -306,6 +313,135 @@ public class FichePosteRepository implements IFichePosteRepository {
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("annee", annee);
 		FichePoste res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public FeFp chercherFEFPAvecFP(Integer idFichePoste, Integer isPrimaire) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FeFp fp where fp.id.idFichePoste = :idFichePoste and fp.fePrimaire = :fePrimaire ");
+
+		TypedQuery<FeFp> query = sirhEntityManager.createQuery(sb.toString(), FeFp.class);
+		query.setParameter("idFichePoste", idFichePoste);
+		query.setParameter("fePrimaire", isPrimaire);
+		FeFp res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public FicheEmploi chercherFicheEmploi(Integer idFicheEmploi) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FicheEmploi fp where fp.idFicheEmploi = :idFicheEmploi ");
+
+		TypedQuery<FicheEmploi> query = sirhEntityManager.createQuery(sb.toString(), FicheEmploi.class);
+		query.setParameter("idFicheEmploi", idFicheEmploi);
+		FicheEmploi res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public NiveauEtude chercherNiveauEtude(Integer idNiveauEtude) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from NiveauEtude fp where fp.idNiveauEtude = :idNiveauEtude ");
+
+		TypedQuery<NiveauEtude> query = sirhEntityManager.createQuery(sb.toString(), NiveauEtude.class);
+		query.setParameter("idNiveauEtude", idNiveauEtude);
+		NiveauEtude res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public Activite chercherActivite(Integer idActivite) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from Activite fp where fp.idActivite = :idActivite ");
+
+		TypedQuery<Activite> query = sirhEntityManager.createQuery(sb.toString(), Activite.class);
+		query.setParameter("idActivite", idActivite);
+		Activite res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public Competence chercherCompetence(Integer idCompetence) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from Competence fp where fp.idCompetence = :idCompetence ");
+
+		TypedQuery<Competence> query = sirhEntityManager.createQuery(sb.toString(), Competence.class);
+		query.setParameter("idCompetence", idCompetence);
+		Competence res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public AvantageNature chercherAvantageNature(Integer idAvantage) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from AvantageNature fp where fp.idAvantage = :idAvantage ");
+
+		TypedQuery<AvantageNature> query = sirhEntityManager.createQuery(sb.toString(), AvantageNature.class);
+		query.setParameter("idAvantage", idAvantage);
+		AvantageNature res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public Delegation chercherDelegation(Integer idDelegation) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from Delegation fp where fp.idDelegation = :idDelegation ");
+
+		TypedQuery<Delegation> query = sirhEntityManager.createQuery(sb.toString(), Delegation.class);
+		query.setParameter("idDelegation", idDelegation);
+		Delegation res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public RegimeIndemnitaire chercherRegimeIndemnitaire(Integer idRegime) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from RegimeIndemnitaire fp where fp.idRegimeIndemnitaire = :idRegimeIndemnitaire ");
+
+		TypedQuery<RegimeIndemnitaire> query = sirhEntityManager.createQuery(sb.toString(), RegimeIndemnitaire.class);
+		query.setParameter("idRegimeIndemnitaire", idRegime);
+		RegimeIndemnitaire res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {

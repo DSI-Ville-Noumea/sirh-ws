@@ -5,15 +5,22 @@ import java.util.Hashtable;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Sppost;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.AvantageNature;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
+import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
+import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
@@ -55,4 +62,20 @@ public interface IFichePosteRepository {
 	Sppost chercherSppost(Integer poanne, Integer ponuor);
 
 	FichePoste chercherDerniereFichePosteByYear(Integer annee);
+
+	FeFp chercherFEFPAvecFP(Integer idFichePoste, Integer isPrimaire);
+
+	FicheEmploi chercherFicheEmploi(Integer idFicheEmploi);
+
+	NiveauEtude chercherNiveauEtude(Integer idNiveauEtude);
+
+	Activite chercherActivite(Integer idActivite);
+
+	Competence chercherCompetence(Integer idCompetence);
+
+	AvantageNature chercherAvantageNature(Integer idAvantage);
+
+	Delegation chercherDelegation(Integer idDelegation);
+
+	RegimeIndemnitaire chercherRegimeIndemnitaire(Integer idRegime);
 }

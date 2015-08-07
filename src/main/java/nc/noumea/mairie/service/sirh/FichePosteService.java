@@ -16,18 +16,26 @@ import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.AvantageNature;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
+import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
+import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
+import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
@@ -669,6 +677,7 @@ public class FichePosteService implements IFichePosteService {
 
 	@Override
 	public ReturnMessageDto dupliqueFichePosteByIdFichePoste(Integer idFichePoste, Integer idEntite, Integer idAgent) {
+		// #16242 : RG dupliaction et #17455
 
 		ReturnMessageDto result = new ReturnMessageDto();
 
@@ -696,37 +705,122 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 
-//		// on duplique la FDP
-//		try {
-//			Integer numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
-//			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
-//		} catch (Exception e) {
-//			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
-//		}
+		// on duplique la FDP
+		try {
+			String numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
+			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
+		} catch (Exception e) {
+			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
+		}
 
 		return result;
 	}
 
-//	private Integer dupliquerFDP(FichePoste fichePoste, Integer idEntite, String getsAMAccountName) {
-//
-//		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
-//		fichePDupliquee.setIdFichePoste(null);
-//		fichePDupliquee.setNumFP(null);
-//		// on positionne l'année sur l'année cours
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(new Date());
-//		Integer annee = cal.get(Calendar.YEAR);
-//		fichePDupliquee.setAnnee(annee);
-//		// on genere le numero de la FDP
-//		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
-//
-//		// on crée la FDP en base
-//		// aussi dans SPPOST
-//		// on historise
-//		// on crée les liens
-//
-//		// TODO en attentye de reponse #17455
-//	}
+	private String dupliquerFDP(FichePoste fichePoste, Integer idEntite, String login)
+			throws CloneNotSupportedException {
+
+		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
+		fichePDupliquee.setIdFichePoste(null);
+		fichePDupliquee.setNumFP(null);
+		fichePDupliquee.setSuperieurHierarchique(null);
+		fichePDupliquee.setRemplace(null);
+		fichePDupliquee.setAgent(null);
+		// on positionne l'année sur l'année cours
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		Integer annee = cal.get(Calendar.YEAR);
+		fichePDupliquee.setAnnee(annee);
+		// on genere le numero de la FDP
+		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
+
+		// on crée les liens
+		FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
+		if (lienPrimaire != null) {
+			FicheEmploi fePrimaire = fichePosteDao.chercherFicheEmploi(lienPrimaire.getId().getIdFicheEmploi());
+			if (fePrimaire != null)
+				fichePDupliquee.getFicheEmploiPrimaire().add(fePrimaire);
+		}
+		FeFp lienSecondaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 0);
+		if (lienSecondaire != null) {
+			FicheEmploi feSecondaire = fichePosteDao.chercherFicheEmploi(lienSecondaire.getId().getIdFicheEmploi());
+			if (feSecondaire != null)
+				fichePDupliquee.getFicheEmploiSecondaire().add(feSecondaire);
+		}
+
+		ArrayList<NiveauEtudeFP> niveauFPExistant = (ArrayList<NiveauEtudeFP>) fichePosteDao
+				.listerNiveauEtudeFPAvecFP(fichePoste.getIdFichePoste());
+		if (niveauFPExistant.size() > 0) {
+			NiveauEtude niveau = fichePosteDao.chercherNiveauEtude(niveauFPExistant.get(0).getNiveauEtudeFPPK()
+					.getIdNiveauEtude());
+			if (niveau != null)
+				fichePDupliquee.setNiveauEtude(niveau);
+		}
+
+		ArrayList<ActiviteFP> activiteFPExistant = (ArrayList<ActiviteFP>) fichePosteDao
+				.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
+		for (ActiviteFP lien : activiteFPExistant) {
+			Activite acti = fichePosteDao.chercherActivite(lien.getActiviteFPPK().getIdActivite());
+			if (acti != null)
+				fichePDupliquee.getActivites().add(acti);
+		}
+
+		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao
+				.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
+		for (CompetenceFP lien : competencesFPExistant) {
+			Competence comp = fichePosteDao.chercherCompetence(lien.getCompetenceFPPK().getIdCompetence());
+			if (comp != null)
+				fichePDupliquee.getCompetencesFDP().add(comp);
+		}
+
+		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao
+				.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
+		for (AvantageNatureFP lien : avantagesFPExistant) {
+			AvantageNature avNat = fichePosteDao.chercherAvantageNature(lien.getAvantageNaturePK().getIdAvantage());
+			if (avNat != null)
+				fichePDupliquee.getAvantagesNature().add(avNat);
+		}
+
+		ArrayList<DelegationFP> delegationFPExistant = (ArrayList<DelegationFP>) fichePosteDao
+				.listerDelegationFPAvecFP(fichePoste.getIdFichePoste());
+		for (DelegationFP lien : delegationFPExistant) {
+			Delegation del = fichePosteDao.chercherDelegation(lien.getDelegationFPPK().getIdDelegation());
+			if (del != null)
+				fichePDupliquee.getDelegations().add(del);
+		}
+
+		ArrayList<PrimePointageFP> primesPointagesFPExistant = (ArrayList<PrimePointageFP>) fichePosteDao
+				.listerPrimePointageFP(fichePoste.getIdFichePoste());
+		for (PrimePointageFP lien : primesPointagesFPExistant) {
+			PrimePointageFPPK fk = new PrimePointageFPPK();
+			fk.setNumRubrique(lien.getPrimePointageFPPK().getNumRubrique());
+			PrimePointageFP prime = new PrimePointageFP();
+			prime.setFichePoste(fichePDupliquee);
+			prime.setPrimePointageFPPK(fk);
+			fichePosteDao.persisEntity(prime);
+		}
+
+		ArrayList<RegIndemFP> regimesFPExistant = (ArrayList<RegIndemFP>) fichePosteDao
+				.listerRegIndemFPFPAvecFP(fichePoste.getIdFichePoste());
+		for (RegIndemFP lien : regimesFPExistant) {
+			RegimeIndemnitaire reg = fichePosteDao.chercherRegimeIndemnitaire(lien.getRegIndemFPPK().getIdRegime());
+			if (reg != null)
+				fichePDupliquee.getRegimesIndemnitaires().add(reg);
+		}
+
+		// on crée la FDP en base
+		fichePosteDao.persisEntity(fichePDupliquee);
+		// aussi dans SPPOST
+		Sppost sppostDuplique = new Sppost(fichePDupliquee);
+		fichePosteDao.persisEntity(sppostDuplique);
+		// on historise
+		HistoFichePoste histo = new HistoFichePoste(fichePDupliquee);
+		histo.setDateHisto(new Date());
+		histo.setUserHisto(login);
+		histo.setTypeHisto(EnumTypeHisto.CREATION.getValue());
+		fichePosteDao.persisEntity(histo);
+
+		return fichePDupliquee.getNumFP();
+	}
 
 	private String createFichePosteNumber(Integer annee) {
 		// RG_PE_FP_C01

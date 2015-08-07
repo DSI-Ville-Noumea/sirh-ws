@@ -36,7 +36,7 @@ import org.hibernate.annotations.WhereJoinTable;
 @Entity
 @Table(name = "FICHE_POSTE")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
-public class FichePoste {
+public class FichePoste implements Cloneable {
 
 	@Id
 	@Column(name = "ID_FICHE_POSTE")
