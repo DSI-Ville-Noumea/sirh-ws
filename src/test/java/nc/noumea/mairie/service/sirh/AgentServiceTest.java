@@ -235,7 +235,6 @@ public class AgentServiceTest {
 		ag1.setTitre("0");
 
 		FichePoste fp1 = new FichePoste();
-		fp1.setIdFichePoste(1);
 		fp1.setAnnee(2014);
 		fp1.setIdServiceADS(1);
 		Affectation aff1 = new Affectation();

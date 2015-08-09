@@ -11,6 +11,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -36,12 +38,14 @@ import org.hibernate.annotations.WhereJoinTable;
 @Entity
 @Table(name = "FICHE_POSTE")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
-public class FichePoste implements Cloneable {
+public class FichePoste {
 
 	@Id
 	@Column(name = "ID_FICHE_POSTE")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idFichePoste;
 
+	@NotNull
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
 	private TitrePoste titrePoste;
@@ -84,11 +88,13 @@ public class FichePoste implements Cloneable {
 	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
 	private StatutFichePoste statutFP;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
 	private Spbhor budgete;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
 	private Spbhor reglementaire;
 
@@ -461,10 +467,5 @@ public class FichePoste implements Cloneable {
 
 	public void setDateDebAppliServ(Date dateDebAppliServ) {
 		this.dateDebAppliServ = dateDebAppliServ;
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
 	}
 }

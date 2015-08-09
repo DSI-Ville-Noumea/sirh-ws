@@ -10,4 +10,6 @@ public interface IAdsService {
 
 	String getSigleEntityInEntiteDtoTreeByIdEntite(EntiteDto entite,
 			Integer idServiceAds);
+
+	EntiteDto getInfoSiservByIdEntite(Integer idEntite);
 }

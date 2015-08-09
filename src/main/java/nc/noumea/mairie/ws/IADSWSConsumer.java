@@ -22,4 +22,6 @@ public interface IADSWSConsumer {
 	List<ReferenceDto> getListTypeEntite();
 
 	EntiteDto getParentOfEntiteByTypeEntite(Integer idEntite, Integer idTypeEntite);
+
+	EntiteDto getInfoSiservByIdEntite(Integer idEntite);
 }

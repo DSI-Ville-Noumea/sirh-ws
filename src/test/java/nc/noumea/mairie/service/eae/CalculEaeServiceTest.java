@@ -107,7 +107,6 @@ public class CalculEaeServiceTest {
 		fichePoste.setReglementaire(reglementaire);
 		fichePoste.setGradePoste(gradePoste);
 		fichePoste.setLieuPoste(lieuPoste);
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("NumFP");
 		fichePoste.setNiveauEtude(niveauEtude);
@@ -121,7 +120,6 @@ public class CalculEaeServiceTest {
 		fichePosteSecondaire.setReglementaire(reglementaire);
 		fichePosteSecondaire.setGradePoste(gradePoste);
 		fichePosteSecondaire.setLieuPoste(lieuPoste);
-		fichePosteSecondaire.setIdFichePoste(3);
 		fichePosteSecondaire.setMissions("missions2");
 		fichePosteSecondaire.setNumFP("NumFP2");
 		fichePosteSecondaire.setNiveauEtude(niveauEtude);
@@ -228,7 +226,6 @@ public class CalculEaeServiceTest {
 
 		assertEquals(result.getCarriereActive().getCodeCategorie().intValue(), 1);
 
-		assertEquals(result.getFichePostePrincipale().getIdFichePoste().intValue(), 2);
 		assertEquals(result.getFichePostePrincipale().getNumero(), "NumFP");
 		assertEquals(result.getFichePostePrincipale().getIdAgent().intValue(), 9005138);
 		assertEquals(result.getFichePostePrincipale().getDirection(), "direction");
@@ -244,7 +241,6 @@ public class CalculEaeServiceTest {
 		assertEquals(result.getFichePostePrincipale().getGradePoste(), "gradeInitial");
 		assertEquals(result.getFichePostePrincipale().getMissions(), "missions");
 
-		assertEquals(result.getFichePosteSecondaire().getIdFichePoste().intValue(), 3);
 		assertEquals(result.getFichePosteSecondaire().getNumero(), "NumFP2");
 		assertEquals(result.getFichePosteSecondaire().getIdAgent().intValue(), 9005138);
 		assertEquals(result.getFichePosteSecondaire().getDirection(), "direction");
@@ -804,7 +800,6 @@ public class CalculEaeServiceTest {
 		superieurHierarchique.setLieuPoste(lieuPoste);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setSuperieurHierarchique(superieurHierarchique);
 		fichePoste.setIdServiceADS(2);
 		fichePoste.setTitrePoste(titrePoste);
@@ -813,7 +808,6 @@ public class CalculEaeServiceTest {
 		fichePoste.setReglementaire(reglementaire);
 		fichePoste.setGradePoste(gradePoste);
 		fichePoste.setLieuPoste(lieuPoste);
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("NumFP");
 		fichePoste.setNiveauEtude(niveauEtude);
@@ -835,7 +829,7 @@ public class CalculEaeServiceTest {
 		listAff.add(aff);
 
 		IFichePosteRepository fichePosteRepository = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteRepository.chercherFichePoste(2)).thenReturn(fichePoste);
+		Mockito.when(fichePosteRepository.chercherFichePoste(Mockito.anyInt())).thenReturn(fichePoste);
 
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
 		Mockito.when(affectationRepository.getListeAffectationsAgentOrderByDateAsc(idAgent)).thenReturn(listAff);

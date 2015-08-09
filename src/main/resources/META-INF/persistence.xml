@@ -100,6 +100,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.DelegationFP</class>
 		<class>nc.noumea.mairie.model.bean.sirh.RegIndemFP</class>
 		<class>nc.noumea.mairie.model.bean.Sppost</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NFA</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

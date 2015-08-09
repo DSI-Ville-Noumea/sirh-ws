@@ -61,7 +61,6 @@ public class FichePosteRepositoryTest {
 	public void getListFichePosteByIdServiceADSAndStatutFDP_NoStatut_returnResults() {
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(1);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -76,7 +75,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(statutFP);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -87,7 +85,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(fichePoste);
 
 		FichePoste fichePoste3 = new FichePoste();
-		fichePoste3.setIdFichePoste(13);
 		fichePoste3.setAnnee(2010);
 		fichePoste3.setMissions("missions");
 		fichePoste3.setNumFP("numFP");
@@ -105,6 +102,8 @@ public class FichePosteRepositoryTest {
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
 		assertEquals(fichePoste3.getIdFichePoste(), result.get(1).getIdFichePoste());
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -112,7 +111,6 @@ public class FichePosteRepositoryTest {
 	public void getListFichePosteByIdServiceADSAndStatutFDP_WithStatut_emptyList() {
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(1);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -127,7 +125,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(statutFP);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -142,6 +139,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -149,7 +148,6 @@ public class FichePosteRepositoryTest {
 	public void getListFichePosteByIdServiceADSAndStatutFDP_WithStatut_returnResult() {
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(1);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -164,7 +162,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(statutFP);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -181,6 +178,8 @@ public class FichePosteRepositoryTest {
 		assertEquals(1, result.size());
 		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getIdFichePoste());
 		assertEquals(statutFP.getLibStatut(), result.get(0).getStatutFP().getLibStatut());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -191,6 +190,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -198,7 +199,6 @@ public class FichePosteRepositoryTest {
 	public void chercherFichePoste_returnResult() {
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(1);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -213,7 +213,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(statutFP);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -223,10 +222,12 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		FichePoste result = repository.chercherFichePoste(1);
+		FichePoste result = repository.chercherFichePoste(fichePoste2.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(fichePoste2.getIdFichePoste(), result.getIdFichePoste());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -234,7 +235,6 @@ public class FichePosteRepositoryTest {
 	public void chercherFichePoste_returnNoResult() {
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(3);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -249,7 +249,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(statutFP);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -262,6 +261,8 @@ public class FichePosteRepositoryTest {
 		FichePoste result = repository.chercherFichePoste(1);
 
 		assertNull(result);
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -287,7 +288,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(titrePoste2);
 
 		FichePoste fichePoste3 = new FichePoste();
-		fichePoste3.setIdFichePoste(4);
 		fichePoste3.setAnnee(2010);
 		fichePoste3.setMissions("missions");
 		fichePoste3.setNumFP("numFP");
@@ -300,7 +300,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(fichePoste3);
 
 		FichePoste fichePoste2 = new FichePoste();
-		fichePoste2.setIdFichePoste(3);
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
 		fichePoste2.setNumFP("numFP");
@@ -313,7 +312,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(fichePoste2);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(2);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -336,6 +334,8 @@ public class FichePosteRepositoryTest {
 		assertEquals(new Double(0.75), result.get(1).getTauxETP());
 		assertEquals("LIB 2", result.get(1).getTitreFDP());
 		assertEquals(new Integer(1), result.get(1).getNbFDP());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -343,7 +343,6 @@ public class FichePosteRepositoryTest {
 	public void listerFEFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 		FicheEmploi ficheEmploi = new FicheEmploi();
 		ficheEmploi.setIdFicheEmploi(1);
@@ -357,10 +356,12 @@ public class FichePosteRepositoryTest {
 		lien2.setFePrimaire(0);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<FeFp> result = repository.listerFEFPAvecFP(1);
+		List<FeFp> result = repository.listerFEFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -371,14 +372,15 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void listerNiveauEtudeFPAvecFP_returnResults() {
 
-		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
+		FichePoste fichePoste = new FichePoste();		
 		sirhPersistenceUnit.persist(fichePoste);
 
 		NiveauEtude niveau1 = new NiveauEtude();
@@ -394,10 +396,12 @@ public class FichePosteRepositoryTest {
 		lien2.setNiveauEtudeFPPK(niveauEtudeFPPK1);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<NiveauEtudeFP> result = repository.listerNiveauEtudeFPAvecFP(1);
+		List<NiveauEtudeFP> result = repository.listerNiveauEtudeFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -408,6 +412,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -415,7 +421,6 @@ public class FichePosteRepositoryTest {
 	public void listerActiviteFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 		Activite niveau1 = new Activite();
 		niveau1.setIdActivite(1);
@@ -428,10 +433,12 @@ public class FichePosteRepositoryTest {
 		lien2.setActiviteFPPK(activiteFPPK);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<ActiviteFP> result = repository.listerActiviteFPAvecFP(1);
+		List<ActiviteFP> result = repository.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -442,6 +449,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -449,7 +458,6 @@ public class FichePosteRepositoryTest {
 	public void listerCompetenceFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 		Competence niveau1 = new Competence();
 		niveau1.setIdCompetence(1);
@@ -462,10 +470,12 @@ public class FichePosteRepositoryTest {
 		lien2.setCompetenceFPPK(competenceFPPK);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<CompetenceFP> result = repository.listerCompetenceFPAvecFP(1);
+		List<CompetenceFP> result = repository.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -476,6 +486,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -483,7 +495,6 @@ public class FichePosteRepositoryTest {
 	public void listerAvantageNatureFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 		AvantageNature niveau1 = new AvantageNature();
 		niveau1.setIdAvantage(1);
@@ -496,10 +507,12 @@ public class FichePosteRepositoryTest {
 		lien2.setAvantageNaturePK(avantageNaturePK);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<AvantageNatureFP> result = repository.listerAvantageNatureFPAvecFP(1);
+		List<AvantageNatureFP> result = repository.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -510,6 +523,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -517,7 +532,6 @@ public class FichePosteRepositoryTest {
 	public void listerDelegationFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 		Delegation niveau1 = new Delegation();
 		niveau1.setIdDelegation(1);
@@ -530,10 +544,12 @@ public class FichePosteRepositoryTest {
 		lien2.setDelegationFPPK(delegationFPPK);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<DelegationFP> result = repository.listerDelegationFPAvecFP(1);
+		List<DelegationFP> result = repository.listerDelegationFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -544,6 +560,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -551,7 +569,6 @@ public class FichePosteRepositoryTest {
 	public void listerPrimePointageFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		PrimePointageFPPK delegationFPPK = new PrimePointageFPPK();
@@ -561,10 +578,12 @@ public class FichePosteRepositoryTest {
 		lien2.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<PrimePointageFP> result = repository.listerPrimePointageFP(1);
+		List<PrimePointageFP> result = repository.listerPrimePointageFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -575,6 +594,8 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -586,7 +607,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(regime);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		sirhPersistenceUnit.persist(fichePoste);
 
 		RegIndemFPPK regIndemFPPK = new RegIndemFPPK();
@@ -596,10 +616,12 @@ public class FichePosteRepositoryTest {
 		lien2.setRegIndemFPPK(regIndemFPPK);
 		sirhPersistenceUnit.persist(lien2);
 
-		List<RegIndemFP> result = repository.listerRegIndemFPFPAvecFP(1);
+		List<RegIndemFP> result = repository.listerRegIndemFPFPAvecFP(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -610,5 +632,7 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 }

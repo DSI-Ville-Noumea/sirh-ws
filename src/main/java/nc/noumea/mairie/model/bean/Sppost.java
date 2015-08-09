@@ -135,6 +135,8 @@ public class Sppost {
 		this.poserp = "";
 		this.commen = "";
 		this.primaire = 0;
+		this.soanne = 0;
+		this.sonuor = 0;
 	}
 
 	public SppostId getId() {

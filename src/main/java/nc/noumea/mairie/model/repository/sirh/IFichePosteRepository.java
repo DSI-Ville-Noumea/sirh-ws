@@ -16,11 +16,13 @@ import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
@@ -78,4 +80,8 @@ public interface IFichePosteRepository {
 	Delegation chercherDelegation(Integer idDelegation);
 
 	RegimeIndemnitaire chercherRegimeIndemnitaire(Integer idRegime);
+
+	NFA chercherNFA(Integer idEntite);
+
+	StatutFichePoste chercherStatutFPByIdStatut(Integer idStatut);
 }

@@ -30,6 +30,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	private static final String sirhAdsGetEntiteUrl = "api/entite/";
 	private static final String sirhAdsGetEntiteWithWildrenUrl = "/withChildren";
 	private static final String sirhAdsGetEntiteByCodeServiceSISERVUrl = "api/entite/codeAs400/";
+	private static final String sirhAdsGetInfoSiservUrl = "api/entite/infoSiserv/";
 
 	@Override
 	public EntiteDto getEntiteByIdEntite(Integer idEntite) {
@@ -171,6 +172,27 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 
 		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteUrl + idEntite.toString()
 				+ sirhAdsGetEntiteWithWildrenUrl);
+
+		Map<String, String> parameters = new HashMap<String, String>();
+
+		ClientResponse res = createAndFireGetRequest(parameters, url);
+		try {
+			return readResponse(EntiteDto.class, res, url);
+		} catch (Exception e) {
+			logger.error("L'application ADS ne repond pas." + e.getMessage());
+		}
+
+		return null;
+	}
+
+	@Override
+	public EntiteDto getInfoSiservByIdEntite(Integer idEntite) {
+
+		if (null == idEntite) {
+			return null;
+		}
+
+		String url = String.format(adsWsBaseUrl + sirhAdsGetInfoSiservUrl + idEntite);
 
 		Map<String, String> parameters = new HashMap<String, String>();
 

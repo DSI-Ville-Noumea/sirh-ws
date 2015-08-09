@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -30,11 +31,13 @@ import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
@@ -566,7 +569,7 @@ public class FichePosteService implements IFichePosteService {
 
 		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
 		// on verifie que la FDP existe
-		if (fichePoste == null || fichePoste.getIdFichePoste() == null) {
+		if (fichePoste == null) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
 			return result;
 		}
@@ -676,6 +679,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
+	@Transactional(value = "sirhTransactionManager")
 	public ReturnMessageDto dupliqueFichePosteByIdFichePoste(Integer idFichePoste, Integer idEntite, Integer idAgent) {
 		// #16242 : RG dupliaction et #17455
 
@@ -683,7 +687,7 @@ public class FichePosteService implements IFichePosteService {
 
 		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
 		// on verifie que la FDP existe
-		if (fichePoste == null || fichePoste.getIdFichePoste() == null) {
+		if (fichePoste == null) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
 			return result;
 		}
@@ -707,7 +711,7 @@ public class FichePosteService implements IFichePosteService {
 
 		// on duplique la FDP
 		try {
-			String numNewFDP = dupliquerFDP(fichePoste, idEntite, user.getsAMAccountName());
+			String numNewFDP = dupliquerFDP(fichePoste, entite, user.getsAMAccountName());
 			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
 		} catch (Exception e) {
 			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
@@ -716,11 +720,13 @@ public class FichePosteService implements IFichePosteService {
 		return result;
 	}
 
-	private String dupliquerFDP(FichePoste fichePoste, Integer idEntite, String login)
+	private String dupliquerFDP(FichePoste fichePoste, EntiteDto entite, String login)
 			throws CloneNotSupportedException {
 
-		FichePoste fichePDupliquee = (FichePoste) fichePoste.clone();
+		FichePoste fichePDupliquee = cloneFDP(fichePoste);
 		fichePDupliquee.setIdFichePoste(null);
+		StatutFichePoste statutCreation = fichePosteDao.chercherStatutFPByIdStatut(1);
+		fichePDupliquee.setStatutFP(statutCreation);
 		fichePDupliquee.setNumFP(null);
 		fichePDupliquee.setSuperieurHierarchique(null);
 		fichePDupliquee.setRemplace(null);
@@ -732,6 +738,15 @@ public class FichePosteService implements IFichePosteService {
 		fichePDupliquee.setAnnee(annee);
 		// on genere le numero de la FDP
 		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
+		// on gere les infos liées à l'entité
+		fichePDupliquee.setDateDebAppliServ(entite.getDateDeliberationActif());
+		EntiteDto serv = adsService.getInfoSiservByIdEntite(entite.getIdEntite());
+		fichePDupliquee.setIdServi(serv == null || serv.getCodeServi() == null ? null : serv.getCodeServi());
+		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
+		// on cherche la NFA de l'entite
+		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
+		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
+		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
 		FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
@@ -809,6 +824,7 @@ public class FichePosteService implements IFichePosteService {
 
 		// on crée la FDP en base
 		fichePosteDao.persisEntity(fichePDupliquee);
+
 		// aussi dans SPPOST
 		Sppost sppostDuplique = new Sppost(fichePDupliquee);
 		fichePosteDao.persisEntity(sppostDuplique);
@@ -819,7 +835,59 @@ public class FichePosteService implements IFichePosteService {
 		histo.setTypeHisto(EnumTypeHisto.CREATION.getValue());
 		fichePosteDao.persisEntity(histo);
 
+		try {
+			fichePosteDao.flush();
+		} catch (Exception e) {
+			System.out.println("ici");
+		}
+
 		return fichePDupliquee.getNumFP();
+	}
+
+	private FichePoste cloneFDP(FichePoste fichePoste) {
+		FichePoste ficheClone = new FichePoste();
+
+		// on remet à vide les listes
+		ficheClone.setActivites(new HashSet<Activite>());
+		ficheClone.setAgent(new HashSet<Affectation>());
+		ficheClone.setNiveauEtude(null);
+		ficheClone.setPrimePointageFP(new HashSet<PrimePointageFP>());
+		ficheClone.setRegimesIndemnitaires(new HashSet<RegimeIndemnitaire>());
+		ficheClone.setCompetencesFDP(new HashSet<Competence>());
+		ficheClone.setAvantagesNature(new HashSet<AvantageNature>());
+		ficheClone.setDelegations(new HashSet<Delegation>());
+		ficheClone.setFicheEmploiPrimaire(new HashSet<FicheEmploi>());
+		ficheClone.setFicheEmploiSecondaire(new HashSet<FicheEmploi>());
+		ficheClone.setSuperieurHierarchique(null);
+		ficheClone.setRemplace(null);
+
+		// on ne remplit pas les infos liées au service
+		ficheClone.setDateDebAppliServ(null);
+		ficheClone.setIdServi(null);
+		ficheClone.setIdServiceADS(null);
+		ficheClone.setNfa(null);
+		ficheClone.setNumDeliberation(null);
+
+		// on renseigne les autres infos
+		ficheClone.setDateDebutValiditeFp(null);
+		ficheClone.setDateFinValiditeFp(null);
+		ficheClone.setIdFichePoste(null);
+		ficheClone.setAnnee(null);
+		ficheClone.setNumFP(null);
+		ficheClone.setStatutFP(null);
+		ficheClone.setBudget(fichePoste.getBudget());
+		ficheClone.setBudgete(fichePoste.getBudgete());
+		ficheClone.setGradePoste(fichePoste.getGradePoste());
+		ficheClone.setIdBaseHoraireAbsence(fichePoste.getIdBaseHoraireAbsence());
+		ficheClone.setIdBaseHorairePointage(fichePoste.getIdBaseHorairePointage());
+		ficheClone.setLieuPoste(fichePoste.getLieuPoste());
+		ficheClone.setMissions(fichePoste.getMissions());
+		ficheClone.setNatureCredit(fichePoste.getNatureCredit());
+		ficheClone.setOpi(fichePoste.getOpi());
+		ficheClone.setReglementaire(fichePoste.getReglementaire());
+		ficheClone.setTitrePoste(fichePoste.getTitrePoste());
+
+		return ficheClone;
 	}
 
 	private String createFichePosteNumber(Integer annee) {

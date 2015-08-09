@@ -239,7 +239,6 @@ public class FichePosteDtoTest {
 		comp6.setTypeCompetence(typeCompetenceComportement);
 
 		FichePoste fp = new FichePoste();
-		fp.setIdFichePoste(1234);
 		// fp.setService(service);
 		fp.setNumFP("2013/5");
 		fp.setTitrePoste(tp);

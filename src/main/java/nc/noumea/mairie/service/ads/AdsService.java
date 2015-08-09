@@ -11,14 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdsService implements IAdsService {
 
-
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
-	
+
 	@Override
-	public EntiteDto getEntiteByIdEntiteOptimise(Integer idEntite,
-			List<EntiteDto> listEntiteDtoExistant) {
-		
+	public EntiteDto getEntiteByIdEntiteOptimise(Integer idEntite, List<EntiteDto> listEntiteDtoExistant) {
+
 		if (null == idEntite) {
 			return null;
 		}
@@ -37,45 +35,45 @@ public class AdsService implements IAdsService {
 
 		return result;
 	}
-	
+
 	/**
-	 * Retourne le sigle d une entite par rapport a l ID Entite passe en parametre
-	 * dans un arbre d EntiteDto
+	 * Retourne le sigle d une entite par rapport a l ID Entite passe en
+	 * parametre dans un arbre d EntiteDto
 	 */
 	@Override
 	public String getSigleEntityInEntiteDtoTreeByIdEntite(EntiteDto entite, Integer idServiceAds) {
-		
+
 		String result = null;
-		
-		if(null != entite
-				&& null != idServiceAds
-				&& null != entite.getIdEntite()) {
-			if(entite.getIdEntite().equals(idServiceAds)) {
+
+		if (null != entite && null != idServiceAds && null != entite.getIdEntite()) {
+			if (entite.getIdEntite().equals(idServiceAds)) {
 				return entite.getSigle();
 			}
 			return getListIdsEntiteEnfants(entite, idServiceAds, result);
 		}
-		
+
 		return result;
 	}
-	
+
 	private String getListIdsEntiteEnfants(EntiteDto entite, Integer idServiceAds, String result) {
 
-		
 		if (null != entite && null != entite.getEnfants()) {
 			for (EntiteDto enfant : entite.getEnfants()) {
-				if(null != enfant
-						&& null != enfant.getIdEntite()
-						&& enfant.getIdEntite().equals(idServiceAds)) {
+				if (null != enfant && null != enfant.getIdEntite() && enfant.getIdEntite().equals(idServiceAds)) {
 					return enfant.getSigle();
 				}
 				result = getListIdsEntiteEnfants(enfant, idServiceAds, result);
-				if(null != result) {
+				if (null != result) {
 					return result;
 				}
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public EntiteDto getInfoSiservByIdEntite(Integer idEntite) {
+		return adsWSConsumer.getInfoSiservByIdEntite(idEntite);
 	}
 
 }

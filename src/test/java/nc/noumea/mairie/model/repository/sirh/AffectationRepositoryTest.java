@@ -51,7 +51,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -71,6 +70,9 @@ public class AffectationRepositoryTest {
 		Affectation result = repository.getAffectationActiveByAgent(9005138);
 
 		assertEquals(result.getIdAffectation().intValue(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	// @Test
@@ -90,7 +92,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -113,6 +114,9 @@ public class AffectationRepositoryTest {
 		Affectation result = repository.getAffectationActiveByAgent(9005138);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	// @Test
@@ -132,7 +136,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -152,6 +155,9 @@ public class AffectationRepositoryTest {
 		Affectation result = repository.getAffectationActiveByAgent(9005438);
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -171,7 +177,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -192,6 +197,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, 1);
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -211,7 +219,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -229,9 +236,12 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, 2);
+		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005138, fichePoste.getIdFichePoste());
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -251,7 +261,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -269,9 +278,12 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005130, 1);
+		List<Affectation> result = repository.getListeAffectationsAgentAvecService(9005130, fichePoste.getIdFichePoste());
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -291,7 +303,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -308,9 +319,12 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecFP(9005138, 1);
+		List<Affectation> result = repository.getListeAffectationsAgentAvecFP(9005138, fichePoste.getIdFichePoste());
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -330,7 +344,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -347,9 +360,12 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getListeAffectationsAgentAvecFP(9005118, 1);
+		List<Affectation> result = repository.getListeAffectationsAgentAvecFP(9005118, fichePoste.getIdFichePoste());
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -369,7 +385,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -389,6 +404,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentAvecFP(9005138, 2);
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -423,6 +441,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -456,6 +477,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -489,6 +513,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005142, dateDebut, dateFin);
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -523,6 +550,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -557,6 +587,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -591,6 +624,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -655,6 +691,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 3);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -719,6 +758,9 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListeAffectationsAgentByPeriode(9005138, dateDebut, dateFin);
 
 		assertEquals(result.size(), 3);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -738,7 +780,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -758,11 +799,14 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getAffectationByIdFichePoste(1);
+		List<Affectation> result = repository.getAffectationByIdFichePoste(5);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(fichePoste.getIdFichePoste(), result.get(0).getFichePoste().getIdFichePoste());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -782,7 +826,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -803,6 +846,9 @@ public class AffectationRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -822,7 +868,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -854,6 +899,9 @@ public class AffectationRepositoryTest {
 		assertEquals(result.size(), 2);
 		assertEquals(result.get(0).getIdAffectation(), a2.getIdAffectation());
 		assertEquals(result.get(1).getIdAffectation(), a1.getIdAffectation());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -873,7 +921,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -904,6 +951,9 @@ public class AffectationRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(result.getIdAffectation(), a2.getIdAffectation());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 
 	@Test
@@ -923,7 +973,6 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -944,5 +993,8 @@ public class AffectationRepositoryTest {
 		Affectation result = repository.chercherAffectationAgentAvecDateDebut(9005138,new DateTime(2010,01,01,0,0,0).toDate());
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 }

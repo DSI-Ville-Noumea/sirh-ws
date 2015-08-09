@@ -57,7 +57,6 @@ public class FichePosteServiceTest {
 	public void getFichePostePrimaireAgentAffectationEnCours_returnFichePoste() {
 		// Given
 		FichePoste fp = new FichePoste();
-		fp.setIdFichePoste(12);
 
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
 		listeFDP.add(fp);
@@ -143,7 +142,6 @@ public class FichePosteServiceTest {
 	public void getFichePosteSecondaireAgentAffectationEnCours_returnFichePoste() {
 		// Given
 		FichePoste fp = new FichePoste();
-		fp.setIdFichePoste(12);
 
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
 		listeFDP.add(fp);
@@ -242,7 +240,6 @@ public class FichePosteServiceTest {
 	public void getFichePosteById_returnFDP() {
 		// Given
 		FichePoste fdp1 = new FichePoste();
-		fdp1.setIdFichePoste(12);
 		fdp1.setAnnee(2013);
 
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
@@ -277,7 +274,6 @@ public class FichePosteServiceTest {
 		pp1.setLibelle("prime 1");
 
 		FichePoste fdp1 = new FichePoste();
-		fdp1.setIdFichePoste(12);
 		fdp1.setAnnee(2013);
 		pp1.setFichePoste(fdp1);
 		fdp1.getPrimePointageFP().add(pp1);
@@ -384,7 +380,6 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("En creation");
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setStatutFP(statutFP);
 		fiche.setIdServiceADS(1);
@@ -425,7 +420,6 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("En creation");
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setStatutFP(statutFP);
 		fiche.setIdServiceADS(1);
@@ -467,13 +461,11 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("En creation");
 
 		FichePoste fiche2 = new FichePoste();
-		fiche2.setIdFichePoste(2);
 		fiche2.setNumFP("201/2");
 		fiche2.setIdServiceADS(2);
 		fiche2.setStatutFP(statutFP);
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setIdServiceADS(1);
 		fiche.setStatutFP(statutFP);
@@ -528,7 +520,6 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("En création");
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setStatutFP(statutFP);
 
@@ -564,7 +555,6 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("Validée");
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setStatutFP(statutFP);
 
@@ -657,7 +647,6 @@ public class FichePosteServiceTest {
 		statutFP.setLibStatut("En création");
 
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setNumFP("201/1");
 		fiche.setStatutFP(statutFP);
 
@@ -704,11 +693,10 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(2);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -727,17 +715,16 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		List<Affectation> listAff = new ArrayList<Affectation>();
 		listAff.add(new Affectation());
 
 		IAffectationService affSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affSrv.getAffectationByIdFichePoste(1)).thenReturn(listAff);
+		Mockito.when(affSrv.getAffectationByIdFichePoste(Mockito.anyInt())).thenReturn(listAff);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -757,7 +744,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		List<Affectation> listAff = new ArrayList<Affectation>();
@@ -796,7 +782,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 		fiche.setNumFP("2015/3");
 
@@ -809,15 +794,20 @@ public class FichePosteServiceTest {
 		Mockito.when(affSrv.getAffectationByIdFichePoste(1)).thenReturn(listAff);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.listerFEFPAvecFP(1)).thenReturn(new ArrayList<FeFp>());
-		Mockito.when(fichePosteDao.listerNiveauEtudeFPAvecFP(1)).thenReturn(new ArrayList<NiveauEtudeFP>());
-		Mockito.when(fichePosteDao.listerActiviteFPAvecFP(1)).thenReturn(listActi);
-		Mockito.when(fichePosteDao.listerCompetenceFPAvecFP(1)).thenReturn(new ArrayList<CompetenceFP>());
-		Mockito.when(fichePosteDao.listerAvantageNatureFPAvecFP(1)).thenReturn(new ArrayList<AvantageNatureFP>());
-		Mockito.when(fichePosteDao.listerDelegationFPAvecFP(1)).thenReturn(new ArrayList<DelegationFP>());
-		Mockito.when(fichePosteDao.listerPrimePointageFP(1)).thenReturn(new ArrayList<PrimePointageFP>());
-		Mockito.when(fichePosteDao.listerRegIndemFPFPAvecFP(1)).thenReturn(new ArrayList<RegIndemFP>());
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
+		Mockito.when(fichePosteDao.listerFEFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<FeFp>());
+		Mockito.when(fichePosteDao.listerNiveauEtudeFPAvecFP(Mockito.anyInt())).thenReturn(
+				new ArrayList<NiveauEtudeFP>());
+		Mockito.when(fichePosteDao.listerActiviteFPAvecFP(Mockito.anyInt())).thenReturn(listActi);
+		Mockito.when(fichePosteDao.listerCompetenceFPAvecFP(Mockito.anyInt()))
+				.thenReturn(new ArrayList<CompetenceFP>());
+		Mockito.when(fichePosteDao.listerAvantageNatureFPAvecFP(Mockito.anyInt())).thenReturn(
+				new ArrayList<AvantageNatureFP>());
+		Mockito.when(fichePosteDao.listerDelegationFPAvecFP(Mockito.anyInt()))
+				.thenReturn(new ArrayList<DelegationFP>());
+		Mockito.when(fichePosteDao.listerPrimePointageFP(Mockito.anyInt()))
+				.thenReturn(new ArrayList<PrimePointageFP>());
+		Mockito.when(fichePosteDao.listerRegIndemFPFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<RegIndemFP>());
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -858,7 +848,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
@@ -881,7 +870,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(1);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		EntiteDto entite = new EntiteDto();
@@ -911,7 +899,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(2);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 
 		EntiteDto entite = new EntiteDto();
@@ -924,7 +911,7 @@ public class FichePosteServiceTest {
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(null);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -959,7 +946,6 @@ public class FichePosteServiceTest {
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(2);
 		FichePoste fiche = new FichePoste();
-		fiche.setIdFichePoste(1);
 		fiche.setStatutFP(statutFP);
 		fiche.setNumFP("2015/3");
 
@@ -981,15 +967,19 @@ public class FichePosteServiceTest {
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.listerFEFPAvecFP(1)).thenReturn(new ArrayList<FeFp>());
-		Mockito.when(fichePosteDao.listerNiveauEtudeFPAvecFP(1)).thenReturn(new ArrayList<NiveauEtudeFP>());
-		Mockito.when(fichePosteDao.listerActiviteFPAvecFP(1)).thenReturn(listActi);
-		Mockito.when(fichePosteDao.listerCompetenceFPAvecFP(1)).thenReturn(new ArrayList<CompetenceFP>());
-		Mockito.when(fichePosteDao.listerAvantageNatureFPAvecFP(1)).thenReturn(new ArrayList<AvantageNatureFP>());
-		Mockito.when(fichePosteDao.listerDelegationFPAvecFP(1)).thenReturn(new ArrayList<DelegationFP>());
-		Mockito.when(fichePosteDao.listerPrimePointageFP(1)).thenReturn(listPrime);
-		Mockito.when(fichePosteDao.listerRegIndemFPFPAvecFP(1)).thenReturn(new ArrayList<RegIndemFP>());
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
+		Mockito.when(fichePosteDao.listerFEFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<FeFp>());
+		Mockito.when(fichePosteDao.listerNiveauEtudeFPAvecFP(Mockito.anyInt())).thenReturn(
+				new ArrayList<NiveauEtudeFP>());
+		Mockito.when(fichePosteDao.listerActiviteFPAvecFP(Mockito.anyInt())).thenReturn(listActi);
+		Mockito.when(fichePosteDao.listerCompetenceFPAvecFP(Mockito.anyInt()))
+				.thenReturn(new ArrayList<CompetenceFP>());
+		Mockito.when(fichePosteDao.listerAvantageNatureFPAvecFP(Mockito.anyInt())).thenReturn(
+				new ArrayList<AvantageNatureFP>());
+		Mockito.when(fichePosteDao.listerDelegationFPAvecFP(Mockito.anyInt()))
+				.thenReturn(new ArrayList<DelegationFP>());
+		Mockito.when(fichePosteDao.listerPrimePointageFP(Mockito.anyInt())).thenReturn(listPrime);
+		Mockito.when(fichePosteDao.listerRegIndemFPFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<RegIndemFP>());
 		Mockito.when(fichePosteDao.chercherActivite(Mockito.anyInt())).thenReturn(acti);
 
 		FichePosteService ficheService = new FichePosteService();
