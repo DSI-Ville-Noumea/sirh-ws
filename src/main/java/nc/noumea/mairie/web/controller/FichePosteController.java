@@ -477,4 +477,31 @@ public class FichePosteController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+
+	/**
+	 * Utile à ADS lors de l'activation d'une entité
+	 * 
+	 * @param idEntite
+	 * @param idAgent
+	 *            : agent faisant l'action
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/activeFichesPosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> activeFichesPosteByIdEntite(
+			@RequestParam(value = "idEntite", required = true) Integer idEntite,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.activeFichesPosteByIdEntite(idEntite, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }

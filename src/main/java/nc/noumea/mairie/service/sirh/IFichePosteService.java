@@ -47,11 +47,17 @@ public interface IFichePosteService {
 	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite,
 			List<Integer> listStatutFDP, boolean withEntiteChildren);
 
-	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent);
-
 	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren);
 
+	// Pour ADS
+
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent);
+
 	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent);
+
+	public ReturnMessageDto activeFichesPosteByIdEntite(Integer idEntite, Integer idAgent);
+
+	// Pour JOBS
 
 	public ReturnMessageDto deleteFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
 

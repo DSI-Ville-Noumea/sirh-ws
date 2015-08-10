@@ -997,4 +997,34 @@ public class FichePosteServiceTest {
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(PrimePointageFP.class));
 	}
+
+	@Test
+	public void activeFichesPosteByIdEntite_OK() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		statutFP.setLibStatut("En création");
+
+		FichePoste fiche = new FichePoste();
+		fiche.setNumFP("201/1");
+		fiche.setStatutFP(statutFP);
+
+		List<FichePoste> listFP = new ArrayList<FichePoste>();
+		listFP.add(fiche);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1)))
+				.thenReturn(listFP);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.activeFichesPosteByIdEntite(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(0, result.getErrors().size());
+		assertEquals(1, result.getInfos().size());
+		assertEquals("1 FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.",
+				result.getInfos().get(0));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
+	}
 }

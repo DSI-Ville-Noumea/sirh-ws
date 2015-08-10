@@ -823,7 +823,11 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on crée la FDP en base
-		fichePosteDao.persisEntity(fichePDupliquee);
+		try {
+			fichePosteDao.persisEntity(fichePDupliquee);
+		} catch (AbstractMethodError e) {
+			System.out.println("ici");
+		}
 
 		// aussi dans SPPOST
 		Sppost sppostDuplique = new Sppost(fichePDupliquee);
@@ -904,5 +908,24 @@ public class FichePosteService implements IFichePosteService {
 		} else {
 			return (annee + "/" + String.valueOf(1));
 		}
+	}
+
+	@Override
+	public ReturnMessageDto activeFichesPosteByIdEntite(Integer idEntite, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		// on chacher toutes les FDP "en creation"
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite),
+				Arrays.asList(1));
+
+		// on crée un job de lancement de suppression des FDP
+		for (FichePoste fp : listeFDP) {
+			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "ACTIVATION", null);
+			fichePosteDao.persisEntity(job);
+		}
+		result.getInfos().add(
+				listeFDP.size()
+						+ " FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.");
+		return result;
 	}
 }
