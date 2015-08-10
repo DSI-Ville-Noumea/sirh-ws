@@ -380,7 +380,7 @@ public class FichePosteRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void listerNiveauEtudeFPAvecFP_returnResults() {
 
-		FichePoste fichePoste = new FichePoste();		
+		FichePoste fichePoste = new FichePoste();
 		sirhPersistenceUnit.persist(fichePoste);
 
 		NiveauEtude niveau1 = new NiveauEtude();

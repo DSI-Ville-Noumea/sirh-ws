@@ -799,7 +799,7 @@ public class AffectationRepositoryTest {
 		a.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a);
 
-		List<Affectation> result = repository.getAffectationByIdFichePoste(5);
+		List<Affectation> result = repository.getAffectationByIdFichePoste(fichePoste.getIdFichePoste());
 
 		assertNotNull(result);
 		assertEquals(1, result.size());

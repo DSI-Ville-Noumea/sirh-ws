@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -80,8 +79,7 @@ public class FichePoste {
 	private String numFP;
 
 	@NotNull
-	@Lob
-	@Column(name = "MISSIONS")
+	@Column(name = "MISSIONS", columnDefinition = "clob")
 	private String missions;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
@@ -156,6 +154,9 @@ public class FichePoste {
 	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
 	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
 	private Set<Affectation> agent = new HashSet<Affectation>();
+	
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
 
 	@Transient
 	public HashMap<String, List<String>> getCompetences() {
@@ -468,4 +469,13 @@ public class FichePoste {
 	public void setDateDebAppliServ(Date dateDebAppliServ) {
 		this.dateDebAppliServ = dateDebAppliServ;
 	}
+
+	public Set<FeFp> getFicheEmploi() {
+		return ficheEmploi;
+	}
+
+	public void setFicheEmploi(Set<FeFp> ficheEmploi) {
+		this.ficheEmploi = ficheEmploi;
+	}
+	
 }

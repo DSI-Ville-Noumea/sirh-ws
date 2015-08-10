@@ -139,7 +139,7 @@ public class HistoFichePoste {
 		this.dateDebutValiditeFp = fichePoste.getDateDebutValiditeFp();
 		this.opi = fichePoste.getOpi();
 		this.nfa = fichePoste.getNfa();
-		this.missions = fichePoste.getMissions();
+		this.missions = null == fichePoste.getMissions() ? "" : fichePoste.getMissions().toString();
 		this.anneeCreation = fichePoste.getAnnee();
 		this.codeGrade = fichePoste.getGradePoste() == null ? null : fichePoste.getGradePoste().getCdgrad();
 		this.numFp = fichePoste.getNumFP();

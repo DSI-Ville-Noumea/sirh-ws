@@ -108,7 +108,7 @@ public class Sppost {
 		idSppost.setPoanne(new Integer(fichePoste.getNumFP().substring(0, 4)));
 		idSppost.setPonuor(new Integer(fichePoste.getNumFP().substring(5, fichePoste.getNumFP().length())));
 		this.id = idSppost;
-		this.poserv = fichePoste.getIdServi();
+		this.poserv = fichePoste.getIdServi() == null ? "" : fichePoste.getIdServi();
 		this.podval = fichePoste.getDateDebutValiditeFp() == null ? 0 : new Integer(sdf.format(
 				fichePoste.getDateDebutValiditeFp()).replace("-", ""));
 		this.podsup = fichePoste.getDateFinValiditeFp() == null ? 0 : new Integer(sdf.format(

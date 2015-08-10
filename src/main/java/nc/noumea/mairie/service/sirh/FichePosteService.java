@@ -39,6 +39,7 @@ import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
+import nc.noumea.mairie.model.pk.sirh.FeFpPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
@@ -748,19 +749,43 @@ public class FichePosteService implements IFichePosteService {
 		// on cherche la NFA de l'entite
 		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
 		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
+		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
 		FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
 		if (lienPrimaire != null) {
 			FicheEmploi fePrimaire = fichePosteDao.chercherFicheEmploi(lienPrimaire.getId().getIdFicheEmploi());
-			if (fePrimaire != null)
-				fichePDupliquee.getFicheEmploiPrimaire().add(fePrimaire);
+			if (fePrimaire != null) {
+				FeFpPK feFpPk = new FeFpPK();
+				feFpPk.setIdFicheEmploi(fePrimaire.getIdFicheEmploi());
+				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+				
+				FeFp feFp = new FeFp();
+				feFp.setId(feFpPk);
+				feFp.setFePrimaire(1);
+				feFp.setFichePoste(fichePDupliquee);
+				feFp.setFicheEmploi(fePrimaire);
+				
+				fichePDupliquee.getFicheEmploi().add(feFp);
+			}
 		}
+		
 		FeFp lienSecondaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 0);
 		if (lienSecondaire != null) {
 			FicheEmploi feSecondaire = fichePosteDao.chercherFicheEmploi(lienSecondaire.getId().getIdFicheEmploi());
-			if (feSecondaire != null)
-				fichePDupliquee.getFicheEmploiSecondaire().add(feSecondaire);
+			if (feSecondaire != null) {
+				FeFpPK feFpPk = new FeFpPK();
+				feFpPk.setIdFicheEmploi(feSecondaire.getIdFicheEmploi());
+				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+				
+				FeFp feFp = new FeFp();
+				feFp.setId(feFpPk);
+				feFp.setFePrimaire(0);
+				feFp.setFichePoste(fichePDupliquee);
+				feFp.setFicheEmploi(feSecondaire);
+				
+				fichePDupliquee.getFicheEmploi().add(feFp);
+			}
 		}
 
 		ArrayList<NiveauEtudeFP> niveauFPExistant = (ArrayList<NiveauEtudeFP>) fichePosteDao
@@ -826,8 +851,8 @@ public class FichePosteService implements IFichePosteService {
 		// on crée la FDP en base
 		try {
 			fichePosteDao.persisEntity(fichePDupliquee);
-		} catch (AbstractMethodError e) {
-			System.out.println("ici");
+		} catch(Exception e){
+			logger.debug(e.getMessage());
 		}
 
 		// aussi dans SPPOST
@@ -840,10 +865,18 @@ public class FichePosteService implements IFichePosteService {
 		histo.setTypeHisto(EnumTypeHisto.CREATION.getValue());
 		fichePosteDao.persisEntity(histo);
 
+		// probleme avec FE_FP.ID_FICHE_POSTE = NULL lors de l insert en BDD
+		// pas trouve mieux que cette solution
+		if(null != fichePDupliquee.getFicheEmploi()) {
+			for(FeFp feFp : fichePDupliquee.getFicheEmploi()){
+				feFp.getId().setIdFichePoste(fichePDupliquee.getIdFichePoste());
+			}
+		}
+		
 		try {
 			fichePosteDao.flush();
 		} catch (Exception e) {
-			System.out.println("ici");
+			logger.debug(e.getMessage());
 		}
 
 		return fichePDupliquee.getNumFP();

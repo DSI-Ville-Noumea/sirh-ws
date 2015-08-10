@@ -136,7 +136,7 @@ public class FichePosteDto {
 		// superieur =
 		// fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
 
-		this.missions = fichePoste.getMissions();
+		this.missions = null == fichePoste.getMissions() ? "" : fichePoste.getMissions().toString();
 
 		for (Activite act : fichePoste.getActivites())
 			this.activites.add(act.getNomActivite());
