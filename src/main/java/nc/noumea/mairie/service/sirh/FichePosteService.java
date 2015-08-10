@@ -32,6 +32,7 @@ import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
 import nc.noumea.mairie.model.bean.sirh.NFA;
+import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
@@ -595,9 +596,9 @@ public class FichePosteService implements IFichePosteService {
 		// on supprime la FDP
 		try {
 			supprimerFDP(fichePoste, user.getsAMAccountName());
-			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est supprimée.");
+			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est supprimée.");
 		} catch (Exception e) {
-			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être suprimée.");
+			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être suprimée.");
 		}
 
 		return result;
@@ -712,9 +713,9 @@ public class FichePosteService implements IFichePosteService {
 		// on duplique la FDP
 		try {
 			String numNewFDP = dupliquerFDP(fichePoste, entite, user.getsAMAccountName());
-			result.getInfos().add("La FDP id " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
+			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
 		} catch (Exception e) {
-			result.getErrors().add("La FDP id " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
+			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
 		}
 
 		return result;
@@ -740,13 +741,13 @@ public class FichePosteService implements IFichePosteService {
 		fichePDupliquee.setNumFP(createFichePosteNumber(fichePDupliquee.getAnnee()));
 		// on gere les infos liées à l'entité
 		fichePDupliquee.setDateDebAppliServ(entite.getDateDeliberationActif());
+		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 		EntiteDto serv = adsService.getInfoSiservByIdEntite(entite.getIdEntite());
 		fichePDupliquee.setIdServi(serv == null || serv.getCodeServi() == null ? null : serv.getCodeServi());
 		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
 		// on cherche la NFA de l'entite
 		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
 		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
-		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
 		FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
@@ -927,5 +928,258 @@ public class FichePosteService implements IFichePosteService {
 				listeFDP.size()
 						+ " FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.");
 		return result;
+	}
+
+	@Override
+	@Transactional(value = "sirhTransactionManager")
+	public ReturnMessageDto activeFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		FichePoste fichePoste = fichePosteDao.chercherFichePoste(idFichePoste);
+		// on verifie que la FDP existe
+		if (fichePoste == null) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'existe pas.");
+			return result;
+		}
+		// on verifie que la FDP est bien "en création"
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("1")) {
+			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
+			return result;
+		}
+		// le service ne doit pas etre vide
+		if (fichePoste.getIdServiceADS() == null) {
+			result.getErrors().add("Le champ service est obligatoire.");
+			return result;
+		}
+		// on verifie que l'entite est bien "active"
+		EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(),
+				new ArrayList<EntiteDto>());
+		if (!entite.getIdStatut().toString().equals(String.valueOf(StatutEntiteEnum.ACTIF.getIdRefStatutEntite()))) {
+			result.getErrors().add("L'entite id " + fichePoste.getIdServiceADS() + " n'est pas en statut 'actif'.");
+			return result;
+		}
+		// on cherche le login de l'agent qui fait l'action
+		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
+		if (user == null || user.getsAMAccountName() == null) {
+			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
+			return result;
+		}
+
+		// on verifie les RG pour activer la FDP
+		result = checkRGActivationFDP(fichePoste, result, entite);
+		if (result.getErrors().size() > 0) {
+			return result;
+		}
+
+		// on active la FDP
+		try {
+			activerFDP(fichePoste, entite, user.getsAMAccountName());
+			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est activée.");
+		} catch (Exception e) {
+			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être activée.");
+		}
+
+		return result;
+	}
+
+	private ReturnMessageDto checkRGActivationFDP(FichePoste fichePoste, ReturnMessageDto result, EntiteDto entite) {
+		// l'année ne doit pas etre vide
+		if (fichePoste.getAnnee() == null) {
+			result.getErrors().add("Le champ année est obligatoire.");
+			return result;
+		}
+		// le garde ne doit pas etre vide
+		if (fichePoste.getGradePoste() == null) {
+			result.getErrors().add("Le champ grade est obligatoire.");
+			return result;
+		}
+		// le titre ne doit pas etre vide
+		if (fichePoste.getTitrePoste() == null) {
+			result.getErrors().add("Le champ titre du poste est obligatoire.");
+			return result;
+		}
+		// le budget ne doit pas etre vide
+		if (fichePoste.getBudget() == null) {
+			result.getErrors().add("Le champ budget est obligatoire.");
+			return result;
+		}
+		// le lieu ne doit pas etre vide
+		if (fichePoste.getLieuPoste() == null) {
+			result.getErrors().add("Le champ lieu est obligatoire.");
+			return result;
+		}
+		// le niveau d'etude ne doit pas etre vide
+		if (fichePoste.getNiveauEtude() == null) {
+			result.getErrors().add("Le champ niveau d'étude est obligatoire.");
+			return result;
+		}
+
+		// le service doit avoir un numero et une date de delib
+		if (entite.getRefDeliberationActif() == null || entite.getDateDeliberationActif() == null) {
+			result.getErrors().add("Le service associé n'a pas de delibération.");
+			return result;
+		}
+
+		// le NFA ne doit pas etre vide
+		if (fichePoste.getNfa() == null) {
+			// si vide alors on regarde si on trouve la NFA dans la table de
+			// paramétrage
+			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
+			if (nfaEntite == null || nfaEntite.getNfa() == null) {
+				result.getErrors().add("Le champ NFA est obligatoire.");
+				return result;
+			}
+		}
+		// le responsable hierarchique ne doit pas etre vide
+		if (fichePoste.getSuperieurHierarchique() == null) {
+			result.getErrors().add("Le champ supérieur hiérarchique est obligatoire.");
+			return result;
+		}
+		// la mission ne doit pas etre vide
+		if (fichePoste.getMissions() == null) {
+			result.getErrors().add("Le champ mission est obligatoire.");
+			return result;
+		}
+
+		// il doit y avoir au moins 1 activité
+		if (fichePoste.getActivites().size() == 0) {
+			result.getErrors().add("Il doit au moins y avoir 1 activité.");
+			return result;
+		}
+
+		// la base pointage ne doit pas etre vide
+		if (fichePoste.getIdBaseHorairePointage() == null) {
+			result.getErrors().add("Le champ base horaire pointage est obligatoire.");
+			return result;
+		}
+
+		// la base absence ne doit pas etre vide
+		if (fichePoste.getIdBaseHoraireAbsence() == null) {
+			result.getErrors().add("Le champ base horaire absence est obligatoire.");
+			return result;
+		}
+		// il faut verifier le hierachique et le remplacé ne sont pas la FDP
+		// elle
+		// meme
+		if (fichePoste.getSuperieurHierarchique() != null
+				&& fichePoste.getSuperieurHierarchique().getIdFichePoste().toString()
+						.equals(fichePoste.getIdFichePoste().toString())) {
+			result.getErrors().add("Une FDP ne peut être supérieur hiérarchique d'elle-même.");
+			return result;
+		}
+		if (fichePoste.getRemplace() != null
+				&& fichePoste.getRemplace().getIdFichePoste().toString()
+						.equals(fichePoste.getIdFichePoste().toString())) {
+			result.getErrors().add("Une FDP ne peut être en remplacement d'elle-même.");
+			return result;
+		}
+
+		// reglementaire ne doit pas etre vide
+		if (fichePoste.getReglementaire() == null) {
+			result.getErrors().add("Le champ reglementaire est obligatoire.");
+			return result;
+		}
+
+		// budgete ne doit pas etre vide
+		if (fichePoste.getBudgete() == null) {
+			result.getErrors().add("Le champ budgeté est obligatoire.");
+			return result;
+		}
+
+		// nature des credits ne doit pas etre vide
+		if (fichePoste.getNatureCredit() == null) {
+			result.getErrors().add("Le champ nature des crédits est obligatoire.");
+			return result;
+		}
+
+		// on check les RG sur reglementaire etc...
+		NatureCredit natureCredit = fichePoste.getNatureCredit();
+		Spbhor budgete = fichePoste.getBudgete();
+		Spbhor reglementaire = fichePoste.getReglementaire();
+		// si nature credit = NON alors budgete doit etre egal a 0
+		if (natureCredit.getLibNatureCredit().trim().toUpperCase().equals("NON")
+				&& !budgete.getLibHor().trim().toLowerCase().equals("non")) {
+			// "ERR1111",
+			// "Si la nature des crédits est @, alors budgété doit être @."
+			result.getErrors().add("Si la nature des crédits est 'NON', alors budgété doit être 'Non'.");
+			return result;
+		}
+		// si nature credit = PERMANENT ou REMPLACEMENT ou TEMPORAIRE ou
+		// SURNUMERAIRE alors budgete >0 et <=100
+		if (natureCredit.getLibNatureCredit().toUpperCase().equals("PERMANENT")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("TEMPORAIRE")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("SURNUMERAIRE")) {
+			if (budgete.getLibHor().trim().toLowerCase().equals("non")) {
+				// "ERR1112",
+				// "Si la nature des crédits est @, alors budgété ne doit pas être @."
+				result.getErrors().add("Si la nature des crédits est 'PERMANENT', alors budgété doit être 'Non'.");
+				return result;
+			}
+		}
+
+		// si nature credit = REMPLACEMENT, alors fiche poste remplacee doit
+		// etre renseigné et insersement
+		if (natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT") && fichePoste.getRemplace() == null) {
+			// "ERR1113",
+			// "Budget de remplacement : fiche de poste remplacee necessaire.");
+			result.getErrors().add("Budget de remplacement : fiche de poste remplacee necessaire.");
+			return result;
+
+		}
+		if (fichePoste.getRemplace() != null) {
+			if (!natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT")) {
+				// "ERR1114",
+				// "Fiche de poste remplacee mais budget different de remplacement."
+				result.getErrors().add("Fiche de poste remplacee mais budget different de remplacement.");
+				return result;
+			}
+		}
+
+		// si relementaire > 0 alors budget doit etre different de permanent
+		// et inversement
+		if (natureCredit.getLibNatureCredit().toUpperCase().equals("PERMANENT")
+				&& reglementaire.getLibHor().trim().toLowerCase().equals("non")) {
+			// "ERR1115",
+			// "Le poste n'est pas reglementaire, le budget ne peut pas être permanent."
+			result.getErrors().add("Le poste n'est pas reglementaire, le budget ne peut pas être permanent.");
+			return result;
+
+		}
+		if (!reglementaire.getLibHor().trim().toLowerCase().equals("non")) {
+			if (!natureCredit.getLibNatureCredit().equals("PERMANENT")) {
+				// "ERR1116",
+				// "Le poste est reglementaire, le budget doit être permanent."
+				result.getErrors().add("Le poste est reglementaire, le budget doit être permanent.");
+				return result;
+			}
+		}
+
+		return result;
+	}
+
+	private void activerFDP(FichePoste fichePoste, EntiteDto entite, String login) {
+		// on met à jour les champs de la deliberation
+		fichePoste.setNumDeliberation(entite.getRefDeliberationActif());
+		fichePoste.setDateDebAppliServ(entite.getDateDeliberationActif());
+		// on met à jour la NFA
+		if (fichePoste.getNfa() == null) {
+			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
+			fichePoste.setNfa(nfaEntite.getNfa());
+		}
+		// on met à jour le statut en "validée"
+		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(2);
+		fichePoste.setStatutFP(statutFP);
+
+		// on historise
+		HistoFichePoste histo = new HistoFichePoste(fichePoste);
+		// on sauvegarde
+		fichePosteDao.persisEntity(fichePoste);
+		// historisation
+		histo.setDateHisto(new Date());
+		histo.setUserHisto(login);
+		histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
+		fichePosteDao.persisEntity(histo);
+
 	}
 }

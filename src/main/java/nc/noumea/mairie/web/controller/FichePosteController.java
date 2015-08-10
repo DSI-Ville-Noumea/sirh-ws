@@ -504,4 +504,30 @@ public class FichePosteController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+
+	/**
+	 * Utile à JOBS lors de l'activation d'une entité, car il faut activer les
+	 * FDP associées
+	 * 
+	 * @param idFichePoste
+	 * @param idAgent
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/activeFichePosteByIdFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> activeFichePosteByIdFichePoste(
+			@RequestParam(value = "idFichePoste", required = true) Integer idFichePoste,
+			@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.activeFichePosteByIdFichePoste(idFichePoste, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }

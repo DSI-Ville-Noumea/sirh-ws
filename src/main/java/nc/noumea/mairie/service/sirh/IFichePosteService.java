@@ -62,4 +62,6 @@ public interface IFichePosteService {
 	public ReturnMessageDto deleteFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
 
 	public ReturnMessageDto dupliqueFichePosteByIdFichePoste(Integer idFichePoste, Integer idEntite, Integer idAgent);
+
+	public ReturnMessageDto activeFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
 }

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,21 +17,29 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.Budget;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NFA;
+import nc.noumea.mairie.model.bean.sirh.NatureCredit;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
 import nc.noumea.mairie.model.pk.sirh.ActiviteFPPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
@@ -819,7 +828,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("La FDP id 2015/3 est supprimée.", result.getInfos().get(0));
+		assertEquals("La FDP 2015/3 est supprimée.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(ActiviteFP.class));
@@ -992,7 +1001,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("La FDP id 2015/3 est dupliquée en 2015/1.", result.getInfos().get(0));
+		assertEquals("La FDP 2015/3 est dupliquée en 2015/1.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(PrimePointageFP.class));
@@ -1026,5 +1035,1360 @@ public class FichePosteServiceTest {
 		assertEquals("1 FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.",
 				result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadFichePoste() {
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(null);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("La FDP id 1 n'existe pas.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadStatut() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("La FDP id 1 n'est pas en statut 'en création'.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_EntiteNoActive() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.PREVISION.getIdRefStatutEntite());
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("L'entite id 1 n'est pas en statut 'actif'.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadLogin() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(null);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("L'agent qui tente de faire l'action n'a pas de login dans l'AD.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadAnnee() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ année est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadGrade() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ grade est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadTitre() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ titre du poste est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadBudget() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ budget est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadLieu() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ lieu est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadNiveauEtude() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ niveau d'étude est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadEntiteDelib() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le service associé n'a pas de delibération.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadNFA() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(null);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ NFA est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadSupHierarchique() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ supérieur hiérarchique est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadMission() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		fiche.setSuperieurHierarchique(new FichePoste());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ mission est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadActivite() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		fiche.setSuperieurHierarchique(new FichePoste());
+		fiche.setMissions("mission");
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Il doit au moins y avoir 1 activité.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadPointage() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		fiche.setSuperieurHierarchique(new FichePoste());
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ base horaire pointage est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadAbsence() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		fiche.setSuperieurHierarchique(new FichePoste());
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ base horaire absence est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRemplace() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		fiche.setRemplace(fiche);
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Une FDP ne peut être en remplacement d'elle-même.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadReglementaire() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ reglementaire est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadBudgete() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ budgeté est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadNatureCredit() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		fiche.setBudgete(new Spbhor());
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le champ nature des crédits est obligatoire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("OUI");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("NON");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Si la nature des crédits est 'NON', alors budgété doit être 'Non'.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire2() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("NON");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("PERMANENT");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Si la nature des crédits est 'PERMANENT', alors budgété doit être 'Non'.", result.getErrors()
+				.get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire3() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("oui");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("REMPLACEMENT");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Budget de remplacement : fiche de poste remplacee necessaire.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire4() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		fiche.setReglementaire(new Spbhor());
+		FichePoste remplacee = new FichePoste();
+		remplacee.setIdFichePoste(4);
+		fiche.setRemplace(remplacee);
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("oui");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("TEMPORAIRE");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Fiche de poste remplacee mais budget different de remplacement.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire5() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setLibHor("non");
+		fiche.setReglementaire(reglementaire);
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("oui");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("PERMANENT");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le poste n'est pas reglementaire, le budget ne peut pas être permanent.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_BadRGReglementaire6() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		fiche.setLieuPoste(new Silieu());
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setLibHor("oui");
+		fiche.setReglementaire(reglementaire);
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("oui");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("REMPLACEMENT");
+		fiche.setNatureCredit(natureCredit);
+		FichePoste remplacee = new FichePoste();
+		remplacee.setIdFichePoste(4);
+		fiche.setRemplace(remplacee);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("Le poste est reglementaire, le budget doit être permanent.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void activeFichePosteByIdFichePoste_OK() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(1);
+		FichePoste fiche = new FichePoste();
+		fiche.setNumFP("2005/1");
+		fiche.setIdFichePoste(1);
+		fiche.setStatutFP(statutFP);
+		fiche.setIdServiceADS(1);
+		fiche.setAnnee(2015);
+		fiche.setGradePoste(new Spgradn());
+		fiche.setTitrePoste(new TitrePoste());
+		fiche.setBudget(new Budget());
+		Silieu lieu = new Silieu();
+		lieu.setCodeLieu(new Long(12));
+		fiche.setLieuPoste(lieu);
+		fiche.setNiveauEtude(new NiveauEtude());
+		fiche.setNfa("blbl");
+		FichePoste superieur = new FichePoste();
+		superieur.setIdFichePoste(2);
+		fiche.setSuperieurHierarchique(superieur);
+		fiche.setMissions("mission");
+		HashSet<Activite> actiFDP = new HashSet<Activite>();
+		actiFDP.add(new Activite());
+		fiche.setActivites(actiFDP);
+		fiche.setIdBaseHorairePointage(1);
+		fiche.setIdBaseHoraireAbsence(1);
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setLibHor("oui");
+		fiche.setReglementaire(reglementaire);
+		Spbhor budgete = new Spbhor();
+		budgete.setLibHor("oui");
+		fiche.setBudgete(budgete);
+		NatureCredit natureCredit = new NatureCredit();
+		natureCredit.setLibNatureCredit("PERMANENT");
+		fiche.setNatureCredit(natureCredit);
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setDateDeliberationActif(new Date());
+		entite.setRefDeliberationActif("blabl");
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+		StatutFichePoste statutValide = new StatutFichePoste();
+		statutValide.setIdStatutFp(2);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
+		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(2)).thenReturn(statutValide);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.activeFichePosteByIdFichePoste(1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(0, result.getErrors().size());
+		assertEquals(1, result.getInfos().size());
+		assertEquals("La FDP 2005/1 est activée.", result.getInfos().get(0));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
 }
