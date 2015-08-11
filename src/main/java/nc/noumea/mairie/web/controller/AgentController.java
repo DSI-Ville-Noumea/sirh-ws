@@ -70,7 +70,7 @@ public class AgentController {
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
-	
+
 	@Autowired
 	private IAdsService adsService;
 
@@ -144,12 +144,12 @@ public class AgentController {
 		if (ag.getCodeBanque() != null) {
 			banque = sibanqSrv.getBanque(ag.getCodeBanque());
 		}
-		
+
 		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant, banque);
-		
+
 		// id service ADS pour le kiosque RH
 		EntiteDto entite = agentSrv.getServiceAgent(new Integer(newIdAgent), new Date());
-		dto.setIdServiceAds(entite.getIdEntite());
+		dto.setIdServiceAds(entite == null ? null : entite.getIdEntite());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
@@ -248,18 +248,20 @@ public class AgentController {
 		List<AgentWithServiceDto> dto = new ArrayList<AgentWithServiceDto>();
 		List<EntiteDto> listEntitesDto = new ArrayList<EntiteDto>();
 		for (Agent agentService : listAgentService) {
-			FichePoste fichePoste = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(), dateJour, false);
-			
+			FichePoste fichePoste = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(),
+					dateJour, false);
+
 			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(agentService);
-			dtoAgent.setPosition(null == fichePoste.getTitrePoste() ? "" : fichePoste.getTitrePoste().getLibTitrePoste());
-			
+			dtoAgent.setPosition(null == fichePoste.getTitrePoste() ? "" : fichePoste.getTitrePoste()
+					.getLibTitrePoste());
+
 			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntitesDto);
-			if(null != entite) {
+			if (null != entite) {
 				dtoAgent.setIdServiceADS(fichePoste.getIdServiceADS());
 				dtoAgent.setService(entite.getLabel());
 				dtoAgent.setSigleService(entite.getSigle());
 			}
-			
+
 			dto.add(dtoAgent);
 		}
 
@@ -438,7 +440,7 @@ public class AgentController {
 	public ResponseEntity<String> getAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
 		// on remanie l'idAgent
-        String newIdAgent = remanieIdAgent(idAgent);
+		String newIdAgent = remanieIdAgent(idAgent);
 
 		Agent agent = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
