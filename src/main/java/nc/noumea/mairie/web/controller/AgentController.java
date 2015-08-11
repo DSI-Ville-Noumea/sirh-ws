@@ -149,7 +149,7 @@ public class AgentController {
 
 		// id service ADS pour le kiosque RH
 		EntiteDto entite = agentSrv.getServiceAgent(new Integer(newIdAgent), new Date());
-		dto.setIdServiceAds(entite == null ? null : entite.getIdEntite());
+		dto.setIdServiceAds(entite.getIdEntite());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
