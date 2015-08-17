@@ -38,6 +38,7 @@ public class FichePosteDto {
 	private String superieur;
 
 	private String missions;
+	private String commentaire;
 
 	private List<String> activites;
 	private List<String> savoirs;
@@ -86,6 +87,7 @@ public class FichePosteDto {
 		this();
 		this.idFichePoste = fichePoste.getIdFichePoste();
 		this.numero = fichePoste.getNumFP();
+		this.commentaire = fichePoste.getObservation();
 
 		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
 
@@ -136,7 +138,7 @@ public class FichePosteDto {
 		// superieur =
 		// fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
 
-		this.missions = null == fichePoste.getMissions() ? "" : fichePoste.getMissions().toString();
+		this.missions = fichePoste.getMissions();
 
 		for (Activite act : fichePoste.getActivites())
 			this.activites.add(act.getNomActivite());
@@ -308,10 +310,11 @@ public class FichePosteDto {
 			this.primes.add(prime.getPrimePointageFPPK().getNumRubrique() + " - " + prime.getLibelle());
 		}
 	}
-	
+
 	public FichePosteDto(FichePoste fichePoste, String sigle) {
 		this.idFichePoste = fichePoste.getIdFichePoste();
 		this.numero = fichePoste.getNumFP();
+		this.commentaire = fichePoste.getObservation();
 
 		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
 
@@ -352,9 +355,8 @@ public class FichePosteDto {
 								.toLowerCase() + " (" + agt.getAgent().getNomatr().toString() + ")";
 			}
 		}
-		
-		if (null != fichePoste.getGradePoste()
-				&& null != fichePoste.getGradePoste().getGradeGenerique()
+
+		if (null != fichePoste.getGradePoste() && null != fichePoste.getGradePoste().getGradeGenerique()
 				&& null != fichePoste.getGradePoste().getGradeGenerique().getCdcadr()) {
 			this.categorie = fichePoste.getGradePoste().getGradeGenerique().getCdcadr().trim();
 		}
@@ -694,6 +696,14 @@ public class FichePosteDto {
 
 	public void setSigle(String sigle) {
 		this.sigle = sigle;
+	}
+
+	public String getCommentaire() {
+		return commentaire;
+	}
+
+	public void setCommentaire(String commentaire) {
+		this.commentaire = commentaire;
 	}
 
 }

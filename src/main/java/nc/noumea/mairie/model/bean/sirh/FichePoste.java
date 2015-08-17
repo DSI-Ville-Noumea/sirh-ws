@@ -82,6 +82,10 @@ public class FichePoste {
 	@Column(name = "MISSIONS", columnDefinition = "clob")
 	private String missions;
 
+	@NotNull
+	@Column(name = "OBSERVATION", columnDefinition = "clob")
+	private String observation;
+
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
 	private StatutFichePoste statutFP;
@@ -476,6 +480,14 @@ public class FichePoste {
 
 	public void setFicheEmploi(Set<FeFp> ficheEmploi) {
 		this.ficheEmploi = ficheEmploi;
+	}
+
+	public String getObservation() {
+		return observation;
+	}
+
+	public void setObservation(String observation) {
+		this.observation = observation;
 	}
 	
 }
