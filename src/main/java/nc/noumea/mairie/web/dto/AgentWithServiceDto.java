@@ -6,6 +6,11 @@ import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 public class AgentWithServiceDto extends AgentDto {
 	private String service;
 	private Integer idServiceADS;
+	// attention pour ce champ direction car il n'est utilié que dans ce DTO
+	// pour les reports BIRT
+	// faire attention dans les autres projets ils n'existe pas et cel fait
+	// planter l'ajout d'une demande absence si on le rajoute dans le DTO du
+	// kiosque.
 	private String direction;
 	private String signature;
 	private String position;
