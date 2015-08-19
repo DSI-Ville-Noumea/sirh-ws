@@ -344,7 +344,7 @@ public class FichePosteDto {
 		this.agent = "";
 		this.categorie = "";
 
-		this.statutFDP = fichePoste.getStatutFP().getLibStatut();
+		this.statutFDP = null == fichePoste.getStatutFP() ? "" : fichePoste.getStatutFP().getLibStatut();
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {

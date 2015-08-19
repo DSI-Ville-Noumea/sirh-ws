@@ -96,7 +96,7 @@ public class FichePosteService implements IFichePosteService {
 	private IAdsService adsService;
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
-	private Hashtable<Integer, FichePosteTreeNode> hFpTree;
+	protected Hashtable<Integer, FichePosteTreeNode> hFpTree = new Hashtable<Integer, FichePosteTreeNode>();
 
 	@Override
 	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
@@ -341,7 +341,7 @@ public class FichePosteService implements IFichePosteService {
 		return result;
 	}
 	
-	private List<Integer> rechercheFichesPosteParent(List<FichePoste> listFichesPoste) {
+	protected List<Integer> rechercheFichesPosteParent(List<FichePoste> listFichesPoste) {
 		
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
 		
@@ -363,7 +363,7 @@ public class FichePosteService implements IFichePosteService {
 
 			logger.debug("node has a parent: {}", node.getSuperieurHierarchique().getIdFichePoste());
 
-			if (!hTree.containsKey(node.getSuperieurHierarchique())) {
+			if (!hTree.containsKey(node.getSuperieurHierarchique().getIdFichePoste())) {
 				logger.debug("parent node is not null but does not exist in tree", node.getIdFichePoste());
 				continue;
 			}

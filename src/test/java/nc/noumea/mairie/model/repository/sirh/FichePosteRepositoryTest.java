@@ -19,6 +19,7 @@ import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
@@ -632,6 +633,72 @@ public class FichePosteRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_1Result() {
+		
+		StatutFichePoste statut = new StatutFichePoste();
+		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
+		sirhPersistenceUnit.persist(statut);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statut);
+		sirhPersistenceUnit.persist(fichePoste);
+			
+		List<FichePoste> result = repository
+				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+		
+		assertEquals(result.size(), 1);
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_badService() {
+		
+		StatutFichePoste statut = new StatutFichePoste();
+		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
+		sirhPersistenceUnit.persist(statut);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statut);
+		sirhPersistenceUnit.persist(fichePoste);
+			
+		List<FichePoste> result = repository
+				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(2), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+		
+		assertEquals(result.size(), 0);
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_badStatut() {
+		
+		StatutFichePoste statut = new StatutFichePoste();
+		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
+		sirhPersistenceUnit.persist(statut);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setStatutFP(statut);
+		sirhPersistenceUnit.persist(fichePoste);
+			
+		List<FichePoste> result = repository
+				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+		
+		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
