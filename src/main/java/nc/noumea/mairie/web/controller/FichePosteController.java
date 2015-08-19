@@ -15,6 +15,7 @@ import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.FichePosteTreeNodeDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
@@ -524,6 +525,19 @@ public class FichePosteController {
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		ReturnMessageDto result = fpSrv.activeFichePosteByIdFichePoste(idFichePoste, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
+				.deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/treeFichesPosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> getTreeFichesPosteByIdEntite(
+			@RequestParam(value = "idEntite") Integer idEntite) {
+		
+		List<FichePosteTreeNodeDto> result = fpSrv.getTreeFichesPosteByIdEntite(idEntite);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

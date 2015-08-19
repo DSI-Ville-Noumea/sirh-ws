@@ -5,6 +5,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.FichePosteTreeNodeDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -64,4 +65,6 @@ public interface IFichePosteService {
 	public ReturnMessageDto dupliqueFichePosteByIdFichePoste(Integer idFichePoste, Integer idEntite, Integer idAgent);
 
 	public ReturnMessageDto activeFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
+
+	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite);
 }

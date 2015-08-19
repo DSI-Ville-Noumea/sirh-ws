@@ -26,6 +26,7 @@ import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
@@ -47,6 +48,7 @@ import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.web.dto.FichePosteTreeNodeDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
@@ -311,6 +313,98 @@ public class FichePosteService implements IFichePosteService {
 		listShdAgents(fichePosteTreeNode.getFichePosteParent(), agents, maxDepth - 1);
 
 		return agents;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite) {
+		
+		// on recherche la liste des fiches de poste appartement a un service
+		List<FichePoste> listFichesPoste = 
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
+								EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+		
+		if (null == listFichesPoste || listFichesPoste.isEmpty())
+			return null;
+		
+		// on recherche le ou les fiches de poste ayant la plus haute hierarchie (niveau 0)
+		List<Integer> listTreeParent = rechercheFichesPosteParent(listFichesPoste);
+		
+		List<EntiteDto> listEntiteDtoForOptimize = new ArrayList<EntiteDto>();
+		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
+		for(Integer idFichePosteParent : listTreeParent) {
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize);
+			result.add(treeNode);
+		}
+		
+		return result;
+	}
+	
+	private List<Integer> rechercheFichesPosteParent(List<FichePoste> listFichesPoste) {
+		
+		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
+		
+		for(FichePoste node : listFichesPoste) {
+			hTree.put(node.getIdFichePoste(), new FichePosteTreeNode(
+					node.getIdFichePoste(), 
+					null == node.getSuperieurHierarchique() ? null : node.getSuperieurHierarchique().getIdFichePoste(), 
+					null));
+		}
+		
+		for(FichePoste node : listFichesPoste) {
+
+			logger.debug("node id: {}", node.getIdFichePoste());
+
+			if (node.getSuperieurHierarchique() == null) {
+				logger.debug("parent node is null", node.getIdFichePoste());
+				continue;
+			}
+
+			logger.debug("node has a parent: {}", node.getSuperieurHierarchique().getIdFichePoste());
+
+			if (!hTree.containsKey(node.getSuperieurHierarchique())) {
+				logger.debug("parent node is not null but does not exist in tree", node.getIdFichePoste());
+				continue;
+			}
+
+			FichePosteTreeNode fichePosteNode = hTree.get(node.getIdFichePoste());
+			FichePosteTreeNode parent = hTree.get(node.getSuperieurHierarchique().getIdFichePoste());
+
+			if (parent != null && !parent.getIdFichePoste().equals(node.getIdFichePoste())) {
+				parent.getFichePostesEnfant().add(fichePosteNode);
+				fichePosteNode.setFichePosteParent(parent);
+			}
+		}
+		
+		List<Integer> listIdsFichesPosteParent = new ArrayList<Integer>();
+		for (FichePosteTreeNode node : hTree.values()) {
+			if(null == node.getFichePosteParent()) {
+				listIdsFichesPosteParent.add(node.getIdFichePoste());
+			}
+		}
+		
+		return listIdsFichesPosteParent;
+	}
+	
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto) {
+		
+		FichePosteTreeNodeDto dto = null;
+		
+		if(null != root) {
+			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
+			
+			dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
+					fichePoste, adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto).getSigle());
+			
+			if(null != root.getFichePostesEnfant()) {
+				for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
+					dto.getFichePostesEnfant().add(constructFichePosteTreeNodeDto(enfant, listEntiteDto));
+				}
+			}
+		}
+		
+		return dto;
 	}
 
 	@Override
