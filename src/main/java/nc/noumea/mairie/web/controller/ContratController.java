@@ -111,7 +111,7 @@ public class ContratController {
 		EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
 		EntiteDto section = adsWSConsumer.getSection(aff.getFichePoste().getIdServiceADS());
 		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction.getLabel(), service.getLabel(),
-				section.getLabel(), service.getSigle());
+				section == null ? null : section.getLabel(), service.getSigle());
 		CompteDto cptDto = new CompteDto(ag, banque);
 		AgentDto agDto = new AgentDto(ag, cptDto);
 		if (ag.getCodeCommuneNaissFr() == null) {

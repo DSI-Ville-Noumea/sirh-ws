@@ -93,7 +93,7 @@ public class CalculEaeService implements ICalculEaeService {
 			titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
 
 			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste(), direction.getLabel(),
-					service.getLabel(), section.getLabel(), null);
+					service.getLabel(), section == null ? null : section.getLabel(), null);
 			fichePostePrincipale.setTitrePoste(titrePoste);
 
 			dto.setFichePostePrincipale(fichePostePrincipale);
@@ -104,8 +104,8 @@ public class CalculEaeService implements ICalculEaeService {
 				EntiteDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
 				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),
-						directionSecondaire.getLabel(), serviceSecondaire.getLabel(), sectionSecondaire.getLabel(),
-						null);
+						directionSecondaire.getLabel(), serviceSecondaire.getLabel(), sectionSecondaire == null ? null
+								: sectionSecondaire.getLabel(), null);
 				dto.setFichePosteSecondaire(fichePosteSecondaire);
 			}
 
