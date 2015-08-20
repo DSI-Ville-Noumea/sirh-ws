@@ -133,7 +133,7 @@ public class FichePosteController {
 			EntiteDto direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
 			EntiteDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
 
-			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section == null ? null
+			dto = new FichePosteDto(fp, true, direction==null ? null :direction.getLabel(), service.getLabel(), section == null ? null
 					: section.getLabel(), null);
 		} else {
 			dto = new FichePosteDto(fp, true, "", null, null, null);
@@ -155,7 +155,7 @@ public class FichePosteController {
 			EntiteDto direction = adsWSConsumer.getDirection(fp.getIdServiceADS());
 			EntiteDto section = adsWSConsumer.getSection(fp.getIdServiceADS());
 
-			dto = new FichePosteDto(fp, true, direction.getLabel(), service.getLabel(), section == null ? null
+			dto = new FichePosteDto(fp, true, direction==null ? null :direction.getLabel(), service.getLabel(), section == null ? null
 					: section.getLabel(), null);
 		}
 

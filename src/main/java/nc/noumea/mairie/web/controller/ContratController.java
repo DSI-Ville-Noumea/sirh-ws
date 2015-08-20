@@ -110,7 +110,7 @@ public class ContratController {
 		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 		EntiteDto direction = adsWSConsumer.getDirection(aff.getFichePoste().getIdServiceADS());
 		EntiteDto section = adsWSConsumer.getSection(aff.getFichePoste().getIdServiceADS());
-		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction.getLabel(), service.getLabel(),
+		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(),direction==null ? null : direction.getLabel(), service.getLabel(),
 				section == null ? null : section.getLabel(), service.getSigle());
 		CompteDto cptDto = new CompteDto(ag, banque);
 		AgentDto agDto = new AgentDto(ag, cptDto);

@@ -92,7 +92,8 @@ public class CalculEaeService implements ICalculEaeService {
 			TitrePosteDto titrePoste = new TitrePosteDto();
 			titrePoste.setLibTitrePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
 
-			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste(), direction.getLabel(),
+			FichePosteDto fichePostePrincipale = new FichePosteDto(affectation.getFichePoste(),
+					direction == null ? null : direction.getLabel(),
 					service.getLabel(), section == null ? null : section.getLabel(), null);
 			fichePostePrincipale.setTitrePoste(titrePoste);
 
@@ -103,7 +104,7 @@ public class CalculEaeService implements ICalculEaeService {
 				EntiteDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(serviceSecondaire);
 				EntiteDto sectionSecondaire = adsWSConsumer.getSection(affectation.getFichePosteSecondaire()
 						.getIdServiceADS());
-				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),
+				FichePosteDto fichePosteSecondaire = new FichePosteDto(affectation.getFichePosteSecondaire(),directionSecondaire==null ? null : 
 						directionSecondaire.getLabel(), serviceSecondaire.getLabel(), sectionSecondaire == null ? null
 								: sectionSecondaire.getLabel(), null);
 				dto.setFichePosteSecondaire(fichePosteSecondaire);
@@ -223,7 +224,7 @@ public class CalculEaeService implements ICalculEaeService {
 						if (affSuiv == null) {
 							fin = true;
 						} else {
-							dateSortie = new DateTime(aff.getDateFinAff());
+							dateSortie = new DateTime(affSuiv.getDateFinAff());
 						}
 					}
 
