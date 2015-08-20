@@ -23,17 +23,17 @@ public class SpmtsrId implements Serializable {
 
 	public SpmtsrId() {
 	}
-	
+
 	@Column(name = "NOMATR", columnDefinition = "numeric")
 	public Integer nomatr;
-	
+
 	@NotNull
 	@Column(name = "SERVI", columnDefinition = "char")
 	public String servi;
-	
+
 	@Column(name = "DATDEB", columnDefinition = "numeric")
 	public Integer datdeb;
-	
+
 	public Integer getNomatr() {
 		return nomatr;
 	}
@@ -43,7 +43,7 @@ public class SpmtsrId implements Serializable {
 	}
 
 	public String getServi() {
-		return servi;
+		return servi == null ? null : servi.trim();
 	}
 
 	public void setServi(String servi) {
