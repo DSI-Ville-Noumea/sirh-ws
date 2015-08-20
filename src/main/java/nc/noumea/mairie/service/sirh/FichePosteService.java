@@ -96,7 +96,7 @@ public class FichePosteService implements IFichePosteService {
 	private IAdsService adsService;
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
-	protected Hashtable<Integer, FichePosteTreeNode> hFpTree = new Hashtable<Integer, FichePosteTreeNode>();
+	protected Hashtable<Integer, FichePosteTreeNode> hFpTree;
 
 	@Override
 	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
