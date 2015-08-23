@@ -879,9 +879,35 @@ public class FichePosteServiceTest {
 	}
 
 	@Test
+	public void dupliqueFichePosteByIdFichePoste_NoEntite() {
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		FichePoste fiche = new FichePoste();
+		fiche.setStatutFP(statutFP);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(null);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+
+		ReturnMessageDto result = ficheService.dupliqueFichePosteByIdFichePoste(1, 1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
+		assertEquals("L'entite id 1 n'existe pas ou plus.", result.getErrors().get(0));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
+	}
+
+	@Test
 	public void dupliqueFichePosteByIdFichePoste_BadStatutEntite() {
 		StatutFichePoste statutFP = new StatutFichePoste();
-		statutFP.setIdStatutFp(1);
+		statutFP.setIdStatutFp(2);
 		FichePoste fiche = new FichePoste();
 		fiche.setStatutFP(statutFP);
 
@@ -903,7 +929,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
 		assertEquals(0, result.getInfos().size());
-		assertEquals("La FDP id 1 n'est pas en statut 'validée'.", result.getErrors().get(0));
+		assertEquals("L'entite id 1 n'est pas en statut 'prévision'.", result.getErrors().get(0));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
 	}
 

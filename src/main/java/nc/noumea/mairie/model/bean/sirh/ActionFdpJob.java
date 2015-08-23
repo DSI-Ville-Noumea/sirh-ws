@@ -27,19 +27,19 @@ public class ActionFdpJob {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idActionFdpJob;
 
-	@Column(name = "ID_AGENT")
 	@NotNull
+	@Column(name = "ID_AGENT")
 	private Integer idAgent;
 
-	@Column(name = "ID_FICHE_POSTE")
 	@NotNull
+	@Column(name = "ID_FICHE_POSTE")
 	private Integer idFichePoste;
 
 	@Column(name = "ID_NEW_SERVICE_ADS")
 	private Integer idNewServiceAds;
 
-	@Column(name = "TYPE_ACTION")
 	@NotNull
+	@Column(name = "TYPE_ACTION")
 	private String typeAction;
 
 	@Column(name = "STATUT")

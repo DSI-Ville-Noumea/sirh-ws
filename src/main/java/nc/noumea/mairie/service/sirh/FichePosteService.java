@@ -394,8 +394,9 @@ public class FichePosteService implements IFichePosteService {
 		if(null != root) {
 			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
 			
+			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
 			dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
-					fichePoste, adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto).getSigle());
+					fichePoste, entite.getSigle() == null ? "" : entite.getSigle());
 			
 			if(null != root.getFichePostesEnfant()) {
 				for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
@@ -794,6 +795,12 @@ public class FichePosteService implements IFichePosteService {
 		}
 		// on verifie que l'entite est bien "prévision"
 		EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(idEntite, new ArrayList<EntiteDto>());
+		
+		if(null == entite) {
+			result.getErrors().add("L'entite id " + idEntite + " n'existe pas ou plus.");
+			return result;
+		}
+		
 		if (!entite.getIdStatut().toString().equals(String.valueOf(StatutEntiteEnum.PREVISION.getIdRefStatutEntite()))) {
 			result.getErrors().add("L'entite id " + idEntite + " n'est pas en statut 'prévision'.");
 			return result;
