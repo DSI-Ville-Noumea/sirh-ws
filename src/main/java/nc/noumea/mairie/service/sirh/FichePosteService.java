@@ -392,16 +392,20 @@ public class FichePosteService implements IFichePosteService {
 		FichePosteTreeNodeDto dto = null;
 		
 		if(null != root) {
+			try {
 			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
 			
 			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
 			dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
-					fichePoste, entite.getSigle() == null ? "" : entite.getSigle());
+					fichePoste, entite == null ? "" : entite.getSigle());
 			
 			if(null != root.getFichePostesEnfant()) {
 				for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
 					dto.getFichePostesEnfant().add(constructFichePosteTreeNodeDto(enfant, listEntiteDto));
 				}
+			}
+			} catch(Exception e) {
+				logger.debug(e.getMessage());
 			}
 		}
 		
