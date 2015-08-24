@@ -317,7 +317,7 @@ public class FichePosteService implements IFichePosteService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite) {
+	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires) {
 		
 		// on recherche la liste des fiches de poste appartement a un service
 		List<FichePoste> listFichesPoste = 
@@ -334,8 +334,10 @@ public class FichePosteService implements IFichePosteService {
 		List<EntiteDto> listEntiteDtoForOptimize = new ArrayList<EntiteDto>();
 		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
 		for(Integer idFichePosteParent : listTreeParent) {
-			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize);
-			result.add(treeNode);
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize, withFichesPosteNonReglementaires);
+			
+			if(null != treeNode)
+				result.add(treeNode);
 		}
 		
 		return result;
@@ -387,25 +389,26 @@ public class FichePosteService implements IFichePosteService {
 		return listIdsFichesPosteParent;
 	}
 	
-	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto) {
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
 		
 		FichePosteTreeNodeDto dto = null;
 		
 		if(null != root) {
-			try {
 			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
 			
-			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
-			dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
-					fichePoste, entite == null ? "" : entite.getSigle());
-			
-			if(null != root.getFichePostesEnfant()) {
-				for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
-					dto.getFichePostesEnfant().add(constructFichePosteTreeNodeDto(enfant, listEntiteDto));
+			if(withFichesPosteNonReglemente
+					|| !fichePoste.getReglementaire().getCdThor().equals(0)){
+				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
+				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
+						fichePoste, entite == null ? "" : entite.getSigle());
+				
+				if(null != root.getFichePostesEnfant()) {
+					for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
+						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente);
+						if(null != dtoEnfant)
+							dto.getFichePostesEnfant().add(dtoEnfant);
+					}
 				}
-			}
-			} catch(Exception e) {
-				logger.debug(e.getMessage());
 			}
 		}
 		

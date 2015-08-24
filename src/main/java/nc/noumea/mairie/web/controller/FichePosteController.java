@@ -537,9 +537,9 @@ public class FichePosteController {
 	@RequestMapping(value = "/treeFichesPosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> getTreeFichesPosteByIdEntite(
-			@RequestParam(value = "idEntite") Integer idEntite) {
+			@RequestParam(value = "idEntite") Integer idEntite, @RequestParam(value = "withFichesPosteNonReglemente") boolean withFichesPosteNonReglemente) {
 		
-		List<FichePosteTreeNodeDto> result = fpSrv.getTreeFichesPosteByIdEntite(idEntite);
+		List<FichePosteTreeNodeDto> result = fpSrv.getTreeFichesPosteByIdEntite(idEntite, withFichesPosteNonReglemente);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(result);

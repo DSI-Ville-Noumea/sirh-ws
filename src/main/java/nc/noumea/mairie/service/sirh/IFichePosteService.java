@@ -66,5 +66,5 @@ public interface IFichePosteService {
 
 	public ReturnMessageDto activeFichePosteByIdFichePoste(Integer idFichePoste, Integer idAgent);
 
-	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite);
+	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires);
 }
