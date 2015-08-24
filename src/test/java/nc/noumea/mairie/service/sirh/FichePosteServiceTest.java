@@ -34,7 +34,6 @@ import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
-import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
@@ -1467,7 +1466,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(null);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1513,7 +1511,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1560,7 +1557,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1608,7 +1604,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1659,7 +1654,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1711,7 +1705,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1768,7 +1761,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1824,7 +1816,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1881,7 +1872,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1939,7 +1929,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2002,7 +1991,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2065,7 +2053,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2129,7 +2116,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2195,7 +2181,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2260,7 +2245,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2278,7 +2262,8 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
 		assertEquals(0, result.getInfos().size());
-		assertEquals("Le poste n'est pas reglementaire, le budget ne peut pas être permanent.", result.getErrors().get(0));
+		assertEquals("Le poste n'est pas reglementaire, le budget ne peut pas être permanent.",
+				result.getErrors().get(0));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
@@ -2328,7 +2313,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2398,7 +2382,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(2)).thenReturn(statutValide);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
@@ -2421,133 +2404,139 @@ public class FichePosteServiceTest {
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
-	
+
 	@Test
 	public void rechercheFichesPosteParent_unParent() {
-		
+
 		Integer idEntite = 1;
-		
+
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
 		FichePoste fpNiv1 = new FichePoste();
 		fpNiv1.setIdFichePoste(1);
 		fpNiv1.setNumFP("2010/1");
 		listFichesPoste.add(fpNiv1);
-		
+
 		FichePoste fpNiv2 = new FichePoste();
 		fpNiv2.setIdFichePoste(2);
 		fpNiv2.setNumFP("2011/1");
 		fpNiv2.setSuperieurHierarchique(fpNiv1);
 		listFichesPoste.add(fpNiv2);
-		
+
 		FichePoste fpNiv2Bis = new FichePoste();
 		fpNiv2Bis.setIdFichePoste(3);
 		fpNiv2Bis.setNumFP("2011/2");
 		fpNiv2Bis.setSuperieurHierarchique(fpNiv1);
 		listFichesPoste.add(fpNiv2Bis);
-		
+
 		FichePoste fpNiv2Niv3 = new FichePoste();
 		fpNiv2Niv3.setIdFichePoste(4);
 		fpNiv2Niv3.setNumFP("2012/1");
 		fpNiv2Niv3.setSuperieurHierarchique(fpNiv2);
 		listFichesPoste.add(fpNiv2Niv3);
-		
+
 		FichePoste fpNiv2BisNiv3 = new FichePoste();
 		fpNiv2BisNiv3.setIdFichePoste(5);
 		fpNiv2BisNiv3.setNumFP("2012/2");
 		fpNiv2BisNiv3.setSuperieurHierarchique(fpNiv2Bis);
 		listFichesPoste.add(fpNiv2BisNiv3);
-		
+
 		FichePoste fpNiv2Niv3Bis = new FichePoste();
 		fpNiv2Niv3Bis.setIdFichePoste(6);
 		fpNiv2Niv3Bis.setNumFP("2012/3");
 		fpNiv2Niv3Bis.setSuperieurHierarchique(fpNiv2);
 		listFichesPoste.add(fpNiv2Niv3Bis);
-		
+
 		FichePoste fpNiv2BisNiv3Bis = new FichePoste();
 		fpNiv2BisNiv3Bis.setIdFichePoste(7);
 		fpNiv2BisNiv3Bis.setNumFP("2012/4");
 		fpNiv2BisNiv3Bis.setSuperieurHierarchique(fpNiv2Bis);
 		listFichesPoste.add(fpNiv2BisNiv3Bis);
-				
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
-				EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
-		
+		Mockito.when(
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays
+						.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
+						EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+						EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
-		
+
 		List<Integer> result = ficheService.rechercheFichesPosteParent(listFichesPoste);
-		
+
 		assertEquals(1, result.size());
 		assertEquals(result.get(0).intValue(), 1);
 	}
-	
+
 	@Test
 	public void rechercheFichesPosteParent_3Parents() {
-		
+
 		Integer idEntite = 1;
-		
+
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
 		FichePoste fp = new FichePoste();
 		fp.setIdFichePoste(1);
 		fp.setNumFP("2010/1");
 		listFichesPoste.add(fp);
-		
+
 		FichePoste fp2 = new FichePoste();
 		fp2.setIdFichePoste(2);
 		fp2.setNumFP("2010/2");
 		listFichesPoste.add(fp2);
-		
+
 		FichePoste fp3 = new FichePoste();
 		fp3.setIdFichePoste(3);
 		fp3.setNumFP("2010/3");
 		listFichesPoste.add(fp3);
-				
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
-				EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
-		
+		Mockito.when(
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays
+						.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
+						EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+						EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
-		
+
 		List<Integer> result = ficheService.rechercheFichesPosteParent(listFichesPoste);
-		
+
 		assertEquals(3, result.size());
 		assertEquals(result.get(0).intValue(), 3);
 		assertEquals(result.get(1).intValue(), 2);
 		assertEquals(result.get(2).intValue(), 1);
 	}
-	
+
 	private void getAllFichePosteAndAffectedAgents(Hashtable<Integer, FichePosteTreeNode> hTree) {
-		
+
 		FichePosteTreeNode fpNiv1 = new FichePosteTreeNode();
 		fpNiv1.setIdFichePoste(1);
 		fpNiv1.setIdFichePosteParent(null);
-		
+
 		FichePosteTreeNode fpNiv2 = new FichePosteTreeNode();
 		fpNiv2.setIdFichePoste(2);
 		fpNiv2.setIdFichePosteParent(1);
-		
+
 		FichePosteTreeNode fpNiv2Bis = new FichePosteTreeNode();
 		fpNiv2Bis.setIdFichePoste(3);
 		fpNiv2Bis.setIdFichePosteParent(1);
-		
+
 		FichePosteTreeNode fpNiv2Niv3 = new FichePosteTreeNode();
 		fpNiv2Niv3.setIdFichePoste(4);
 		fpNiv2Niv3.setIdFichePosteParent(2);
-		
+
 		FichePosteTreeNode fpNiv2BisNiv3 = new FichePosteTreeNode();
 		fpNiv2BisNiv3.setIdFichePoste(5);
 		fpNiv2BisNiv3.setIdFichePosteParent(3);
-		
+
 		FichePosteTreeNode fpNiv2Niv3Bis = new FichePosteTreeNode();
 		fpNiv2Niv3Bis.setIdFichePoste(6);
 		fpNiv2Niv3Bis.setIdFichePosteParent(2);
-		
+
 		FichePosteTreeNode fpNiv2BisNiv3Bis = new FichePosteTreeNode();
 		fpNiv2BisNiv3Bis.setIdFichePoste(7);
 		fpNiv2BisNiv3Bis.setIdFichePosteParent(3);
-		
+
 		hTree.put(fpNiv1.getIdFichePoste(), fpNiv1);
 		hTree.put(fpNiv2.getIdFichePoste(), fpNiv2);
 		hTree.put(fpNiv2Bis.getIdFichePoste(), fpNiv2Bis);
@@ -2556,21 +2545,21 @@ public class FichePosteServiceTest {
 		hTree.put(fpNiv2Niv3Bis.getIdFichePoste(), fpNiv2Niv3Bis);
 		hTree.put(fpNiv2BisNiv3Bis.getIdFichePoste(), fpNiv2BisNiv3Bis);
 	}
-	
+
 	@Test
 	public void construitArbreFichePostes_3niveaux() {
-		
+
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
 		getAllFichePosteAndAffectedAgents(hTree);
-		
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getAllFichePosteAndAffectedAgents(Mockito.any(Date.class))).thenReturn(hTree);
-		
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
-		
+
 		ficheService.construitArbreFichePostes();
-		
+
 		assertEquals(7, ficheService.hFpTree.size());
 		// 1er niveau
 		assertEquals(ficheService.hFpTree.get(1).getIdFichePoste().intValue(), 1);
@@ -2578,81 +2567,88 @@ public class FichePosteServiceTest {
 		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 3);
 		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 2);
 		// 3e niveau
-		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(1).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 4);
-		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(0).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 5);
-		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(1).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 6);
-		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(0).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 7);
+		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(1).getFichePostesEnfant().get(1)
+				.getIdFichePoste().intValue(), 4);
+		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(0).getFichePostesEnfant().get(1)
+				.getIdFichePoste().intValue(), 5);
+		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(1).getFichePostesEnfant().get(0)
+				.getIdFichePoste().intValue(), 6);
+		assertEquals(ficheService.hFpTree.get(1).getFichePostesEnfant().get(0).getFichePostesEnfant().get(0)
+				.getIdFichePoste().intValue(), 7);
 	}
-	
+
 	@Test
 	public void getTreeFichesPosteByIdEntite_3Niveaux() {
-		
+
 		Integer idEntite = 1;
-		
+
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
 		FichePoste fpNiv1 = new FichePoste();
 		fpNiv1.setIdFichePoste(1);
 		fpNiv1.setNumFP("2010/1");
 		listFichesPoste.add(fpNiv1);
-		
+
 		FichePoste fpNiv2 = new FichePoste();
 		fpNiv2.setIdFichePoste(2);
 		fpNiv2.setNumFP("2011/1");
 		fpNiv2.setSuperieurHierarchique(fpNiv1);
 		listFichesPoste.add(fpNiv2);
-		
+
 		FichePoste fpNiv2Bis = new FichePoste();
 		fpNiv2Bis.setIdFichePoste(3);
 		fpNiv2Bis.setNumFP("2011/2");
 		fpNiv2Bis.setSuperieurHierarchique(fpNiv1);
 		listFichesPoste.add(fpNiv2Bis);
-		
+
 		FichePoste fpNiv2Niv3 = new FichePoste();
 		fpNiv2Niv3.setIdFichePoste(4);
 		fpNiv2Niv3.setNumFP("2012/1");
 		fpNiv2Niv3.setSuperieurHierarchique(fpNiv2);
 		listFichesPoste.add(fpNiv2Niv3);
-		
+
 		FichePoste fpNiv2BisNiv3 = new FichePoste();
 		fpNiv2BisNiv3.setIdFichePoste(5);
 		fpNiv2BisNiv3.setNumFP("2012/2");
 		fpNiv2BisNiv3.setSuperieurHierarchique(fpNiv2Bis);
 		listFichesPoste.add(fpNiv2BisNiv3);
-		
+
 		FichePoste fpNiv2Niv3Bis = new FichePoste();
 		fpNiv2Niv3Bis.setIdFichePoste(6);
 		fpNiv2Niv3Bis.setNumFP("2012/3");
 		fpNiv2Niv3Bis.setSuperieurHierarchique(fpNiv2);
 		listFichesPoste.add(fpNiv2Niv3Bis);
-		
+
 		FichePoste fpNiv2BisNiv3Bis = new FichePoste();
 		fpNiv2BisNiv3Bis.setIdFichePoste(7);
 		fpNiv2BisNiv3Bis.setNumFP("2012/4");
 		fpNiv2BisNiv3Bis.setSuperieurHierarchique(fpNiv2Bis);
 		listFichesPoste.add(fpNiv2BisNiv3Bis);
-		
+
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
 		getAllFichePosteAndAffectedAgents(hTree);
-		
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getAllFichePosteAndAffectedAgents(Mockito.any(Date.class))).thenReturn(hTree);
-		
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-				Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
-						EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
-		
+
+		Mockito.when(
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays
+						.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
+						EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+						EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
+
 		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(new FichePoste());
-		
+
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(new EntiteDto());
-		
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(
+				new EntiteDto());
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
-		
+
 		ficheService.construitArbreFichePostes();
-		List<FichePosteTreeNodeDto> result = ficheService.getTreeFichesPosteByIdEntite(idEntite);
-		
+		List<FichePosteTreeNodeDto> result = ficheService.getTreeFichesPosteByIdEntite(idEntite, true);
+
 		assertEquals(1, result.size());
 		// 1er niveau
 		assertEquals(result.get(0).getIdFichePoste().intValue(), 1);
@@ -2660,55 +2656,62 @@ public class FichePosteServiceTest {
 		assertEquals(result.get(0).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 3);
 		assertEquals(result.get(0).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 2);
 		// 3e niveau
-		assertEquals(result.get(0).getFichePostesEnfant().get(1).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 4);
-		assertEquals(result.get(0).getFichePostesEnfant().get(0).getFichePostesEnfant().get(1).getIdFichePoste().intValue(), 5);
-		assertEquals(result.get(0).getFichePostesEnfant().get(1).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 6);
-		assertEquals(result.get(0).getFichePostesEnfant().get(0).getFichePostesEnfant().get(0).getIdFichePoste().intValue(), 7);
+		assertEquals(result.get(0).getFichePostesEnfant().get(1).getFichePostesEnfant().get(1).getIdFichePoste()
+				.intValue(), 4);
+		assertEquals(result.get(0).getFichePostesEnfant().get(0).getFichePostesEnfant().get(1).getIdFichePoste()
+				.intValue(), 5);
+		assertEquals(result.get(0).getFichePostesEnfant().get(1).getFichePostesEnfant().get(0).getIdFichePoste()
+				.intValue(), 6);
+		assertEquals(result.get(0).getFichePostesEnfant().get(0).getFichePostesEnfant().get(0).getIdFichePoste()
+				.intValue(), 7);
 	}
-	
+
 	@Test
 	public void getTreeFichesPosteByIdEntite_3FichesDePosteMemeNiveau() {
-		
+
 		Integer idEntite = 1;
-		
+
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
 		FichePoste fp = new FichePoste();
 		fp.setIdFichePoste(1);
 		fp.setNumFP("2010/1");
 		listFichesPoste.add(fp);
-		
+
 		FichePoste fp2 = new FichePoste();
 		fp2.setIdFichePoste(2);
 		fp2.setNumFP("2011/1");
 		listFichesPoste.add(fp2);
-		
+
 		FichePoste fp3 = new FichePoste();
 		fp3.setIdFichePoste(3);
 		fp3.setNumFP("2011/2");
 		listFichesPoste.add(fp3);
-		
+
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
 		getAllFichePosteAndAffectedAgents(hTree);
-		
+
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getAllFichePosteAndAffectedAgents(Mockito.any(Date.class))).thenReturn(hTree);
-		
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-				Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
-						EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
-		
+
+		Mockito.when(
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays
+						.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
+						EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+						EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
+
 		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(new FichePoste());
-		
+
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(new EntiteDto());
-		
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(
+				new EntiteDto());
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
-		
+
 		ficheService.construitArbreFichePostes();
-		List<FichePosteTreeNodeDto> result = ficheService.getTreeFichesPosteByIdEntite(idEntite);
-		
+		List<FichePosteTreeNodeDto> result = ficheService.getTreeFichesPosteByIdEntite(idEntite, true);
+
 		assertEquals(3, result.size());
 		// 1er niveau
 		assertEquals(result.get(0).getIdFichePoste().intValue(), 3);

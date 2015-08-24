@@ -32,7 +32,6 @@ import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
-import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
@@ -314,47 +313,51 @@ public class FichePosteService implements IFichePosteService {
 
 		return agents;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
-	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires) {
-		
+	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite,
+			boolean withFichesPosteNonReglementaires) {
+
 		// on recherche la liste des fiches de poste appartement a un service
-		List<FichePoste> listFichesPoste = 
-				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-						Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
-								EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()));
-		
+		List<FichePoste> listFichesPoste = fichePosteDao
+				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(idEntite),
+						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
+								EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+								EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+
 		if (null == listFichesPoste || listFichesPoste.isEmpty())
 			return null;
-		
-		// on recherche le ou les fiches de poste ayant la plus haute hierarchie (niveau 0)
+
+		// on recherche le ou les fiches de poste ayant la plus haute hierarchie
+		// (niveau 0)
 		List<Integer> listTreeParent = rechercheFichesPosteParent(listFichesPoste);
-		
+
 		List<EntiteDto> listEntiteDtoForOptimize = new ArrayList<EntiteDto>();
 		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
-		for(Integer idFichePosteParent : listTreeParent) {
-			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize, withFichesPosteNonReglementaires);
-			
-			if(null != treeNode)
+		for (Integer idFichePosteParent : listTreeParent) {
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(
+					getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize,
+					withFichesPosteNonReglementaires);
+
+			if (null != treeNode)
 				result.add(treeNode);
 		}
-		
+
 		return result;
 	}
-	
+
 	protected List<Integer> rechercheFichesPosteParent(List<FichePoste> listFichesPoste) {
-		
+
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
-		
-		for(FichePoste node : listFichesPoste) {
-			hTree.put(node.getIdFichePoste(), new FichePosteTreeNode(
-					node.getIdFichePoste(), 
-					null == node.getSuperieurHierarchique() ? null : node.getSuperieurHierarchique().getIdFichePoste(), 
-					null));
+
+		for (FichePoste node : listFichesPoste) {
+			hTree.put(node.getIdFichePoste(),
+					new FichePosteTreeNode(node.getIdFichePoste(), null == node.getSuperieurHierarchique() ? null
+							: node.getSuperieurHierarchique().getIdFichePoste(), null));
 		}
-		
-		for(FichePoste node : listFichesPoste) {
+
+		for (FichePoste node : listFichesPoste) {
 
 			logger.debug("node id: {}", node.getIdFichePoste());
 
@@ -378,40 +381,41 @@ public class FichePosteService implements IFichePosteService {
 				fichePosteNode.setFichePosteParent(parent);
 			}
 		}
-		
+
 		List<Integer> listIdsFichesPosteParent = new ArrayList<Integer>();
 		for (FichePosteTreeNode node : hTree.values()) {
-			if(null == node.getFichePosteParent()) {
+			if (null == node.getFichePosteParent()) {
 				listIdsFichesPosteParent.add(node.getIdFichePoste());
 			}
 		}
-		
+
 		return listIdsFichesPosteParent;
 	}
-	
-	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
-		
+
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root,
+			List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
+
 		FichePosteTreeNodeDto dto = null;
-		
-		if(null != root) {
+
+		if (null != root) {
 			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
-			
-			if(withFichesPosteNonReglemente
-					|| !fichePoste.getReglementaire().getCdThor().equals(0)){
+
+			if (withFichesPosteNonReglemente || !fichePoste.getReglementaire().getCdThor().equals(0)) {
 				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
-				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
-						fichePoste, entite == null ? "" : entite.getSigle());
-				
-				if(null != root.getFichePostesEnfant()) {
-					for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
-						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente);
-						if(null != dtoEnfant)
+				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste,
+						entite == null ? "" : entite.getSigle());
+
+				if (null != root.getFichePostesEnfant()) {
+					for (FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
+						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto,
+								withFichesPosteNonReglemente);
+						if (null != dtoEnfant)
 							dto.getFichePostesEnfant().add(dtoEnfant);
 					}
 				}
 			}
 		}
-		
+
 		return dto;
 	}
 
@@ -802,12 +806,12 @@ public class FichePosteService implements IFichePosteService {
 		}
 		// on verifie que l'entite est bien "prévision"
 		EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(idEntite, new ArrayList<EntiteDto>());
-		
-		if(null == entite) {
+
+		if (null == entite) {
 			result.getErrors().add("L'entite id " + idEntite + " n'existe pas ou plus.");
 			return result;
 		}
-		
+
 		if (!entite.getIdStatut().toString().equals(String.valueOf(StatutEntiteEnum.PREVISION.getIdRefStatutEntite()))) {
 			result.getErrors().add("L'entite id " + idEntite + " n'est pas en statut 'prévision'.");
 			return result;
@@ -854,9 +858,7 @@ public class FichePosteService implements IFichePosteService {
 		EntiteDto serv = adsService.getInfoSiservByIdEntite(entite.getIdEntite());
 		fichePDupliquee.setIdServi(serv == null || serv.getCodeServi() == null ? null : serv.getCodeServi());
 		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
-		// on cherche la NFA de l'entite
-		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
-		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
+		fichePDupliquee.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
@@ -867,17 +869,17 @@ public class FichePosteService implements IFichePosteService {
 				FeFpPK feFpPk = new FeFpPK();
 				feFpPk.setIdFicheEmploi(fePrimaire.getIdFicheEmploi());
 				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
-				
+
 				FeFp feFp = new FeFp();
 				feFp.setId(feFpPk);
 				feFp.setFePrimaire(1);
 				feFp.setFichePoste(fichePDupliquee);
 				feFp.setFicheEmploi(fePrimaire);
-				
+
 				fichePDupliquee.getFicheEmploi().add(feFp);
 			}
 		}
-		
+
 		FeFp lienSecondaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 0);
 		if (lienSecondaire != null) {
 			FicheEmploi feSecondaire = fichePosteDao.chercherFicheEmploi(lienSecondaire.getId().getIdFicheEmploi());
@@ -885,13 +887,13 @@ public class FichePosteService implements IFichePosteService {
 				FeFpPK feFpPk = new FeFpPK();
 				feFpPk.setIdFicheEmploi(feSecondaire.getIdFicheEmploi());
 				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
-				
+
 				FeFp feFp = new FeFp();
 				feFp.setId(feFpPk);
 				feFp.setFePrimaire(0);
 				feFp.setFichePoste(fichePDupliquee);
 				feFp.setFicheEmploi(feSecondaire);
-				
+
 				fichePDupliquee.getFicheEmploi().add(feFp);
 			}
 		}
@@ -959,7 +961,7 @@ public class FichePosteService implements IFichePosteService {
 		// on crée la FDP en base
 		try {
 			fichePosteDao.persisEntity(fichePDupliquee);
-		} catch(Exception e){
+		} catch (Exception e) {
 			logger.debug(e.getMessage());
 		}
 
@@ -975,12 +977,12 @@ public class FichePosteService implements IFichePosteService {
 
 		// probleme avec FE_FP.ID_FICHE_POSTE = NULL lors de l insert en BDD
 		// pas trouve mieux que cette solution
-		if(null != fichePDupliquee.getFicheEmploi()) {
-			for(FeFp feFp : fichePDupliquee.getFicheEmploi()){
+		if (null != fichePDupliquee.getFicheEmploi()) {
+			for (FeFp feFp : fichePDupliquee.getFicheEmploi()) {
 				feFp.getId().setIdFichePoste(fichePDupliquee.getIdFichePoste());
 			}
 		}
-		
+
 		try {
 			fichePosteDao.flush();
 		} catch (Exception e) {
@@ -1162,14 +1164,9 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// le NFA ne doit pas etre vide
-		if (fichePoste.getNfa() == null) {
-			// si vide alors on regarde si on trouve la NFA dans la table de
-			// paramétrage
-			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
-			if (nfaEntite == null || nfaEntite.getNfa() == null) {
-				result.getErrors().add("Le champ NFA est obligatoire.");
-				return result;
-			}
+		if (fichePoste.getNfa() == null && entite.getNfa() == null) {
+			result.getErrors().add("Le champ NFA est obligatoire.");
+			return result;
 		}
 		// le responsable hierarchique ne doit pas etre vide
 		if (fichePoste.getSuperieurHierarchique() == null) {
@@ -1305,8 +1302,7 @@ public class FichePosteService implements IFichePosteService {
 		fichePoste.setDateDebAppliServ(entite.getDateDeliberationActif());
 		// on met à jour la NFA
 		if (fichePoste.getNfa() == null) {
-			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
-			fichePoste.setNfa(nfaEntite.getNfa());
+			fichePoste.setNfa(entite.getNfa());
 		}
 		// on met à jour le statut en "validée"
 		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(2);

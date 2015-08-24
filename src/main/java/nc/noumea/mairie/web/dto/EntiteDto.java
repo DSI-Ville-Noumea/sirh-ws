@@ -28,6 +28,7 @@ public class EntiteDto {
 	private Date dateDeliberationActif;
 	private String refDeliberationInactif;
 	private Date dateDeliberationInactif;
+	private String nfa;
 
 	public EntiteDto() {
 		enfants = new ArrayList<>();
@@ -175,5 +176,13 @@ public class EntiteDto {
 
 	public void setDateDeliberationInactif(Date dateDeliberationInactif) {
 		this.dateDeliberationInactif = dateDeliberationInactif;
+	}
+
+	public String getNfa() {
+		return nfa;
+	}
+
+	public void setNfa(String nfa) {
+		this.nfa = nfa;
 	}
 }
