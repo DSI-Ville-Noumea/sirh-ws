@@ -31,6 +31,10 @@ import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.WhereJoinTable;
 
@@ -44,9 +48,10 @@ public class FichePoste {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idFichePoste;
 
-	@NotNull
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@OneToOne(optional = true, fetch = FetchType.LAZY, orphanRemoval = false)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
+	@LazyToOne(value = LazyToOneOption.NO_PROXY)
 	private TitrePoste titrePoste;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
