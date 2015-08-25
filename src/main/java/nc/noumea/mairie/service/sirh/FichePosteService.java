@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +33,7 @@ import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
@@ -96,6 +98,7 @@ public class FichePosteService implements IFichePosteService {
 
 	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
 	protected Hashtable<Integer, FichePosteTreeNode> hFpTree;
+	protected TreeMap<Integer, FichePosteTreeNode> hFpTreeWithFPAffecteesEtNonAffectees;
 
 	@Override
 	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
@@ -313,34 +316,29 @@ public class FichePosteService implements IFichePosteService {
 
 		return agents;
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite,
-			boolean withFichesPosteNonReglementaires) {
-
+	public List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires) {
+		
 		// on recherche la liste des fiches de poste appartement a un service
-		List<FichePoste> listFichesPoste = fichePosteDao
-				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(idEntite),
-						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(),
-								EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
-								EnumStatutFichePoste.TRANSITOIRE.getStatut()));
-
+		List<FichePoste> listFichesPoste = 
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
+						Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
+								EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+		
 		if (null == listFichesPoste || listFichesPoste.isEmpty())
 			return null;
-
-		// on recherche le ou les fiches de poste ayant la plus haute hierarchie
-		// (niveau 0)
+		
+		// on recherche le ou les fiches de poste ayant la plus haute hierarchie (niveau 0)
 		List<Integer> listTreeParent = rechercheFichesPosteParent(listFichesPoste);
-
+		
 		List<EntiteDto> listEntiteDtoForOptimize = new ArrayList<EntiteDto>();
 		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
-		for (Integer idFichePosteParent : listTreeParent) {
-			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(
-					getFichePosteTree().get(idFichePosteParent), listEntiteDtoForOptimize,
-					withFichesPosteNonReglementaires);
-
-			if (null != treeNode)
+		for(Integer idFichePosteParent : listTreeParent) {
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent), listEntiteDtoForOptimize, withFichesPosteNonReglementaires);
+			
+			if(null != treeNode)
 				result.add(treeNode);
 		}
 
@@ -356,8 +354,8 @@ public class FichePosteService implements IFichePosteService {
 					new FichePosteTreeNode(node.getIdFichePoste(), null == node.getSuperieurHierarchique() ? null
 							: node.getSuperieurHierarchique().getIdFichePoste(), null));
 		}
-
-		for (FichePoste node : listFichesPoste) {
+		
+		for(FichePoste node : listFichesPoste) {
 
 			logger.debug("node id: {}", node.getIdFichePoste());
 
@@ -381,41 +379,41 @@ public class FichePosteService implements IFichePosteService {
 				fichePosteNode.setFichePosteParent(parent);
 			}
 		}
-
+		
 		List<Integer> listIdsFichesPosteParent = new ArrayList<Integer>();
 		for (FichePosteTreeNode node : hTree.values()) {
-			if (null == node.getFichePosteParent()) {
+			if(null == node.getFichePosteParent()) {
 				listIdsFichesPosteParent.add(node.getIdFichePoste());
 			}
 		}
-
+		
 		return listIdsFichesPosteParent;
 	}
-
-	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root,
-			List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
-
+	
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
+		
 		FichePosteTreeNodeDto dto = null;
-
-		if (null != root) {
+		
+		if(null != root) {
 			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
-
-			if (withFichesPosteNonReglemente || !fichePoste.getReglementaire().getCdThor().equals(0)) {
+			
+			if(withFichesPosteNonReglemente
+					|| null == fichePoste.getReglementaire()
+					|| !fichePoste.getReglementaire().getCdThor().equals(0)) {
 				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
-				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste,
-						entite == null ? "" : entite.getSigle());
-
-				if (null != root.getFichePostesEnfant()) {
-					for (FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
-						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto,
-								withFichesPosteNonReglemente);
-						if (null != dtoEnfant)
+				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
+						fichePoste, entite == null ? "" : entite.getSigle());
+				
+				if(null != root.getFichePostesEnfant()) {
+					for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
+						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente);
+						if(null != dtoEnfant)
 							dto.getFichePostesEnfant().add(dtoEnfant);
 					}
 				}
 			}
 		}
-
+		
 		return dto;
 	}
 
@@ -452,6 +450,78 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		return hFpTree;
+	}
+	
+	/**
+	 * Retourne l'instance de l'arbre des fiches de poste affectees et non affectees
+	 * en statut EnCreation, Validee, Gelee et transitoire. 
+	 * Le construit de manière thread-safe s'il n'existe pas.
+	 * 
+	 * @return Hashtable L'arbre des fiches de postes
+	 */
+	protected TreeMap<Integer, FichePosteTreeNode> getFichePosteTreeAffecteesEtNonAffectees() {
+		
+		TreeMap<Integer, FichePosteTreeNode> hTreeTemp = fichePosteDao.getAllFichePoste(new Date());
+		
+		if (null != hFpTreeWithFPAffecteesEtNonAffectees 
+				&& hTreeTemp.size() ==  hFpTreeWithFPAffecteesEtNonAffectees.size()
+				&& hTreeTemp.lastKey() == hFpTreeWithFPAffecteesEtNonAffectees.lastKey())
+			return hFpTreeWithFPAffecteesEtNonAffectees;
+
+		synchronized (this) {
+
+			if (null != hFpTreeWithFPAffecteesEtNonAffectees 
+					&& hTreeTemp.size() ==  hFpTreeWithFPAffecteesEtNonAffectees.size()
+					&& hTreeTemp.lastKey() == hFpTreeWithFPAffecteesEtNonAffectees.lastKey())
+				return hFpTreeWithFPAffecteesEtNonAffectees;
+
+			hFpTreeWithFPAffecteesEtNonAffectees = construitArbreWithFPAffecteesEtNonAffectees();
+		}
+
+		return hFpTreeWithFPAffecteesEtNonAffectees;
+	}
+
+	/**
+	 * Construit un arbre hiérarchique des fiches de postes actives
+	 * 
+	 * @return Hashtablel'arbre des fiches de postes
+	 */
+	private TreeMap<Integer, FichePosteTreeNode> construitArbreWithFPAffecteesEtNonAffectees() {
+
+		TreeMap<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePoste(new Date());
+
+		int nbNodes = 0, nbNotOrphanNodes = 0;
+
+		for (FichePosteTreeNode node : hTree.values()) {
+
+			logger.debug("node id: {}", node.getIdFichePoste());
+			nbNodes++;
+
+			if (node.getIdFichePosteParent() == null) {
+				logger.debug("parent node is null", node.getIdFichePoste());
+				continue;
+			}
+
+			logger.debug("node has a parent: {}", node.getIdFichePosteParent());
+
+			if (!hTree.containsKey(node.getIdFichePosteParent())) {
+				logger.debug("parent node is not null but does not exist in tree", node.getIdFichePoste());
+				continue;
+			}
+
+			nbNotOrphanNodes++;
+
+			FichePosteTreeNode parent = hTree.get(node.getIdFichePosteParent());
+
+			if (parent != null && parent != node) {
+				parent.getFichePostesEnfant().add(node);
+				node.setFichePosteParent(parent);
+			}
+		}
+
+		logger.debug("{} nodes total with {} being orphans.", nbNodes, nbNodes - nbNotOrphanNodes);
+
+		return hTree;
 	}
 
 	/**
@@ -806,12 +876,12 @@ public class FichePosteService implements IFichePosteService {
 		}
 		// on verifie que l'entite est bien "prévision"
 		EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(idEntite, new ArrayList<EntiteDto>());
-
-		if (null == entite) {
+		
+		if(null == entite) {
 			result.getErrors().add("L'entite id " + idEntite + " n'existe pas ou plus.");
 			return result;
 		}
-
+		
 		if (!entite.getIdStatut().toString().equals(String.valueOf(StatutEntiteEnum.PREVISION.getIdRefStatutEntite()))) {
 			result.getErrors().add("L'entite id " + idEntite + " n'est pas en statut 'prévision'.");
 			return result;
@@ -858,7 +928,9 @@ public class FichePosteService implements IFichePosteService {
 		EntiteDto serv = adsService.getInfoSiservByIdEntite(entite.getIdEntite());
 		fichePDupliquee.setIdServi(serv == null || serv.getCodeServi() == null ? null : serv.getCodeServi());
 		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
-		fichePDupliquee.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
+		// on cherche la NFA de l'entite
+		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
+		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
 		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
@@ -1164,9 +1236,14 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// le NFA ne doit pas etre vide
-		if (fichePoste.getNfa() == null && entite.getNfa() == null) {
-			result.getErrors().add("Le champ NFA est obligatoire.");
-			return result;
+		if (fichePoste.getNfa() == null) {
+			// si vide alors on regarde si on trouve la NFA dans la table de
+			// paramétrage
+			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
+			if (nfaEntite == null || nfaEntite.getNfa() == null) {
+				result.getErrors().add("Le champ NFA est obligatoire.");
+				return result;
+			}
 		}
 		// le responsable hierarchique ne doit pas etre vide
 		if (fichePoste.getSuperieurHierarchique() == null) {
@@ -1302,7 +1379,8 @@ public class FichePosteService implements IFichePosteService {
 		fichePoste.setDateDebAppliServ(entite.getDateDeliberationActif());
 		// on met à jour la NFA
 		if (fichePoste.getNfa() == null) {
-			fichePoste.setNfa(entite.getNfa());
+			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
+			fichePoste.setNfa(nfaEntite.getNfa());
 		}
 		// on met à jour le statut en "validée"
 		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(2);

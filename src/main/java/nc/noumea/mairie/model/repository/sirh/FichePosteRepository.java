@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -45,6 +46,33 @@ public class FichePosteRepository implements IFichePosteRepository {
 		Hashtable<Integer, FichePosteTreeNode> result = new Hashtable<Integer, FichePosteTreeNode>();
 
 		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT from FICHE_POSTE fp left join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE where fp.ID_STATUT_FP = 2 order by ID_FICHE_POSTE asc, ID_AGENT asc";
+		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
+		q.setParameter("today", today);
+		List<Object[]> l = q.getResultList();
+
+		for (Object[] r : l) {
+			Integer idFichePoste = (Integer) r[0];
+
+			if (result.containsKey(idFichePoste))
+				continue;
+
+			FichePosteTreeNode node = new FichePosteTreeNode(idFichePoste, (Integer) r[1], (Integer) r[2]);
+			result.put(idFichePoste, node);
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today) {
+
+		TreeMap<Integer, FichePosteTreeNode> result = new TreeMap<Integer, FichePosteTreeNode>();
+
+		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, "
+				+ "case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT "
+				+ "from FICHE_POSTE fp left outer join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE and (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) "
+				+ "where fp.ID_STATUT_FP in (1 , 2 , 6, 5) order by ID_FICHE_POSTE asc, ID_AGENT asc";
 		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
 		q.setParameter("today", today);
 		List<Object[]> l = q.getResultList();

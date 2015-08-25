@@ -3,6 +3,7 @@ package nc.noumea.mairie.model.repository.sirh;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeMap;
 
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.Activite;
@@ -81,4 +82,6 @@ public interface IFichePosteRepository {
 	RegimeIndemnitaire chercherRegimeIndemnitaire(Integer idRegime);
 
 	StatutFichePoste chercherStatutFPByIdStatut(Integer idStatut);
+
+	TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today);
 }

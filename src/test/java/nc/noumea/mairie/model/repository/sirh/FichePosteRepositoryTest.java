@@ -5,7 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +15,9 @@ import javax.persistence.PersistenceContext;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
 import nc.noumea.mairie.model.bean.sirh.Competence;
@@ -38,8 +43,10 @@ import nc.noumea.mairie.model.pk.sirh.FeFpPK;
 import nc.noumea.mairie.model.pk.sirh.NiveauEtudeFPPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.pk.sirh.RegIndemFPPK;
+import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -701,5 +708,128 @@ public class FichePosteRepositoryTest {
 		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAllFichePoste() {
+		
+		// 1er fiche de poste EN CREATION
+		StatutFichePoste statutEN_CREATION = new StatutFichePoste();
+		statutEN_CREATION.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
+		sirhPersistenceUnit.persist(statutEN_CREATION);
+		
+//		Agent agentEN_CREATION = new Agent();
+//		agentEN_CREATION.setIdAgent(9005138);
+//		sirhPersistenceUnit.persist(agentEN_CREATION);
+		
+		AgentRecherche agentRechercheEN_CREATION = new AgentRecherche();
+		agentRechercheEN_CREATION.setIdAgent(9005138);
+		sirhPersistenceUnit.persist(agentRechercheEN_CREATION);
+		
+		Affectation affEN_CREATION = new Affectation();
+		affEN_CREATION.setIdAffectation(1);
+//		affEN_CREATION.setAgent(agentEN_CREATION);
+		affEN_CREATION.setAgentrecherche(agentRechercheEN_CREATION);
+		affEN_CREATION.setDateDebutAff(new DateTime().minusDays(1).toDate());
+		affEN_CREATION.setDateFinAff(null);
+		sirhPersistenceUnit.persist(affEN_CREATION);
+		
+		FichePoste fichePosteEN_CREATION = new FichePoste();
+		fichePosteEN_CREATION.setIdServiceADS(1);
+		fichePosteEN_CREATION.setStatutFP(statutEN_CREATION);
+		fichePosteEN_CREATION.getAgent().add(affEN_CREATION);
+		sirhPersistenceUnit.persist(fichePosteEN_CREATION);
+		
+		// 2e fiche de poste GELEE
+		StatutFichePoste statutGELEE = new StatutFichePoste();
+		statutGELEE.setIdStatutFp(EnumStatutFichePoste.GELEE.getStatut());
+		sirhPersistenceUnit.persist(statutGELEE);
+		
+		Agent agentGELEE = new Agent();
+		agentGELEE.setIdAgent(9001111);
+		sirhPersistenceUnit.persist(agentGELEE);
+		
+		Affectation affGELEE = new Affectation();
+		affGELEE.setIdAffectation(2);
+		affGELEE.setAgent(agentGELEE);
+		affGELEE.setDateDebutAff(new DateTime().minusDays(1).toDate());
+		sirhPersistenceUnit.persist(affGELEE);
+		
+		FichePoste fichePosteGELEE = new FichePoste();
+		fichePosteGELEE.setIdServiceADS(1);
+		fichePosteGELEE.setStatutFP(statutGELEE);
+		fichePosteGELEE.getAgent().add(affGELEE);
+		sirhPersistenceUnit.persist(fichePosteGELEE);
+		
+		// 3e fiche de poste INACTIVE
+		StatutFichePoste statutINACTIVE = new StatutFichePoste();
+		statutINACTIVE.setIdStatutFp(EnumStatutFichePoste.INACTIVE.getStatut());
+		sirhPersistenceUnit.persist(statutINACTIVE);
+		
+		Agent agentINACTIVE = new Agent();
+		agentINACTIVE.setIdAgent(9004444);
+		sirhPersistenceUnit.persist(agentINACTIVE);
+		
+		Affectation affINACTIVE = new Affectation();
+		affINACTIVE.setIdAffectation(3);
+		affINACTIVE.setAgent(agentINACTIVE);
+		sirhPersistenceUnit.persist(affINACTIVE);
+		
+		FichePoste fichePosteINACTIVE = new FichePoste();
+		fichePosteINACTIVE.setIdServiceADS(1);
+		fichePosteINACTIVE.setStatutFP(statutINACTIVE);
+		fichePosteINACTIVE.getAgent().add(affINACTIVE);
+		sirhPersistenceUnit.persist(fichePosteINACTIVE);
+		
+		// 4e fiche de poste TRANSITOIRE
+		StatutFichePoste statutTRANSITOIRE = new StatutFichePoste();
+		statutTRANSITOIRE.setIdStatutFp(EnumStatutFichePoste.TRANSITOIRE.getStatut());
+		sirhPersistenceUnit.persist(statutTRANSITOIRE);
+		
+		Agent agentTRANSITOIRE = new Agent();
+		agentTRANSITOIRE.setIdAgent(9002222);
+		sirhPersistenceUnit.persist(agentTRANSITOIRE);
+		
+		Affectation affTRANSITOIRE = new Affectation();
+		affTRANSITOIRE.setIdAffectation(4);
+		affTRANSITOIRE.setAgent(agentTRANSITOIRE);
+		sirhPersistenceUnit.persist(affTRANSITOIRE);
+		
+		FichePoste fichePosteTRANSITOIRE = new FichePoste();
+		fichePosteTRANSITOIRE.setIdServiceADS(1);
+		fichePosteTRANSITOIRE.setStatutFP(statutTRANSITOIRE);
+		fichePosteTRANSITOIRE.getAgent().add(affTRANSITOIRE);
+		sirhPersistenceUnit.persist(fichePosteTRANSITOIRE);
+		
+		// 5e fiche de poste VALIDEE
+		StatutFichePoste statutVALIDEE = new StatutFichePoste();
+		statutVALIDEE.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getStatut());
+		sirhPersistenceUnit.persist(statutVALIDEE);
+		
+		Agent agentVALIDEE = new Agent();
+		agentVALIDEE.setIdAgent(9003333);
+		sirhPersistenceUnit.persist(agentVALIDEE);
+		
+		Affectation affVALIDEE = new Affectation();
+		affVALIDEE.setIdAffectation(5);
+		affVALIDEE.setAgent(agentVALIDEE);
+		sirhPersistenceUnit.persist(affVALIDEE);
+		
+		FichePoste fichePosteVALIDEE = new FichePoste();
+		fichePosteVALIDEE.setIdServiceADS(1);
+		fichePosteVALIDEE.setStatutFP(statutVALIDEE);
+		fichePosteVALIDEE.getAgent().add(affVALIDEE);
+		sirhPersistenceUnit.persist(fichePosteVALIDEE);
+		
+		
+		TreeMap<Integer, FichePosteTreeNode> result = repository.getAllFichePoste(new Date());
+		
+		// la FDP inactive n est pas retournee
+		assertEquals(result.size(), 4);
+//		assertEquals(result.get(1).getIdAgent().intValue(), 9005138);
+//		assertEquals(result.get(2).getIdAgent().intValue(), 9001111);
+//		assertEquals(result.get(4).getIdAgent().intValue(), 9002222);
+//		assertEquals(result.get(5).getIdAgent().intValue(), 9003333);
 	}
 }
