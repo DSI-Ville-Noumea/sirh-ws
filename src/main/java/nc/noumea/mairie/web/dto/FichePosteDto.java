@@ -60,6 +60,8 @@ public class FichePosteDto {
 	private String OPI;
 	private String anneeEmploi;
 	private String statutFDP;
+	// #17920 
+	private Integer idStatutFDP;
 	private String natureCredit;
 
 	private List<String> avantages;
@@ -90,6 +92,7 @@ public class FichePosteDto {
 		this.commentaire = fichePoste.getObservation();
 
 		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
+		this.idStatutFDP = fichePoste.getStatutFP() == null ? null : fichePoste.getStatutFP().getIdStatutFp();
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
@@ -199,6 +202,7 @@ public class FichePosteDto {
 		this.natureCredit = "";
 
 		this.statutFDP = fichePoste.getStatutFP().getLibStatut();
+		this.idStatutFDP = fichePoste.getStatutFP() == null ? null : fichePoste.getStatutFP().getIdStatutFp();
 
 		if (fichePoste.getNatureCredit() != null) {
 			this.natureCredit = fichePoste.getNatureCredit().getLibNatureCredit();
@@ -317,6 +321,7 @@ public class FichePosteDto {
 		this.commentaire = fichePoste.getObservation();
 
 		this.statutFDP = fichePoste.getStatutFP() == null ? "" : fichePoste.getStatutFP().getLibStatut();
+		this.idStatutFDP = fichePoste.getStatutFP() == null ? null : fichePoste.getStatutFP().getIdStatutFp();
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
@@ -343,8 +348,6 @@ public class FichePosteDto {
 				: fichePoste.getGradePoste().getGradeInitial().trim();
 		this.agent = "";
 		this.categorie = "";
-
-		this.statutFDP = null == fichePoste.getStatutFP() ? "" : fichePoste.getStatutFP().getLibStatut();
 
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
@@ -706,4 +709,11 @@ public class FichePosteDto {
 		this.commentaire = commentaire;
 	}
 
+	public Integer getIdStatutFDP() {
+		return idStatutFDP;
+	}
+
+	public void setIdStatutFDP(Integer idStatutFDP) {
+		this.idStatutFDP = idStatutFDP;
+	}
 }
