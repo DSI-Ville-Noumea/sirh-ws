@@ -87,4 +87,7 @@ public interface IFichePosteRepository {
 	TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today);
 
 	NFA chercherNFA(Integer idEntite);
+
+	List<String> getListNumFPByIdServiceADSAndTitrePoste(
+			List<Integer> idEntiteEnfant, String titrePoste);
 }

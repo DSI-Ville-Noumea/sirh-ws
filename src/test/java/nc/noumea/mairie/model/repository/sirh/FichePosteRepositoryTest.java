@@ -348,6 +348,76 @@ public class FichePosteRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
+	public void getListNumFPByIdServiceADSAndTitrePoste() {
+		
+		Spbhor reglementaire = new Spbhor();
+		reglementaire.setCdThor(1);
+		reglementaire.setTaux(0.75);
+		sirhPersistenceUnit.persist(reglementaire);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		sirhPersistenceUnit.persist(statutFP);
+
+		TitrePoste titrePoste = new TitrePoste();
+		titrePoste.setIdTitrePoste(2);
+		titrePoste.setLibTitrePoste("titrePoste");
+		sirhPersistenceUnit.persist(titrePoste);
+
+		TitrePoste titrePoste2 = new TitrePoste();
+		titrePoste2.setIdTitrePoste(1);
+		titrePoste2.setLibTitrePoste("titrePosteErrrone");
+		sirhPersistenceUnit.persist(titrePoste2);
+
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setAnnee(2010);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("numFP1");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(1);
+		fichePoste3.setReglementaire(reglementaire);
+		fichePoste3.setStatutFP(statutFP);
+		fichePoste3.setTitrePoste(titrePoste);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP2");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(1);
+		fichePoste2.setReglementaire(reglementaire);
+		fichePoste2.setStatutFP(statutFP);
+		fichePoste2.setTitrePoste(titrePoste);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP3");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(1);
+		fichePoste.setReglementaire(reglementaire);
+		fichePoste.setStatutFP(statutFP);
+		fichePoste.setTitrePoste(titrePoste2);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		List<String> result = repository
+				.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(1), "titrePoste");
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals("numFP1", result.get(0));
+		assertEquals("numFP2", result.get(1));
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
 	public void listerFEFPAvecFP_returnResults() {
 
 		FichePoste fichePoste = new FichePoste();

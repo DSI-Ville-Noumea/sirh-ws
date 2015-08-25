@@ -5,6 +5,7 @@ public class InfoFichePosteDto {
 	private Integer nbFDP;
 	private String titreFDP;
 	private Double tauxETP;
+	private String listNumFP;
 
 	public Integer getNbFDP() {
 		return nbFDP;
@@ -30,4 +31,12 @@ public class InfoFichePosteDto {
 		this.tauxETP = tauxETP;
 	}
 
+	public String getListNumFP() {
+		return listNumFP;
+	}
+
+	public void setListNumFP(String listNumFP) {
+		this.listNumFP = listNumFP;
+	}
+	
 }

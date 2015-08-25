@@ -709,6 +709,7 @@ public class FichePosteService implements IFichePosteService {
 			List<InfoFichePosteDto> resFDP = fichePosteDao
 					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
 
 		} else {
 			result.setIdEntite(idEntite);
@@ -717,9 +718,31 @@ public class FichePosteService implements IFichePosteService {
 			List<InfoFichePosteDto> resFDP = fichePosteDao
 					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
 		}
+		
 		return result;
 
+	}
+	
+	private void getListeNumFPByIdServiceADSAndTitrePoste(InfoEntiteDto result, List<Integer> listeIdServiceAds) {
+		
+		if(null != result.getListeInfoFDP()) {
+			for(InfoFichePosteDto resFDP : result.getListeInfoFDP()) {
+				StringBuffer listNumFp = new StringBuffer();
+				
+				List<String> listNumFichePoste = fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(listeIdServiceAds, resFDP.getTitreFDP());
+				
+				if(null != listNumFichePoste) {
+					for(String numFp : listNumFichePoste) {
+						listNumFp.append(numFp + ", ");
+					}
+				}
+				if(listNumFp.length() > 2) {
+					resFDP.setListNumFP(listNumFp.substring(0, listNumFp.length()-2));
+				}
+			}
+		}
 	}
 
 	@Override

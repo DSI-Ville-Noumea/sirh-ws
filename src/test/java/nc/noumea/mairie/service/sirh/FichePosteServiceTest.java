@@ -606,7 +606,9 @@ public class FichePosteServiceTest {
 
 		List<InfoFichePosteDto> listInfoParaent = new ArrayList<InfoFichePosteDto>();
 		InfoFichePosteDto listInfo1 = new InfoFichePosteDto();
+		listInfo1.setTitreFDP("titreFDP");
 		InfoFichePosteDto listInfo2 = new InfoFichePosteDto();
+		listInfo2.setTitreFDP("titreFDP2");
 		listInfoParaent.add(listInfo1);
 		listInfoParaent.add(listInfo2);
 
@@ -616,6 +618,9 @@ public class FichePosteServiceTest {
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(2, 1)))
 				.thenReturn(listInfoParaent);
+		
+		Mockito.when(fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP())).thenReturn(Arrays.asList("numFP", "numFP2"));
+		Mockito.when(fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP())).thenReturn(Arrays.asList("numFP3", "numFP4"));
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
@@ -625,6 +630,8 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(2, result.getListeInfoFDP().size());
+		assertEquals("numFP, numFP2", result.getListeInfoFDP().get(0).getListNumFP());
+		assertEquals("numFP3, numFP4", result.getListeInfoFDP().get(1).getListNumFP());
 	}
 
 	@Test

@@ -201,6 +201,40 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		return res;
 	}
+	
+	@Override
+	public List<String> getListNumFPByIdServiceADSAndTitrePoste(
+			List<Integer> idEntiteEnfant, String titrePoste) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select fp.numFP ");
+		sb.append(" from FichePoste fp where fp.idServiceADS in (:idServiceADS) ");
+		// on ne prend que les FDP en statut "gelée" ou "validée
+		// #16786
+		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");
+		// on ne prend que les FDP reglementaire != non
+		// #16786
+		sb.append(" and fp.reglementaire.cdThor != 0 ");
+
+		// on groupe par titrePoste
+		// #16786
+		sb.append(" and fp.titrePoste.libTitrePoste = :titrePoste ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString());
+		query.setParameter("idServiceADS", idEntiteEnfant);
+		query.setParameter("titrePoste", titrePoste);
+
+		List<String> res = new ArrayList<String>();
+		@SuppressWarnings("unchecked")
+		List<String> result1 = query.getResultList();
+		for (String resultElement : result1) {
+			String numFP = (String) resultElement;
+			res.add(numFP);
+		}
+
+		return res;
+	}
 
 	@Override
 	public void persisEntity(Object obj) {
