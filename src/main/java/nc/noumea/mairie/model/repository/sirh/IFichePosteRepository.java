@@ -17,6 +17,7 @@ import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
@@ -84,4 +85,6 @@ public interface IFichePosteRepository {
 	StatutFichePoste chercherStatutFPByIdStatut(Integer idStatut);
 
 	TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today);
+
+	NFA chercherNFA(Integer idEntite);
 }
