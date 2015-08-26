@@ -468,7 +468,7 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant")
-				.exclude("*.serviceParent");
+				.exclude("*.serviceParent").transform(new MSDateTransformer(), Date.class);
 
 		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
 	}
