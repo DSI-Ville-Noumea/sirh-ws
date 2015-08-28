@@ -333,10 +333,19 @@ public class FichePosteService implements IFichePosteService {
 		// on recherche le ou les fiches de poste ayant la plus haute hierarchie (niveau 0)
 		List<Integer> listTreeParent = rechercheFichesPosteParent(listFichesPoste);
 		
+		// #17987 dans le but d ameliorer les performances et reduire le nombre de requetes
+		// on recupere tous les idFichePoste pour récupérer toutes les fiches de poste en une seule requete
+		List<FichePoste> listFichesPosteByFichePosteParent =  getAllFichesPoste(listTreeParent);
+		
 		List<EntiteDto> listEntiteDtoForOptimize = new ArrayList<EntiteDto>();
 		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
+		
 		for(Integer idFichePosteParent : listTreeParent) {
-			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent), listEntiteDtoForOptimize, withFichesPosteNonReglementaires);
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(
+					getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent), 
+					listEntiteDtoForOptimize, 
+					withFichesPosteNonReglementaires,
+					listFichesPosteByFichePosteParent);
 			
 			if(null != treeNode)
 				result.add(treeNode);
@@ -390,12 +399,40 @@ public class FichePosteService implements IFichePosteService {
 		return listIdsFichesPosteParent;
 	}
 	
-	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente) {
+	private List<FichePoste> getAllFichesPoste(List<Integer> listTreeParent) {
+		
+		List<Integer> listIdsFichePoste = null;
+		for(Integer idFichePosteParent : listTreeParent) {
+			listIdsFichePoste = getAllIdsFichePosteRecursive(getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent));
+		}
+		
+		List<FichePoste> listResult = null;
+		if(null != listIdsFichePoste
+				&& !listIdsFichePoste.isEmpty()) {
+			listResult = fichePosteDao.chercherListFichesPosteByListIdsFichePoste(listIdsFichePoste);
+		}
+		return listResult;
+	}
+	
+	private List<Integer> getAllIdsFichePosteRecursive(FichePosteTreeNode node) {
+		
+		List<Integer> result = new ArrayList<Integer>();
+		result.add(node.getIdFichePoste());
+		
+		for(FichePosteTreeNode enfant : node.getFichePostesEnfant()) {
+			result.addAll(getAllIdsFichePosteRecursive(enfant));
+		}
+		
+		return result;
+	}
+	
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente,
+			List<FichePoste> listFichesPosteByFichePosteParent) {
 		
 		FichePosteTreeNodeDto dto = null;
 		
 		if(null != root) {
-			FichePoste fichePoste = fichePosteDao.chercherFichePoste(root.getIdFichePoste());
+			FichePoste fichePoste = getFichePosteInListFichesPoste(listFichesPosteByFichePosteParent, root.getIdFichePoste());
 			
 			if(withFichesPosteNonReglemente
 					|| null == fichePoste.getReglementaire()
@@ -406,7 +443,7 @@ public class FichePosteService implements IFichePosteService {
 				
 				if(null != root.getFichePostesEnfant()) {
 					for(FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
-						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente);
+						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente, listFichesPosteByFichePosteParent);
 						if(null != dtoEnfant)
 							dto.getFichePostesEnfant().add(dtoEnfant);
 					}
@@ -415,6 +452,18 @@ public class FichePosteService implements IFichePosteService {
 		}
 		
 		return dto;
+	}
+	
+	private FichePoste getFichePosteInListFichesPoste(List<FichePoste> listFichesPosteByFichePosteParent, Integer idFichePoste) {
+		
+		if(null != listFichesPosteByFichePosteParent) {
+			for(FichePoste fp : listFichesPosteByFichePosteParent) {
+				if(fp.getIdFichePoste().equals(idFichePoste)){
+					return fp;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override

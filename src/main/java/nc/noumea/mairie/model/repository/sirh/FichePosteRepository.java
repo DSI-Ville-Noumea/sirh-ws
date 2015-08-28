@@ -163,6 +163,27 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 
 	@Override
+	public List<FichePoste> chercherListFichesPosteByListIdsFichePoste(List<Integer> listIdsFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from FichePoste fp ");
+		sb.append("left join fetch fp.statutFP statut ");
+		sb.append("left join fetch fp.budgete budgete ");
+		sb.append("left join fetch fp.reglementaire reglementaire ");
+		sb.append("left join fetch fp.titrePoste titrePoste ");
+		sb.append("left join fetch fp.gradePoste gradePoste ");
+		sb.append("left join fetch gradePoste.barem ");
+		sb.append("left join fetch gradePoste.classe ");
+		sb.append("left join fetch gradePoste.echelon ");
+		sb.append("left join fetch gradePoste.gradeGenerique ");
+		sb.append("where fp.idFichePoste in :listIdsFichePoste ");
+		
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
+		query.setParameter("listIdsFichePoste", listIdsFichePoste);
+
+		return query.getResultList();
+	}
+
+	@Override
 	public List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(
 			List<Integer> idEntiteEnfant) {
 
@@ -234,6 +255,51 @@ public class FichePosteRepository implements IFichePosteRepository {
 		}
 
 		return res;
+	}
+	
+	@Override
+	public List<String> getListAgentsFPByIdServiceADSAndListNumPoste(
+			List<Integer> idEntiteEnfant, String numFP) {
+//
+//		StringBuilder sb = new StringBuilder();
+//
+//		sb.append("select fp.numFP ");
+//		sb.append(" from FichePoste fp where fp.idServiceADS in (:idServiceADS) ");
+//		// on ne prend que les FDP en statut "gelée" ou "validée
+//		// #16786
+//		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");
+//		// on ne prend que les FDP reglementaire != non
+//		// #16786
+//		sb.append(" and fp.reglementaire.cdThor != 0 ");
+//
+//		// on groupe par titrePoste
+//		// #16786
+//		sb.append(" and fp.numFP = :numFP ");
+//
+//		Query query = sirhEntityManager.createQuery(sb.toString());
+//		query.setParameter("idServiceADS", idEntiteEnfant);
+//		query.setParameter("numFP", numFP);
+//		
+//		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, "
+//				+ "case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT "
+//				+ "from FICHE_POSTE fp left outer join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE and (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) "
+//				+ "where fp.ID_STATUT_FP in (1 , 2 , 6, 5) order by ID_FICHE_POSTE asc, ID_AGENT asc";
+//		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
+//		q.setParameter("idServiceADS", idEntiteEnfant);
+//		q.setParameter("numFP", numFP);
+//		List<Object[]> l = q.getResultList();
+//		
+//		
+//
+//		List<String> res = new ArrayList<String>();
+//		@SuppressWarnings("unchecked")
+//		List<String> result1 = query.getResultList();
+//		for (String resultElement : result1) {
+//			String numFP = (String) resultElement;
+//			res.add(numFP);
+//		}
+//
+		return null;
 	}
 
 	@Override

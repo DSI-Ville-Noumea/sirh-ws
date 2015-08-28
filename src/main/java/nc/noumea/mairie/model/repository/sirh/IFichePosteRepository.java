@@ -90,4 +90,10 @@ public interface IFichePosteRepository {
 
 	List<String> getListNumFPByIdServiceADSAndTitrePoste(
 			List<Integer> idEntiteEnfant, String titrePoste);
+
+	List<String> getListAgentsFPByIdServiceADSAndListNumPoste(
+			List<Integer> idEntiteEnfant, String numFP);
+
+	List<FichePoste> chercherListFichesPosteByListIdsFichePoste(
+			List<Integer> listIdsFichePoste);
 }
