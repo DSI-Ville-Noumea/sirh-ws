@@ -7,11 +7,11 @@ public class InfoEntiteDto {
 
 	public InfoEntiteDto() {
 		super();
-		this.listeInfoFDP = new ArrayList<InfoFichePosteDto>();
+		this.listeInfoFDP = new ArrayList<GroupeInfoFichePosteDto>();
 	}
 
 	private Integer idEntite;
-	private List<InfoFichePosteDto> listeInfoFDP;
+	private List<GroupeInfoFichePosteDto> listeInfoFDP;
 
 	public Integer getIdEntite() {
 		return idEntite;
@@ -21,12 +21,12 @@ public class InfoEntiteDto {
 		this.idEntite = idEntite;
 	}
 
-	public List<InfoFichePosteDto> getListeInfoFDP() {
+	public List<GroupeInfoFichePosteDto> getListeInfoFDP() {
 		return listeInfoFDP;
 	}
 
-	public void setListeInfoFDP(List<InfoFichePosteDto> listeInfoFDP) {
+	public void setListeInfoFDP(List<GroupeInfoFichePosteDto> listeInfoFDP) {
 		this.listeInfoFDP = listeInfoFDP;
 	}
-
+	
 }

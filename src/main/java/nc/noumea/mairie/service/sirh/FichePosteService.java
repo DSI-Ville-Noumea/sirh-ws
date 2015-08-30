@@ -50,6 +50,7 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.FichePosteTreeNodeDto;
+import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
@@ -434,9 +435,10 @@ public class FichePosteService implements IFichePosteService {
 		if(null != root) {
 			FichePoste fichePoste = getFichePosteInListFichesPoste(listFichesPosteByFichePosteParent, root.getIdFichePoste());
 			
-			if(withFichesPosteNonReglemente
-					|| null == fichePoste.getReglementaire()
-					|| !fichePoste.getReglementaire().getCdThor().equals(0)) {
+			if(null != fichePoste
+					&& (withFichesPosteNonReglemente
+						|| null == fichePoste.getReglementaire()
+						|| !fichePoste.getReglementaire().getCdThor().equals(0))) {
 				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
 				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(),
 						fichePoste, entite == null ? "" : entite.getSigle());
@@ -755,7 +757,7 @@ public class FichePosteService implements IFichePosteService {
 			if (!listeEnfant.contains(entiteParent.getIdEntite()))
 				listeEnfant.add(entiteParent.getIdEntite());
 			result.setIdEntite(idEntite);
-			List<InfoFichePosteDto> resFDP = fichePosteDao
+			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao
 					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
 			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
@@ -764,7 +766,7 @@ public class FichePosteService implements IFichePosteService {
 			result.setIdEntite(idEntite);
 			List<Integer> listeEnfant = new ArrayList<Integer>();
 			listeEnfant.add(idEntite);
-			List<InfoFichePosteDto> resFDP = fichePosteDao
+			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao
 					.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
 			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
@@ -777,19 +779,14 @@ public class FichePosteService implements IFichePosteService {
 	private void getListeNumFPByIdServiceADSAndTitrePoste(InfoEntiteDto result, List<Integer> listeIdServiceAds) {
 		
 		if(null != result.getListeInfoFDP()) {
-			for(InfoFichePosteDto resFDP : result.getListeInfoFDP()) {
-				StringBuffer listNumFp = new StringBuffer();
+			for(GroupeInfoFichePosteDto resFDP : result.getListeInfoFDP()) {
 				
-				List<String> listNumFichePoste = fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(listeIdServiceAds, resFDP.getTitreFDP());
+				List<InfoFichePosteDto> listInfoFichePosteDto = 
+						fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(
+								listeIdServiceAds, resFDP.getTitreFDP(), new Date());
 				
-				if(null != listNumFichePoste) {
-					for(String numFp : listNumFichePoste) {
-						listNumFp.append(numFp + ", ");
-					}
-				}
-				if(listNumFp.length() > 2) {
-					resFDP.setListNumFP(listNumFp.substring(0, listNumFp.length()-2));
-				}
+				if(null != listInfoFichePosteDto)
+					resFDP.setListInfoFichePosteDto(listInfoFichePosteDto);
 			}
 		}
 	}

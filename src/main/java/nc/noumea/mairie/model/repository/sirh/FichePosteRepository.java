@@ -31,6 +31,7 @@ import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 import org.springframework.stereotype.Repository;
@@ -184,10 +185,10 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 
 	@Override
-	public List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(
+	public List<GroupeInfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(
 			List<Integer> idEntiteEnfant) {
 
-		List<InfoFichePosteDto> res = new ArrayList<InfoFichePosteDto>();
+		List<GroupeInfoFichePosteDto> res = new ArrayList<GroupeInfoFichePosteDto>();
 
 		StringBuilder sb = new StringBuilder();
 
@@ -213,7 +214,7 @@ public class FichePosteRepository implements IFichePosteRepository {
 			String titrePoste = (String) resultElement[0];
 			Long nbFDP = (Long) resultElement[1];
 			Double tauxETP = (Double) resultElement[2];
-			InfoFichePosteDto info = new InfoFichePosteDto();
+			GroupeInfoFichePosteDto info = new GroupeInfoFichePosteDto();
 			info.setNbFDP(nbFDP.intValue());
 			info.setTauxETP(tauxETP);
 			info.setTitreFDP(titrePoste);
@@ -224,82 +225,56 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 	
 	@Override
-	public List<String> getListNumFPByIdServiceADSAndTitrePoste(
-			List<Integer> idEntiteEnfant, String titrePoste) {
+	public List<InfoFichePosteDto> getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(
+			List<Integer> idEntiteEnfant, String titrePoste, Date today) {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select fp.numFP ");
-		sb.append(" from FichePoste fp where fp.idServiceADS in (:idServiceADS) ");
+		sb.append("select fp.NUM_FP ");
+		sb.append(" , ag.NOMATR, ag.NOM_USAGE, ag.PRENOM_USAGE, ag.ID_AGENT ");
+		sb.append(" from FICHE_POSTE fp ");
+		sb.append(" left outer join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE and (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) ");
+		sb.append(" left outer join AGENT ag on aff.ID_AGENT = ag.ID_AGENT ");
+		sb.append(" left outer join P_TITRE_POSTE tr on tr.ID_TITRE_POSTE = fp.ID_TITRE_POSTE ");
+		sb.append(" where fp.id_Service_ADS in (:idServiceADS) ");
 		// on ne prend que les FDP en statut "gelée" ou "validée
 		// #16786
-		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");
+		sb.append(" and fp.id_Statut_Fp in (2,6) ");
 		// on ne prend que les FDP reglementaire != non
 		// #16786
-		sb.append(" and fp.reglementaire.cdThor != 0 ");
+		sb.append(" and fp.Id_CDTHOR_REG != 0 ");
 
 		// on groupe par titrePoste
-		// #16786
-		sb.append(" and fp.titrePoste.libTitrePoste = :titrePoste ");
+//		 #16786
+		sb.append(" and tr.LIB_TITRE_POSTE = :titrePoste ");
 
-		Query query = sirhEntityManager.createQuery(sb.toString());
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
 		query.setParameter("idServiceADS", idEntiteEnfant);
 		query.setParameter("titrePoste", titrePoste);
+		query.setParameter("today", today);
 
-		List<String> res = new ArrayList<String>();
+		List<InfoFichePosteDto> result = new ArrayList<InfoFichePosteDto>();
+		
 		@SuppressWarnings("unchecked")
-		List<String> result1 = query.getResultList();
-		for (String resultElement : result1) {
-			String numFP = (String) resultElement;
-			res.add(numFP);
+		List<Object[]> result1 = query.getResultList();
+		for (Object[] resultElement : result1) {
+			String numFP = (String) resultElement[0];
+			Integer noMatr = (Integer) resultElement[1];
+			String nomAgent = (String) resultElement[2];
+			String prenomAgent = (String) resultElement[3];
+			Integer idAgent = (Integer) resultElement[4];
+			
+			InfoFichePosteDto info = new InfoFichePosteDto();
+			info.setIdAgent(idAgent);
+			info.setPrenomAgent(prenomAgent);
+			info.setNomAgent(nomAgent);
+			info.setNumFP(numFP);
+			info.setNoMatr(noMatr);
+			
+			result.add(info);
 		}
 
-		return res;
-	}
-	
-	@Override
-	public List<String> getListAgentsFPByIdServiceADSAndListNumPoste(
-			List<Integer> idEntiteEnfant, String numFP) {
-//
-//		StringBuilder sb = new StringBuilder();
-//
-//		sb.append("select fp.numFP ");
-//		sb.append(" from FichePoste fp where fp.idServiceADS in (:idServiceADS) ");
-//		// on ne prend que les FDP en statut "gelée" ou "validée
-//		// #16786
-//		sb.append(" and fp.statutFP.idStatutFp in (2,6) ");
-//		// on ne prend que les FDP reglementaire != non
-//		// #16786
-//		sb.append(" and fp.reglementaire.cdThor != 0 ");
-//
-//		// on groupe par titrePoste
-//		// #16786
-//		sb.append(" and fp.numFP = :numFP ");
-//
-//		Query query = sirhEntityManager.createQuery(sb.toString());
-//		query.setParameter("idServiceADS", idEntiteEnfant);
-//		query.setParameter("numFP", numFP);
-//		
-//		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, "
-//				+ "case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT "
-//				+ "from FICHE_POSTE fp left outer join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE and (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) "
-//				+ "where fp.ID_STATUT_FP in (1 , 2 , 6, 5) order by ID_FICHE_POSTE asc, ID_AGENT asc";
-//		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
-//		q.setParameter("idServiceADS", idEntiteEnfant);
-//		q.setParameter("numFP", numFP);
-//		List<Object[]> l = q.getResultList();
-//		
-//		
-//
-//		List<String> res = new ArrayList<String>();
-//		@SuppressWarnings("unchecked")
-//		List<String> result1 = query.getResultList();
-//		for (String resultElement : result1) {
-//			String numFP = (String) resultElement;
-//			res.add(numFP);
-//		}
-//
-		return null;
+		return result;
 	}
 
 	@Override

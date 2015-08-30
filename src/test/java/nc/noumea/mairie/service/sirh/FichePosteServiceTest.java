@@ -625,9 +625,9 @@ public class FichePosteServiceTest {
 		InfoFichePosteDto infoFichePosteDto2 = new InfoFichePosteDto();
 		infoFichePosteDto2.setNumFP("numFP2");
 		
-		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP()))
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP(), new Date()))
 			.thenReturn(Arrays.asList(infoFichePosteDto));
-		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP()))
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP(), new Date()))
 			.thenReturn(Arrays.asList(infoFichePosteDto2));
 
 		FichePosteService ficheService = new FichePosteService();

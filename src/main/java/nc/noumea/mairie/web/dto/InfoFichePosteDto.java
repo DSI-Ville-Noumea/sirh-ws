@@ -2,41 +2,41 @@ package nc.noumea.mairie.web.dto;
 
 public class InfoFichePosteDto {
 
-	private Integer nbFDP;
-	private String titreFDP;
-	private Double tauxETP;
-	private String listNumFP;
-
-	public Integer getNbFDP() {
-		return nbFDP;
+	private Integer idAgent;
+	private Integer noMatr;
+	private String prenomAgent;
+	private String nomAgent;
+	private String numFP;
+	
+	public Integer getIdAgent() {
+		return idAgent;
 	}
-
-	public void setNbFDP(Integer nbFDP) {
-		this.nbFDP = nbFDP;
+	public void setIdAgent(Integer idAgent) {
+		this.idAgent = idAgent;
 	}
-
-	public String getTitreFDP() {
-		return titreFDP;
+	public String getPrenomAgent() {
+		return prenomAgent;
 	}
-
-	public void setTitreFDP(String titreFDP) {
-		this.titreFDP = titreFDP;
+	public void setPrenomAgent(String prenomAgent) {
+		this.prenomAgent = prenomAgent;
 	}
-
-	public Double getTauxETP() {
-		return tauxETP;
+	public String getNomAgent() {
+		return nomAgent;
 	}
-
-	public void setTauxETP(Double tauxETP) {
-		this.tauxETP = tauxETP;
+	public void setNomAgent(String nomAgent) {
+		this.nomAgent = nomAgent;
 	}
-
-	public String getListNumFP() {
-		return listNumFP;
+	public String getNumFP() {
+		return numFP;
 	}
-
-	public void setListNumFP(String listNumFP) {
-		this.listNumFP = listNumFP;
+	public void setNumFP(String numFP) {
+		this.numFP = numFP;
+	}
+	public Integer getNoMatr() {
+		return noMatr;
+	}
+	public void setNoMatr(Integer noMatr) {
+		this.noMatr = noMatr;
 	}
 	
 }

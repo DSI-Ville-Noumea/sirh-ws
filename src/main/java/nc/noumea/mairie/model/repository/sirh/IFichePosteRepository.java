@@ -25,6 +25,7 @@ import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 public interface IFichePosteRepository {
@@ -41,7 +42,7 @@ public interface IFichePosteRepository {
 
 	FichePoste chercherFichePoste(Integer idFichePoste);
 
-	List<InfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(List<Integer> idEntiteEnfant);
+	List<GroupeInfoFichePosteDto> getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(List<Integer> idEntiteEnfant);
 
 	List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
 			List<Integer> listIdsEntite, List<Integer> listStatutFDP);
@@ -88,11 +89,8 @@ public interface IFichePosteRepository {
 
 	NFA chercherNFA(Integer idEntite);
 
-	List<String> getListNumFPByIdServiceADSAndTitrePoste(
-			List<Integer> idEntiteEnfant, String titrePoste);
-
-	List<String> getListAgentsFPByIdServiceADSAndListNumPoste(
-			List<Integer> idEntiteEnfant, String numFP);
+	List<InfoFichePosteDto> getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(
+			List<Integer> idEntiteEnfant, String titrePoste, Date today);
 
 	List<FichePoste> chercherListFichesPosteByListIdsFichePoste(
 			List<Integer> listIdsFichePoste);

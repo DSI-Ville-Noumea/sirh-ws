@@ -44,6 +44,7 @@ import nc.noumea.mairie.model.pk.sirh.NiveauEtudeFPPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.pk.sirh.RegIndemFPPK;
 import nc.noumea.mairie.tools.FichePosteTreeNode;
+import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 import org.joda.time.DateTime;
@@ -331,7 +332,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setTitrePoste(titrePoste);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<InfoFichePosteDto> result = repository
+		List<GroupeInfoFichePosteDto> result = repository
 				.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(1));
 
 		assertNotNull(result);
@@ -348,7 +349,7 @@ public class FichePosteRepositoryTest {
 
 	@Test
 	@Transactional("sirhTransactionManager")
-	public void getListNumFPByIdServiceADSAndTitrePoste() {
+	public void getListInfoFichePosteDtoByIdServiceADSAndTitrePoste() {
 		
 		Spbhor reglementaire = new Spbhor();
 		reglementaire.setCdThor(1);
@@ -405,13 +406,13 @@ public class FichePosteRepositoryTest {
 		fichePoste.setTitrePoste(titrePoste2);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<String> result = repository
-				.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(1), "titrePoste");
+		List<InfoFichePosteDto> result = repository
+				.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(1), "titrePoste", new Date());
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
-		assertEquals("numFP1", result.get(0));
-		assertEquals("numFP2", result.get(1));
+		assertEquals("numFP1", result.get(0).getNumFP());
+		assertEquals("numFP2", result.get(1).getNumFP());
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
