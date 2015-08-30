@@ -24,4 +24,26 @@ public class AgentMatriculeConverterService implements IAgentMatriculeConverterS
 		return Integer.parseInt(newIdSb.toString());
 	}
 
+	@Override
+	public Integer tryConvertFromADIdAgentToSIRHIdAgent(Integer nomatr) {
+
+		if (nomatr == null)
+			return nomatr;
+
+		if (nomatr.toString().length() == 4)
+			return convertNoMatrToIdAgent(nomatr);
+
+		if (nomatr.toString().length() == 6)
+			return addMissingDigit(nomatr);
+
+		return nomatr;
+	}
+
+	private Integer convertNoMatrToIdAgent(Integer noMatr) {
+		if (noMatr.toString().length() == 4) {
+			return 9000000 + noMatr;
+		}
+		return noMatr;
+	}
+
 }

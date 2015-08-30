@@ -476,4 +476,68 @@ public class SpadmnRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listAgentActiviteAnnuaire_3results() {
+		Spposa positionAdministrative1 = new Spposa();
+		positionAdministrative1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(positionAdministrative1);
+
+		SpadmnId spadmnId = new SpadmnId();
+		spadmnId.setNomatr(5136);
+		spadmnId.setDatdeb(20140101);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(spadmnId);
+		spAdmn.setDatfin(20161115);
+		spAdmn.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmn);
+
+		Spposa positionAdministrative2 = new Spposa();
+		positionAdministrative2.setCdpAdm("47");
+		sirhPersistenceUnit.persist(positionAdministrative2);
+
+		SpadmnId spadmnId2 = new SpadmnId();
+		spadmnId2.setNomatr(5137);
+		spadmnId2.setDatdeb(20140116);
+		Spadmn spAdmn2 = new Spadmn();
+		spAdmn2.setId(spadmnId2);
+		spAdmn2.setPositionAdministrative(positionAdministrative2);
+		sirhPersistenceUnit.persist(spAdmn2);
+
+		Spposa positionAdministrative3 = new Spposa();
+		positionAdministrative3.setCdpAdm("02");
+		sirhPersistenceUnit.persist(positionAdministrative3);
+
+		SpadmnId spadmnId3 = new SpadmnId();
+		spadmnId3.setNomatr(5138);
+		spadmnId3.setDatdeb(20140201);
+		Spadmn spAdmn3 = new Spadmn();
+		spAdmn3.setId(spadmnId3);
+		spAdmn3.setPositionAdministrative(positionAdministrative3);
+		sirhPersistenceUnit.persist(spAdmn3);
+
+		Spposa positionAdministrative4 = new Spposa();
+		positionAdministrative4.setCdpAdm("49");
+		sirhPersistenceUnit.persist(positionAdministrative4);
+
+		SpadmnId spadmnId4 = new SpadmnId();
+		spadmnId4.setNomatr(5139);
+		spadmnId4.setDatdeb(20140215);
+		Spadmn spAdmn4 = new Spadmn();
+		spAdmn4.setId(spadmnId4);
+		spAdmn4.setPositionAdministrative(positionAdministrative4);
+		sirhPersistenceUnit.persist(spAdmn4);
+
+		List<Integer> result = repository.listAgentActiviteAnnuaire();
+
+		assertNotNull(result);
+		assertEquals(result.size(), 3);
+		assertEquals(result.get(0),spadmnId.getNomatr() );
+		assertEquals(result.get(1),spadmnId2.getNomatr() );
+		assertEquals(result.get(2),spadmnId3.getNomatr() );
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
 }
