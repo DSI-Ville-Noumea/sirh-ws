@@ -52,6 +52,7 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.web.dto.FichePosteTreeNodeDto;
+import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
@@ -604,10 +605,10 @@ public class FichePosteServiceTest {
 		entite.setIdEntite(1);
 		entite.getEnfants().add(enfant1);
 
-		List<InfoFichePosteDto> listInfoParaent = new ArrayList<InfoFichePosteDto>();
-		InfoFichePosteDto listInfo1 = new InfoFichePosteDto();
+		List<GroupeInfoFichePosteDto> listInfoParaent = new ArrayList<GroupeInfoFichePosteDto>();
+		GroupeInfoFichePosteDto listInfo1 = new GroupeInfoFichePosteDto();
 		listInfo1.setTitreFDP("titreFDP");
-		InfoFichePosteDto listInfo2 = new InfoFichePosteDto();
+		GroupeInfoFichePosteDto listInfo2 = new GroupeInfoFichePosteDto();
 		listInfo2.setTitreFDP("titreFDP2");
 		listInfoParaent.add(listInfo1);
 		listInfoParaent.add(listInfo2);
@@ -619,8 +620,15 @@ public class FichePosteServiceTest {
 		Mockito.when(fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(2, 1)))
 				.thenReturn(listInfoParaent);
 		
-		Mockito.when(fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP())).thenReturn(Arrays.asList("numFP", "numFP2"));
-		Mockito.when(fichePosteDao.getListNumFPByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP())).thenReturn(Arrays.asList("numFP3", "numFP4"));
+		InfoFichePosteDto infoFichePosteDto = new InfoFichePosteDto();
+		infoFichePosteDto.setNumFP("numFP");
+		InfoFichePosteDto infoFichePosteDto2 = new InfoFichePosteDto();
+		infoFichePosteDto2.setNumFP("numFP2");
+		
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP()))
+			.thenReturn(Arrays.asList(infoFichePosteDto));
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP()))
+			.thenReturn(Arrays.asList(infoFichePosteDto2));
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
@@ -630,8 +638,8 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(2, result.getListeInfoFDP().size());
-		assertEquals("numFP, numFP2", result.getListeInfoFDP().get(0).getListNumFP());
-		assertEquals("numFP3, numFP4", result.getListeInfoFDP().get(1).getListNumFP());
+		assertEquals("numFP", result.getListeInfoFDP().get(0).getListInfoFichePosteDto().get(0).getNumFP());
+		assertEquals("numFP2", result.getListeInfoFDP().get(1).getListInfoFichePosteDto().get(0).getNumFP());
 	}
 
 	@Test
@@ -640,8 +648,8 @@ public class FichePosteServiceTest {
 		EntiteDto entite = new EntiteDto();
 		entite.setIdEntite(1);
 
-		List<InfoFichePosteDto> listInfoParaent = new ArrayList<InfoFichePosteDto>();
-		InfoFichePosteDto listInfo1 = new InfoFichePosteDto();
+		List<GroupeInfoFichePosteDto> listInfoParaent = new ArrayList<GroupeInfoFichePosteDto>();
+		GroupeInfoFichePosteDto listInfo1 = new GroupeInfoFichePosteDto();
 		listInfoParaent.add(listInfo1);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
@@ -2723,6 +2731,8 @@ public class FichePosteServiceTest {
 		
 		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(new FichePoste());
 		
+		Mockito.when(fichePosteDao.chercherListFichesPosteByListIdsFichePoste(Mockito.anyList())).thenReturn(listFichesPoste);
+		
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(new EntiteDto());
 		
@@ -2777,6 +2787,8 @@ public class FichePosteServiceTest {
 						EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
 		
 		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(new FichePoste());
+		
+		Mockito.when(fichePosteDao.chercherListFichesPosteByListIdsFichePoste(Mockito.anyList())).thenReturn(listFichesPoste);
 		
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(new EntiteDto());
@@ -2837,6 +2849,8 @@ public class FichePosteServiceTest {
 		Mockito.when(fichePosteDao.chercherFichePoste(5)).thenReturn(new FichePoste());
 		Mockito.when(fichePosteDao.chercherFichePoste(6)).thenReturn(new FichePoste());
 		Mockito.when(fichePosteDao.chercherFichePoste(3)).thenReturn(fpNonReglementaire);
+		
+		Mockito.when(fichePosteDao.chercherListFichesPosteByListIdsFichePoste(Mockito.anyList())).thenReturn(listFichesPoste);
 		
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(Mockito.anyInt(), Mockito.any(List.class))).thenReturn(new EntiteDto());
