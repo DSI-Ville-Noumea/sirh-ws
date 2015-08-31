@@ -90,9 +90,9 @@ public class SpadmnRepository implements ISpadmnRepository {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select a.id.nomatr as nomatr from Spadmn a ");
 		sb.append("where ( ");
-		sb.append("(a.positionAdministrative.cdpAdm in ('AC','65','66','60')) ");
+		sb.append("(a.positionAdministrative.cdpAdm in (:listeInclusion)) ");
 		sb.append("OR (a.positionAdministrative.cdpAdm BETWEEN '01' and '51') ");
-		sb.append("OR (a.positionAdministrative.cdpAdm not in (listeExclusion)) ");
+		sb.append("OR (a.positionAdministrative.cdpAdm not in (:listeExclusion)) ");
 		sb.append(") ");
 		sb.append("AND  a.id.datdeb <= :dateFormatMairie and (a.datfin > :dateFormatMairie or a.datfin = 0 or a.datfin is null) ");
 		sb.append("ORDER BY nomatr ");
