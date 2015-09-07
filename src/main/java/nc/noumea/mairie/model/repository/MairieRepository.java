@@ -39,4 +39,35 @@ public class MairieRepository implements IMairieRepository {
 
 		return sirhEntityManager.find(Spbhor.class, idSpbhor);
 	}
+
+	@Override
+	public List<Spmtsr> listerSpmtsrAvecAgentAPartirDateOrderDateDeb(Integer noMatr, Integer date) {
+
+		TypedQuery<Spmtsr> q = sirhEntityManager
+				.createQuery(
+						"select a from Spmtsr a where a.id.nomatr = :noMatricule and a.id.datdeb < :date order by a.id.datdeb ",
+						Spmtsr.class);
+
+		q.setParameter("noMatricule", noMatr);
+		q.setParameter("date", date);
+
+		return q.getResultList();
+	}
+
+	@Override
+	public Spmtsr chercherSpmtsrAvecAgentEtDateDebut(Integer noMatr, Integer date) {
+		TypedQuery<Spmtsr> q = sirhEntityManager.createQuery(
+				"select a from Spmtsr a where a.id.nomatr = :noMatricule and a.id.datdeb =:date ", Spmtsr.class);
+
+		q.setParameter("noMatricule", noMatr);
+		q.setParameter("date", date);
+		Spmtsr res = null;
+		try {
+			res = q.getSingleResult();
+		} catch (Exception e) {
+
+		}
+
+		return res;
+	}
 }

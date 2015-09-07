@@ -1,12 +1,18 @@
 package nc.noumea.mairie.web.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.Sibanq;
+import nc.noumea.mairie.model.bean.sirh.Activite;
+import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Competence;
+import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
+import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISivietService;
@@ -18,7 +24,9 @@ import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.CompteDto;
 import nc.noumea.mairie.web.dto.ContratDto;
 import nc.noumea.mairie.web.dto.DiplomeDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,15 +69,18 @@ public class ContratController {
 	@Autowired
 	private IReportingService reportingService;
 
+	@Autowired
+	private IADSWSConsumer adsWSConsumer;
+
+	@Autowired
+	private IFichePosteRepository fichePosteDao;
+
 	@ResponseBody
 	@RequestMapping(value = "/xml/getContratSIRH", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getXmlContratSIRH(@RequestParam("idAgent") Integer idAgent,
-			@RequestParam("idContrat") Integer idContrat) throws ParseException {
+	public ModelAndView getXmlContratSIRH(@RequestParam("idAgent") Integer idAgent, @RequestParam("idContrat") Integer idContrat) throws ParseException {
 
-		logger.debug(
-				"entered GET [contrat/xml/getContratSIRH] => getXmlContratSIRH with parameter idAgent = {} and idContrat = {} ",
-				idAgent, idContrat);
+		logger.debug("entered GET [contrat/xml/getContratSIRH] => getXmlContratSIRH with parameter idAgent = {} and idContrat = {} ", idAgent, idContrat);
 
 		Contrat contrat = contratSrv.getContratById(idContrat);
 		if (contrat == null) {
@@ -95,19 +106,37 @@ public class ContratController {
 
 		Integer dureePeriodeEssai = null;
 		if (contrat != null && contrat.getDateFinPeriodeEssai() != null) {
-			dureePeriodeEssai = contratSrv.getNbJoursPeriodeEssai(contrat.getDateDebutContrat(),
-					contrat.getDateFinPeriodeEssai());
+			dureePeriodeEssai = contratSrv.getNbJoursPeriodeEssai(contrat.getDateDebutContrat(), contrat.getDateFinPeriodeEssai());
 		}
 
 		// on construit le DTO
 
 		List<DiplomeDto> listDiplomeDto = calculEaeSrv.getListDiplomeDto(idAgent);
-		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste());
+		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+		EntiteDto direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
+		EntiteDto section = adsWSConsumer.getAffichageSection(aff.getFichePoste().getIdServiceADS());
+		List<Competence> listComp = new ArrayList<Competence>();
+		if (aff.getFichePoste().getCompetencesFDP() != null) {
+			for (CompetenceFP compFP : aff.getFichePoste().getCompetencesFDP()) {
+				Competence comp = fichePosteDao.chercherCompetence(compFP.getCompetenceFPPK().getIdCompetence());
+				if (comp != null)
+					listComp.add(comp);
+			}
+		}
+		List<Activite> listActi = new ArrayList<Activite>();
+		if (aff.getFichePoste().getActivites() != null) {
+			for (ActiviteFP actiFP : aff.getFichePoste().getActivites()) {
+				Activite acti = fichePosteDao.chercherActivite(actiFP.getActiviteFPPK().getIdActivite());
+				if (acti != null)
+					listActi.add(acti);
+			}
+		}
+		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction == null ? null : direction.getLabel(), service.getLabel(), section == null ? null : section.getLabel(),
+				service.getSigle(), listActi,listComp);
 		CompteDto cptDto = new CompteDto(ag, banque);
 		AgentDto agDto = new AgentDto(ag, cptDto);
 		if (ag.getCodeCommuneNaissFr() == null) {
-			agDto.setLieuNaissance(sivietSrv.getLieuNaissEtr(ag.getCodePaysNaissEt(), ag.getCodeCommuneNaissEt())
-					.getLibCop());
+			agDto.setLieuNaissance(sivietSrv.getLieuNaissEtr(ag.getCodePaysNaissEt(), ag.getCodeCommuneNaissEt()).getLibCop());
 		} else {
 			agDto.setLieuNaissance(ag.getCodeCommuneNaissFr().getLibVil().trim());
 		}
@@ -119,12 +148,9 @@ public class ContratController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadContratSIRH", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadContratSIRH(@RequestParam("idAgent") Integer idAgent,
-			@RequestParam("idContrat") Integer idContrat) throws ParseException {
+	public ResponseEntity<byte[]> downloadContratSIRH(@RequestParam("idAgent") Integer idAgent, @RequestParam("idContrat") Integer idContrat) throws ParseException {
 
-		logger.debug(
-				"entered GET [contrat/downloadContratSIRH] => downloadContratSIRH with parameter idAgent = {} and idContrat = {}",
-				idAgent, idContrat);
+		logger.debug("entered GET [contrat/downloadContratSIRH] => downloadContratSIRH with parameter idAgent = {} and idContrat = {}", idAgent, idContrat);
 
 		if (idAgent == null || idContrat == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);

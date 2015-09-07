@@ -160,9 +160,9 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" inner join SPPOSA posa on pa.CDPADM = posa.CDPADM and posa.DROITC <> 'N' ");
 		sb.append(" WHERE carr.CDCATE not in (9,10,11) ");
 		sb.append(" and ( (pa.datdeb <= :datdeb ");
-		sb.append(" and (pa.datfin=0 or pa.datfin >= :datdeb )) ");
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");
-		sb.append(" and (pa.datfin=0 or pa.datfin >= :datfin ) )) ");	
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datfin ) )) ");	
 		sb.append(" and ( (carr.datdeb <= :datdeb ");
 		sb.append(" and (carr.datfin=0 or carr.datfin >= :datdeb )) ");
 		sb.append(" or (carr.datdeb <= :datfin ");

@@ -18,7 +18,18 @@ public class ContactService implements IContactService {
 
 	@Override
 	public List<Contact> getContactsAgent(Long id) {
-		TypedQuery<Contact> query = sirhEntityManager.createQuery("select contact from Contact contact " + "where contact.idAgent=:idAgent",
+		TypedQuery<Contact> query = sirhEntityManager.createQuery(
+				"select contact from Contact contact where contact.idAgent=:idAgent", Contact.class);
+		query.setParameter("idAgent", id.intValue());
+		List<Contact> lc = query.getResultList();
+
+		return lc;
+	}
+
+	@Override
+	public List<Contact> getContactsDiffusableAgent(Long id) {
+		TypedQuery<Contact> query = sirhEntityManager.createQuery(
+				"select contact from Contact contact where contact.diffusable = '1' and contact.idAgent=:idAgent",
 				Contact.class);
 		query.setParameter("idAgent", id.intValue());
 		List<Contact> lc = query.getResultList();

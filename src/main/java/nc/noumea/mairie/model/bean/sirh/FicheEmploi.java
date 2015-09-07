@@ -1,8 +1,13 @@
 package nc.noumea.mairie.model.bean.sirh;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
@@ -20,6 +25,9 @@ public class FicheEmploi {
 
 	@Column(name = "NOM_METIER_EMPLOI")
 	private String nomEmploi;
+	
+	@OneToMany(mappedBy = "ficheEmploi", fetch = FetchType.LAZY)
+	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
 
 	public Integer getIdFicheEmploi() {
 		return idFicheEmploi;
@@ -44,4 +52,13 @@ public class FicheEmploi {
 	public void setNomEmploi(String nomEmploi) {
 		this.nomEmploi = nomEmploi;
 	}
+
+	public Set<FeFp> getFicheEmploi() {
+		return ficheEmploi;
+	}
+
+	public void setFicheEmploi(Set<FeFp> ficheEmploi) {
+		this.ficheEmploi = ficheEmploi;
+	}
+	
 }

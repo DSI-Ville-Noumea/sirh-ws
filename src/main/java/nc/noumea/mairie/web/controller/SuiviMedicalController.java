@@ -4,16 +4,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.SuiviMedical;
 import nc.noumea.mairie.service.IReportingService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.ISuiviMedicalService;
 import nc.noumea.mairie.web.dto.AccompagnementVMDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ConvocationVMDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ListVMDto;
 import nc.noumea.mairie.web.dto.MedecinDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +39,10 @@ public class SuiviMedicalController {
 	private ISuiviMedicalService smSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IReportingService reportingService;
 
 	@Autowired
-	private IReportingService reportingService;
+	private IADSWSConsumer adsConsumer;
 
 	@ResponseBody
 	@RequestMapping(value = "/xml/getConvocationSIRH", produces = "application/xml", method = RequestMethod.GET)
@@ -66,12 +66,13 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				Siserv service = siservSrv.getService(sm.getCodeService());
+				EntiteDto service = adsConsumer.getEntiteByIdEntite(sm.getIdServiceADS());
 
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
-					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
-							.getDirection(service.getServi()).getLiServ());
+
+					EntiteDto direction = adsConsumer.getAffichageDirection(sm.getIdServiceADS());
+					agDto.setDirection(direction == null ? "" : direction.getLabel());
 				}
 
 				MedecinDto medDto = new MedecinDto(sm.getMedecinSuiviMedical());
@@ -106,23 +107,22 @@ public class SuiviMedicalController {
 			for (Integer idSuivi : suiviMedIds) {
 				SuiviMedical sm = smSrv.getSuiviMedicalById(idSuivi);
 
-				Siserv service = siservSrv.getService(sm.getCodeService());
+				EntiteDto service = adsConsumer.getEntiteByIdEntite(sm.getIdServiceADS());
 
-				Siserv servResponsable = null;
+				EntiteDto servResponsable = null;
 				AgentWithServiceDto agRespDto = null;
 				AgentWithServiceDto agDto = new AgentWithServiceDto(sm.getAgent(), service);
 				if (service != null) {
-					agDto.setDirection(siservSrv.getDirection(service.getServi()) == null ? "" : siservSrv
-							.getDirection(service.getServi()).getLiServ());
-					if (service.getServi().endsWith("AA")) {
+					EntiteDto direction = adsConsumer.getAffichageDirection(sm.getIdServiceADS());
+					agDto.setDirection(direction == null ? "" : direction.getLabel());
+					if (direction != null) {
 						service = null;
 					} else {
-						String codeServResp = service.getServi().substring(0, service.getServi().length() - 1) + "A";
-						servResponsable = siservSrv.getService(codeServResp);
+						servResponsable = adsConsumer.getParentOfEntiteByTypeEntite(service.getIdEntite(), null);
 
 						agRespDto = new AgentWithServiceDto(null, servResponsable);
-						agRespDto.setDirection(siservSrv.getDirection(servResponsable.getServi()) == null ? ""
-								: siservSrv.getDirection(servResponsable.getServi()).getLiServ());
+						EntiteDto directionResponsable = adsConsumer.getAffichageDirection(servResponsable.getIdEntite());
+						agRespDto.setDirection(directionResponsable == null ? "" : directionResponsable.getLabel());
 					}
 				}
 

@@ -93,7 +93,6 @@ public class AgentRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -134,7 +133,6 @@ public class AgentRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");
@@ -173,7 +171,6 @@ public class AgentRepositoryTest {
 		sirhPersistenceUnit.persist(ag);
 
 		FichePoste fichePoste = new FichePoste();
-		fichePoste.setIdFichePoste(1);
 		fichePoste.setAnnee(2010);
 		fichePoste.setMissions("missions");
 		fichePoste.setNumFP("numFP");

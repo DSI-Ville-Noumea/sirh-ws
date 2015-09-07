@@ -18,7 +18,7 @@ public class DroitsRepository implements IDroitsRepository {
 
 	@Override
 	public List<Droits> getDroitsByElementAndAgent(Integer idElement, String login) {
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("select d from Droits d ");
 		sb.append("inner join fetch d.droitsGroupe dg ");
