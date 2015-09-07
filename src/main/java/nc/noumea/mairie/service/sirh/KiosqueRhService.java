@@ -41,13 +41,13 @@ public class KiosqueRhService implements IKiosqueRhService {
 	}
 
 	@Override
-	public List<ReferentRh> getListReferentRH(String codeService) {
+	public List<ReferentRh> getListReferentRH(Integer idServiceADS) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select ref from ReferentRh ref ");
-		sb.append("where ref.servi = :codeService ");
+		sb.append("where ref.idServiceADS = :idServiceADS ");
 
 		TypedQuery<ReferentRh> q = sirhEntityManager.createQuery(sb.toString(), ReferentRh.class);
-		q.setParameter("codeService", codeService);
+		q.setParameter("idServiceADS", idServiceADS);
 
 		List<ReferentRh> result = q.getResultList();
 
@@ -55,7 +55,7 @@ public class KiosqueRhService implements IKiosqueRhService {
 			// on a pas trouvé alors on cherche le referent global
 			StringBuilder sbGlobal = new StringBuilder();
 			sbGlobal.append("select ref from ReferentRh ref ");
-			sbGlobal.append("where ref.servi is null ");
+			sbGlobal.append("where ref.idServiceADS is null ");
 			Query qGlobal = sirhEntityManager.createQuery(sbGlobal.toString(), ReferentRh.class);
 			try {
 				ReferentRh ref = (ReferentRh) qGlobal.getSingleResult();

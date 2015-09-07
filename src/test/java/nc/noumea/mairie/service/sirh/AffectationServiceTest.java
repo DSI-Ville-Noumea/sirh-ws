@@ -72,4 +72,59 @@ public class AffectationServiceTest {
 		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idAffectation", idAffectation);
 
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getAffectationByIdFichePoste_returnNull() {
+		// Given
+		int idFDP = 1;
+
+		TypedQuery<Affectation> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(null);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
+
+		AffectationService service = new AffectationService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Affectation result = service.getAffectationByIdFichePoste(idFDP);
+
+		// Then
+		assertNull(result);
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idFichePoste", idFDP);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getAffectationByIdFichePoste_returnAffectation() {
+		// Given
+		int idFDP = 1;
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setAgent(ag);
+
+		TypedQuery<Affectation> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(aff));
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
+
+		AffectationService service = new AffectationService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Affectation result = service.getAffectationByIdFichePoste(idFDP);
+
+		// Then
+		assertNotNull(result);
+		assertEquals(aff.getIdAffectation(), result.getIdAffectation());
+		assertEquals(aff.getAgent().getIdAgent(), result.getAgent().getIdAgent());
+		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idFichePoste", idFDP);
+
+	}
 }

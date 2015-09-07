@@ -1,12 +1,16 @@
 package nc.noumea.mairie.web.dto;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
 public class AgentWithServiceDto extends AgentDto {
 	private String service;
-	private String codeService;
+	private Integer idServiceADS;
+	// attention pour ce champ direction car il n'est utilié que dans ce DTO
+	// pour les reports BIRT
+	// faire attention dans les autres projets ils n'existe pas et cel fait
+	// planter l'ajout d'une demande absence si on le rajoute dans le DTO du
+	// kiosque.
 	private String direction;
 	private String signature;
 	private String position;
@@ -25,12 +29,11 @@ public class AgentWithServiceDto extends AgentDto {
 		super(ag);
 	}
 
-	public AgentWithServiceDto(Agent agent, Siserv service) {
+	public AgentWithServiceDto(Agent agent, EntiteDto service) {
 		super(agent);
 		if (service != null) {
-			this.service = service.getLiServ();
-			this.codeService = service.getServi();
-			this.signature = service.getSignature();
+			this.service = service.getLabel();
+			this.idServiceADS = service.getIdEntite();
 			this.sigleService = service.getSigle();
 		}
 		this.position = agent.getPosition();
@@ -42,14 +45,6 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setService(String service) {
 		this.service = service;
-	}
-
-	public String getCodeService() {
-		return codeService;
-	}
-
-	public void setCodeService(String codeService) {
-		this.codeService = codeService;
 	}
 
 	public String getDirection() {
@@ -82,6 +77,14 @@ public class AgentWithServiceDto extends AgentDto {
 
 	public void setSigleService(String sigleService) {
 		this.sigleService = sigleService;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 
 }

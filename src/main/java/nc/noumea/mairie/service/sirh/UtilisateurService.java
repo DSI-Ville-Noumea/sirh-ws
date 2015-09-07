@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 public class UtilisateurService implements IUtilisateurService {
 
 	Logger logger = LoggerFactory.getLogger(UtilisateurService.class);
-	
+
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
 
@@ -86,29 +86,31 @@ public class UtilisateurService implements IUtilisateurService {
 
 	@Override
 	public AccessRightOrganigrammeDto getOrganigrammeAccessRight(Integer idAgent) {
-		
+
 		AccessRightOrganigrammeDto result = new AccessRightOrganigrammeDto();
-		
-		// il faut recuperer l'element id_element=86 (c'est le numero du bon ecran) de la table des droits 
+
+		// il faut recuperer l'element id_element=86 (c'est le numero du bon
+		// ecran) de la table des droits
 		// et faire la mapping avec le groupe et l'utilisateur
 		LightUserDto user = getLoginByIdAgent(idAgent);
-		if(null == user) {
+		if (null == user) {
 			return result;
 		}
-		List<Droits> droits = droitsRepository.getDroitsByElementAndAgent(DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName());
-		
-		if(null != droits) {
-			for(Droits droit : droits) {
-				if(TypeDroitEnum.CONSULTATION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
+		List<Droits> droits = droitsRepository.getDroitsByElementAndAgent(
+				DroitsElementEnum.ECR_ORG_VISU.getIdElement(), user.getsAMAccountName());
+
+		if (null != droits) {
+			for (Droits droit : droits) {
+				if (TypeDroitEnum.CONSULTATION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
 					result.setVisualisation(true);
 				}
-				if(TypeDroitEnum.EDITION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
+				if (TypeDroitEnum.EDITION.getIdTypeDroit().equals(droit.getIdTypeDroit())) {
 					result.setVisualisation(true);
 					result.setEdition(true);
 				}
 			}
 		}
-		
+
 		//#16380 : on gere un role administrateur
 		List<Droits> droitsAdmin = droitsRepository.getDroitsByGroupeAndAgent(DroitsGroupeEnum.GROUPE_SIRH.getIdGroupe(), user.getsAMAccountName());
 		if(null != droitsAdmin && droitsAdmin.size()>0) {
@@ -117,8 +119,9 @@ public class UtilisateurService implements IUtilisateurService {
 		
 		return result;
 	}
-	
-	private LightUserDto getLoginByIdAgent(Integer idAgent) {
+
+	@Override
+	public LightUserDto getLoginByIdAgent(Integer idAgent) {
 		// on cherche si l'agent existe
 		Agent ag = agentSrv.getAgent(idAgent);
 		if (ag == null) {
@@ -127,7 +130,8 @@ public class UtilisateurService implements IUtilisateurService {
 		}
 
 		// on fait la correspondance entre le login et l'agent via RADI
-		LightUserDto user = radiWSConsumer.getAgentCompteAD(Integer.valueOf(radiWSConsumer.getNomatrWithIdAgent(idAgent)));
+		LightUserDto user = radiWSConsumer.getAgentCompteAD(Integer.valueOf(radiWSConsumer
+				.getNomatrWithIdAgent(idAgent)));
 		if (user == null || user.getsAMAccountName() == null) {
 			logger.debug("L'agent " + idAgent + " n'a pas de compte AD ou n'a pas son login renseigné.");
 			return null;

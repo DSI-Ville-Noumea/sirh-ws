@@ -1,31 +1,16 @@
 package nc.noumea.mairie.web.dto;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import nc.noumea.mairie.model.bean.Spmtsr;
-
 public class ParcoursProDto {
-
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	private Date dateDebut;
 	private Date dateFin;
 	private String service;
 	private String direction;
 
-	public ParcoursProDto(Spmtsr spMtsr) {
-		try {
-			this.dateDebut = sdf.parse(spMtsr.getId().getDatdeb().toString());
-		} catch (ParseException e) {
-			this.dateDebut = null;
-		}
-		try {
-			this.dateFin = spMtsr.getDatfin() == null ? null : sdf.parse(spMtsr.getDatfin().toString());
-		} catch (ParseException e) {
-			this.dateFin = null;
-		}
+	public ParcoursProDto() {
+		super();
 	}
 
 	public Date getDateDebut() {
@@ -58,6 +43,12 @@ public class ParcoursProDto {
 
 	public void setDirection(String direction) {
 		this.direction = direction;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return this.dateDebut.equals(((ParcoursProDto) obj).getDateDebut())
+				&& this.dateFin.equals(((ParcoursProDto) obj).getDateFin());
 	}
 
 }

@@ -6,12 +6,13 @@ import java.util.Date;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
 import nc.noumea.mairie.service.IReportingService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IContratService;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.NoteServiceDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class NoteServiceController {
 	private IReportingService reportingService;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IADSWSConsumer adsWSConsumer;
 
 	@ResponseBody
 	@RequestMapping(value = "/xml/getNoteServiceSIRH", produces = "application/xml", method = RequestMethod.GET)
@@ -58,9 +59,10 @@ public class NoteServiceController {
 		Affectation aff = affSrv.getAffectationById(idAffectation);
 		NoteServiceDto dto = new NoteServiceDto();
 		if (aff != null) {
-			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent(), aff.getFichePoste().getService());
-			agDto.setDirection(siservSrv.getDirection(aff.getFichePoste().getService().getServi()) == null ? ""
-					: siservSrv.getDirection(aff.getFichePoste().getService().getServi()).getLiServ());
+			EntiteDto serviceADS = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent(), serviceADS);
+			EntiteDto direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
+			agDto.setDirection(direction == null ? "" : direction.getLabel());
 			TitrePosteDto titrePoste = new TitrePosteDto(aff.getFichePoste());
 
 			Contrat contrat = contratSrv.getContratBetweenDate(aff.getAgent().getIdAgent(), new Date());

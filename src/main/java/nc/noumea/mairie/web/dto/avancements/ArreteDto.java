@@ -14,6 +14,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AvancementDetache;
 import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.web.dto.EntiteDto;
 
 @XmlRootElement
 public class ArreteDto {
@@ -43,8 +44,8 @@ public class ArreteDto {
 		super();
 	}
 
-	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
-			throws ParseException {
+	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
+			EntiteDto direction, EntiteDto service) throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -114,10 +115,8 @@ public class ArreteDto {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
 		this.acc = avct.getAccRestant();
-		this.directionAgent = fp != null && fp.getService() != null ? " (" + fp.getService().getDirectionSigle() + ")"
-				: "";
-		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
-				+ fp.getService().getSigle() + ")" : "";
+		this.directionAgent = direction != null ? " (" + direction.getSigle() + ")" : "";
+		this.serviceAgent = service != null ? direction.getSigle() + " (" + service.getSigle() + ")" : "";
 
 	}
 
@@ -130,8 +129,8 @@ public class ArreteDto {
 		return dureeAvct;
 	}
 
-	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade)
-			throws ParseException {
+	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
+			EntiteDto direction, EntiteDto service) throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -201,10 +200,8 @@ public class ArreteDto {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
 		this.acc = avct.getAccRestant();
-		this.directionAgent = fp != null && fp.getService() != null ? " (" + fp.getService().getDirectionSigle() + ")"
-				: "";
-		this.serviceAgent = fp != null && fp.getService() != null ? fp.getService().getDirectionSigle() + " ("
-				+ fp.getService().getSigle() + ")" : "";
+		this.directionAgent = direction != null ? " (" + direction.getSigle() + ")" : "";
+		this.serviceAgent = service != null ? direction.getSigle() + " (" + service.getSigle() + ")" : "";
 	}
 
 	private Date getDateAvancement(AvancementFonctionnaire avct) {

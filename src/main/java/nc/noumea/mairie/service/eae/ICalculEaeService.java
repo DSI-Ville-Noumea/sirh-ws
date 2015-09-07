@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service.eae;
 
+import java.text.ParseException;
 import java.util.List;
 
 import nc.noumea.mairie.web.dto.AgentDto;
@@ -10,9 +11,10 @@ import nc.noumea.mairie.web.dto.DiplomeDto;
 
 public interface ICalculEaeService {
 
-	CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation);
+	CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation)
+			throws NumberFormatException, ParseException;
 
-	List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, String idService);
+	List<CalculEaeInfosDto> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS);
 
 	List<CalculEaeInfosDto> getListeAffectationsAgentAvecFP(Integer idAgent, Integer idFichePoste);
 

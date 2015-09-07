@@ -1,33 +1,36 @@
 package nc.noumea.mairie.model.bean.sirh;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.bean.Silieu;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.WhereJoinTable;
 
@@ -38,10 +41,13 @@ public class FichePoste {
 
 	@Id
 	@Column(name = "ID_FICHE_POSTE")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idFichePoste;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotFound(action = NotFoundAction.IGNORE)
+	@OneToOne(optional = true, fetch = FetchType.LAZY, orphanRemoval = false)
 	@JoinColumn(name = "ID_TITRE_POSTE", referencedColumnName = "ID_TITRE_POSTE")
+	@LazyToOne(value = LazyToOneOption.NO_PROXY)
 	private TitrePoste titrePoste;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
@@ -74,39 +80,38 @@ public class FichePoste {
 	private String numFP;
 
 	@NotNull
-	@Lob
-	@Column(name = "MISSIONS")
+	@Column(name = "MISSIONS", columnDefinition = "clob")
 	private String missions;
+
+	@NotNull
+	@Column(name = "OBSERVATION", columnDefinition = "clob")
+	private String observation;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
 	private StatutFichePoste statutFP;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
 	private Spbhor budgete;
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
 	private Spbhor reglementaire;
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_SERVI", referencedColumnName = "SERVI")
-	private Siserv service;
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
 	private Spgradn gradePoste;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "ACTIVITE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_ACTIVITE"))
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@OrderBy("idActivite asc")
-	private Set<Activite> activites = new HashSet<Activite>();
+	private Set<ActiviteFP> activites = new HashSet<ActiviteFP>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "COMPETENCE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_COMPETENCE"))
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@OrderBy("nomCompetence asc")
-	private Set<Competence> competencesFDP = new HashSet<Competence>();
+	private Set<CompetenceFP> competencesFDP = new HashSet<CompetenceFP>();
 
 	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
@@ -127,7 +132,7 @@ public class FichePoste {
 	@OrderBy("numRubrique asc")
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
 
-	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
 	@OrderBy("primePointageFPPK.numRubrique asc")
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
 
@@ -153,18 +158,8 @@ public class FichePoste {
 	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
 	private Set<Affectation> agent = new HashSet<Affectation>();
 
-	@Transient
-	public HashMap<String, List<String>> getCompetences() {
-		HashMap<String, List<String>> res = new HashMap<String, List<String>>();
-		for (Competence comp : getCompetencesFDP()) {
-			if (!res.containsKey(comp.getTypeCompetence().getLibTypeCompetence())) {
-				List<String> list = new ArrayList<String>();
-				res.put(comp.getTypeCompetence().getLibTypeCompetence(), list);
-			}
-			res.get(comp.getTypeCompetence().getLibTypeCompetence()).add(comp.getNomCompetence());
-		}
-		return res;
-	}
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
 
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
@@ -172,6 +167,30 @@ public class FichePoste {
 
 	@Column(name = "ID_SERVICE_ADS")
 	private Integer idServiceADS;
+
+	@Column(name = "ID_SERVI", columnDefinition = "char")
+	private String idServi;
+
+	@Column(name = "ID_BASE_HORAIRE_POINTAGE")
+	private Integer idBaseHorairePointage;
+
+	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
+	private Integer idBaseHoraireAbsence;
+
+	@Column(name = "NUM_DELIBERATION")
+	private String numDeliberation;
+
+	@Column(name = "DATE_FIN_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateFinValiditeFp;
+
+	@Column(name = "DATE_DEBUT_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebutValiditeFp;
+
+	@Column(name = "DATE_DEB_APPLI_SERV")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebAppliServ;
 
 	public TitrePoste getTitrePoste() {
 		return titrePoste;
@@ -253,14 +272,6 @@ public class FichePoste {
 		this.reglementaire = reglementaire;
 	}
 
-	public Siserv getService() {
-		return service;
-	}
-
-	public void setService(Siserv service) {
-		this.service = service;
-	}
-
 	public Spgradn getGradePoste() {
 		return gradePoste;
 	}
@@ -269,19 +280,19 @@ public class FichePoste {
 		this.gradePoste = gradePoste;
 	}
 
-	public Set<Activite> getActivites() {
+	public Set<ActiviteFP> getActivites() {
 		return activites;
 	}
 
-	public void setActivites(Set<Activite> activites) {
+	public void setActivites(Set<ActiviteFP> activites) {
 		this.activites = activites;
 	}
 
-	public Set<Competence> getCompetencesFDP() {
+	public Set<CompetenceFP> getCompetencesFDP() {
 		return competencesFDP;
 	}
 
-	public void setCompetencesFDP(Set<Competence> competencesFDP) {
+	public void setCompetencesFDP(Set<CompetenceFP> competencesFDP) {
 		this.competencesFDP = competencesFDP;
 	}
 
@@ -392,4 +403,77 @@ public class FichePoste {
 	public void setIdServiceADS(Integer idServiceADS) {
 		this.idServiceADS = idServiceADS;
 	}
+
+	public String getIdServi() {
+		return idServi;
+	}
+
+	public void setIdServi(String idServi) {
+		this.idServi = idServi;
+	}
+
+	public Integer getIdBaseHorairePointage() {
+		return idBaseHorairePointage;
+	}
+
+	public void setIdBaseHorairePointage(Integer idBaseHorairePointage) {
+		this.idBaseHorairePointage = idBaseHorairePointage;
+	}
+
+	public Integer getIdBaseHoraireAbsence() {
+		return idBaseHoraireAbsence;
+	}
+
+	public void setIdBaseHoraireAbsence(Integer idBaseHoraireAbsence) {
+		this.idBaseHoraireAbsence = idBaseHoraireAbsence;
+	}
+
+	public String getNumDeliberation() {
+		return numDeliberation;
+	}
+
+	public void setNumDeliberation(String numDeliberation) {
+		this.numDeliberation = numDeliberation;
+	}
+
+	public Date getDateFinValiditeFp() {
+		return dateFinValiditeFp;
+	}
+
+	public void setDateFinValiditeFp(Date dateFinValiditeFp) {
+		this.dateFinValiditeFp = dateFinValiditeFp;
+	}
+
+	public Date getDateDebutValiditeFp() {
+		return dateDebutValiditeFp;
+	}
+
+	public void setDateDebutValiditeFp(Date dateDebutValiditeFp) {
+		this.dateDebutValiditeFp = dateDebutValiditeFp;
+	}
+
+	public Date getDateDebAppliServ() {
+		return dateDebAppliServ;
+	}
+
+	public void setDateDebAppliServ(Date dateDebAppliServ) {
+		this.dateDebAppliServ = dateDebAppliServ;
+	}
+
+	public Set<FeFp> getFicheEmploi() {
+		return ficheEmploi;
+	}
+
+	public void setFicheEmploi(Set<FeFp> ficheEmploi) {
+		this.ficheEmploi = ficheEmploi;
+	}
+
+	public String getObservation() {
+		return observation;
+	}
+
+	public void setObservation(String observation) {
+		this.observation = observation;
+	}
+
 }

@@ -4,10 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import nc.noumea.mairie.model.bean.sirh.Droits;
 
 @Embeddable
 public class GroupeUtilisateurId implements Serializable {
