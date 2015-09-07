@@ -2,7 +2,6 @@ package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 
@@ -16,10 +15,10 @@ public class ReferentRhDtoTest {
 		ReferentRh c = new ReferentRh();
 		c.setIdAgentReferent(21);
 		c.setNumeroTelephone(22);
-		c.setServi("toto");
+		// c.setServi("toto");
 		Agent ag = new Agent();
 		ag.setPrenomUsage("prenom usage");
-		Siserv serv = new Siserv();
+		EntiteDto serv = new EntiteDto();
 		serv.setSigle("sigle");
 
 		// When
@@ -29,7 +28,6 @@ public class ReferentRhDtoTest {
 		assertEquals(c.getIdAgentReferent(), dto.getIdAgentReferent());
 		assertEquals(c.getNumeroTelephone(), dto.getNumeroTelephone());
 		assertEquals(ag.getPrenomUsage(), dto.getPrenomAgentReferent());
-		assertEquals(c.getServi(), dto.getServi());
 		assertEquals(serv.getSigle(), dto.getSigleService());
 	}
 
@@ -38,7 +36,7 @@ public class ReferentRhDtoTest {
 		// Given
 		ReferentRh c = null;
 		Agent ag = null;
-		Siserv serv = null;
+		EntiteDto serv = null;
 
 		// When
 		ReferentRhDto dto = new ReferentRhDto(c, ag, serv);
@@ -47,7 +45,6 @@ public class ReferentRhDtoTest {
 		assertNull(dto.getIdAgentReferent());
 		assertNull(dto.getNumeroTelephone());
 		assertNull(dto.getPrenomAgentReferent());
-		assertNull(dto.getServi());
 		assertNull(dto.getSigleService());
 	}
 }

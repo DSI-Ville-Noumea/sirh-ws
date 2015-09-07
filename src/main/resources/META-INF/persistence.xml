@@ -41,7 +41,6 @@
 		<class>nc.noumea.mairie.model.bean.Sicomm</class>
 		<class>nc.noumea.mairie.model.bean.Siguic</class>
 		<class>nc.noumea.mairie.model.bean.Silieu</class>
-		<class>nc.noumea.mairie.model.bean.Siserv</class>
 		<class>nc.noumea.mairie.model.bean.SIVIET</class>
 		<class>nc.noumea.mairie.model.bean.Sivoie</class>
 		<class>nc.noumea.mairie.model.bean.Spadmn</class>
@@ -85,15 +84,25 @@
 		<class>nc.noumea.mairie.model.bean.sirh.ReferentRh</class>
 		<class>nc.noumea.mairie.model.bean.sirh.BaseHorairePointage</class>
 		<class>nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn</class>
-		<class>nc.noumea.mairie.model.bean.sirh.AccueilRh</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.AccueilRh</class>
 		<class>nc.noumea.mairie.model.bean.Spposa</class>
 		<class>nc.noumea.mairie.model.bean.Spprim</class>
 		<class>nc.noumea.mairie.model.bean.sirh.TypeRepresentant</class>
-		<class>nc.noumea.mairie.model.bean.sirh.AlerteRh</class> 
-		<class>nc.noumea.mairie.model.pk.sirh.DroitsId</class> 
-		<class>nc.noumea.mairie.model.bean.sirh.Droits</class> 
-		<class>nc.noumea.mairie.model.bean.sirh.DroitsElement</class> 
-		<class>nc.noumea.mairie.model.bean.sirh.DroitsGroupe</class> 
+		<class>nc.noumea.mairie.model.bean.sirh.AlerteRh</class>
+		<class>nc.noumea.mairie.model.pk.sirh.DroitsId</class>
+		<class>nc.noumea.mairie.model.bean.sirh.Droits</class>
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsElement</class>
+		<class>nc.noumea.mairie.model.bean.sirh.DroitsGroupe</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActionFdpJob</class>
+		<class>nc.noumea.mairie.model.bean.sirh.HistoFichePoste</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FeFp</class>
+		<class>nc.noumea.mairie.model.pk.sirh.FeFpPK</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AvantageNatureFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.DelegationFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.RegIndemFP</class>
+		<class>nc.noumea.mairie.model.bean.Sppost</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NFA</class>
+		<class>nc.noumea.mairie.model.bean.PositDesc</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

@@ -4,19 +4,22 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import nc.noumea.mairie.model.bean.Silieu;
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgeng;
 import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.sirh.Activite;
+import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
 import nc.noumea.mairie.model.bean.sirh.Budget;
 import nc.noumea.mairie.model.bean.sirh.CadreEmploi;
 import nc.noumea.mairie.model.bean.sirh.Competence;
+import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.NatureAvantage;
@@ -56,25 +59,58 @@ public class FichePosteDtoTest {
 	public void FichePosteDto_ctor_FichePoste() throws ParseException {
 		// Given
 		FichePoste fp = getFichePoste();
+		List<Competence> listComp = new ArrayList<Competence>();
+
+		TypeCompetence typeCompetenceSavoir = new TypeCompetence();
+		typeCompetenceSavoir.setIdTypeCompetence(1);
+		TypeCompetence typeCompetenceSavoirFaire = new TypeCompetence();
+		typeCompetenceSavoirFaire.setIdTypeCompetence(2);
+		TypeCompetence typeCompetenceComportement = new TypeCompetence();
+		typeCompetenceComportement.setIdTypeCompetence(3);
+		Competence comp1 = new Competence();
+		comp1.setTypeCompetence(typeCompetenceSavoir);
+		Competence comp2 = new Competence();
+		comp2.setTypeCompetence(typeCompetenceSavoirFaire);
+		Competence comp3 = new Competence();
+		comp3.setTypeCompetence(typeCompetenceSavoirFaire);
+		Competence comp4 = new Competence();
+		comp4.setTypeCompetence(typeCompetenceComportement);
+		Competence comp5 = new Competence();
+		comp5.setTypeCompetence(typeCompetenceComportement);
+		Competence comp6 = new Competence();
+		comp6.setTypeCompetence(typeCompetenceComportement);
+		listComp.add(comp1);
+		listComp.add(comp2);
+		listComp.add(comp3);
+		listComp.add(comp4);
+		listComp.add(comp5);
+		listComp.add(comp6);
+
+		List<Activite> listActi = new ArrayList<Activite>();
+		for (ActiviteFP actiFP : fp.getActivites()) {
+			Activite acti = new Activite();
+			listActi.add(acti);
+		}
+
 		// When
-		FichePosteDto dto = new FichePosteDto(fp);
+		FichePosteDto dto = new FichePosteDto(fp, "", "", "", "sigle", listActi, listComp);
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
-		assertEquals(fp.getService().getDirection(), dto.getDirection());
+		// assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
 		assertEquals(fp.getBudget().getLibelleBudget(), dto.getBudget());
 		assertEquals(fp.getBudgete().getLibHor(), dto.getBudgete());
 		assertEquals(fp.getReglementaire().getLibHor(), dto.getReglementaire());
-		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
-				dto.getCadreEmploi());
+		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(), dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getDivision(), dto.getService());
-		assertEquals(fp.getService().getSection(), dto.getSection());
+		// assertEquals(fp.getService().getDivision(), dto.getService());
+		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
 		assertEquals(fp.getMissions(), dto.getMissions());
+		assertEquals(fp.getObservation(), dto.getCommentaire());
 
 		assertEquals(2, dto.getActivites().size());
 		assertEquals(1, dto.getSavoirs().size());
@@ -84,6 +120,7 @@ public class FichePosteDtoTest {
 		assertEquals(0, dto.getDelegations().size());
 		assertEquals(0, dto.getRegimesIndemnitaires().size());
 		assertEquals(0, dto.getPrimes().size());
+		assertEquals("sigle", dto.getSigle());
 	}
 
 	@Test
@@ -141,25 +178,56 @@ public class FichePosteDtoTest {
 		fp.getAvantagesNature().add(avNature);
 		fp.getPrimePointageFP().add(pp1);
 		fp.getPrimePointageFP().add(pp2);
+		List<Competence> listComp = new ArrayList<Competence>();
+
+		TypeCompetence typeCompetenceSavoir = new TypeCompetence();
+		typeCompetenceSavoir.setIdTypeCompetence(1);
+		TypeCompetence typeCompetenceSavoirFaire = new TypeCompetence();
+		typeCompetenceSavoirFaire.setIdTypeCompetence(2);
+		TypeCompetence typeCompetenceComportement = new TypeCompetence();
+		typeCompetenceComportement.setIdTypeCompetence(3);
+		Competence comp1 = new Competence();
+		comp1.setTypeCompetence(typeCompetenceSavoir);
+		Competence comp2 = new Competence();
+		comp2.setTypeCompetence(typeCompetenceSavoirFaire);
+		Competence comp3 = new Competence();
+		comp3.setTypeCompetence(typeCompetenceSavoirFaire);
+		Competence comp4 = new Competence();
+		comp4.setTypeCompetence(typeCompetenceComportement);
+		Competence comp5 = new Competence();
+		comp5.setTypeCompetence(typeCompetenceComportement);
+		Competence comp6 = new Competence();
+		comp6.setTypeCompetence(typeCompetenceComportement);
+		listComp.add(comp1);
+		listComp.add(comp2);
+		listComp.add(comp3);
+		listComp.add(comp4);
+		listComp.add(comp5);
+		listComp.add(comp6);
+		List<Activite> listActi = new ArrayList<Activite>();
+		for (ActiviteFP actiFP : fp.getActivites()) {
+			Activite acti = new Activite();
+			listActi.add(acti);
+		}
 		// When
-		FichePosteDto dto = new FichePosteDto(fp, true);
+		FichePosteDto dto = new FichePosteDto(fp, true, "", "", "", null, listActi, listComp);
 
 		// Then
 		assertEquals(fp.getIdFichePoste(), dto.getIdFichePoste());
 		assertEquals(fp.getNumFP(), dto.getNumero());
-		assertEquals(fp.getService().getDirection(), dto.getDirection());
+		// assertEquals(fp.getService().getDirection(), dto.getDirection());
 		assertEquals(fp.getTitrePoste().getLibTitrePoste(), dto.getTitre());
 		assertEquals(fp.getBudget().getLibelleBudget(), dto.getBudget());
 		assertEquals(fp.getBudgete().getLibHor(), dto.getBudgete());
 		assertEquals(fp.getReglementaire().getLibHor(), dto.getReglementaire());
-		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(),
-				dto.getCadreEmploi());
+		assertEquals(fp.getGradePoste().getGradeGenerique().getCadreEmploiGrade().getLibelleCadreEmploi(), dto.getCadreEmploi());
 		assertEquals(fp.getNiveauEtude().getLibelleNiveauEtude(), dto.getNiveauEtudes());
-		assertEquals(fp.getService().getDivision(), dto.getService());
-		assertEquals(fp.getService().getSection(), dto.getSection());
+		// assertEquals(fp.getService().getDivision(), dto.getService());
+		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
 		assertEquals(fp.getMissions(), dto.getMissions());
+		assertEquals(fp.getObservation(), dto.getCommentaire());
 		assertEquals(fp.getStatutFP().getLibStatut(), dto.getStatutFDP());
 		assertEquals(fp.getNatureCredit().getLibNatureCredit(), dto.getNatureCredit());
 		assertEquals(fp.getGradePoste().getGradeGenerique().getCdcadr(), dto.getCategorie());
@@ -188,13 +256,13 @@ public class FichePosteDtoTest {
 	}
 
 	private FichePoste getFichePoste() {
-		Siserv service = new Siserv();
-		service.setServi("TATA");
-		service.setSigle("S");
-		service.setLiServ("TEST DIRECTION SERV");
-		service.setDirection("TEST");
-		service.setDirectionSigle("SN");
-		service.setSection("SECETION SERVICE");
+		// Siserv service = new Siserv();
+		// service.setServi("TATA");
+		// service.setSigle("S");
+		// service.setLiServ("TEST DIRECTION SERV");
+		// service.setDirection("TEST");
+		// service.setDirectionSigle("SN");
+		// service.setSection("SECETION SERVICE");
 
 		TitrePoste tp = new TitrePoste();
 		tp.setLibTitrePoste("Lib nono");
@@ -217,30 +285,29 @@ public class FichePosteDtoTest {
 		lieuPoste.setLibelleLieu("libelle lieu");
 		NiveauEtude niveauEtude = new NiveauEtude();
 		niveauEtude.setLibelleNiveauEtude("lib niveau etude");
-		Activite act1 = new Activite();
-		Activite act2 = new Activite();
+		ActiviteFP act1 = new ActiviteFP();
+		ActiviteFP act2 = new ActiviteFP();
 		TypeCompetence typeCompetenceSavoir = new TypeCompetence();
 		typeCompetenceSavoir.setIdTypeCompetence(1);
 		TypeCompetence typeCompetenceSavoirFaire = new TypeCompetence();
 		typeCompetenceSavoirFaire.setIdTypeCompetence(2);
 		TypeCompetence typeCompetenceComportement = new TypeCompetence();
 		typeCompetenceComportement.setIdTypeCompetence(3);
-		Competence comp1 = new Competence();
-		comp1.setTypeCompetence(typeCompetenceSavoir);
-		Competence comp2 = new Competence();
-		comp2.setTypeCompetence(typeCompetenceSavoirFaire);
-		Competence comp3 = new Competence();
-		comp3.setTypeCompetence(typeCompetenceSavoirFaire);
-		Competence comp4 = new Competence();
-		comp4.setTypeCompetence(typeCompetenceComportement);
-		Competence comp5 = new Competence();
-		comp5.setTypeCompetence(typeCompetenceComportement);
-		Competence comp6 = new Competence();
-		comp6.setTypeCompetence(typeCompetenceComportement);
+		CompetenceFP comp1 = new CompetenceFP();
+		// comp1.setTypeCompetence(typeCompetenceSavoir);
+		CompetenceFP comp2 = new CompetenceFP();
+		// comp2.setTypeCompetence(typeCompetenceSavoirFaire);
+		CompetenceFP comp3 = new CompetenceFP();
+		// comp3.setTypeCompetence(typeCompetenceSavoirFaire);
+		CompetenceFP comp4 = new CompetenceFP();
+		// comp4.setTypeCompetence(typeCompetenceComportement);
+		CompetenceFP comp5 = new CompetenceFP();
+		// comp5.setTypeCompetence(typeCompetenceComportement);
+		CompetenceFP comp6 = new CompetenceFP();
+		// comp6.setTypeCompetence(typeCompetenceComportement);
 
 		FichePoste fp = new FichePoste();
-		fp.setIdFichePoste(1234);
-		fp.setService(service);
+		// fp.setService(service);
 		fp.setNumFP("2013/5");
 		fp.setTitrePoste(tp);
 		fp.setBudget(budget);

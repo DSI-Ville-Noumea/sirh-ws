@@ -138,4 +138,103 @@ public class MairieRepositoryTest {
 		assertNull(result);
 	}
 
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listerSpmtsrAvecAgentAPartirDateOrderDateDeb_return1result() {
+
+		SpmtsrId spmtsrId = new SpmtsrId();
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(20090506);
+		spmtsrId.setServi("service");
+
+		Spmtsr spmtsr = new Spmtsr();
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
+		sirhPersistenceUnit.persist(spmtsr);
+
+		List<Spmtsr> result = repository.listerSpmtsrAvecAgentAPartirDateOrderDateDeb(5138, 20100101);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listerSpmtsrAvecAgentAPartirDateOrderDateDeb_returnNoresult() {
+
+		SpmtsrId spmtsrId = new SpmtsrId();
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(20090101);
+		spmtsrId.setServi("service");
+
+		Spmtsr spmtsr = new Spmtsr();
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
+		sirhPersistenceUnit.persist(spmtsr);
+
+		List<Spmtsr> result = repository.listerSpmtsrAvecAgentAPartirDateOrderDateDeb(5138, 20100101);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherSpmtsrAvecAgentEtDateDebut_return1result() {
+
+		SpmtsrId spmtsrId = new SpmtsrId();
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(20100101);
+		spmtsrId.setServi("service");
+
+		Spmtsr spmtsr = new Spmtsr();
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
+		sirhPersistenceUnit.persist(spmtsr);
+
+		Spmtsr result = repository.chercherSpmtsrAvecAgentEtDateDebut(5138,20100101);
+
+		assertNotNull(result);
+		assertEquals(spmtsrId.getDatdeb(), result.getId().getDatdeb());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherSpmtsrAvecAgentEtDateDebut_returnNoresult() {
+
+		SpmtsrId spmtsrId = new SpmtsrId();
+		spmtsrId.setNomatr(5138);
+		spmtsrId.setDatdeb(2010);
+		spmtsrId.setServi("service");
+
+		Spmtsr spmtsr = new Spmtsr();
+		spmtsr.setId(spmtsrId);
+		spmtsr.setCdecol(1);
+		spmtsr.setDatfin(2014);
+		spmtsr.setRefarr(1);
+		sirhPersistenceUnit.persist(spmtsr);
+
+		Spmtsr result = repository.chercherSpmtsrAvecAgentEtDateDebut(5138, 20100101);
+
+		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
 }

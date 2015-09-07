@@ -32,9 +32,6 @@ public class SuiviMedical {
 	@Column(name = "NB_VISITES_RATEES")
 	private Integer nbVisitesRatees;
 
-	@Column(name = "ID_SERVI", columnDefinition = "char")
-	private String codeService;
-
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_MEDECIN", referencedColumnName = "ID_MEDECIN")
 	private Medecin medecinSuiviMedical;
@@ -75,14 +72,6 @@ public class SuiviMedical {
 
 	public void setNbVisitesRatees(Integer nbVisitesRatees) {
 		this.nbVisitesRatees = nbVisitesRatees;
-	}
-
-	public String getCodeService() {
-		return codeService;
-	}
-
-	public void setCodeService(String codeService) {
-		this.codeService = codeService;
 	}
 
 	public Medecin getMedecinSuiviMedical() {

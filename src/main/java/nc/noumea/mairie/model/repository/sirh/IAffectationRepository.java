@@ -9,11 +9,17 @@ public interface IAffectationRepository {
 
 	Affectation getAffectationActiveByAgent(int idAgent);
 
-	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, String idService);
+	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS);
 
 	List<Affectation> getListeAffectationsAgentAvecFP(Integer idAgent, Integer idFichePoste);
 
 	List<Affectation> getListeAffectationsAgentByPeriode(Integer idAgent, Date dateDebut, Date dateFin);
 
 	List<Affectation> getListeAffectationsAgentOrderByDateDesc(Integer idAgent);
+
+	List<Affectation> getAffectationByIdFichePoste(Integer idFichePoste);
+
+	Affectation chercherAffectationAgentAvecDateDebut(Integer idAgent, Date date);
+
+	List<Affectation> getListeAffectationsAgentOrderByDateAsc(Integer idAgent);
 }
