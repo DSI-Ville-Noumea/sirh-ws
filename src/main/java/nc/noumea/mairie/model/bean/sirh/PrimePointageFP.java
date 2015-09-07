@@ -20,7 +20,7 @@ public class PrimePointageFP {
 
 	@ManyToOne
 	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE")
-	private FichePoste idFichePoste;
+	private FichePoste fichePoste;
 
 	@Transient
 	private String libelle;
@@ -33,20 +33,20 @@ public class PrimePointageFP {
 		this.libelle = libelle;
 	}
 
-	public FichePoste getIdFichePoste() {
-		return idFichePoste;
-	}
-
-	public void setIdFichePoste(FichePoste idFichePoste) {
-		this.idFichePoste = idFichePoste;
-	}
-
 	public PrimePointageFPPK getPrimePointageFPPK() {
 		return primePointageFPPK;
 	}
 
 	public void setPrimePointageFPPK(PrimePointageFPPK primePointageFPPK) {
 		this.primePointageFPPK = primePointageFPPK;
+	}
+
+	public FichePoste getFichePoste() {
+		return fichePoste;
+	}
+
+	public void setFichePoste(FichePoste fichePoste) {
+		this.fichePoste = fichePoste;
 	}
 
 }

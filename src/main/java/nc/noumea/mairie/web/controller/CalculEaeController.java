@@ -1,5 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class CalculEaeController {
 	@RequestMapping(value = "/affectationActiveByAgent", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getDetailAffectationActiveByAgent(@RequestParam("idAgent") int idAgent,
-			@RequestParam("anneeFormation") int anneeFormation) {
+			@RequestParam("anneeFormation") int anneeFormation) throws NumberFormatException, ParseException {
 
 		logger.debug(
 				"entered GET [calculEae/affectationActiveByAgent] => getAffectationActiveByAgent with parameter idAgent = {}, anneeFormation = {}",
@@ -127,13 +128,13 @@ public class CalculEaeController {
 	@RequestMapping(value = "/listeAffectationsAgentAvecService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAffectationsAgentAvecService(@RequestParam("idAgent") int idAgent,
-			@RequestParam("idService") String idService) {
+			@RequestParam("idServiceADS") Integer idServiceADS) {
 
 		logger.debug(
-				"entered GET [calculEae/listeAffectationsAgentAvecService] => getListeAffectationsAgentAvecService with parameter idAgent = {}, idService = {}",
-				idAgent, idService);
+				"entered GET [calculEae/listeAffectationsAgentAvecService] => getListeAffectationsAgentAvecService with parameter idAgent = {}, idServiceADS = {}",
+				idAgent, idServiceADS);
 
-		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(idAgent, idService);
+		List<CalculEaeInfosDto> result = calculEaeService.getListeAffectationsAgentAvecService(idAgent, idServiceADS);
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
 				.transform(new MSDateTransformer(), Date.class).deepSerialize(result), HttpStatus.OK);

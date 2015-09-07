@@ -9,13 +9,14 @@ import nc.noumea.mairie.model.bean.sirh.AccueilRh;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IKiosqueRhService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AccueilRhDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ReferentRhDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
@@ -42,10 +43,10 @@ public class KiosqueRHController {
 	private IAgentService agentSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
+	private IAffectationService affSrv;
 
 	@Autowired
-	private IAffectationService affSrv;
+	private IADSWSConsumer adsWSConsumer;
 
 	private Logger logger = LoggerFactory.getLogger(KiosqueRHController.class);
 
@@ -69,11 +70,11 @@ public class KiosqueRHController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		List<ReferentRh> lc = kiosqueSrv.getListReferentRH(aff.getFichePoste().getService().getServi());
+		List<ReferentRh> lc = kiosqueSrv.getListReferentRH(aff.getFichePoste().getIdServiceADS());
 		List<ReferentRhDto> dto = new ArrayList<ReferentRhDto>();
 		for (ReferentRh ref : lc) {
-			dto.add(new ReferentRhDto(ref, agentSrv.getAgent(ref.getIdAgentReferent()), siservSrv.getService(ref
-					.getServi())));
+			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+			dto.add(new ReferentRhDto(ref, agentSrv.getAgent(ref.getIdAgentReferent()), service));
 		}
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)

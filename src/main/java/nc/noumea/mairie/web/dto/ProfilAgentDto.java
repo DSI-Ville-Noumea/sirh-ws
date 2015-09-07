@@ -25,6 +25,8 @@ public class ProfilAgentDto {
 	private CompteDto compte;
 	private CouvertureSocialeDto couvertureSociale;
 
+	private Integer idServiceAds;
+	
 	public ProfilAgentDto(Agent ag, List<ContactAgentDto> listContact, List<EnfantDto> listeEnfant, Sibanq banque)
 			throws ParseException {
 		super();
@@ -131,4 +133,12 @@ public class ProfilAgentDto {
 		this.couvertureSociale = couvertureSociale;
 	}
 
+	public Integer getIdServiceAds() {
+		return idServiceAds;
+	}
+
+	public void setIdServiceAds(Integer idServiceAds) {
+		this.idServiceAds = idServiceAds;
+	}
+	
 }

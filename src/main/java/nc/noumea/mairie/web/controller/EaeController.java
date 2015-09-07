@@ -4,12 +4,11 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -35,9 +34,6 @@ public class EaeController {
 
 	@Autowired
 	private IFichePosteService fpSrv;
-
-	@Autowired
-	private ISiservService siservSrv;
 
 	@Autowired
 	private ISirhEaeWSConsumer sirhEaeWSConsumer;
@@ -104,11 +100,11 @@ public class EaeController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		// on veut la liste des agents du service
-		Siserv serviceAgent = siservSrv.getServiceAgent(ag.getIdAgent(), null);
+		EntiteDto serviceAgent = agentSrv.getServiceAgent(ag.getIdAgent(), null);
 		if (serviceAgent == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getServi(), ag.getIdAgent());
+		List<Agent> listAgentService = agentSrv.listAgentServiceSansAgent(serviceAgent.getIdEntite(), ag.getIdAgent());
 		String jsonResult = Agent.getSerializerForAgentDelegataire().serialize(listAgentService);
 
 		return new ResponseEntity<String>(jsonResult, HttpStatus.OK);

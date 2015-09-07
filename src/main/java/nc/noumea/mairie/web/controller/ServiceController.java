@@ -1,16 +1,14 @@
 package nc.noumea.mairie.web.controller;
 
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.model.bean.Siserv;
-import nc.noumea.mairie.model.bean.sirh.Agent;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.sirh.IAgentService;
-import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,25 +30,12 @@ public class ServiceController {
 	private IAgentService agentSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
-
-	private String remanieIdAgent(Long idAgent) {
-		String newIdAgent;
-		if (idAgent.toString().length() == 6) {
-			// on remanie l'idAgent
-			String matr = idAgent.toString().substring(2, idAgent.toString().length());
-			String prefixe = idAgent.toString().substring(0, 2);
-			newIdAgent = prefixe + "0" + matr;
-		} else {
-			newIdAgent = idAgent.toString();
-		}
-		return newIdAgent;
-	}
+	private IADSWSConsumer adsWSConsumer;
 
 	/**
 	 * Returns the list of agents in a service and its sub services
 	 * 
-	 * @param codeService
+	 * @param idAgent
 	 * @param date
 	 *            (optional)
 	 * @return
@@ -78,7 +63,7 @@ public class ServiceController {
 	/**
 	 * Returns the list of agents in a service and its sub services
 	 * 
-	 * @param codeService
+	 * @param idServiceADS
 	 * @param date
 	 *            (optional)
 	 * @return
@@ -87,16 +72,21 @@ public class ServiceController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getServiceAgents(
-			@RequestParam(value = "codeService", required = true) String codeService,
+			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
-		Siserv service = siservSrv.getService(codeService);
-
+		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(idServiceADS);
 		// Si le service n'existe pas, on ne retourne rien
 		if (service == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		List<String> services = siservSrv.getListSubServicesSigles(codeService);
+		List<Integer> services = new ArrayList<Integer>();
+
+		EntiteDto serviceAgent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
+		for (EntiteDto enfant : serviceAgent.getEnfants()) {
+			if (!services.contains(enfant.getIdEntite()))
+				services.add(enfant.getIdEntite());
+		}
 
 		// Si la date n'est pas spécifiée, prendre la date du jour
 		if (date == null)
@@ -110,76 +100,6 @@ public class ServiceController {
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
-	}
-
-	/**
-	 * Returns the list of services contained in the direction service of the
-	 * given agent
-	 * 
-	 * @param idAgent
-	 * @return
-	 */
-	@RequestMapping(value = "/servicesDirectionAgent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentsDirectionServices(
-			@RequestParam(value = "idAgent", required = true) Long idAgent) {
-
-		String newIdAgent = remanieIdAgent(idAgent);
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		if (ag == null)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent(), null);
-		List<ServiceTreeNode> services = siservSrv.getListSubServices(direction.getService());
-
-		String json = new JSONSerializer().exclude("*.class").exclude("*.serviceParent").exclude("*.sigleParent")
-				.serialize(services);
-
-		return new ResponseEntity<String>(json, HttpStatus.OK);
-	}
-
-	/**
-	 * Returns the list of sub services for a given service
-	 * 
-	 * @param codeService
-	 * @return
-	 */
-	@RequestMapping(value = "/sousServices", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSubServices(
-			@RequestParam(value = "codeService", required = true) String codeService) {
-
-		Siserv service = siservSrv.getService(codeService);
-
-		// Si le service n'existe pas, on ne retourne rien
-		if (service == null)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		List<ServiceTreeNode> services = siservSrv.getListSubServices(service.getServi());
-
-		if (services.size() == 0)
-			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		String json = new JSONSerializer().exclude("*.class").exclude("*.serviceParent").exclude("*.sigleParent")
-				.serialize(services);
-
-		return new ResponseEntity<String>(json, HttpStatus.OK);
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/rebuildServiceTree")
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> rebuildServiceTree() throws ParseException {
-
-		try {
-			siservSrv.construitArbreServices();
-		} catch (Exception ex) {
-			return new ResponseEntity<String>(ex.toString(), HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 }

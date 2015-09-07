@@ -20,7 +20,7 @@ import nc.noumea.mairie.model.bean.sirh.Cap;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.MotifAvct;
 import nc.noumea.mairie.model.repository.sirh.IAvancementRepository;
-import nc.noumea.mairie.service.ISiservService;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteDto;
 import nc.noumea.mairie.web.dto.avancements.ArreteListDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
@@ -28,6 +28,7 @@ import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
+import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -53,13 +54,13 @@ public class AvancementsService implements IAvancementsService {
 	private IFichePosteService fichePosteService;
 
 	@Autowired
-	private ISiservService siservSrv;
-
-	@Autowired
 	private IAvancementRepository avancementRepository;
 
 	@Autowired
 	private ISirhEaeWSConsumer sirhEaeWSConsumer;
+
+	@Autowired
+	private IADSWSConsumer adsWSConsumer;
 
 	@Override
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
@@ -303,13 +304,11 @@ public class AvancementsService implements IAvancementsService {
 					: avct.getGradeNouveau().getClasse();
 			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
-			if (fp != null) {
-				fp.getService().setDirection(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getLiServ());
-				fp.getService().setDirectionSigle(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getSigle());
+			EntiteDto direction = null;
+			EntiteDto service = null;
+			if (fp != null && fp.getIdServiceADS() != null) {
+				direction = adsWSConsumer.getAffichageDirection(fp.getIdServiceADS());
+				service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -319,7 +318,7 @@ public class AvancementsService implements IAvancementsService {
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 			arretes.getArretes().add(dto);
 		}
 
@@ -382,13 +381,11 @@ public class AvancementsService implements IAvancementsService {
 			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
 					: avct.getGradeNouveau().getEchelon();
 
-			if (fp != null) {
-				fp.getService().setDirection(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getLiServ());
-				fp.getService().setDirectionSigle(
-						siservSrv.getDirection(fp.getService().getServi()) == null ? "" : siservSrv.getDirection(
-								fp.getService().getServi()).getSigle());
+			EntiteDto direction = null;
+			EntiteDto service = null;
+			if (fp != null && fp.getIdServiceADS() != null) {
+				direction = adsWSConsumer.getAffichageDirection(fp.getIdServiceADS());
+				service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
 			}
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -398,7 +395,7 @@ public class AvancementsService implements IAvancementsService {
 			qCarr.setParameter("todayFormatMairie", dateFormatMairie);
 			Spcarr carr = qCarr.getSingleResult();
 
-			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade);
+			ArreteDto dto = new ArreteDto(avct, fp, carr, classeGrade, echelonGrade, direction, service);
 			arretes.getArretes().add(dto);
 		}
 

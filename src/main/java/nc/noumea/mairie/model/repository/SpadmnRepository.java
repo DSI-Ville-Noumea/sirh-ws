@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.repository;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.PositDesc;
 import nc.noumea.mairie.model.bean.Spadmn;
 
 import org.springframework.stereotype.Repository;
@@ -82,5 +84,41 @@ public class SpadmnRepository implements ISpadmnRepository {
 			q.setParameter("dateLimite", dateLimite);
 
 		return q.getResultList();
+	}
+
+	@Override
+	public List<Integer> listAgentActiviteAnnuaire() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.id.nomatr as nomatr from Spadmn a ");
+		sb.append("where ( ");
+		sb.append("(a.positionAdministrative.cdpAdm in (:listeInclusion)) ");
+		sb.append("OR (a.positionAdministrative.cdpAdm BETWEEN '01' and '51') ");
+		sb.append("OR (a.positionAdministrative.cdpAdm not in (:listeExclusion)) ");
+		sb.append(") ");
+		sb.append("AND  a.id.datdeb <= :dateFormatMairie and (a.datfin > :dateFormatMairie or a.datfin = 0 or a.datfin is null) ");
+		sb.append("ORDER BY nomatr ");
+
+		TypedQuery<Integer> q = sirhEntityManager.createQuery(sb.toString(), Integer.class);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		int dateFormatMairie = Integer.valueOf(sdf.format(new Date()));
+		q.setParameter("dateFormatMairie", dateFormatMairie);
+		q.setParameter("listeInclusion", Arrays.asList("AC", "65", "66", "60"));
+		q.setParameter("listeExclusion", Arrays.asList("46", "48", "49", "50"));
+
+		return q.getResultList();
+	}
+
+	@Override
+	public PositDesc chercherPositDescByPosit(String position) {
+
+		TypedQuery<PositDesc> q = sirhEntityManager.createQuery(
+				"select a from PositDesc a where a.position = :position ", PositDesc.class);
+		q.setParameter("position", position);
+
+		List<PositDesc> result = q.getResultList();
+		if (null != result && !result.isEmpty())
+			return result.get(0);
+
+		return null;
 	}
 }

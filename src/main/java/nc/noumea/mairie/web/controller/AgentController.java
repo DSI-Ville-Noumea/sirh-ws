@@ -14,22 +14,23 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISiguicService;
-import nc.noumea.mairie.service.ISiservService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.ISpadmnService;
+import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
-import nc.noumea.mairie.tools.ServiceTreeNode;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ContactAgentDto;
 import nc.noumea.mairie.web.dto.EnfantDto;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -66,13 +67,15 @@ public class AgentController {
 	private IFichePosteService fpSrv;
 
 	@Autowired
-	private ISiservService siservSrv;
-
-	@Autowired
 	private ISpadmnService spadmnSrv;
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
+
+	@Autowired
+	private IAdsService adsService;
+	
+	private Logger logger = Logger.getLogger(AgentController.class); 
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -147,6 +150,10 @@ public class AgentController {
 
 		ProfilAgentDto dto = new ProfilAgentDto(ag, listeContact, listeEnfant, banque);
 
+		// id service ADS pour le kiosque RH
+		EntiteDto entite = agentSrv.getServiceAgent(new Integer(newIdAgent), new Date());
+		dto.setIdServiceAds(entite.getIdEntite());
+
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
 				.deepSerialize(dto);
 
@@ -178,7 +185,7 @@ public class AgentController {
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = sdf.parse(dateTemp);
 		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(
-				agentSuperieurHierarchique.getIdAgent(), dateJour);
+				agentSuperieurHierarchique.getIdAgent(), dateJour, false);
 
 		if (fichePosteSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -199,7 +206,7 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getEquipeAgentOtherProject(
 			@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "codeService", required = false) String codeService) throws ParseException,
+			@RequestParam(value = "idService", required = false) Integer idService) throws ParseException,
 			java.text.ParseException {
 
 		// on remanie l'idAgent
@@ -214,11 +221,11 @@ public class AgentController {
 
 		AgentWithServiceDto ag = listAgent.get(0);
 
-		List<String> listService = new ArrayList<String>();
-		if (null != codeService) {
-			listService.add(codeService);
+		List<Integer> listService = new ArrayList<Integer>();
+		if (null != idService) {
+			listService.add(idService);
 		} else {
-			listService.add(ag.getCodeService());
+			listService.add(ag.getIdServiceADS());
 		}
 
 		if (listService.size() == 0) {
@@ -239,17 +246,25 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
-		Date dateJour = sdf.parse(dateTemp);
-		for (Agent agentService : listAgentService) {
-			String titrePoste = fpSrv.getTitrePosteAgent(agentService.getIdAgent(), dateJour);
-			agentService.setPosition(titrePoste);
-		}
+		Date dateJour = new Date();
 
 		List<AgentWithServiceDto> dto = new ArrayList<AgentWithServiceDto>();
-		for (Agent a : listAgentService) {
-			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(a);
+		List<EntiteDto> listEntitesDto = new ArrayList<EntiteDto>();
+		for (Agent agentService : listAgentService) {
+			FichePoste fichePoste = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentService.getIdAgent(),
+					dateJour, false);
+
+			AgentWithServiceDto dtoAgent = new AgentWithServiceDto(agentService);
+			dtoAgent.setPosition(null == fichePoste.getTitrePoste() ? "" : fichePoste.getTitrePoste()
+					.getLibTitrePoste());
+
+			EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntitesDto);
+			if (null != entite) {
+				dtoAgent.setIdServiceADS(fichePoste.getIdServiceADS());
+				dtoAgent.setService(entite.getLabel());
+				dtoAgent.setSigleService(entite.getSigle());
+			}
+
 			dto.add(dtoAgent);
 		}
 
@@ -257,31 +272,6 @@ public class AgentController {
 				.deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/serviceArbre", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getServiceArbre(@RequestParam(value = "idAgent", required = true) Long idAgent) {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		// Si l'agent n'existe pas ou n'est pas chef, on ne retourne rien
-		if (ag == null || !fpSrv.estResponsable(ag.getIdAgent()))
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		// On récupère le noeud parent des services de la personne
-		ServiceTreeNode treeHead = siservSrv.getAgentServiceTree(ag.getIdAgent(), null);
-		List<ServiceTreeNode> treeHeadList = new ArrayList<ServiceTreeNode>();
-		treeHeadList.add(treeHead);
-
-		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.serviceParent")
-				.exclude("*.sigleParent");
-
-		return new ResponseEntity<String>(serializer.deepSerialize(treeHeadList), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/estChef", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
@@ -382,31 +372,6 @@ public class AgentController {
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
-	@ResponseBody
-	@Transactional(readOnly = true)
-	public ResponseEntity<String> getDirection(
-			@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) {
-
-		// on remanie l'idAgent
-		String newIdAgent = remanieIdAgent(idAgent);
-
-		Agent ag = agentSrv.getAgent(Integer.valueOf(newIdAgent));
-
-		// Si l'agent n'existe pas, on ne retourne rien
-		if (ag == null)
-			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-
-		// On récupère le noeud parent des services de la personne
-		ServiceTreeNode direction = siservSrv.getAgentDirection(ag.getIdAgent(), dateAffectation);
-
-		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant")
-				.exclude("*.serviceParent");
-
-		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
-	}
-
 	@ResponseBody
 	@RequestMapping(value = "/agentsSubordonnes", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
@@ -444,11 +409,14 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAgentsMairie(
 			@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
-			@RequestParam(value = "codeService", required = false, defaultValue = "") String codeService)
-			throws ParseException {
+			@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS) throws ParseException {
 
-		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, codeService);
+		logger.debug("DEBUT getListeAgentsMairie [agents/listeAgentsMairie]");
+		
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, idServiceADS);
 
+		logger.debug("FIN getListeAgentsMairie [agents/listeAgentsMairie]");
+		
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite),
 				HttpStatus.OK);
 	}
@@ -478,9 +446,10 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
-
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
+
+
 
 		Agent agent = agentSrv.getAgent(Integer.valueOf(newIdAgent));
 
@@ -492,6 +461,24 @@ public class AgentController {
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 
+	@RequestMapping(value = "/direction", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getDirection(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) {
+
+		EntiteDto direction = agentSrv.getDirectionOfAgent(idAgent, dateAffectation);
+
+		// Si l'agent n'existe pas, on ne retourne rien
+		if (direction == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant")
+				.exclude("*.serviceParent").transform(new MSDateTransformer(), Date.class);
+
+		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
 	}
 }

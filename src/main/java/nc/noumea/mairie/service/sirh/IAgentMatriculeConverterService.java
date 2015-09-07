@@ -11,4 +11,6 @@ public interface IAgentMatriculeConverterService {
 	 * @return IdAgent on 7 digits
 	 */
 	int tryConvertFromADIdAgentToIdAgent(Integer adIdAgent);
+
+	Integer tryConvertFromADIdAgentToSIRHIdAgent(Integer nomatr);
 }

@@ -49,7 +49,7 @@
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
 		<property name="entityManagerFactory" ref="sirhEntityManagerFactory" />
-		<qualifier value="SIRHTransactionManager"/>
+		<qualifier value="sirhTransactionManager"/>
 	</bean>
 	<tx:annotation-driven mode="aspectj"
 		transaction-manager="sirhTransactionManager" />
@@ -71,6 +71,8 @@
 	<jee:jndi-lookup id="radiWsBaseUrl" jndi-name="RADI_WS_URL" expected-type="java.lang.String"/>
 	
 	<jee:jndi-lookup id="eaeWsBaseUrl" jndi-name="SIRH_EAE_WS_URL" expected-type="java.lang.String"/>
+	
+	<jee:jndi-lookup id="adsWsBaseUrl" jndi-name="ADS_WS_URL" expected-type="java.lang.String"/>
 	
 	
 	<!-- -->

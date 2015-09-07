@@ -1,13 +1,12 @@
 package nc.noumea.mairie.web.dto;
 
-import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
 
 public class ReferentRhDto {
 
 	private Integer idReferentRh;
-	private String servi;
+	private Integer idServiceADS;
 	private String sigleService;
 	private Integer idAgentReferent;
 	private String prenomAgentReferent;
@@ -16,10 +15,10 @@ public class ReferentRhDto {
 	public ReferentRhDto() {
 	}
 
-	public ReferentRhDto(ReferentRh c, Agent ag, Siserv serv) {
+	public ReferentRhDto(ReferentRh c, Agent ag, EntiteDto serv) {
 		if (c != null) {
 			this.idReferentRh = c.getIdReferentRh();
-			this.servi = c.getServi();
+			this.idServiceADS = c.getIdServiceADS();
 			this.idAgentReferent = c.getIdAgentReferent();
 			this.numeroTelephone = c.getNumeroTelephone();
 		}
@@ -29,14 +28,6 @@ public class ReferentRhDto {
 		if (serv != null) {
 			this.sigleService = serv.getSigle();
 		}
-	}
-
-	public String getServi() {
-		return servi;
-	}
-
-	public void setServi(String servi) {
-		this.servi = servi;
 	}
 
 	public Integer getIdAgentReferent() {
@@ -77,6 +68,14 @@ public class ReferentRhDto {
 
 	public void setIdReferentRh(Integer idReferentRh) {
 		this.idReferentRh = idReferentRh;
+	}
+
+	public Integer getIdServiceADS() {
+		return idServiceADS;
+	}
+
+	public void setIdServiceADS(Integer idServiceADS) {
+		this.idServiceADS = idServiceADS;
 	}
 
 }
