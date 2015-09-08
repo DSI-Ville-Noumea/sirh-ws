@@ -19,7 +19,7 @@ public class PrimePointageFP {
 	private PrimePointageFPPK primePointageFPPK;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE")
+	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE", insertable = false, updatable = false)
 	private FichePoste fichePoste;
 
 	@Transient

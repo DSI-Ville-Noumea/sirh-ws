@@ -1,6 +1,5 @@
 package nc.noumea.mairie.model.bean.sirh;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,12 +24,12 @@ public class FeFp {
 	private Integer fePrimaire;
 	
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE", insertable = false, updatable = false)
 	private FichePoste fichePoste;
 	
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_FICHE_EMPLOI", referencedColumnName = "ID_FICHE_EMPLOI", insertable = false, updatable = false)
 	private FicheEmploi ficheEmploi;
 
