@@ -18,6 +18,7 @@ import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
+import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
@@ -815,6 +816,7 @@ public class FichePosteService implements IFichePosteService {
 			supprimerFDP(fichePoste, user.getsAMAccountName());
 			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est supprimée.");
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être suprimée.");
 		}
 
@@ -825,53 +827,11 @@ public class FichePosteService implements IFichePosteService {
 		HistoFichePoste histo = new HistoFichePoste(fichePoste);
 		// supprimer la FDP en base (dans HISTO on sauvegarde l'action) et
 		// SPPOST
-		// supprimer les actvites, comptences...
-		ArrayList<FeFp> liensA = (ArrayList<FeFp>) fichePosteDao.listerFEFPAvecFP(fichePoste.getIdFichePoste());
-		for (FeFp lien : liensA) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<NiveauEtudeFP> niveauFPExistant = (ArrayList<NiveauEtudeFP>) fichePosteDao.listerNiveauEtudeFPAvecFP(fichePoste.getIdFichePoste());
-		for (NiveauEtudeFP lien : niveauFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<ActiviteFP> activiteFPExistant = (ArrayList<ActiviteFP>) fichePosteDao.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
-		for (ActiviteFP lien : activiteFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
-		for (CompetenceFP lien : competencesFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
-		for (AvantageNatureFP lien : avantagesFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<DelegationFP> delegationFPExistant = (ArrayList<DelegationFP>) fichePosteDao.listerDelegationFPAvecFP(fichePoste.getIdFichePoste());
-		for (DelegationFP lien : delegationFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<PrimePointageFP> primesPointagesFPExistant = (ArrayList<PrimePointageFP>) fichePosteDao.listerPrimePointageFP(fichePoste.getIdFichePoste());
-		for (PrimePointageFP lien : primesPointagesFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		ArrayList<RegIndemFP> regimesFPExistant = (ArrayList<RegIndemFP>) fichePosteDao.listerRegIndemFPFPAvecFP(fichePoste.getIdFichePoste());
-		for (RegIndemFP lien : regimesFPExistant) {
-			fichePosteDao.removeEntity(lien);
-		}
-
-		// on actualise la FDP suite à la suppression des liens
-		fichePosteDao.flush();
 
 		fichePoste = fichePosteDao.chercherFichePoste(fichePoste.getIdFichePoste());
 		// on supprime enfin la FDP
 		fichePosteDao.removeEntity(fichePoste);
+		fichePosteDao.flush();
 
 		// aussi de SPPOST
 		Sppost posteAS400 = fichePosteDao.chercherSppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(fichePoste.getNumFP().substring(5, histo.getNumFp().length())));
@@ -930,7 +890,8 @@ public class FichePosteService implements IFichePosteService {
 			String numNewFDP = dupliquerFDP(fichePoste, entite, user.getsAMAccountName());
 			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
 		} catch (Exception e) {
-			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée.");
+			logger.debug("Erreur dupliqueFichePosteByIdFichePoste : " + e.getMessage());
+			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée : " + e.getMessage());
 		}
 
 		return result;
@@ -1054,10 +1015,11 @@ public class FichePosteService implements IFichePosteService {
 		for (PrimePointageFP lien : primesPointagesFPExistant) {
 			PrimePointageFPPK fk = new PrimePointageFPPK();
 			fk.setNumRubrique(lien.getPrimePointageFPPK().getNumRubrique());
+			fk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
 			PrimePointageFP prime = new PrimePointageFP();
 			prime.setFichePoste(fichePDupliquee);
 			prime.setPrimePointageFPPK(fk);
-			fichePosteDao.persisEntity(prime);
+			fichePDupliquee.getPrimePointageFP().add(prime);
 		}
 
 		ArrayList<RegIndemFP> regimesFPExistant = (ArrayList<RegIndemFP>) fichePosteDao.listerRegIndemFPFPAvecFP(fichePoste.getIdFichePoste());
@@ -1099,6 +1061,11 @@ public class FichePosteService implements IFichePosteService {
 		if (null != fichePDupliquee.getCompetencesFDP()) {
 			for (CompetenceFP compFp : fichePDupliquee.getCompetencesFDP()) {
 				compFp.getCompetenceFPPK().setIdFichePoste(fichePDupliquee.getIdFichePoste());
+			}
+		}
+		if (null != fichePDupliquee.getPrimePointageFP()) {
+			for (PrimePointageFP primeFp : fichePDupliquee.getPrimePointageFP()) {
+				primeFp.getPrimePointageFPPK().setIdFichePoste(fichePDupliquee.getIdFichePoste());
 			}
 		}
 

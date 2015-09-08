@@ -21,7 +21,7 @@ public class CompetenceFP {
 	private CompetenceFPPK competenceFPPK;
 
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_FICHE_POSTE", referencedColumnName = "ID_FICHE_POSTE", insertable = false, updatable = false)
 	private FichePoste fichePoste;
 

@@ -12,6 +12,9 @@ public class PrimePointageFPPK implements Serializable {
 
 	@Column(name = "NUM_RUBRIQUE")
 	private Integer numRubrique;
+	
+	@Column(name = "ID_FICHE_POSTE")
+	private Integer idFichePoste;
 
 	public Integer getNumRubrique() {
 		return numRubrique;
@@ -27,6 +30,14 @@ public class PrimePointageFPPK implements Serializable {
 		int result = 1;
 		result = prime * result + ((numRubrique == null) ? 0 : numRubrique.hashCode());
 		return result;
+	}
+
+	public Integer getIdFichePoste() {
+		return idFichePoste;
+	}
+
+	public void setIdFichePoste(Integer idFichePoste) {
+		this.idFichePoste = idFichePoste;
 	}
 
 	@Override
