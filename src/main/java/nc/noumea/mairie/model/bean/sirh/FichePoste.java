@@ -83,7 +83,6 @@ public class FichePoste {
 	@Column(name = "MISSIONS", columnDefinition = "clob")
 	private String missions;
 
-	@NotNull
 	@Column(name = "OBSERVATION", columnDefinition = "clob")
 	private String observation;
 
@@ -105,43 +104,43 @@ public class FichePoste {
 	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
 	private Spgradn gradePoste;
 
-	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@OrderBy("idActivite asc")
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("activiteFPPK.idActivite asc")
 	private Set<ActiviteFP> activites = new HashSet<ActiviteFP>();
 
-	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@OrderBy("nomCompetence asc")
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("competenceFPPK.idCompetence asc")
 	private Set<CompetenceFP> competencesFDP = new HashSet<CompetenceFP>();
 
-	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(optional = true, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
 	private NiveauEtude niveauEtude;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
 	@OrderBy("numRubrique asc")
 	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "DELEGATION_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DELEGATION"))
 	@OrderBy("libDelegation asc")
 	private Set<Delegation> delegations = new HashSet<Delegation>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_REGIME"))
 	@OrderBy("numRubrique asc")
 	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
 
-	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@OrderBy("primePointageFPPK.numRubrique asc")
 	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
 	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
 	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
@@ -158,10 +157,10 @@ public class FichePoste {
 	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
 	private Set<Affectation> agent = new HashSet<Affectation>();
 
-	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
 
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.MERGE, optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
 	private NatureCredit natureCredit;
 
