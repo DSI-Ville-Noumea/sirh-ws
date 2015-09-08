@@ -27,6 +27,7 @@ public class FichePosteDto {
 	private String budget;
 	private String budgete;
 	private String reglementaire;
+	private Double tauxETP;
 	private String cadreEmploi;
 	private String niveauEtudes;
 	private Integer idServiceADS;
@@ -113,8 +114,10 @@ public class FichePosteDto {
 		}
 		try {
 			this.reglementaire = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire().getLibHor().trim();
+			this.tauxETP = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getTaux() == null ? 0.0 : fichePoste.getReglementaire().getTaux();
 		} catch (javax.persistence.EntityNotFoundException e) {
 			this.reglementaire = "";
+			this.tauxETP = 0.0;
 		}
 
 		this.cadreEmploi = fichePoste.getGradePoste() == null ? "" : fichePoste.getGradePoste().getGradeGenerique() == null
@@ -307,8 +310,10 @@ public class FichePosteDto {
 
 		try {
 			this.reglementaire = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getLibHor() == null ? "" : fichePoste.getReglementaire().getLibHor().trim();
+			this.tauxETP = null == fichePoste.getReglementaire() || fichePoste.getReglementaire().getTaux() == null ? 0.0 : fichePoste.getReglementaire().getTaux();
 		} catch (javax.persistence.EntityNotFoundException e) {
 			this.reglementaire = "";
+			this.tauxETP = 0.0;
 		}
 
 		this.idServiceADS = fichePoste.getIdServiceADS();
@@ -679,5 +684,13 @@ public class FichePosteDto {
 
 	public void setIdStatutFDP(Integer idStatutFDP) {
 		this.idStatutFDP = idStatutFDP;
+	}
+
+	public Double getTauxETP() {
+		return tauxETP;
+	}
+
+	public void setTauxETP(Double tauxETP) {
+		this.tauxETP = tauxETP;
 	}
 }
