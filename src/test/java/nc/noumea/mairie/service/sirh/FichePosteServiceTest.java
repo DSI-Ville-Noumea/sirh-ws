@@ -560,12 +560,12 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
 
-		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138);
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138, "DSI");
 
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("1 FDP vont être supprimées. Merci d'aller regarder le resultat de cette suppression dans SIRH.", result.getInfos().get(0));
+		assertEquals("1 FDP vont être supprimées de l'entité DSI. Merci d'aller regarder le resultat de cette suppression dans SIRH.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
 	}
 
@@ -592,7 +592,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "affSrv", affectationSrv);
 
-		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138);
+		ReturnMessageDto result = ficheService.deleteFichePosteByIdEntite(1, 9005138, "DSI");
 
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
@@ -918,7 +918,6 @@ public class FichePosteServiceTest {
 		assertEquals("La FDP 2015/3 est supprimée.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(FichePoste.class));
-		Mockito.verify(fichePosteDao, Mockito.times(1)).removeEntity(Mockito.isA(ActiviteFP.class));
 	}
 
 	@Test
@@ -1113,7 +1112,6 @@ public class FichePosteServiceTest {
 		assertEquals("La FDP 2015/3 est dupliquée en 2015/1.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
-		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(PrimePointageFP.class));
 	}
 
 	@Test
