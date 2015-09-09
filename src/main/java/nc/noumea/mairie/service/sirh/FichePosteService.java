@@ -846,7 +846,6 @@ public class FichePosteService implements IFichePosteService {
 		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
 		fichePosteDao.persisEntity(histo);
 		fichePosteDao.flush();
-
 	}
 
 	@Override
