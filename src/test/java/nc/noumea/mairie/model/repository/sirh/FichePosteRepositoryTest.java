@@ -650,10 +650,11 @@ public class FichePosteRepositoryTest {
 		FichePoste fichePoste = new FichePoste();
 		sirhPersistenceUnit.persist(fichePoste);
 
-		PrimePointageFPPK delegationFPPK = new PrimePointageFPPK();
-		delegationFPPK.setNumRubrique(2543);
+		PrimePointageFPPK primeFPPK = new PrimePointageFPPK();
+		primeFPPK.setNumRubrique(2543);
+		primeFPPK.setIdFichePoste(fichePoste.getIdFichePoste());
 		PrimePointageFP lien2 = new PrimePointageFP();
-		lien2.setPrimePointageFPPK(delegationFPPK);
+		lien2.setPrimePointageFPPK(primeFPPK);
 		lien2.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(lien2);
 
