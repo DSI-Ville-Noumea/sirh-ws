@@ -52,7 +52,7 @@ public interface IFichePosteService {
 
 	// Pour ADS
 
-	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent);
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent, String sigleEntite);
 
 	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent);
 

@@ -18,7 +18,6 @@ import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
-import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
@@ -690,7 +689,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent) {
+	public ReturnMessageDto deleteFichePosteByIdEntite(Integer idEntite, Integer idAgent, String sigleEntite) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
 		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), null);
@@ -713,7 +712,9 @@ public class FichePosteService implements IFichePosteService {
 			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION", null);
 			fichePosteDao.persisEntity(job);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP vont être supprimées. Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+		result.getInfos().add(listeFDP.size() + " FDP vont être supprimées de l'entité " 
+				+ sigleEntite 
+				+ ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
 		return result;
 	}
 
