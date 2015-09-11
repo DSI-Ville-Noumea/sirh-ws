@@ -36,7 +36,6 @@ import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
-import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
@@ -1542,7 +1541,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(null);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1588,7 +1586,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1635,7 +1632,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1683,7 +1679,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1734,7 +1729,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1786,7 +1780,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1843,7 +1836,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1899,7 +1891,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -1956,7 +1947,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2014,7 +2004,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2077,7 +2066,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2140,7 +2128,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2203,7 +2190,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2269,7 +2255,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2334,7 +2319,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2402,7 +2386,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
@@ -2472,7 +2455,6 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
-		Mockito.when(fichePosteDao.chercherNFA(1)).thenReturn(new NFA());
 		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(2)).thenReturn(statutValide);
 
 		IAdsService adsService = Mockito.mock(IAdsService.class);
