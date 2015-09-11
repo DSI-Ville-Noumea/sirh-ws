@@ -31,7 +31,6 @@ import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
-import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NatureCredit;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
@@ -712,9 +711,7 @@ public class FichePosteService implements IFichePosteService {
 			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION", null);
 			fichePosteDao.persisEntity(job);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP vont être supprimées de l'entité " 
-				+ sigleEntite 
-				+ ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+		result.getInfos().add(listeFDP.size() + " FDP vont être supprimées de l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
 		return result;
 	}
 
@@ -920,9 +917,7 @@ public class FichePosteService implements IFichePosteService {
 		EntiteDto serv = adsService.getInfoSiservByIdEntite(entite.getIdEntite());
 		fichePDupliquee.setIdServi(serv == null || serv.getCodeServi() == null ? null : serv.getCodeServi());
 		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
-		// on cherche la NFA de l'entite
-		NFA nfaEntite = fichePosteDao.chercherNFA(entite.getIdEntite());
-		fichePDupliquee.setNfa(nfaEntite == null ? "0" : nfaEntite.getNfa());
+		fichePDupliquee.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
 
 		// on crée les liens
@@ -1247,14 +1242,10 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// le NFA ne doit pas etre vide
-		if (fichePoste.getNfa() == null) {
-			// si vide alors on regarde si on trouve la NFA dans la table de
-			// paramétrage
-			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
-			if (nfaEntite == null || nfaEntite.getNfa() == null) {
-				result.getErrors().add("Le champ NFA est obligatoire.");
-				return result;
-			}
+		if (fichePoste.getNfa() == null && entite.getNfa() == null) {
+			result.getErrors().add("Le champ NFA est obligatoire.");
+			return result;
+
 		}
 		// le responsable hierarchique ne doit pas etre vide
 		if (fichePoste.getSuperieurHierarchique() == null) {
@@ -1382,8 +1373,7 @@ public class FichePosteService implements IFichePosteService {
 		fichePoste.setDateDebAppliServ(entite.getDateDeliberationActif());
 		// on met à jour la NFA
 		if (fichePoste.getNfa() == null) {
-			NFA nfaEntite = fichePosteDao.chercherNFA(fichePoste.getIdServiceADS());
-			fichePoste.setNfa(nfaEntite.getNfa());
+			fichePoste.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		}
 		// on met à jour le statut en "validée"
 		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(2);
