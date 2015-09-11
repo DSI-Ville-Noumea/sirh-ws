@@ -23,7 +23,6 @@ import nc.noumea.mairie.model.bean.sirh.DelegationFP;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.model.bean.sirh.NFA;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
 import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
 import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
@@ -270,7 +269,7 @@ public class FichePosteRepository implements IFichePosteRepository {
 			if (fichePoste != null && null != fichePoste.getGradePoste() && null != fichePoste.getGradePoste().getGradeGenerique()
 					&& null != fichePoste.getGradePoste().getGradeGenerique().getCdcadr()) {
 				info.setCategorie(fichePoste.getGradePoste().getGradeGenerique().getCdcadr().trim());
-			}else{
+			} else {
 				info.setCategorie("");
 			}
 			info.setGradePoste(fichePoste == null || fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste().getGradeInitial()
@@ -559,22 +558,6 @@ public class FichePosteRepository implements IFichePosteRepository {
 		TypedQuery<RegimeIndemnitaire> query = sirhEntityManager.createQuery(sb.toString(), RegimeIndemnitaire.class);
 		query.setParameter("idRegimeIndemnitaire", idRegime);
 		RegimeIndemnitaire res = null;
-		try {
-			res = query.getSingleResult();
-		} catch (Exception e) {
-
-		}
-		return res;
-	}
-
-	@Override
-	public NFA chercherNFA(Integer idEntite) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("select fp from NFA fp where fp.idServiceAds = :idServiceAds ");
-
-		TypedQuery<NFA> query = sirhEntityManager.createQuery(sb.toString(), NFA.class);
-		query.setParameter("idServiceAds", idEntite);
-		NFA res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
