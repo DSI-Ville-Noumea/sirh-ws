@@ -822,10 +822,18 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	private void supprimerFDP(FichePoste fichePoste, String login) {
-		HistoFichePoste histo = new HistoFichePoste(fichePoste);
 		// supprimer la FDP en base (dans HISTO on sauvegarde l'action) et
 		// SPPOST
+		HistoFichePoste histo = new HistoFichePoste(fichePoste);
 
+		// historisation
+		histo.setDateHisto(new Date());
+		histo.setUserHisto(login);
+		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
+		fichePosteDao.persisEntity(histo);
+		fichePosteDao.flush();
+		
+		
 		fichePoste = fichePosteDao.chercherFichePoste(fichePoste.getIdFichePoste());
 		// on supprime enfin la FDP
 		fichePosteDao.removeEntity(fichePoste);
@@ -836,13 +844,6 @@ public class FichePosteService implements IFichePosteService {
 		if (posteAS400 != null) {
 			fichePosteDao.removeEntity(posteAS400);
 		}
-
-		// historisation
-		histo.setDateHisto(new Date());
-		histo.setUserHisto(login);
-		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
-		fichePosteDao.persisEntity(histo);
-		fichePosteDao.flush();
 	}
 
 	@Override
