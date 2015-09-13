@@ -832,18 +832,17 @@ public class FichePosteService implements IFichePosteService {
 		histo.setTypeHisto(EnumTypeHisto.SUPPRESSION.getValue());
 		fichePosteDao.persisEntity(histo);
 		fichePosteDao.flush();
-		
-		
-		fichePoste = fichePosteDao.chercherFichePoste(fichePoste.getIdFichePoste());
-		// on supprime enfin la FDP
-		fichePosteDao.removeEntity(fichePoste);
-		fichePosteDao.flush();
 
 		// aussi de SPPOST
 		Sppost posteAS400 = fichePosteDao.chercherSppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(fichePoste.getNumFP().substring(5, histo.getNumFp().length())));
 		if (posteAS400 != null) {
 			fichePosteDao.removeEntity(posteAS400);
 		}
+
+		fichePoste = fichePosteDao.chercherFichePoste(fichePoste.getIdFichePoste());
+		// on supprime enfin la FDP
+		fichePosteDao.removeEntity(fichePoste);
+		fichePosteDao.flush();
 	}
 
 	@Override
