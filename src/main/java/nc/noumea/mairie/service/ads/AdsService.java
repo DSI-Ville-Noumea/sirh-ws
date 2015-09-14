@@ -3,6 +3,7 @@ package nc.noumea.mairie.service.ads;
 import java.util.List;
 
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.ws.ADSWSConsumer;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,28 @@ public class AdsService implements IAdsService {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Retourne la direction d une entite sans appeler ADS.
+	 * Pour cela, l entiteDto en parametre necessite d'avoir ses parents et grand parents
+	 */
+	@Override
+	public EntiteDto getAffichageDirectionWithoutCallADS(EntiteDto entite) {
+		
+		if(null != entite
+			&& null != entite.getEntiteParent()) {
+			
+			if(null != entite.getEntiteParent().getTypeEntite()
+					&& null != entite.getEntiteParent().getTypeEntite().getLabel()
+					&& ADSWSConsumer.AFFICHAGE_DIRECTION.equals(entite.getEntiteParent().getTypeEntite().getLabel())) {
+				return entite.getEntiteParent();
+			}else{
+				return getAffichageDirectionWithoutCallADS(entite.getEntiteParent());
+			}
+		}
+		
+		return null;		
 	}
 
 }
