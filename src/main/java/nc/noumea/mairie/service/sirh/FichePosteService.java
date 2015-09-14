@@ -1405,6 +1405,18 @@ public class FichePosteService implements IFichePosteService {
 	public ReturnMessageDto deplaceFichePosteFromEntityToOtherEntity(Integer idEntiteSource, Integer idEntiteCible, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
+		EntiteDto source = adsWSConsumer.getEntiteByIdEntite(idEntiteSource);
+		if (source == null) {
+			result.getErrors().add("L'entité " + idEntiteSource + " n'existe pas.");
+			return result;
+		}
+
+		EntiteDto cible = adsWSConsumer.getEntiteByIdEntite(idEntiteCible);
+		if (cible == null) {
+			result.getErrors().add("L'entité " + idEntiteCible + " n'existe pas.");
+			return result;
+		}
+
 		// on cherche le login de l'agent qui fait l'action
 		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
 		if (user == null || user.getsAMAccountName() == null) {
@@ -1413,11 +1425,13 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP validées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteSource),
-				Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
+				Arrays.asList(idEntiteSource),
+				Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
+						EnumStatutFichePoste.EN_CREATION.getStatut()));
 
 		if (null == listeFDP || listeFDP.isEmpty()) {
-			result.getInfos().add("Aucune FDP sont déplacées de l'entité " + idEntiteSource + " vers l'entité " + idEntiteCible + ".");
+			result.getInfos().add("Aucune FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 			return result;
 		}
 
@@ -1431,7 +1445,7 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + idEntiteSource + " vers l'entité " + idEntiteCible + ".");
+		result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		return result;
 	}
 }
