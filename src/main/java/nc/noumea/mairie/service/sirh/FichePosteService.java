@@ -695,7 +695,7 @@ public class FichePosteService implements IFichePosteService {
 		// on regarde que toutes les FDP soient en statut "En creation" et que
 		// la FDP n'est jamais été affectée à un agent
 		for (FichePoste fp : listeFDP) {
-			if (fp.getStatutFP().getIdStatutFp() != 1) {
+			if (!fp.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
 				result.getErrors().add("La FDP " + fp.getNumFP() + " n'est pas en statut 'En création'.");
 			}
 			if (affSrv.getListAffectationByIdFichePoste(fp.getIdFichePoste()).size() > 0) {
@@ -761,7 +761,13 @@ public class FichePosteService implements IFichePosteService {
 	public ReturnMessageDto dupliqueFichePosteByIdEntite(Integer idEntiteNew, Integer idEntiteOld, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 		// on cherche toutes les FDP validées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteOld), Arrays.asList(2));
+		// #18431 : on ajoute de nouveaux statut
+		List<Integer> listStatut = new ArrayList<Integer>();
+		listStatut.add(new Integer(EnumStatutFichePoste.VALIDEE.getId()));
+		listStatut.add(new Integer(EnumStatutFichePoste.EN_CREATION.getId()));
+		listStatut.add(new Integer(EnumStatutFichePoste.TRANSITOIRE.getId()));
+		listStatut.add(new Integer(EnumStatutFichePoste.GELEE.getId()));
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteOld), listStatut);
 
 		// on crée un job de lancement de duplication des FDP
 		for (FichePoste fp : listeFDP) {
@@ -791,7 +797,7 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "en création"
-		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("1")) {
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
 			return result;
 		}
@@ -859,8 +865,11 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "validée"
-		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("2")) {
-			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'validée'.");
+		if (!(fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.VALIDEE.getId())
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.TRANSITOIRE.getId()) || fichePoste.getStatutFP().getIdStatutFp().toString()
+				.equals(EnumStatutFichePoste.GELEE.getId()))) {
+			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'est pas en statut 'validée','en création','transitoire' ou 'gelée'.");
 			return result;
 		}
 		// on verifie que l'entite est bien "prévision"
@@ -1164,7 +1173,7 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "en création"
-		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals("1")) {
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
 			return result;
 		}
