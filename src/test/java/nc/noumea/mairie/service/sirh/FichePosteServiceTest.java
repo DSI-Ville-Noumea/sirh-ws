@@ -709,7 +709,7 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2))).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2,1,5,6))).thenReturn(listFP);
 
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("TEST");
@@ -749,7 +749,7 @@ public class FichePosteServiceTest {
 		listFP.add(fiche2);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2))).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2,1,5,6))).thenReturn(listFP);
 
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("TEST");
@@ -940,9 +940,10 @@ public class FichePosteServiceTest {
 	@Test
 	public void dupliqueFichePosteByIdFichePoste_BadStatut() {
 		StatutFichePoste statutFP = new StatutFichePoste();
-		statutFP.setIdStatutFp(1);
+		statutFP.setIdStatutFp(new Integer(EnumStatutFichePoste.INACTIVE.getId()));
 		FichePoste fiche = new FichePoste();
 		fiche.setStatutFP(statutFP);
+		fiche.setNumFP("2011/11");
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
@@ -955,7 +956,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(1, result.getErrors().size());
 		assertEquals(0, result.getInfos().size());
-		assertEquals("La FDP id 1 n'est pas en statut 'validée'.", result.getErrors().get(0));
+		assertEquals("La FDP 2011/11 n'est pas en statut 'validée','en création','transitoire' ou 'gelée'.", result.getErrors().get(0));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(FichePoste.class));
 	}
 
