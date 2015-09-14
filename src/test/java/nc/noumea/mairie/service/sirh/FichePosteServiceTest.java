@@ -709,7 +709,7 @@ public class FichePosteServiceTest {
 		listFP.add(fiche);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2,1,5,6))).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2, 1, 5, 6))).thenReturn(listFP);
 
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("TEST");
@@ -749,7 +749,7 @@ public class FichePosteServiceTest {
 		listFP.add(fiche2);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2,1,5,6))).thenReturn(listFP);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(2), Arrays.asList(2, 1, 5, 6))).thenReturn(listFP);
 
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("TEST");
@@ -2946,20 +2946,31 @@ public class FichePosteServiceTest {
 	public void deplaceFichePosteFromEntityToOtherEntity_UserNonReconnu() {
 
 		Integer idEntiteSource = 1;
+		EntiteDto entiteSource = new EntiteDto();
+		entiteSource.setSigle("SOURCE");
 		Integer idEntiteCible = 2;
+		EntiteDto entiteCible = new EntiteDto();
+		entiteCible.setSigle("CIBLE");
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(
-				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteSource),
-						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(null);
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
+						Arrays.asList(idEntiteSource),
+						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
+								EnumStatutFichePoste.EN_CREATION.getStatut()))).thenReturn(null);
 
 		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(null);
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entiteSource);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(entiteCible);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
 		assertTrue(result.getInfos().isEmpty());
@@ -2971,34 +2982,70 @@ public class FichePosteServiceTest {
 	public void deplaceFichePosteFromEntityToOtherEntity_pasFichePoste() {
 
 		Integer idEntiteSource = 1;
+		EntiteDto entiteSource = new EntiteDto();
+		entiteSource.setSigle("SOURCE");
 		Integer idEntiteCible = 2;
+		EntiteDto entiteCible = new EntiteDto();
+		entiteCible.setSigle("CIBLE");
+
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(
-				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteSource),
-						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(null);
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
+						Arrays.asList(idEntiteSource),
+						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
+								EnumStatutFichePoste.EN_CREATION.getStatut()))).thenReturn(null);
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
 		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(user);
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entiteSource);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(entiteCible);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
-		assertEquals("Aucune FDP sont déplacées de l'entité " + idEntiteSource + " vers l'entité " + idEntiteCible + ".", result.getInfos().get(0));
+		assertEquals("Aucune FDP sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+	}
+
+	@Test
+	public void deplaceFichePosteFromEntityToOtherEntity_badEntite() {
+
+		Integer idEntiteSource = 1;
+		Integer idEntiteCible = 2;
+
+		Integer idAgent = 9005138;
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(null);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+
+		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
+		assertEquals("L'entité 1 n'existe pas.", result.getErrors().get(0));
+		assertEquals(1, result.getErrors().size());
+		assertEquals(0, result.getInfos().size());
 	}
 
 	@Test
 	public void deplaceFichePosteFromEntityToOtherEntity_3FichesPoste() {
 
 		Integer idEntiteSource = 1;
+		EntiteDto entiteSource = new EntiteDto();
+		entiteSource.setSigle("SOURCE");
 		Integer idEntiteCible = 2;
+		EntiteDto entiteCible = new EntiteDto();
+		entiteCible.setSigle("CIBLE");
 		Integer idAgent = 9005138;
 
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
@@ -3010,8 +3057,10 @@ public class FichePosteServiceTest {
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(
-				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteSource),
-						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()))).thenReturn(listFichesPoste);
+				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
+						Arrays.asList(idEntiteSource),
+						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
+								EnumStatutFichePoste.EN_CREATION.getStatut()))).thenReturn(listFichesPoste);
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3028,12 +3077,17 @@ public class FichePosteServiceTest {
 			}
 		}).when(fichePosteDao).persisEntity(Mockito.isA(HistoFichePoste.class));
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entiteSource);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(entiteCible);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
-		assertEquals("3 FDP sont déplacées de l'entité " + idEntiteSource + " vers l'entité " + idEntiteCible + ".", result.getInfos().get(0));
+		assertEquals("3 FDP sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
