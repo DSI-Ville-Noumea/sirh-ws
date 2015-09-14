@@ -274,11 +274,15 @@ public class AgentServiceTest {
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(noeud1);
 		Mockito.when(adsWSConsumer.getAffichageDirection(1)).thenReturn(noeudDirection);
+		
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(noeud1)).thenReturn(noeudDirection);
 
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
-
+		ReflectionTestUtils.setField(agtService, "adsService", adsService);
+		
 		// When
 		List<AgentWithServiceDto> result = agtService.listAgentsOfServices(null, new Date(), null);
 
