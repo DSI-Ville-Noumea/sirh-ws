@@ -14,4 +14,6 @@ public interface IAdsService {
 	EntiteDto getInfoSiservByIdEntite(Integer idEntite);
 
 	EntiteDto getEntiteByIdEntiteOptimiseWithWholeTree(Integer idEntite, EntiteDto root);
+
+	EntiteDto getAffichageDirectionWithoutCallADS(EntiteDto entite);
 }
