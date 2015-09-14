@@ -21,6 +21,10 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 
 	private Logger logger = LoggerFactory.getLogger(ADSWSConsumer.class);
 
+	public static final String AFFICHAGE_SERVICE = "AFFICHAGE SIRH DE TYPE SERVICE";
+	public static final String AFFICHAGE_SECTION = "AFFICHAGE SIRH DE TYPE SECTION";
+	public static final String AFFICHAGE_DIRECTION = "AFFICHAGE SIRH DE TYPE DIRECTION";
+	
 	@Autowired
 	@Qualifier("adsWsBaseUrl")
 	private String adsWsBaseUrl;
@@ -73,7 +77,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		List<ReferenceDto> listeType = getListTypeEntite();
 		ReferenceDto type = null;
 		for (ReferenceDto r : listeType) {
-			if (r.getLabel().toUpperCase().equals("AFFICHAGE SIRH DE TYPE SECTION")) {
+			if (r.getLabel().toUpperCase().equals(AFFICHAGE_SECTION)) {
 				type = r;
 				break;
 			}
@@ -135,7 +139,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		List<ReferenceDto> listeType = getListTypeEntite();
 		ReferenceDto type = null;
 		for (ReferenceDto r : listeType) {
-			if (r.getLabel().toUpperCase().equals("AFFICHAGE SIRH DE TYPE DIRECTION")) {
+			if (r.getLabel().toUpperCase().equals(AFFICHAGE_DIRECTION)) {
 				type = r;
 				break;
 			}
@@ -216,7 +220,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		List<ReferenceDto> listeType = getListTypeEntite();
 		ReferenceDto type = null;
 		for (ReferenceDto r : listeType) {
-			if (r.getLabel().toUpperCase().equals("AFFICHAGE SIRH DE TYPE SERVICE")) {
+			if (r.getLabel().toUpperCase().equals(AFFICHAGE_SERVICE)) {
 				type = r;
 				break;
 			}
