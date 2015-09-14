@@ -136,12 +136,29 @@ public class AgentService implements IAgentService {
 		if (idAgents != null && idAgents.size() != 0)
 			query.setParameter("idAgents", idAgents);
 
+		// optimisation #18391
+		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a verifier)
+		// dans leur cas, on recherche qu un seul agent
+		// cela ne sert donc a rien d appeler l arbre entier ADS
+		EntiteDto root = null;
+		if(null == idAgents
+				|| 1 < idAgents.size()) {
+			root = adsWSConsumer.getWholeTree();
+		}
+
 		for (Affectation aff : query.getResultList()) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
 			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
-				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-				EntiteDto direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
+				
+				if(null != root) {
+					service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(aff.getFichePoste().getIdServiceADS(), root);
+				}else{
+					service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				}
+				
+				//adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				EntiteDto direction = adsService.getAffichageDirectionWithoutCallADS(service);
 				agDto.setDirection(direction == null ? "" : direction.getLabel());
 			}
 			
