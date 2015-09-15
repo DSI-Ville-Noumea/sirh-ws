@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -22,9 +23,16 @@ import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class AgentServiceTest {
+
+	@Autowired
+	IAgentService repository;
+
+	@PersistenceContext(unitName = "sirhPersistenceUnit")
+	private EntityManager sirhPersistenceUnit;
 
 	@Test
 	public void testlistAgentsEnActivite_returnListOfAgentDto() {
@@ -38,7 +46,7 @@ public class AgentServiceTest {
 		ag2.setNomUsage("TEST NOM");
 		listeAgentRecherche.add(ag1);
 		listeAgentRecherche.add(ag2);
-		
+
 		List<Object[]> listResult = new ArrayList<Object[]>();
 		Object[] obj1 = new Object[2];
 		obj1[0] = ag1;
@@ -46,7 +54,7 @@ public class AgentServiceTest {
 		Object[] obj2 = new Object[2];
 		obj2[0] = ag2;
 		obj2[1] = new FichePoste();
-		
+
 		listResult.add(obj1);
 		listResult.add(obj2);
 
@@ -54,9 +62,8 @@ public class AgentServiceTest {
 		Mockito.when(mockQuery.getResultList()).thenReturn(listResult);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString())).thenReturn(
-				mockQuery);
-		
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString())).thenReturn(mockQuery);
+
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 
@@ -82,9 +89,8 @@ public class AgentServiceTest {
 		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<Object[]>());
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString())).thenReturn(
-				mockQuery);
-		
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString())).thenReturn(mockQuery);
+
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 
@@ -274,7 +280,7 @@ public class AgentServiceTest {
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(noeud1);
 		Mockito.when(adsWSConsumer.getAffichageDirection(1)).thenReturn(noeudDirection);
-		
+
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(noeud1)).thenReturn(noeudDirection);
 
@@ -282,7 +288,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(agtService, "adsService", adsService);
-		
+
 		// When
 		List<AgentWithServiceDto> result = agtService.listAgentsOfServices(null, new Date(), null);
 
