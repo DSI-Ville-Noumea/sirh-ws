@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 
 public interface IAffectationRepository {
 
@@ -22,4 +23,6 @@ public interface IAffectationRepository {
 	Affectation chercherAffectationAgentAvecDateDebut(Integer idAgent, Date date);
 
 	List<Affectation> getListeAffectationsAgentOrderByDateAsc(Integer idAgent);
+
+	Agent getAffectationAgent(Integer idAgent, Date dateDonnee);
 }

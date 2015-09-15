@@ -947,7 +947,7 @@ public class AffectationRepositoryTest {
 		a2.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a2);
 
-		Affectation result = repository.chercherAffectationAgentAvecDateDebut(9005138,new DateTime(2010,01,01,0,0,0).toDate());
+		Affectation result = repository.chercherAffectationAgentAvecDateDebut(9005138, new DateTime(2010, 01, 01, 0, 0, 0).toDate());
 
 		assertNotNull(result);
 		assertEquals(result.getIdAffectation(), a2.getIdAffectation());
@@ -990,9 +990,107 @@ public class AffectationRepositoryTest {
 		a1.setFichePoste(fichePoste);
 		sirhPersistenceUnit.persist(a1);
 
-		Affectation result = repository.chercherAffectationAgentAvecDateDebut(9005138,new DateTime(2010,01,01,0,0,0).toDate());
+		Affectation result = repository.chercherAffectationAgentAvecDateDebut(9005138, new DateTime(2010, 01, 01, 0, 0, 0).toDate());
 
 		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAffectationAgent_ReturnNull() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a1 = new Affectation();
+		a1.setAgent(ag);
+		a1.setIdAffectation(2);
+		a1.setTempsTravail("tempsTravail");
+		a1.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		a1.setDateFinAff(new DateTime(2010, 06, 01, 0, 0, 0).toDate());
+		sirhPersistenceUnit.persist(a1);
+
+		Agent result = repository.getAffectationAgent(9005138, new Date());
+
+		assertNull(result);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAffectationAgent_NoDateFin_ReturnAgent() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a1 = new Affectation();
+		a1.setAgent(ag);
+		a1.setIdAffectation(2);
+		a1.setTempsTravail("tempsTravail");
+		a1.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		a1.setDateFinAff(null);
+		sirhPersistenceUnit.persist(a1);
+
+		Agent result = repository.getAffectationAgent(9005138, new Date());
+
+		assertNotNull(result);
+		assertEquals(ag.getIdAgent(), result.getIdAgent());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getAffectationAgent_WithDateFin_ReturnAgent() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a1 = new Affectation();
+		a1.setAgent(ag);
+		a1.setIdAffectation(2);
+		a1.setTempsTravail("tempsTravail");
+		a1.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		a1.setDateFinAff(new DateTime(2018, 05, 01, 0, 0, 0).toDate());
+		sirhPersistenceUnit.persist(a1);
+
+		Agent result = repository.getAffectationAgent(9005138, new Date());
+
+		assertNotNull(result);
+		assertEquals(ag.getIdAgent(), result.getIdAgent());
 
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
