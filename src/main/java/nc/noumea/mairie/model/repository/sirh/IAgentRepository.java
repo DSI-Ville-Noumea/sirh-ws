@@ -1,5 +1,7 @@
 package nc.noumea.mairie.model.repository.sirh;
 
+import java.util.List;
+
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
 public interface IAgentRepository {
@@ -9,4 +11,6 @@ public interface IAgentRepository {
 	Agent getAgentEligibleEAESansAffectes(Integer noMatr);
 
 	Agent getAgent(Integer idAgent);
+
+	List<Agent> getListAgents(List<Integer> listIdsAgent);
 }
