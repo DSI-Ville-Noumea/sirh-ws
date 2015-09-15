@@ -35,7 +35,7 @@ public class AgentService implements IAgentService {
 
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
-	
+
 	@Autowired
 	private IAdsService adsService;
 
@@ -62,8 +62,7 @@ public class AgentService implements IAgentService {
 		TypedQuery<Agent> query = sirhEntityManager
 				.createQuery(
 						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ " and fp.idServiceADS =:idServiceADS  and aff.agent.idAgent != :idAgent "
-								+ " and aff.dateDebutAff<=:dateJour and "
+								+ " and fp.idServiceADS =:idServiceADS  and aff.agent.idAgent != :idAgent " + " and aff.dateDebutAff<=:dateJour and "
 								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", Agent.class);
 		query.setParameter("idServiceADS", idServiceADS);
 		query.setParameter("idAgent", idAgent);
@@ -74,15 +73,11 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable,
-			List<Integer> listeIdServiceADS) {
-		TypedQuery<Agent> query = sirhEntityManager
-				.createQuery(
-						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ " and fp.idServiceADS in (:listeIdServiceADS)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
-								+ " and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
-						Agent.class);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<Integer> listeIdServiceADS) {
+		TypedQuery<Agent> query = sirhEntityManager.createQuery(
+				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+						+ " and fp.idServiceADS in (:listeIdServiceADS)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp " + " and aff.dateDebutAff<=:dateJour and "
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ", Agent.class);
 		query.setParameter("listeIdServiceADS", listeIdServiceADS);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("idAgentResp", idAgentResponsable);
@@ -95,8 +90,7 @@ public class AgentService implements IAgentService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent) {
-		String sql = "select a.* from Affectation aff, Agent a "
-				+ "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
+		String sql = "select a.* from Affectation aff, Agent a " + "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
 				+ "( select fpAgent.id_responsable from Fiche_Poste fpAgent, Affectation aff "
 				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)) "
 				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)";
@@ -142,12 +136,12 @@ public class AgentService implements IAgentService {
 			query.setParameter("idAgents", idAgents);
 
 		// optimisation #18391
-		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a verifier)
+		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
+		// verifier)
 		// dans leur cas, on recherche qu un seul agent
 		// cela ne sert donc a rien d appeler l arbre entier ADS
 		EntiteDto root = null;
-		if(null == idAgents
-				|| 1 < idAgents.size()) {
+		if (null == idAgents || 1 < idAgents.size()) {
 			root = adsWSConsumer.getWholeTree();
 		}
 
@@ -155,19 +149,19 @@ public class AgentService implements IAgentService {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
 			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
-				
-				if(null != root) {
+
+				if (null != root) {
 					service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(aff.getFichePoste().getIdServiceADS(), root);
-				}else{
+				} else {
 					service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 				}
-				
-				//adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+
+				// adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 				EntiteDto direction = adsService.getAffichageDirectionWithoutCallADS(service);
 				agDto.setDirection(direction == null ? "" : direction.getLabel());
 				agDto.setSigleDirection(direction == null ? "" : direction.getSigle());
 			}
-			
+
 			agDto.setService(service == null ? "" : service.getLabel().trim());
 			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setSigleService(service == null ? "" : service.getSigle());
@@ -181,8 +175,7 @@ public class AgentService implements IAgentService {
 	public Agent findAgentWithName(Integer idAgent, String nom) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery(
-				"select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom", Agent.class);
 
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("nom", nom.toUpperCase() + "%");
@@ -232,11 +225,11 @@ public class AgentService implements IAgentService {
 
 		// optimisation #18176
 		EntiteDto root = adsWSConsumer.getWholeTree();
-		
+
 		@SuppressWarnings("unchecked")
 		List<Object[]> list = query.getResultList();
 		for (Object[] res : list) {
-			AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche)res[0]);
+			AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
 			FichePoste fp = (FichePoste) res[1];
 			EntiteDto service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(fp.getIdServiceADS(), root);
 
@@ -251,8 +244,7 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee) {
-		String hql = "select fp from FichePoste fp, Affectation aff "
-				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+		String hql = "select fp from FichePoste fp, Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
@@ -276,8 +268,7 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee) {
-		String hql = "select fp from FichePoste fp ,Affectation aff "
-				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+		String hql = "select fp from FichePoste fp ,Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
