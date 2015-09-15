@@ -37,7 +37,7 @@ public class AgentWithServiceDto extends AgentDto {
 			this.idServiceADS = service.getIdEntite();
 			this.sigleService = service.getSigle();
 		}
-		this.position = agent.getPosition();
+		this.position = agent == null ? null : agent.getPosition();
 	}
 
 	public String getService() {
@@ -95,5 +95,5 @@ public class AgentWithServiceDto extends AgentDto {
 	public void setSigleDirection(String sigleDirection) {
 		this.sigleDirection = sigleDirection;
 	}
-	
+
 }
