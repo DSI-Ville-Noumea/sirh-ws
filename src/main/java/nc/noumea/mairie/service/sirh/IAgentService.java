@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 
@@ -45,5 +46,7 @@ public interface IAgentService {
 	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee);
 
 	EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee);
+
+	List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent);
 
 }

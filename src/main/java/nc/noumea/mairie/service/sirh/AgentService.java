@@ -14,7 +14,9 @@ import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
+import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
@@ -36,6 +38,9 @@ public class AgentService implements IAgentService {
 	
 	@Autowired
 	private IAdsService adsService;
+
+	@Autowired
+	private IAgentRepository agentRepository;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -160,6 +165,7 @@ public class AgentService implements IAgentService {
 				//adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
 				EntiteDto direction = adsService.getAffichageDirectionWithoutCallADS(service);
 				agDto.setDirection(direction == null ? "" : direction.getLabel());
+				agDto.setSigleDirection(direction == null ? "" : direction.getSigle());
 			}
 			
 			agDto.setService(service == null ? "" : service.getLabel().trim());
@@ -291,5 +297,20 @@ public class AgentService implements IAgentService {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	
+	@Override
+	public List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent) {
+		
+		List<Agent> listAgents = agentRepository.getListAgents(listIdsAgent);
+		
+		List<AgentGeneriqueDto> result = new ArrayList<AgentGeneriqueDto>();
+		if(null != listAgents) {
+			for(Agent agent : listAgents) {
+				result.add(new AgentGeneriqueDto(agent));
+			}
+		}
+		
+		return result;
 	}
 }

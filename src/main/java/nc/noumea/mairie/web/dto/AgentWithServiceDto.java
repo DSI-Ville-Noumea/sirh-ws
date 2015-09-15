@@ -12,6 +12,7 @@ public class AgentWithServiceDto extends AgentDto {
 	// planter l'ajout d'une demande absence si on le rajoute dans le DTO du
 	// kiosque.
 	private String direction;
+	private String sigleDirection;
 	private String signature;
 	private String position;
 	private String sigleService;
@@ -87,4 +88,12 @@ public class AgentWithServiceDto extends AgentDto {
 		this.idServiceADS = idServiceADS;
 	}
 
+	public String getSigleDirection() {
+		return sigleDirection;
+	}
+
+	public void setSigleDirection(String sigleDirection) {
+		this.sigleDirection = sigleDirection;
+	}
+	
 }

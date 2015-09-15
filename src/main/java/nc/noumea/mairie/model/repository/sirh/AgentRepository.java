@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
@@ -83,5 +84,14 @@ public class AgentRepository implements IAgentRepository {
 			return null;
 
 		return result.get(0);
+	}
+
+	@Override
+	public List<Agent> getListAgents(List<Integer> listIdsAgent) {
+
+		TypedQuery<Agent> query = sirhEntityManager.createNamedQuery("getListAgents", Agent.class);
+
+		query.setParameter("listIdsAgent", listIdsAgent);
+		return query.getResultList();
 	}
 }
