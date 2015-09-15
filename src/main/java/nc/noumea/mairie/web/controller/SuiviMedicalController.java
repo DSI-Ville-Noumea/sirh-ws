@@ -47,12 +47,9 @@ public class SuiviMedicalController {
 	@ResponseBody
 	@RequestMapping(value = "/xml/getConvocationSIRH", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getXmlConvocationSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
-			@RequestParam("typePopulation") String typePopulation) throws ParseException {
+	public ModelAndView getXmlConvocationSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical, @RequestParam("typePopulation") String typePopulation) throws ParseException {
 
-		logger.debug(
-				"entered GET [suiviMedical/xml/getConvocationSIRH] => getXmlConvocationSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ",
-				csvIdSuiviMedical, typePopulation);
+		logger.debug("entered GET [suiviMedical/xml/getConvocationSIRH] => getXmlConvocationSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ", csvIdSuiviMedical, typePopulation);
 
 		ListVMDto listDto = new ListVMDto();
 		listDto.setTypePopulation(typePopulation);
@@ -88,12 +85,10 @@ public class SuiviMedicalController {
 	@ResponseBody
 	@RequestMapping(value = "/xml/getLettreAccompagnementSIRH", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getXmlLettreAccompagnementSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
-			@RequestParam("typePopulation") String typePopulation) throws ParseException {
+	public ModelAndView getXmlLettreAccompagnementSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical, @RequestParam("typePopulation") String typePopulation) throws ParseException {
 
-		logger.debug(
-				"entered GET [suiviMedical/xml/getLettreAccompagnementSIRH] => getXmlLettreAccompagnementSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ",
-				csvIdSuiviMedical, typePopulation);
+		logger.debug("entered GET [suiviMedical/xml/getLettreAccompagnementSIRH] => getXmlLettreAccompagnementSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} ", csvIdSuiviMedical,
+				typePopulation);
 
 		ListVMDto listDto = new ListVMDto();
 		listDto.setTypePopulation(typePopulation);
@@ -115,7 +110,7 @@ public class SuiviMedicalController {
 				if (service != null) {
 					EntiteDto direction = adsConsumer.getAffichageDirection(sm.getIdServiceADS());
 					agDto.setDirection(direction == null ? "" : direction.getLabel());
-					if (direction != null) {
+					if (direction != null && direction.getSigle().equals(service.getSigle())) {
 						service = null;
 					} else {
 						servResponsable = adsConsumer.getParentOfEntiteByTypeEntite(service.getIdEntite(), null);
@@ -140,12 +135,10 @@ public class SuiviMedicalController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadConvocationSIRH", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadConvocationSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
-			@RequestParam("typePopulation") String typePopulation, @RequestParam("mois") String mois,
-			@RequestParam("annee") String annee) throws ParseException {
+	public ResponseEntity<byte[]> downloadConvocationSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical, @RequestParam("typePopulation") String typePopulation,
+			@RequestParam("mois") String mois, @RequestParam("annee") String annee) throws ParseException {
 
-		logger.debug(
-				"entered GET [suiviMedical/downloadConvocationSIRH] => downloadConvocationSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} and mois = {} and annee = {} ",
+		logger.debug("entered GET [suiviMedical/downloadConvocationSIRH] => downloadConvocationSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} and mois = {} and annee = {} ",
 				csvIdSuiviMedical, typePopulation, mois, annee);
 
 		if (csvIdSuiviMedical == null)
@@ -162,8 +155,7 @@ public class SuiviMedicalController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/doc");
-		headers.add("Content-Disposition",
-				String.format("attachment; filename=\"SM_Convocation_%s_%s_%s.doc\"", typePopulation, mois, annee));
+		headers.add("Content-Disposition", String.format("attachment; filename=\"SM_Convocation_%s_%s_%s.doc\"", typePopulation, mois, annee));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
@@ -171,10 +163,8 @@ public class SuiviMedicalController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadLettreAccompagnementSIRH", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadLettreAccompagnementSIRH(
-			@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical,
-			@RequestParam("typePopulation") String typePopulation, @RequestParam("mois") String mois,
-			@RequestParam("annee") String annee) throws ParseException {
+	public ResponseEntity<byte[]> downloadLettreAccompagnementSIRH(@RequestParam("csvIdSuiviMedical") String csvIdSuiviMedical, @RequestParam("typePopulation") String typePopulation,
+			@RequestParam("mois") String mois, @RequestParam("annee") String annee) throws ParseException {
 
 		logger.debug(
 				"entered GET [suiviMedical/downloadLettreAccompagnementSIRH] => downloadLettreAccompagnementSIRH with parameter csvIdSuiviMedical = {} and typePopulation = {} and mois = {} and annee = {} ",
@@ -194,8 +184,7 @@ public class SuiviMedicalController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/doc");
-		headers.add("Content-Disposition", String.format(
-				"attachment; filename=\"SM_Lettre_Accompagnement_%s_%s_%s.doc\"", typePopulation, mois, annee));
+		headers.add("Content-Disposition", String.format("attachment; filename=\"SM_Lettre_Accompagnement_%s_%s_%s.doc\"", typePopulation, mois, annee));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
