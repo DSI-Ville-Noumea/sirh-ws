@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +26,7 @@ public class AffectationRepository implements IAffectationRepository {
 	@Override
 	public Affectation getAffectationActiveByAgent(int idAgent) {
 
-		TypedQuery<Affectation> q = sirhEntityManager.createNamedQuery("getAffectationActiveByAgentPourCalculEAE",
-				Affectation.class);
+		TypedQuery<Affectation> q = sirhEntityManager.createNamedQuery("getAffectationActiveByAgentPourCalculEAE", Affectation.class);
 		q.setParameter("idAgent", idAgent);
 		q.setParameter("today", new Date());
 		q.setMaxResults(1);
@@ -34,9 +34,7 @@ public class AffectationRepository implements IAffectationRepository {
 		List<Affectation> result = q.getResultList();
 
 		if (result.size() != 1) {
-			logger.warn(
-					"Une erreur s'est produite lors de la recherche d'une affectation pour l'agent {}. Le nombre de résultat est {} affectations au lieu de 1.",
-					idAgent, result.size());
+			logger.warn("Une erreur s'est produite lors de la recherche d'une affectation pour l'agent {}. Le nombre de résultat est {} affectations au lieu de 1.", idAgent, result.size());
 			return null;
 		}
 
@@ -160,6 +158,31 @@ public class AffectationRepository implements IAffectationRepository {
 		Affectation res = null;
 		try {
 			res = (Affectation) query.getSingleResult();
+		} catch (Exception e) {
+		}
+
+		return res;
+	}
+
+	@Override
+	public Agent getAffectationAgent(Integer idAgent, Date dateDonnee) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select aff.agent from Affectation aff ");
+		sb.append("where aff.agent.idAgent =:idAgent ");
+		sb.append("and aff.dateDebutAff<=:dateJour  and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour) ");
+
+		Query query = sirhEntityManager.createQuery(sb.toString(), Agent.class);
+		query.setParameter("idAgent", idAgent);
+		if (null != dateDonnee) {
+			query.setParameter("dateJour", dateDonnee);
+		} else {
+			query.setParameter("dateJour", new Date());
+		}
+		Agent res = null;
+		try {
+			res = (Agent) query.getSingleResult();
 		} catch (Exception e) {
 		}
 
