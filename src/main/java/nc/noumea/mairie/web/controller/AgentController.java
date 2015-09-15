@@ -17,6 +17,7 @@ import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.ISpadmnService;
 import nc.noumea.mairie.service.ads.IAdsService;
+import nc.noumea.mairie.service.sirh.HelperService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
@@ -37,11 +38,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 
 @Controller
@@ -74,6 +77,9 @@ public class AgentController {
 
 	@Autowired
 	private IAdsService adsService;
+
+	@Autowired
+	private HelperService helperService;
 	
 	private Logger logger = Logger.getLogger(AgentController.class); 
 
@@ -459,6 +465,38 @@ public class AgentController {
 		AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
 
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "getListAgents", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListAgents(@RequestBody String agentsApprouvesJson)
+			throws ParseException {
+		
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class)
+				.use("values", Integer.class).deserialize(agentsApprouvesJson);
+		
+		if(null == listIdsAgent
+				|| listIdsAgent.isEmpty()) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+		
+		// on remanie l'idAgent
+		List<Integer> listIdsAgentRemanie = new ArrayList<Integer>();
+		for(Integer idAgent : listIdsAgent) {
+			listIdsAgentRemanie.add(helperService.remanieIdAgent(idAgent));
+		}
+
+		List<AgentGeneriqueDto> result = agentSrv.getListAgents(listIdsAgentRemanie);
+
+		if (null == result
+				|| result.isEmpty()) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		String response = new JSONSerializer().exclude("*.class").deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
