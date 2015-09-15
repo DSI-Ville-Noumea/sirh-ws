@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IAgentService;
-import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
