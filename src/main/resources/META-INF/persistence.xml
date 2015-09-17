@@ -102,6 +102,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.RegIndemFP</class>
 		<class>nc.noumea.mairie.model.bean.Sppost</class>
 		<class>nc.noumea.mairie.model.bean.PositDesc</class>
+		<class>nc.noumea.mairie.model.bean.Siserv</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />

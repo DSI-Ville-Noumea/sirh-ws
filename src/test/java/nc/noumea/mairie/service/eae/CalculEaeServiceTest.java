@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import nc.noumea.mairie.model.bean.Silieu;
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spcatg;
@@ -799,7 +800,27 @@ public class CalculEaeServiceTest {
 		superieurHierarchique.setGradePoste(gradePoste);
 		superieurHierarchique.setLieuPoste(lieuPoste);
 
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setIdFichePoste(122);
+		fichePoste2.setSuperieurHierarchique(superieurHierarchique);
+		fichePoste2.setTitrePoste(titrePoste);
+		fichePoste2.setBudget(budget);
+		fichePoste2.setBudgete(budgete);
+		fichePoste2.setReglementaire(reglementaire);
+		fichePoste2.setGradePoste(gradePoste);
+		fichePoste2.setLieuPoste(lieuPoste);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("NumFP");
+		fichePoste2.setNiveauEtude(niveauEtude);
+		fichePoste2.setIdServi("DCCA");
+		
+		Siserv siserv = new Siserv();
+		siserv.setServi("DCCA");
+		siserv.setLiserv("Lib service AS400");
+		siserv.setSigle("DSI");
+
 		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdFichePoste(120);
 		fichePoste.setSuperieurHierarchique(superieurHierarchique);
 		fichePoste.setIdServiceADS(2);
 		fichePoste.setTitrePoste(titrePoste);
@@ -814,7 +835,7 @@ public class CalculEaeServiceTest {
 
 		Affectation aff2 = new Affectation();
 		aff2.setAgent(agent);
-		aff2.setFichePoste(fichePoste);
+		aff2.setFichePoste(fichePoste2);
 		aff2.setDateDebutAff(new DateTime(2009, 01, 01, 0, 0, 0).toDate());
 		aff2.setDateFinAff(new DateTime(2010, 01, 01, 0, 0, 0).toDate());
 
@@ -829,7 +850,8 @@ public class CalculEaeServiceTest {
 		listAff.add(aff);
 
 		IFichePosteRepository fichePosteRepository = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteRepository.chercherFichePoste(Mockito.anyInt())).thenReturn(fichePoste);
+		Mockito.when(fichePosteRepository.chercherFichePoste(120)).thenReturn(fichePoste);
+		Mockito.when(fichePosteRepository.chercherFichePoste(122)).thenReturn(fichePoste2);
 
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
 		Mockito.when(affectationRepository.getListeAffectationsAgentOrderByDateAsc(idAgent)).thenReturn(listAff);
@@ -850,6 +872,8 @@ public class CalculEaeServiceTest {
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.listerSpmtsrAvecAgentAPartirDateOrderDateDeb(5138, 20090101)).thenReturn(
 				listSpmstr);
+		Mockito.when(mairieRepository.chercherSiserv(fichePoste2.getIdServi())).thenReturn(
+				siserv);
 
 		EntiteDto siservDirection = new EntiteDto();
 		siservDirection.setLabel("direction");
@@ -882,8 +906,8 @@ public class CalculEaeServiceTest {
 		assertEquals(result.get(2).getDateDebut(), sdf.parse("20080101"));
 		assertEquals(result.get(2).getDateFin(), sdf.parse("20081231"));
 
-		assertEquals(result.get(1).getDirection(), "direction");
-		assertEquals(result.get(1).getService(), "liServ");
+		assertEquals(result.get(1).getDirection(), "");
+		assertEquals(result.get(1).getService(), "Lib service AS400");
 		assertEquals(result.get(1).getDateDebut(), sdf.parse("20090101"));
 		assertEquals(result.get(1).getDateFin(), sdf.parse("20100101"));
 
