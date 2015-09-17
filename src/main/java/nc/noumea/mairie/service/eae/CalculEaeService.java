@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Siserv;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spgradn;
 import nc.noumea.mairie.model.bean.Spmtsr;
@@ -208,12 +209,30 @@ public class CalculEaeService implements ICalculEaeService {
 		for (int i = 0; i < listAff.size(); i++) {
 			Affectation aff = listAff.get(i);
 			FichePoste fp = fichePosteRepository.chercherFichePoste(aff.getFichePoste().getIdFichePoste());
+
+			EntiteDto service = null;
+			EntiteDto direction = null;
 			if (fp == null || fp.getIdServiceADS() == null) {
-				continue;
+				if (fp.getIdServi() == null) {
+					continue;
+				} else {
+					Siserv siserv = mairieRepository.chercherSiserv(fp.getIdServi());
+					if (siserv != null && siserv.getServi() != null) {
+						service = new EntiteDto();
+						service.setLabel(siserv.getLiserv());
+						service.setSigle(siserv.getSigle());
+					} else {
+						continue;
+					}
+				}
+			} else {
+				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				direction = adsWSConsumer.getDirectionPourEAE(service);
 			}
 
-			EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-			EntiteDto direction = adsWSConsumer.getDirectionPourEAE(service);
+			if (service == null && direction == null) {
+				continue;
+			}
 
 			if (aff.getDateFinAff() == null) {
 				// on crée une ligne pour affectation
