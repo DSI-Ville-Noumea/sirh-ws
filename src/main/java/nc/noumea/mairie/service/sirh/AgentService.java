@@ -289,19 +289,19 @@ public class AgentService implements IAgentService {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent) {
-		
+
 		List<Agent> listAgents = agentRepository.getListAgents(listIdsAgent);
-		
+
 		List<AgentGeneriqueDto> result = new ArrayList<AgentGeneriqueDto>();
-		if(null != listAgents) {
-			for(Agent agent : listAgents) {
+		if (null != listAgents) {
+			for (Agent agent : listAgents) {
 				result.add(new AgentGeneriqueDto(agent));
 			}
 		}
-		
+
 		return result;
 	}
 }
