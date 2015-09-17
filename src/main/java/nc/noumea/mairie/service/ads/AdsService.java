@@ -132,7 +132,7 @@ public class AdsService implements IAdsService {
 			
 			if(null != entite.getEntiteParent().getTypeEntite()
 					&& null != entite.getEntiteParent().getTypeEntite().getLabel()
-					&& ADSWSConsumer.AFFICHAGE_DIRECTION.equals(entite.getEntiteParent().getTypeEntite().getLabel())) {
+					&& ADSWSConsumer.AFFICHAGE_DIRECTION.equals(entite.getEntiteParent().getTypeEntite().getLabel().toUpperCase())) {
 				return entite.getEntiteParent();
 			}else{
 				return getAffichageDirectionWithoutCallADS(entite.getEntiteParent());
