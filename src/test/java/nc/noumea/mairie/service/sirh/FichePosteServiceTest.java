@@ -564,7 +564,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("1 FDP vont être supprimées de l'entité DSI. Merci d'aller regarder le resultat de cette suppression dans SIRH.", result.getInfos().get(0));
+		assertEquals("1 FDP va être supprimée sur l'entité DSI. Merci d'aller regarder le resultat de cette suppression dans SIRH.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
 	}
 
@@ -1126,19 +1126,27 @@ public class FichePosteServiceTest {
 
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
+		
+		EntiteDto entite = new EntiteDto();
+		entite.setSigle("DSI");
+		entite.setIdEntite(1);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1))).thenReturn(listFP);
 
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		ReturnMessageDto result = ficheService.activeFichesPosteByIdEntite(1, 9005138);
 
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("1 FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.", result.getInfos().get(0));
+		assertEquals("1 FDP va être activée sur l'entité DSI. Merci d'aller regarder le resultat de cette activation dans SIRH.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(ActionFdpJob.class));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
@@ -3012,7 +3020,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 
 		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
-		assertEquals("Aucune FDP sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
+		assertEquals("Aucune FDP ne sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
