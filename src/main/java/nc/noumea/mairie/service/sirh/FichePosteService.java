@@ -711,7 +711,14 @@ public class FichePosteService implements IFichePosteService {
 			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "SUPPRESSION", null);
 			fichePosteDao.persisEntity(job);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP vont être supprimées de l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+
+		if (listeFDP.size() == 0) {
+			result.getInfos().add("Aucune FDP ne va être supprimée sur l'entité " + sigleEntite + ".");
+		} else if (listeFDP.size() == 1) {
+			result.getInfos().add("1 FDP va être supprimée sur l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+		} else {
+			result.getInfos().add(listeFDP.size() + " FDP vont être supprimées sur l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+		}
 		return result;
 	}
 
@@ -1157,7 +1164,15 @@ public class FichePosteService implements IFichePosteService {
 			ActionFdpJob job = new ActionFdpJob(fp.getIdFichePoste(), idAgent, "ACTIVATION", null);
 			fichePosteDao.persisEntity(job);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP vont être activées. Merci d'aller regarder le resultat de cette activation dans SIRH.");
+
+		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(idEntite);
+		if (listeFDP.size() == 0) {
+			result.getInfos().add("Aucune FDP ne va être activée sur l'entité " + entite.getSigle() + ".");
+		} else if (listeFDP.size() == 1) {
+			result.getInfos().add("1 FDP va être activée sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
+		} else {
+			result.getInfos().add(listeFDP.size() + " FDP vont être activées sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
+		}
 		return result;
 	}
 
@@ -1431,7 +1446,7 @@ public class FichePosteService implements IFichePosteService {
 						EnumStatutFichePoste.EN_CREATION.getStatut()));
 
 		if (null == listeFDP || listeFDP.isEmpty()) {
-			result.getInfos().add("Aucune FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+			result.getInfos().add("Aucune FDP ne sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 			return result;
 		}
 
@@ -1445,7 +1460,11 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+		if (listeFDP.size() == 1) {
+			result.getInfos().add(listeFDP.size() + " FDP est déplacée de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+		} else {
+			result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+		}
 		return result;
 	}
 }
