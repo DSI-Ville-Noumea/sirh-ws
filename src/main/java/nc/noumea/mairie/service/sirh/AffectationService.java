@@ -36,8 +36,7 @@ public class AffectationService implements IAffectationService {
 	public Affectation getAffectationById(Integer idAffectation) {
 
 		Affectation res = null;
-		TypedQuery<Affectation> query = sirhEntityManager.createQuery(
-				"select aff from Affectation aff where aff.idAffectation=:idAffectation", Affectation.class);
+		TypedQuery<Affectation> query = sirhEntityManager.createQuery("select aff from Affectation aff where aff.idAffectation=:idAffectation", Affectation.class);
 		query.setParameter("idAffectation", idAffectation);
 
 		List<Affectation> lfp = query.getResultList();
@@ -54,7 +53,7 @@ public class AffectationService implements IAffectationService {
 		Affectation res = null;
 		TypedQuery<Affectation> query = sirhEntityManager
 				.createQuery(
-						"select aff from Affectation aff where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
+						"select aff from Affectation aff, Agent ag where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
 						Affectation.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
@@ -76,10 +75,9 @@ public class AffectationService implements IAffectationService {
 	public Affectation getAffectationByIdFichePoste(Integer idFichePoste) {
 
 		Affectation res = null;
-		TypedQuery<Affectation> query = sirhEntityManager
-				.createQuery(
-						"select aff from Affectation aff where aff.fichePoste.idFichePoste=:idFichePoste and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
-						Affectation.class);
+		TypedQuery<Affectation> query = sirhEntityManager.createQuery(
+				"select aff from Affectation aff where aff.fichePoste.idFichePoste=:idFichePoste and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
+				Affectation.class);
 		query.setParameter("idFichePoste", idFichePoste);
 		query.setParameter("dateJour", new Date());
 

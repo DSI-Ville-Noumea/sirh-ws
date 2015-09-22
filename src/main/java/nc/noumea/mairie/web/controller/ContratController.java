@@ -12,6 +12,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISibanqService;
@@ -20,6 +21,7 @@ import nc.noumea.mairie.service.eae.ICalculEaeService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContratService;
+import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.CompteDto;
 import nc.noumea.mairie.web.dto.ContratDto;
@@ -28,6 +30,7 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +67,9 @@ public class ContratController {
 	private IAffectationService affSrv;
 
 	@Autowired
+	private IFichePosteService fichePosteService;
+
+	@Autowired
 	private IAgentService agSrv;
 
 	@Autowired
@@ -94,11 +100,19 @@ public class ContratController {
 			return new ModelAndView("xmlView", "object", new ContratDto());
 		}
 
-		Affectation aff = affSrv.getAffectationActiveByIdAgent(idAgent);
-		if (aff == null) {
+		Affectation affAgent = affSrv.getAffectationActiveByIdAgent(idAgent);
+		if (affAgent == null) {
 			logger.error("L'agent id={} n'a pas d'affectation active.", idAgent);
 			return new ModelAndView("xmlView", "object", new ContratDto());
 		}
+
+		Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(affAgent.getAgent().getIdAgent(), new DateTime().toDate());
+		FichePoste fp = fichePosteService.getFichePosteById(fpId);
+		if (fp == null || fp.getIdServiceADS() == null) {
+			logger.error("L'agent id={} n'a pas d'affectation sur une entité ADS.", idAgent);
+			return new ModelAndView("xmlView", "object", new ContratDto());
+		}
+
 		Sibanq banque = null;
 		if (ag.getCodeBanque() != null) {
 			banque = sibanqSrv.getBanque(ag.getCodeBanque());
@@ -112,27 +126,27 @@ public class ContratController {
 		// on construit le DTO
 
 		List<DiplomeDto> listDiplomeDto = calculEaeSrv.getListDiplomeDto(idAgent);
-		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-		EntiteDto direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
-		EntiteDto section = adsWSConsumer.getAffichageSection(aff.getFichePoste().getIdServiceADS());
+		EntiteDto service = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+		EntiteDto direction = adsWSConsumer.getAffichageDirection(fp.getIdServiceADS());
+		EntiteDto section = adsWSConsumer.getAffichageSection(fp.getIdServiceADS());
 		List<Competence> listComp = new ArrayList<Competence>();
-		if (aff.getFichePoste().getCompetencesFDP() != null) {
-			for (CompetenceFP compFP : aff.getFichePoste().getCompetencesFDP()) {
+		if (fp.getCompetencesFDP() != null) {
+			for (CompetenceFP compFP : fp.getCompetencesFDP()) {
 				Competence comp = fichePosteDao.chercherCompetence(compFP.getCompetenceFPPK().getIdCompetence());
 				if (comp != null)
 					listComp.add(comp);
 			}
 		}
 		List<Activite> listActi = new ArrayList<Activite>();
-		if (aff.getFichePoste().getActivites() != null) {
-			for (ActiviteFP actiFP : aff.getFichePoste().getActivites()) {
+		if (fp.getActivites() != null) {
+			for (ActiviteFP actiFP : fp.getActivites()) {
 				Activite acti = fichePosteDao.chercherActivite(actiFP.getActiviteFPPK().getIdActivite());
 				if (acti != null)
 					listActi.add(acti);
 			}
 		}
-		FichePosteDto fichePosteDto = new FichePosteDto(aff.getFichePoste(), direction == null ? null : direction.getLabel(), service.getLabel(), section == null ? null : section.getLabel(),
-				service.getSigle(), listActi,listComp);
+		FichePosteDto fichePosteDto = new FichePosteDto(fp, direction == null ? null : direction.getLabel(), service.getLabel(), section == null ? null : section.getLabel(), service.getSigle(),
+				listActi, listComp);
 		CompteDto cptDto = new CompteDto(ag, banque);
 		AgentDto agDto = new AgentDto(ag, cptDto);
 		if (ag.getCodeCommuneNaissFr() == null) {

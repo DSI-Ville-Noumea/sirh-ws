@@ -16,6 +16,7 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class AnnuaireService implements IAnnuaireService {
 
 	@Autowired
 	private IAffectationService affectationSrv;
+
+	@Autowired
+	private IFichePosteService fichePosteService;
 
 	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
@@ -86,12 +90,18 @@ public class AnnuaireService implements IAnnuaireService {
 			return null;
 		}
 		// on cherche la descrition de posit
-		PositDesc positDesc = spadmnRepository
-				.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition());
+		PositDesc positDesc = spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition());
 
 		Affectation affAgent = affectationSrv.getAffectationActiveByIdAgent(idAgent);
-		if (affAgent == null || affAgent.getFichePoste() == null || affAgent.getFichePoste().getIdServiceADS() == null) {
+		if (affAgent == null || affAgent.getIdAffectation() == null) {
 			logger.error("L'agent id={} n'a pas d'affectation active.", idAgent);
+			return null;
+		}
+
+		Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(affAgent.getAgent().getIdAgent(), new DateTime().toDate());
+		FichePoste fp = fichePosteService.getFichePosteById(fpId);
+		if (fp == null || fp.getIdServiceADS() == null) {
+			logger.error("L'agent id={} n'a pas d'affectation sur une entité ADS.", idAgent);
 			return null;
 		}
 
@@ -109,8 +119,7 @@ public class AnnuaireService implements IAnnuaireService {
 		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(affAgent.getFichePoste().getIdServiceADS());
 		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(affAgent.getFichePoste().getIdServiceADS());
 		EntiteDto direction = adsWSConsumer.getAffichageDirection(affAgent.getFichePoste().getIdServiceADS());
-		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(),
-				entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
+		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
 
 		return dto;
 	}
