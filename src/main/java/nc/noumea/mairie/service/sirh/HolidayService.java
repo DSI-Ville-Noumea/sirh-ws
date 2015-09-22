@@ -12,6 +12,7 @@ import nc.noumea.mairie.model.bean.sirh.JourFerie;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.web.dto.JourDto;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,10 @@ public class HolidayService implements IHolidayService {
 	
 	@Override
 	public List<JourDto> getListeJoursFeries(Date dateDebut, Date dateFin) {
+		
+		DateTime dateTimeFin = new DateTime(dateFin).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59);
 
-		List<JourFerie> result = sirhRepository.getListeJoursFeries(dateDebut, dateFin);
+		List<JourFerie> result = sirhRepository.getListeJoursFeries(dateDebut, dateTimeFin.toDate());
 		
 		List<JourDto> list = new ArrayList<JourDto>();
 		if(null != result) {
