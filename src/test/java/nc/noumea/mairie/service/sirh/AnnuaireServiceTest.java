@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.PositDesc;
@@ -187,7 +188,9 @@ public class AnnuaireServiceTest {
 		fichePoste.setLieuPoste(lieuPoste);
 
 		Affectation affAgent = new Affectation();
+		affAgent.setIdAffectation(12);
 		affAgent.setFichePoste(fichePoste);
+		affAgent.setAgent(ag);
 
 		EntiteDto infoSiserv = new EntiteDto();
 		infoSiserv.setCodeServi("DDCA");
@@ -208,6 +211,10 @@ public class AnnuaireServiceTest {
 		Mockito.when(spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition()))
 				.thenReturn(posit);
 
+		IFichePosteService fichePosteService = Mockito.mock(IFichePosteService.class);
+		Mockito.when(fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(Mockito.anyInt(),Mockito.any(Date.class))).thenReturn(1);
+		Mockito.when(fichePosteService.getFichePosteById(1)).thenReturn(fichePoste);
+
 		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
 		Mockito.when(affectationSrv.getAffectationActiveByIdAgent(idAgent)).thenReturn(affAgent);
 
@@ -222,6 +229,7 @@ public class AnnuaireServiceTest {
 		AnnuaireService service = new AnnuaireService();
 		ReflectionTestUtils.setField(service, "agSrv", agSrv);
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
+		ReflectionTestUtils.setField(service, "fichePosteService", fichePosteService);
 		ReflectionTestUtils.setField(service, "affectationSrv", affectationSrv);
 		ReflectionTestUtils.setField(service, "contactSrv", contactSrv);
 		ReflectionTestUtils.setField(service, "adsWSConsumer", adsWSConsumer);
