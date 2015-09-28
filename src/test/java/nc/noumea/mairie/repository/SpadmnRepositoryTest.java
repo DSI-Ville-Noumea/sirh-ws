@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 
 import nc.noumea.mairie.model.bean.Spadmn;
 import nc.noumea.mairie.model.bean.Spposa;
+import nc.noumea.mairie.model.bean.SpposaAnnuaire;
 import nc.noumea.mairie.model.pk.SpadmnId;
 import nc.noumea.mairie.model.repository.ISpadmnRepository;
 
@@ -480,6 +481,17 @@ public class SpadmnRepositoryTest {
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void listAgentActiviteAnnuaire_3results() {
+		SpposaAnnuaire paAnnu3 = new SpposaAnnuaire();
+		paAnnu3.setCdpAdm("47");
+		sirhPersistenceUnit.persist(paAnnu3);
+		SpposaAnnuaire paAnnu2 = new SpposaAnnuaire();
+		paAnnu2.setCdpAdm("02");
+		sirhPersistenceUnit.persist(paAnnu2);
+		SpposaAnnuaire paAnnu1 = new SpposaAnnuaire();
+		paAnnu1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(paAnnu1);
+		
+		
 		Spposa positionAdministrative1 = new Spposa();
 		positionAdministrative1.setCdpAdm("01");
 		sirhPersistenceUnit.persist(positionAdministrative1);
@@ -532,10 +544,10 @@ public class SpadmnRepositoryTest {
 		List<Integer> result = repository.listAgentActiviteAnnuaire();
 
 		assertNotNull(result);
-//		assertEquals(result.size(), 3);
-//		assertEquals(result.get(0),spadmnId.getNomatr() );
-//		assertEquals(result.get(1),spadmnId2.getNomatr() );
-//		assertEquals(result.get(2),spadmnId3.getNomatr() );
+		assertEquals(result.size(), 3);
+		assertEquals(result.get(0),spadmnId.getNomatr() );
+		assertEquals(result.get(1),spadmnId2.getNomatr() );
+		assertEquals(result.get(2),spadmnId3.getNomatr() );
 
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
