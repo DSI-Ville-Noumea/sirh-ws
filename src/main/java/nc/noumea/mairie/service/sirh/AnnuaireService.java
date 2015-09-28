@@ -56,8 +56,8 @@ public class AnnuaireService implements IAnnuaireService {
 		List<Integer> result = new ArrayList<Integer>();
 		// #17922
 		// on cherche tous les agents dans une certaine PA
-		// TODO : s'appuyer sur une table de paramétrage SPADMN_ANNUAIRE qui
-		// contient le PA à prendre en compte
+		// TODO : s'appuyer sur une table de paramétrage SPPOSA_ANNUAIRE qui
+		// contient la liste des PA à prendre en compte
 		List<Integer> listNomatrPAActiveAnnuaire = spadmnRepository.listAgentActiviteAnnuaire();
 
 		// pour chacun on regarde si son affectation est active
