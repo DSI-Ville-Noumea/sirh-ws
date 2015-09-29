@@ -19,6 +19,7 @@ import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.TitrePoste;
 import nc.noumea.mairie.model.repository.ISpadmnRepository;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.web.dto.AgentAnnuaireDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
@@ -54,19 +55,18 @@ public class AnnuaireServiceTest {
 		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
 		Mockito.when(spadmnRepository.listAgentActiviteAnnuaire()).thenReturn(Arrays.asList(5138, 5131));
 
-		IAgentMatriculeConverterService agentMatriculeConverterService = Mockito
-				.mock(IAgentMatriculeConverterService.class);
+		IAgentMatriculeConverterService agentMatriculeConverterService = Mockito.mock(IAgentMatriculeConverterService.class);
 		Mockito.when(agentMatriculeConverterService.tryConvertFromADIdAgentToSIRHIdAgent(5138)).thenReturn(9005138);
 		Mockito.when(agentMatriculeConverterService.tryConvertFromADIdAgentToSIRHIdAgent(5131)).thenReturn(9005131);
 
-		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affectationSrv.getAffectationActiveByIdAgent(9005138)).thenReturn(aff);
-		Mockito.when(affectationSrv.getAffectationActiveByIdAgent(9005131)).thenReturn(null);
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getAffectationActiveByAgent(9005138)).thenReturn(aff);
+		Mockito.when(affectationRepository.getAffectationActiveByAgent(9005131)).thenReturn(null);
 
 		AnnuaireService service = new AnnuaireService();
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "agentMatriculeConverterService", agentMatriculeConverterService);
-		ReflectionTestUtils.setField(service, "affectationSrv", affectationSrv);
+		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 
 		// When
 		List<Integer> result = service.listAgentActiviteAnnuaire();
@@ -144,13 +144,13 @@ public class AnnuaireServiceTest {
 		Mockito.when(spadmnRepository.chercherPositionAdmAgentEnCours(ag.getNomatr())).thenReturn(spAdm);
 		Mockito.when(spadmnRepository.chercherPositDescByPosit(Mockito.anyString())).thenReturn(posit);
 
-		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affectationSrv.getAffectationActiveByIdAgent(idAgent)).thenReturn(null);
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getAffectationActiveByAgent(idAgent)).thenReturn(null);
 
 		AnnuaireService service = new AnnuaireService();
 		ReflectionTestUtils.setField(service, "agSrv", agSrv);
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
-		ReflectionTestUtils.setField(service, "affectationSrv", affectationSrv);
+		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 
 		// When
 		AgentAnnuaireDto result = service.getInfoAgent(idAgent);
@@ -208,15 +208,14 @@ public class AnnuaireServiceTest {
 
 		ISpadmnRepository spadmnRepository = Mockito.mock(ISpadmnRepository.class);
 		Mockito.when(spadmnRepository.chercherPositionAdmAgentEnCours(ag.getNomatr())).thenReturn(spAdm);
-		Mockito.when(spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition()))
-				.thenReturn(posit);
+		Mockito.when(spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition())).thenReturn(posit);
 
 		IFichePosteService fichePosteService = Mockito.mock(IFichePosteService.class);
-		Mockito.when(fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(Mockito.anyInt(),Mockito.any(Date.class))).thenReturn(1);
+		Mockito.when(fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(Mockito.anyInt(), Mockito.any(Date.class))).thenReturn(1);
 		Mockito.when(fichePosteService.getFichePosteById(1)).thenReturn(fichePoste);
 
-		IAffectationService affectationSrv = Mockito.mock(IAffectationService.class);
-		Mockito.when(affectationSrv.getAffectationActiveByIdAgent(idAgent)).thenReturn(affAgent);
+		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
+		Mockito.when(affectationRepository.getAffectationActiveByAgent(idAgent)).thenReturn(affAgent);
 
 		IContactService contactSrv = Mockito.mock(IContactService.class);
 		Mockito.when(contactSrv.getContactsDiffusableAgent(Long.valueOf(idAgent))).thenReturn(new ArrayList<Contact>());
@@ -230,7 +229,7 @@ public class AnnuaireServiceTest {
 		ReflectionTestUtils.setField(service, "agSrv", agSrv);
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
 		ReflectionTestUtils.setField(service, "fichePosteService", fichePosteService);
-		ReflectionTestUtils.setField(service, "affectationSrv", affectationSrv);
+		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		ReflectionTestUtils.setField(service, "contactSrv", contactSrv);
 		ReflectionTestUtils.setField(service, "adsWSConsumer", adsWSConsumer);
 

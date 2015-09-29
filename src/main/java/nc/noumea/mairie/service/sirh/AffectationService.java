@@ -48,25 +48,6 @@ public class AffectationService implements IAffectationService {
 	}
 
 	@Override
-	public Affectation getAffectationActiveByIdAgent(Integer idAgent) {
-
-		Affectation res = null;
-		TypedQuery<Affectation> query = sirhEntityManager
-				.createQuery(
-						"select aff from Affectation aff, Agent ag where aff.agent.idAgent=:idAgent and aff.dateDebutAff <= :dateJour and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)",
-						Affectation.class);
-		query.setParameter("idAgent", idAgent);
-		query.setParameter("dateJour", new Date());
-
-		List<Affectation> lfp = query.getResultList();
-		if (lfp != null && lfp.size() > 0) {
-			res = lfp.get(0);
-		}
-
-		return res;
-	}
-
-	@Override
 	public List<Affectation> getListAffectationByIdFichePoste(Integer idFichePoste) {
 		return affRepo.getAffectationByIdFichePoste(idFichePoste);
 	}
