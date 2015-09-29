@@ -114,12 +114,12 @@ public class AnnuaireService implements IAnnuaireService {
 			}
 		}
 
-		TitrePosteDto titrePoste = new TitrePosteDto(affAgent.getFichePoste());
+		TitrePosteDto titrePoste = new TitrePosteDto(fp);
 		List<Contact> lc = contactSrv.getContactsDiffusableAgent(Long.valueOf(idAgent));
-		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(affAgent.getFichePoste().getIdServiceADS());
-		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(affAgent.getFichePoste().getIdServiceADS());
-		EntiteDto direction = adsWSConsumer.getAffichageDirection(affAgent.getFichePoste().getIdServiceADS());
-		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
+		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(fp.getIdServiceADS());
+		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
+		EntiteDto direction = adsWSConsumer.getAffichageDirection(fp.getIdServiceADS());
+		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, fp, positDesc);
 
 		return dto;
 	}
