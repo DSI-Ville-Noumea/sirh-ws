@@ -10,13 +10,13 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.repository.ISpadmnRepository;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.web.dto.AgentAnnuaireDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,10 @@ public class AnnuaireService implements IAnnuaireService {
 	private ISpadmnRepository spadmnRepository;
 
 	@Autowired
-	private IAffectationService affectationSrv;
+	private IAffectationRepository affectationRepository;
+
+	@Autowired
+	private IAffectationService affSrv;
 
 	@Autowired
 	private IFichePosteService fichePosteService;
@@ -56,7 +59,8 @@ public class AnnuaireService implements IAnnuaireService {
 		List<Integer> result = new ArrayList<Integer>();
 		// #17922
 		// on cherche tous les agents dans une certaine PA
-		// TODO : s'appuyer sur une table de paramétrage SPPOSA_ANNUAIRE qui
+		// Pour cela on va s'appuyer sur une table de paramétrage
+		// SPPOSA_ANNUAIRE qui
 		// contient la liste des PA à prendre en compte
 		List<Integer> listNomatrPAActiveAnnuaire = spadmnRepository.listAgentActiviteAnnuaire();
 
@@ -64,7 +68,7 @@ public class AnnuaireService implements IAnnuaireService {
 		for (Integer nomatr : listNomatrPAActiveAnnuaire) {
 			try {
 				Integer idAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToSIRHIdAgent(nomatr);
-				Affectation affAgent = affectationSrv.getAffectationActiveByIdAgent(idAgent);
+				Affectation affAgent = affectationRepository.getAffectationActiveByAgent(idAgent);
 				if (affAgent != null && affAgent.getIdAffectation() != null) {
 					result.add(idAgent);
 				}
@@ -92,34 +96,27 @@ public class AnnuaireService implements IAnnuaireService {
 		// on cherche la descrition de posit
 		PositDesc positDesc = spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition());
 
-		Affectation affAgent = affectationSrv.getAffectationActiveByIdAgent(idAgent);
-		if (affAgent == null || affAgent.getIdAffectation() == null) {
+		Affectation affAgent = affectationRepository.getAffectationActiveByAgent(idAgent);
+		if (affAgent == null || affAgent.getIdAffectation() == null || affAgent.getFichePoste() == null || affAgent.getFichePoste().getIdServiceADS() == null) {
 			logger.error("L'agent id={} n'a pas d'affectation active.", idAgent);
-			return null;
-		}
-
-		Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(affAgent.getAgent().getIdAgent(), new DateTime().toDate());
-		FichePoste fp = fichePosteService.getFichePosteById(fpId);
-		if (fp == null || fp.getIdServiceADS() == null) {
-			logger.error("L'agent id={} n'a pas d'affectation sur une entité ADS.", idAgent);
 			return null;
 		}
 
 		FichePoste ficheSuperieur = affAgent.getFichePoste().getSuperieurHierarchique();
 		Integer idSuperieur = null;
 		if (ficheSuperieur != null && ficheSuperieur.getIdFichePoste() != null) {
-			Affectation affSuperieur = affectationSrv.getAffectationByIdFichePoste(ficheSuperieur.getIdFichePoste());
+			Affectation affSuperieur = affSrv.getAffectationByIdFichePoste(ficheSuperieur.getIdFichePoste());
 			if (affSuperieur != null && affSuperieur.getAgent() != null) {
 				idSuperieur = affSuperieur.getAgent().getIdAgent();
 			}
 		}
 
-		TitrePosteDto titrePoste = new TitrePosteDto(fp);
+		TitrePosteDto titrePoste = new TitrePosteDto(affAgent.getFichePoste());
 		List<Contact> lc = contactSrv.getContactsDiffusableAgent(Long.valueOf(idAgent));
-		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(fp.getIdServiceADS());
-		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS());
-		EntiteDto direction = adsWSConsumer.getAffichageDirection(fp.getIdServiceADS());
-		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, fp, positDesc);
+		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(affAgent.getFichePoste().getIdServiceADS());
+		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(affAgent.getFichePoste().getIdServiceADS());
+		EntiteDto direction = adsWSConsumer.getAffichageDirection(affAgent.getFichePoste().getIdServiceADS());
+		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
 
 		return dto;
 	}
