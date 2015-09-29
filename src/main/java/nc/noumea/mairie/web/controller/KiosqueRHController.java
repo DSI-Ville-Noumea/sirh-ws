@@ -9,7 +9,7 @@ import nc.noumea.mairie.model.bean.sirh.AccueilRh;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.ReferentRh;
-import nc.noumea.mairie.service.sirh.IAffectationService;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IKiosqueRhService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
@@ -43,7 +43,7 @@ public class KiosqueRHController {
 	private IAgentService agentSrv;
 
 	@Autowired
-	private IAffectationService affSrv;
+	private IAffectationRepository affectationRepository;
 
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
@@ -65,7 +65,7 @@ public class KiosqueRHController {
 		}
 
 		// on cherche le service de l'agent
-		Affectation aff = affSrv.getAffectationActiveByIdAgent(idAgent);
+		Affectation aff = affectationRepository.getAffectationActiveByAgent(idAgent);
 		if (aff == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
@@ -77,8 +77,7 @@ public class KiosqueRHController {
 			dto.add(new ReferentRhDto(ref, agentSrv.getAgent(ref.getIdAgentReferent()), service));
 		}
 
-		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(dto);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
@@ -95,8 +94,7 @@ public class KiosqueRHController {
 			listeRef.add(dto);
 		}
 
-		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(listeRef);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(listeRef);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
@@ -119,8 +117,7 @@ public class KiosqueRHController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getAlerteRHByAgent(Integer idAgent) {
 
-		logger.debug("entered GET [kiosqueRH/getAlerteRHByAgent] => getAlerteRHByAgent with parameter idAgent = {}  ",
-				idAgent);
+		logger.debug("entered GET [kiosqueRH/getAlerteRHByAgent] => getAlerteRHByAgent with parameter idAgent = {}  ", idAgent);
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -133,8 +130,7 @@ public class KiosqueRHController {
 
 		ReturnMessageDto res = kiosqueSrv.getAlerteRHByAgent(new Integer(newIdAgent));
 
-		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(res);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(res);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}

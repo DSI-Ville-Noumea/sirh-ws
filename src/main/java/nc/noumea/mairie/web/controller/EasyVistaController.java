@@ -2,8 +2,8 @@ package nc.noumea.mairie.web.controller;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.service.ISpprimService;
-import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.ws.dto.EasyVistaDto;
 
@@ -29,7 +29,7 @@ public class EasyVistaController {
 	private ISpprimService primeSrv;
 
 	@Autowired
-	private IAffectationService affectationSrv;
+	private IAffectationRepository affectationRepository;
 
 	/**
 	 * Returns le chef de service d'un agent
@@ -54,7 +54,7 @@ public class EasyVistaController {
 		}
 
 		// on cherche si l'agent a une affectation active
-		Affectation aff = affectationSrv.getAffectationActiveByIdAgent(newIdAgent);
+		Affectation aff = affectationRepository.getAffectationActiveByAgent(newIdAgent);
 		if (aff == null) {
 			result.getErrors().add("L'agent n'a pas d'affectation active.");
 			return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").deepSerialize(result), HttpStatus.OK);
