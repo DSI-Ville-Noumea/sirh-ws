@@ -13,12 +13,12 @@ import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Contrat;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.IReportingService;
 import nc.noumea.mairie.service.ISibanqService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.eae.ICalculEaeService;
-import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContratService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
@@ -64,7 +64,7 @@ public class ContratController {
 	private IContratService contratSrv;
 
 	@Autowired
-	private IAffectationService affSrv;
+	private IAffectationRepository affectationRepository;
 
 	@Autowired
 	private IFichePosteService fichePosteService;
@@ -100,7 +100,7 @@ public class ContratController {
 			return new ModelAndView("xmlView", "object", new ContratDto());
 		}
 
-		Affectation affAgent = affSrv.getAffectationActiveByIdAgent(idAgent);
+		Affectation affAgent = affectationRepository.getAffectationActiveByAgent(idAgent);
 		if (affAgent == null) {
 			logger.error("L'agent id={} n'a pas d'affectation active.", idAgent);
 			return new ModelAndView("xmlView", "object", new ContratDto());
