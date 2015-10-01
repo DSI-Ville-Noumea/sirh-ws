@@ -53,6 +53,9 @@ public class ActionFdpJob {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateStatut;
 
+	@Column(name = "NEW_ID_FICHE_POSTE")
+	private Integer newIdFichePoste;
+
 	public ActionFdpJob(Integer idFichePoste, Integer idAgent, String typeAction, Integer idNewEntite) {
 		this.idFichePoste = idFichePoste;
 		this.idAgent = idAgent;
@@ -123,5 +126,13 @@ public class ActionFdpJob {
 
 	public void setIdNewServiceAds(Integer idNewServiceAds) {
 		this.idNewServiceAds = idNewServiceAds;
+	}
+
+	public Integer getNewIdFichePoste() {
+		return newIdFichePoste;
+	}
+
+	public void setNewIdFichePoste(Integer newIdFichePoste) {
+		this.newIdFichePoste = newIdFichePoste;
 	}
 }

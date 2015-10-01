@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Sppost;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
@@ -98,6 +99,8 @@ public class FichePosteRepository implements IFichePosteRepository {
 		if (listStatutFDP != null && listStatutFDP.size() > 0) {
 			sb.append(" and fp.statutFP.idStatutFp in (:listStatut) ");
 		}
+		sb.append("order by fp.superieurHierarchique.idFichePoste ");		
+		 
 
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("listIdsServiceADS", listIdsEntite);
@@ -594,6 +597,24 @@ public class FichePosteRepository implements IFichePosteRepository {
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("numFP", numFP);
 		FichePoste res = null;
+		try {
+			res = query.getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return res;
+	}
+
+	@Override
+	public ActionFdpJob chercherActionFDPParentDuplication(Integer idFichePoste) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select fp from ActionFdpJob fp ");
+		sb.append("where fp.idFichePoste=:idFichePoste ");
+		sb.append("and fp.typeAction='DUPLICATION' ");
+		sb.append("order by fp.idActionFdpJob desc ");
+		TypedQuery<ActionFdpJob> query = sirhEntityManager.createQuery(sb.toString(), ActionFdpJob.class);
+		query.setParameter("idFichePoste", idFichePoste);
+		ActionFdpJob res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
