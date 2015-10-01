@@ -900,8 +900,9 @@ public class FichePosteService implements IFichePosteService {
 
 		// on duplique la FDP
 		try {
-			String numNewFDP = dupliquerFDP(fichePoste, entite, user.getsAMAccountName());
-			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est dupliquée en " + numNewFDP + ".");
+			FichePoste newFDP = dupliquerFDP(result, fichePoste, entite, user.getsAMAccountName());
+			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est dupliquée en " + newFDP.getNumFP() + ".");
+			result.setId(newFDP.getIdFichePoste());
 		} catch (Exception e) {
 			logger.debug("Erreur dupliqueFichePosteByIdFichePoste : " + e.getMessage());
 			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée : " + e.getMessage());
@@ -910,16 +911,29 @@ public class FichePosteService implements IFichePosteService {
 		return result;
 	}
 
-	private String dupliquerFDP(FichePoste fichePoste, EntiteDto entite, String login) throws CloneNotSupportedException {
+	private FichePoste dupliquerFDP(ReturnMessageDto result, FichePoste fichePoste, EntiteDto entite, String login) throws CloneNotSupportedException {
 
 		FichePoste fichePDupliquee = cloneFDP(fichePoste);
 		fichePDupliquee.setIdFichePoste(null);
 		StatutFichePoste statutCreation = fichePosteDao.chercherStatutFPByIdStatut(1);
 		fichePDupliquee.setStatutFP(statutCreation);
 		fichePDupliquee.setNumFP(null);
-		fichePDupliquee.setSuperieurHierarchique(null);
 		fichePDupliquee.setRemplace(null);
 		fichePDupliquee.setAgent(null);
+		// #18614 : on recherche le supérieur hiérarchique
+		fichePDupliquee.setSuperieurHierarchique(null);
+		if (fichePoste.getSuperieurHierarchique() != null && fichePoste.getSuperieurHierarchique().getIdFichePoste() != null) {
+			// on cherche dans action fdp si on a une entrée avec l'id de la FDP
+			// correspondant
+			ActionFdpJob actionParent = fichePosteDao.chercherActionFDPParentDuplication(fichePoste.getSuperieurHierarchique().getIdFichePoste());
+			if (actionParent != null && actionParent.getNewIdFichePoste() != null) {
+				FichePoste newFDPSuperieur = fichePosteDao.chercherFichePoste(actionParent.getNewIdFichePoste());
+				if (newFDPSuperieur != null && newFDPSuperieur.getIdFichePoste() != null) {
+					fichePDupliquee.setSuperieurHierarchique(newFDPSuperieur);
+				}
+			}
+		}
+
 		// on positionne l'année sur l'année cours
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
@@ -1086,7 +1100,11 @@ public class FichePosteService implements IFichePosteService {
 			logger.debug(e.getMessage());
 		}
 
-		return fichePDupliquee.getNumFP();
+		if (fichePDupliquee.getSuperieurHierarchique() == null || fichePDupliquee.getSuperieurHierarchique().getIdFichePoste() == null) {
+			result.getInfos().add("Attention, la FDP " + fichePDupliquee.getNumFP() + " n'a pas de supérieur hiérarchique.");
+		}
+
+		return fichePDupliquee;
 	}
 
 	private FichePoste cloneFDP(FichePoste fichePoste) {
@@ -1103,7 +1121,6 @@ public class FichePosteService implements IFichePosteService {
 		ficheClone.setDelegations(new HashSet<Delegation>());
 		ficheClone.setFicheEmploiPrimaire(new HashSet<FicheEmploi>());
 		ficheClone.setFicheEmploiSecondaire(new HashSet<FicheEmploi>());
-		ficheClone.setSuperieurHierarchique(null);
 		ficheClone.setRemplace(null);
 		ficheClone.setObservation("");
 

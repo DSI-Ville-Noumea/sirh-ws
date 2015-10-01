@@ -1049,7 +1049,7 @@ public class FichePosteServiceTest {
 	}
 
 	@Test
-	public void dupliqueFichePosteByIdFichePoste_OK() {
+	public void dupliqueFichePosteByIdFichePoste_OK_NoSuperieur() {
 		Activite acti = new Activite();
 		acti.setIdActivite(1);
 
@@ -1064,11 +1064,15 @@ public class FichePosteServiceTest {
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
+		FichePoste superieurHierarchique = new FichePoste();
+		superieurHierarchique.setIdFichePoste(12);
+
 		StatutFichePoste statutFP = new StatutFichePoste();
 		statutFP.setIdStatutFp(2);
 		FichePoste fiche = new FichePoste();
 		fiche.setStatutFP(statutFP);
 		fiche.setNumFP("2015/3");
+		fiche.setSuperieurHierarchique(superieurHierarchique);
 
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(0);
@@ -1108,6 +1112,82 @@ public class FichePosteServiceTest {
 
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
+		assertEquals(2, result.getInfos().size());
+		assertEquals("Attention, la FDP 2015/1 n'a pas de supérieur hiérarchique.", result.getInfos().get(0));
+		assertEquals("La FDP 2015/3 est dupliquée en 2015/1.", result.getInfos().get(1));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
+	}
+
+	@Test
+	public void dupliqueFichePosteByIdFichePoste_OK_WithSuperieur() {
+		Activite acti = new Activite();
+		acti.setIdActivite(1);
+
+		ActiviteFPPK activiteFPPK = new ActiviteFPPK();
+		activiteFPPK.setIdActivite(1);
+		activiteFPPK.setIdFichePoste(1);
+		ActiviteFP lien = new ActiviteFP();
+		lien.setActiviteFPPK(activiteFPPK);
+		List<ActiviteFP> listActi = new ArrayList<ActiviteFP>();
+		listActi.add(lien);
+
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("chata73");
+
+		ActionFdpJob action = new ActionFdpJob();
+		action.setNewIdFichePoste(1);
+
+		FichePoste superieurHierarchique = new FichePoste();
+		superieurHierarchique.setIdFichePoste(12);
+
+		StatutFichePoste statutFP = new StatutFichePoste();
+		statutFP.setIdStatutFp(2);
+		FichePoste fiche = new FichePoste();
+		fiche.setIdFichePoste(12);
+		fiche.setStatutFP(statutFP);
+		fiche.setNumFP("2015/3");
+		fiche.setSuperieurHierarchique(superieurHierarchique);
+
+		EntiteDto entite = new EntiteDto();
+		entite.setIdStatut(0);
+
+		PrimePointageFPPK primePointageFPPK = new PrimePointageFPPK();
+		primePointageFPPK.setNumRubrique(5117);
+		PrimePointageFP pp = new PrimePointageFP();
+		pp.setFichePoste(fiche);
+		pp.setPrimePointageFPPK(primePointageFPPK);
+		List<PrimePointageFP> listPrime = new ArrayList<PrimePointageFP>();
+		listPrime.add(pp);
+
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getEntiteByIdEntiteOptimise(1, new ArrayList<EntiteDto>())).thenReturn(entite);
+
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(9005138)).thenReturn(user);
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fiche);
+		Mockito.when(fichePosteDao.chercherActionFDPParentDuplication(Mockito.anyInt())).thenReturn(action);
+		Mockito.when(fichePosteDao.listerFEFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<FeFp>());
+		Mockito.when(fichePosteDao.listerNiveauEtudeFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<NiveauEtudeFP>());
+		Mockito.when(fichePosteDao.listerActiviteFPAvecFP(Mockito.anyInt())).thenReturn(listActi);
+		Mockito.when(fichePosteDao.listerCompetenceFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<CompetenceFP>());
+		Mockito.when(fichePosteDao.listerAvantageNatureFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<AvantageNatureFP>());
+		Mockito.when(fichePosteDao.listerDelegationFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<DelegationFP>());
+		Mockito.when(fichePosteDao.listerPrimePointageFP(Mockito.anyInt())).thenReturn(listPrime);
+		Mockito.when(fichePosteDao.listerRegIndemFPFPAvecFP(Mockito.anyInt())).thenReturn(new ArrayList<RegIndemFP>());
+		Mockito.when(fichePosteDao.chercherActivite(Mockito.anyInt())).thenReturn(acti);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+
+		ReturnMessageDto result = ficheService.dupliqueFichePosteByIdFichePoste(1, 1, 9005138);
+
+		assertNotNull(result);
+		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
 		assertEquals("La FDP 2015/3 est dupliquée en 2015/1.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
@@ -1126,7 +1206,7 @@ public class FichePosteServiceTest {
 
 		List<FichePoste> listFP = new ArrayList<FichePoste>();
 		listFP.add(fiche);
-		
+
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("DSI");
 		entite.setIdEntite(1);
