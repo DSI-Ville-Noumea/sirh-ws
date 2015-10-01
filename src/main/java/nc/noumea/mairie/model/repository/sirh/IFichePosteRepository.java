@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import nc.noumea.mairie.model.bean.Sppost;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.AvantageNature;
@@ -90,4 +91,7 @@ public interface IFichePosteRepository {
 	List<InfoFichePosteDto> getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(List<Integer> idEntiteEnfant, String titrePoste, Date today);
 
 	List<FichePoste> chercherListFichesPosteByListIdsFichePoste(List<Integer> listIdsFichePoste);
+
+	ActionFdpJob chercherActionFDPParentDuplication(Integer idFichePoste);
+
 }

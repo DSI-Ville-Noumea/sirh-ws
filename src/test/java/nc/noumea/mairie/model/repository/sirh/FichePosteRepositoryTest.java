@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
@@ -971,6 +972,48 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.persist(fichePoste);
 
 		FichePoste result = repository.chercherFichePosteByNumFP("toto");
+
+		assertNull(result);
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherActionFDPParentDuplication_returnResult() {
+
+		ActionFdpJob action2 = new ActionFdpJob();
+		action2.setTypeAction("DUPLICATION");
+		action2.setIdFichePoste(1);
+		sirhPersistenceUnit.persist(action2);
+
+		ActionFdpJob action = new ActionFdpJob();
+		action.setTypeAction("SUPPRESSION");
+		sirhPersistenceUnit.persist(action);
+
+		ActionFdpJob result = repository.chercherActionFDPParentDuplication(1);
+
+		assertNotNull(result);
+		assertEquals(action2.getIdFichePoste(), result.getIdFichePoste());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherActionFDPParentDuplication_returnNoResult() {
+
+		ActionFdpJob action2 = new ActionFdpJob();
+		action2.setTypeAction("DUPLICATION");
+		action2.setIdFichePoste(12);
+		sirhPersistenceUnit.persist(action2);
+
+		ActionFdpJob action = new ActionFdpJob();
+		action.setTypeAction("SUPPRESSION");
+		sirhPersistenceUnit.persist(action);
+
+		ActionFdpJob result = repository.chercherActionFDPParentDuplication(1);
 
 		assertNull(result);
 		sirhPersistenceUnit.flush();
