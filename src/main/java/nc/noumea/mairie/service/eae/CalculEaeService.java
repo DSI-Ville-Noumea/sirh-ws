@@ -92,8 +92,7 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setDateDebut(affectation.getDateDebutAff());
 			dto.setDateFin(affectation.getDateFinAff());
 
-			EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePoste().getIdServiceADS());
-			EntiteDto direction = adsWSConsumer.getDirectionPourEAE(entite);
+			EntiteDto direction = adsWSConsumer.getAffichageDirection(affectation.getFichePoste().getIdServiceADS());
 			EntiteDto service = adsWSConsumer.getAffichageService(affectation.getFichePoste().getIdServiceADS());
 			EntiteDto section = adsWSConsumer.getAffichageSection(affectation.getFichePoste().getIdServiceADS());
 
@@ -124,7 +123,7 @@ public class CalculEaeService implements ICalculEaeService {
 			dto.setFichePostePrincipale(fichePostePrincipale);
 			if (null != affectation.getFichePosteSecondaire()) {
 				EntiteDto serviceSecondaire = adsWSConsumer.getEntiteByIdEntite(affectation.getFichePosteSecondaire().getIdServiceADS());
-				EntiteDto directionSecondaire = adsWSConsumer.getDirectionPourEAE(serviceSecondaire);
+				EntiteDto directionSecondaire = adsWSConsumer.getAffichageDirection(affectation.getFichePosteSecondaire().getIdServiceADS());
 				EntiteDto sectionSecondaire = adsWSConsumer.getAffichageSection(affectation.getFichePosteSecondaire().getIdServiceADS());
 
 				List<Activite> listActiSecondaire = new ArrayList<Activite>();
@@ -227,7 +226,7 @@ public class CalculEaeService implements ICalculEaeService {
 				}
 			} else {
 				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-				direction = adsWSConsumer.getDirectionPourEAE(service);
+				direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
 			}
 
 			if (service == null && direction == null) {
@@ -310,7 +309,7 @@ public class CalculEaeService implements ICalculEaeService {
 			EntiteDto service = adsWSConsumer.getEntiteByCodeServiceSISERV(sp.getId().getServi());
 			EntiteDto direction = null;
 			if (service != null && service.getIdEntite() != null) {
-				direction = adsWSConsumer.getDirectionPourEAE(service);
+				direction = adsWSConsumer.getAffichageDirection(service.getIdEntite());
 			}
 
 			if (sp.getDatfin() == null || sp.getDatfin() == 0) {

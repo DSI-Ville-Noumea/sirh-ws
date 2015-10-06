@@ -209,7 +209,7 @@ public class CalculEaeServiceTest {
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
-		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.any(EntiteDto.class))).thenReturn(siservDirection);
+		Mockito.when(adsWSConsumer.getAffichageDirection(Mockito.anyInt())).thenReturn(siservDirection);
 		Mockito.when(adsWSConsumer.getAffichageSection(Mockito.anyInt())).thenReturn(siservSection);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
 		Mockito.when(adsWSConsumer.getEntiteByCodeServiceSISERV(spMtsr.getId().getServi())).thenReturn(siservService);
@@ -885,7 +885,7 @@ public class CalculEaeServiceTest {
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
-		Mockito.when(adsWSConsumer.getDirectionPourEAE(Mockito.any(EntiteDto.class))).thenReturn(siservDirection);
+		Mockito.when(adsWSConsumer.getAffichageDirection(Mockito.anyInt())).thenReturn(siservDirection);
 		Mockito.when(adsWSConsumer.getAffichageSection(Mockito.anyInt())).thenReturn(siservSection);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(Mockito.anyInt())).thenReturn(siservService);
 		Mockito.when(adsWSConsumer.getEntiteByCodeServiceSISERV(spMtsr.getId().getServi())).thenReturn(siservService);
