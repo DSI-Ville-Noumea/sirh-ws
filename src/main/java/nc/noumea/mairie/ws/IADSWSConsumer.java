@@ -11,8 +11,6 @@ public interface IADSWSConsumer {
 
 	EntiteDto getEntiteWithChildrenByIdEntite(Integer idEntite);
 
-	EntiteDto getDirectionPourEAE(EntiteDto entiteDto);
-
 	EntiteDto getAffichageSection(Integer idEntite);
 
 	EntiteDto getAffichageService(Integer idEntite);
