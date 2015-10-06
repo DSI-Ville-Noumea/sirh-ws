@@ -24,7 +24,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 	public static final String AFFICHAGE_SERVICE = "AFFICHAGE SIRH DE TYPE SERVICE";
 	public static final String AFFICHAGE_SECTION = "AFFICHAGE SIRH DE TYPE SECTION";
 	public static final String AFFICHAGE_DIRECTION = "AFFICHAGE SIRH DE TYPE DIRECTION";
-	
+
 	@Autowired
 	@Qualifier("adsWsBaseUrl")
 	private String adsWsBaseUrl;
@@ -47,7 +47,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteUrl + idEntite.toString());
 
 		logger.debug("Call ADS : " + url);
-		
+
 		Map<String, String> parameters = new HashMap<String, String>();
 
 		ClientResponse res = createAndFireGetRequest(parameters, url);
@@ -58,16 +58,6 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 		}
 
 		return null;
-	}
-
-	@Override
-	public EntiteDto getDirectionPourEAE(EntiteDto entiteDto) {
-		if (!entiteDto.getCodeServi().substring(0, 3).equals("DAG")) {
-			return getAffichageDirection(entiteDto.getIdEntite());
-		} else {
-			// cas de la DPM
-			return getEntiteByCodeServiceSISERV("DAGA");
-		}
 	}
 
 	@Override
@@ -179,8 +169,7 @@ public class ADSWSConsumer extends BaseWsConsumer implements IADSWSConsumer {
 			return null;
 		}
 
-		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteUrl + idEntite.toString()
-				+ sirhAdsGetEntiteWithWildrenUrl);
+		String url = String.format(adsWsBaseUrl + sirhAdsGetEntiteUrl + idEntite.toString() + sirhAdsGetEntiteWithWildrenUrl);
 
 		Map<String, String> parameters = new HashMap<String, String>();
 
