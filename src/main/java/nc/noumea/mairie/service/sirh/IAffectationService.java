@@ -11,4 +11,6 @@ public interface IAffectationService {
 	public List<Affectation> getListAffectationByIdFichePoste(Integer idFichePoste);
 
 	public Affectation getAffectationByIdFichePoste(Integer idFichePoste);
+
+	public List<Affectation> getListAffectationActiveByIdFichePoste(Integer idFichePoste);
 }

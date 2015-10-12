@@ -22,11 +22,14 @@ import javax.persistence.TypedQuery;
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
+import nc.noumea.mairie.model.bean.Spmtsr;
+import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
 import nc.noumea.mairie.model.bean.sirh.Budget;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
@@ -43,6 +46,7 @@ import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
 import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.pk.SpmtsrId;
 import nc.noumea.mairie.model.pk.sirh.ActiviteFPPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
@@ -3138,8 +3142,28 @@ public class FichePosteServiceTest {
 
 		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
 		FichePoste fp = new FichePoste();
+		fp.setNumFP("2015/1");
 		FichePoste fp2 = new FichePoste();
+		fp2.setNumFP("2015/2");
 		FichePoste fp3 = new FichePoste();
+		fp3.setNumFP("2015/3");
+		
+		EntiteDto siservAs400 = new EntiteDto();
+		siservAs400.setCodeServi("DDCA");
+
+		Sppost sppost= new Sppost();
+		SpmtsrId id = new SpmtsrId();
+		Spmtsr spmtsr= new Spmtsr();
+		spmtsr.setId(id);
+		
+		Agent agent = new Agent();
+		agent.setNomatr(5138);
+		
+		Affectation aff = new Affectation();
+		aff.setDateDebutAff(new Date());
+		aff.setAgent(agent);
+		List<Affectation> listAff = new ArrayList<Affectation>();
+		listAff.add(aff);
 
 		listFichesPoste.addAll(Arrays.asList(fp, fp2, fp3));
 
@@ -3149,6 +3173,8 @@ public class FichePosteServiceTest {
 						Arrays.asList(idEntiteSource),
 						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
 								EnumStatutFichePoste.EN_CREATION.getStatut()))).thenReturn(listFichesPoste);
+		Mockito.when(
+				fichePosteDao.chercherSppost(Mockito.anyInt(),Mockito.anyInt())).thenReturn(sppost);
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3169,14 +3195,29 @@ public class FichePosteServiceTest {
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entiteSource);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(entiteCible);
 
+
+		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
+		Mockito.when(mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(Mockito.anyInt(),Mockito.anyInt())).thenReturn(spmtsr);
+
+		IAffectationService affSrv = Mockito.mock(IAffectationService.class);
+		Mockito.when(affSrv.getListAffectationActiveByIdFichePoste(Mockito.anyInt())).thenReturn(listAff);
+		
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getInfoSiservByIdEntite(Mockito.anyInt())).thenReturn(siservAs400);
+
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "adsService", adsService);
+		ReflectionTestUtils.setField(ficheService, "affSrv", affSrv);
+		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
 
 		ReturnMessageDto result = ficheService.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, idAgent);
 		assertEquals("3 FDP sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(HistoFichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(Spmtsr.class));
+		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(Sppost.class));
 	}
 }

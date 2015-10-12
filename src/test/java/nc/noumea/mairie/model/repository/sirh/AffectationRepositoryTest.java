@@ -1095,4 +1095,86 @@ public class AffectationRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAffectationActiveByIdFichePoste_Noresult() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new DateTime(2015, 01, 01, 00, 00).toDate());
+		a.setDateFinAff(new DateTime(2015, 03, 01, 00, 00).toDate());
+		a.setFichePoste(fichePoste);
+		sirhPersistenceUnit.persist(a);
+
+		List<Affectation> result = repository.getListAffectationActiveByIdFichePoste(fichePoste.getIdFichePoste());
+
+		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAffectationActiveByIdFichePoste_Result() {
+
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new DateTime(2015, 01, 01, 00, 00).toDate());
+		a.setDateFinAff(null);
+		a.setFichePoste(fichePoste);
+		sirhPersistenceUnit.persist(a);
+
+		List<Affectation> result = repository.getListAffectationActiveByIdFichePoste(fichePoste.getIdFichePoste());
+
+		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
 }
