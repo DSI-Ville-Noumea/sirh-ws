@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -15,6 +16,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.Spbhor;
+import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
@@ -1468,8 +1470,26 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on crée un job de lancement de duplication des FDP
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		for (FichePoste fp : listeFDP) {
 			fp.setIdServiceADS(idEntiteCible);
+			// #18976 : on met à jour le vieux service AS400
+			EntiteDto servAS400 = adsService.getInfoSiservByIdEntite(fp.getIdServiceADS());
+			fp.setIdServi(servAS400 == null || servAS400.getCodeServi() == null ? null : servAS400.getCodeServi());
+
+			// #18977 : on met à jour sppost et spmtsr
+			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+			sppost.setPoserv(fp.getIdServi() == null ? "" : fp.getIdServi());
+
+			List<Affectation> listeAffFP = affSrv.getListAffectationActiveByIdFichePoste(fp.getIdFichePoste());
+
+			for (Affectation aff : listeAffFP) {
+				Spmtsr spmtsr = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(aff.getAgent().getNomatr(), new Integer(sdf.format(aff.getDateDebutAff())));
+				spmtsr.getId().setServi(fp.getIdServi());
+				sppost.setPomatr(aff.getAgent().getNomatr());
+				fichePosteDao.persisEntity(spmtsr);
+			}
+			fichePosteDao.persisEntity(sppost);
 
 			HistoFichePoste histo = new HistoFichePoste(fp);
 			histo.setDateHisto(new Date());

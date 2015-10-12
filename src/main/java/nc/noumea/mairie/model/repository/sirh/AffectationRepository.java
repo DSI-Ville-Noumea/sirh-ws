@@ -189,4 +189,20 @@ public class AffectationRepository implements IAffectationRepository {
 		return res;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Affectation> getListAffectationActiveByIdFichePoste(Integer idFichePoste) {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select aff from Affectation aff ");
+		sb.append("where aff.dateDebutAff<=:dateJour  and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour) ");
+		sb.append("and aff.fichePoste.idFichePoste = :idFichePoste ");
+
+		Query q = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		q.setParameter("dateJour", new Date());
+		q.setParameter("idFichePoste", idFichePoste);
+
+		return q.getResultList();
+	}
+
 }
