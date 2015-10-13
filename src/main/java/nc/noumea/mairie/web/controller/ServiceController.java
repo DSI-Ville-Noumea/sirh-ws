@@ -141,4 +141,46 @@ public class ServiceController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
+	/**
+	 * Returns the list of agents in a service and its sub services
+	 * 
+	 * @param idServiceADS
+	 * @param date
+	 *            (optional)
+	 * @return
+	 */
+	@RequestMapping(value = "/agentsWithEntiteParent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getServiceAgentsWithEntiteParent(
+			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
+			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
+
+		EntiteDto serviceAgent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
+		// Si le service n'existe pas, on ne retourne rien
+		if (serviceAgent == null)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		List<Integer> services = new ArrayList<Integer>();
+		services.add(serviceAgent.getIdEntite());
+		
+		for (EntiteDto enfant : serviceAgent.getEnfants()) {
+			if (!services.contains(enfant.getIdEntite()))
+				services.add(enfant.getIdEntite());
+		}
+
+		// Si la date n'est pas spécifiée, prendre la date du jour
+		if (date == null)
+			date = new Date();
+
+		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(services, date, null);
+
+		if (result.size() == 0)
+			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
 }
