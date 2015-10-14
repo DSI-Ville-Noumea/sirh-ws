@@ -35,6 +35,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP</class>
 		<class>nc.noumea.mairie.model.bean.sirh.ParentEnfant</class>
 		<class>nc.noumea.mairie.model.bean.sirh.PrimePointageFP</class>
+		<class>nc.noumea.mairie.model.bean.sirh.PrimePointageAff</class>
 		<class>nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire</class>
 		<class>nc.noumea.mairie.model.bean.Sicomm</class>
 		<class>nc.noumea.mairie.model.bean.Siguic</class>
