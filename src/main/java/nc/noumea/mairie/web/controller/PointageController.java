@@ -31,9 +31,10 @@ public class PointageController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getPrimePointageAffOfAgent(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
 
-		List<Integer> result = pointageSrv.getPrimePointagesByAgent(idAgent, date);
+		List<Integer> result = pointageSrv.getPrimePointagesByAgent(idAgent, dateDebut, dateFin);
 
 		if (result.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -48,9 +49,10 @@ public class PointageController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getBaseHoraireOfAgent(
 			@RequestParam(value = "idAgent", required = true) Integer idAgent,
-			@RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
 
-		BaseHorairePointageDto result = pointageSrv.getBaseHorairePointageByAgent(idAgent, date);
+		List<BaseHorairePointageDto> result = pointageSrv.getBaseHorairePointageByAgent(idAgent, dateDebut, dateFin);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
 

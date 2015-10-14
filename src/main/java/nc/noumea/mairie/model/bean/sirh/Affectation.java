@@ -80,6 +80,10 @@ public class Affectation {
 	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
 	private Integer idBaseHoraireAbsence;
 
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_BASE_HORAIRE_POINTAGE", referencedColumnName = "ID_BASE_HORAIRE_POINTAGE")
+	private BaseHorairePointage baseHorairePointage;
+	
 	public Integer getIdAffectation() {
 		return idAffectation;
 	}
@@ -150,6 +154,14 @@ public class Affectation {
 
 	public void setIdBaseHoraireAbsence(Integer idBaseHoraireAbsence) {
 		this.idBaseHoraireAbsence = idBaseHoraireAbsence;
+	}
+
+	public BaseHorairePointage getBaseHorairePointage() {
+		return baseHorairePointage;
+	}
+
+	public void setBaseHorairePointage(BaseHorairePointage baseHorairePointage) {
+		this.baseHorairePointage = baseHorairePointage;
 	}
 
 }
