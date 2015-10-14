@@ -7,8 +7,8 @@ import nc.noumea.mairie.web.dto.BaseHorairePointageDto;
 
 public interface IPointageService {
 
-	List<Integer> getPrimePointagesByAgent(Integer idAgent, Date date);
+	List<Integer> getPrimePointagesByAgent(Integer idAgent, Date dateDebut, Date dateFin);
 
-	BaseHorairePointageDto getBaseHorairePointageByAgent(Integer idAgent, Date date);
+	List<BaseHorairePointageDto> getBaseHorairePointageByAgent(Integer idAgent, Date dateDebut, Date dateFin);
 
 }
