@@ -11,4 +11,6 @@ public interface IPointageService {
 
 	List<BaseHorairePointageDto> getBaseHorairePointageByAgent(Integer idAgent, Date dateDebut, Date dateFin);
 
+	List<Integer> getListAgentsWithPrimeTIDOnAffectation(Date dateDebut, Date dateFin);
+
 }

@@ -562,4 +562,276 @@ public class PointageServiceTest {
 		// Then
 		assertEquals(0, result.size());
 	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnDtoNotNull_dateDebutEgaleDateFinAffectation() {
+		// Given
+
+		Date dateDebutAffectation = new DateTime(2015,8,15,0,0,0).toDate();
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateDebutAffectation);
+		a.setDateFinAff(dateDebut);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7721);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(9005138, result.get(0).intValue());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnDtoNotNull_dateFinEgaleDateDebutAffectation() {
+		// Given
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateFin);
+		a.setDateFinAff(null);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7722);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(9005138, result.get(0).intValue());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnDtoNotNull_AffectationEntreDateDebutEtDateFin() {
+		// Given
+
+		Date dateDebutAffectation = new DateTime(2015,9,1,0,0,0).toDate();
+		Date dateFinAffectation = new DateTime(2015,9,3,0,0,0).toDate();
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateDebutAffectation);
+		a.setDateFinAff(dateFinAffectation);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7720);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(9005138, result.get(0).intValue());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnNull_badPrime() {
+		// Given
+
+		Date dateDebutAffectation = new DateTime(2015,7,1,0,0,0).toDate();
+		Date dateFinAffectation = new DateTime(2015,10,3,0,0,0).toDate();
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateDebutAffectation);
+		a.setDateFinAff(dateFinAffectation);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7701);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(0, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnDtoNotNull_AffectationPlusGrandeQueDateDebutEtDateFin() {
+		// Given
+
+		Date dateDebutAffectation = new DateTime(2015,7,1,0,0,0).toDate();
+		Date dateFinAffectation = new DateTime(2015,10,3,0,0,0).toDate();
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateDebutAffectation);
+		a.setDateFinAff(dateFinAffectation);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7721);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(9005138, result.get(0).intValue());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithPrimeTIDOnAffectation_returnDtoNull_badDate() {
+		// Given
+
+		Date dateDebutAffectation = new DateTime(2015,7,1,0,0,0).toDate();
+		Date dateFinAffectation = new DateTime(2015,8,3,0,0,0).toDate();
+		
+		Date dateDebut = new DateTime(2015,8,31,0,0,0).toDate();
+		Date dateFin = new DateTime(2015,9,6,0,0,0).toDate();
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(dateDebutAffectation);
+		a.setDateFinAff(dateFinAffectation);
+		sirhPersistenceUnit.persist(a);
+
+		PrimePointageAffPK primePK = new PrimePointageAffPK();
+		primePK.setIdAffectation(a.getIdAffectation());
+		primePK.setNumRubrique(7721);
+		
+		PrimePointageAff prime = new PrimePointageAff();
+		prime.setAffectation(a);
+		prime.setPrimePointageAffPK(primePK);
+		sirhPersistenceUnit.persist(prime);
+
+		// When
+		List<Integer> result = service.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+		// Then
+		assertEquals(0, result.size());
+	}
 }
