@@ -59,4 +59,21 @@ public class PointageController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/listAgentsWithPrimeTIDOnAffectation", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListAgentsWithPrimeTIDOnAffectation(
+			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
+			@RequestParam(value = "dateFin", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFin) {
+
+		List<Integer> result = pointageSrv.getListAgentsWithPrimeTIDOnAffectation(dateDebut, dateFin);
+
+		if (result.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
 }
