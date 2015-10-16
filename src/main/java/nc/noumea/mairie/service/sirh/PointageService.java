@@ -66,4 +66,24 @@ public class PointageService implements IPointageService {
 		
 		return resultDto;
 	}
+
+	@Override
+	public List<Integer> getListAgentsWithPrimeTIDOnAffectation(Date dateDebut, Date dateFin) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select aff.id_agent from affectation aff ");
+		sb.append("inner join prime_pointage_aff paff on aff.id_affectation=paff.id_affectation ");
+		sb.append("and paff.num_rubrique in (7720,7721,7722) ");
+		sb.append("where aff.date_debut_aff <= :dateFin ");
+		sb.append("and (aff.date_fin_aff is null or aff.date_fin_aff >= :dateDebut) ");
+		sb.append("order by aff.id_agent ");
+
+		Query q = sirhEntityManager.createNativeQuery(sb.toString());
+		q.setParameter("dateDebut", dateDebut);
+		q.setParameter("dateFin", dateFin);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> result = q.getResultList();
+
+		return result;
+	}
 }
