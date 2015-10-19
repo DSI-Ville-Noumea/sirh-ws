@@ -44,20 +44,17 @@ public class ArreteDto {
 		super();
 	}
 
-	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
-			EntiteDto direction, EntiteDto service) throws ParseException {
+	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade, EntiteDto direction, EntiteDto service) throws ParseException {
 		this.baseReglement = carr.getModReg();
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7
-				|| avct.getIdModifAvancement() == 6 ? false : true;
+		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
-		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
-				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation()
-						.toLowerCase().replace("/cp", "/CP");
-		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
-				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
+		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale()
+				.getLibDeliberation().toLowerCase().replace("/cp", "/CP");
+		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale()
+				.getTexteCap();
 		this.dateCap = avct.getDateCap();
 		SimpleDateFormat dateMoisAnnee = new SimpleDateFormat("MMMM y", new Locale("fr", "FR"));
 		SimpleDateFormat date = new SimpleDateFormat("d MMMM y", new Locale("fr", "FR"));
@@ -70,16 +67,13 @@ public class ArreteDto {
 			}
 		}
 
-		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : getTexteDureeAvct(avct.getAvisCapEmployeur()
-				.getLibLong().toLowerCase());
+		this.dureeAvct = avct.getAvisCapEmployeur() == null ? "" : getTexteDureeAvct(avct.getAvisCapEmployeur().getLibLong().toLowerCase());
 
-		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
-				+ classeGrade.getLibCla().trim();
+		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", " + classeGrade.getLibCla().trim();
 		if (classe.contains("1°")) {
 			classe = classe.replace("1°", "1er");
 		}
-		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
-				+ echelonGrade.getLibEch().trim();
+		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", " + echelonGrade.getLibEch().trim();
 		if (echelon.contains("1°")) {
 			echelon = echelon.replace("1°", "1er");
 		}
@@ -92,12 +86,9 @@ public class ArreteDto {
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
 
-		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e")
-				|| libelleGrade.toLowerCase().startsWith("i") || libelleGrade.toLowerCase().startsWith("o")
-				|| libelleGrade.toLowerCase().startsWith("u") ? "d'"
-				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
-				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon"))
-				+ filiere;
+		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e") || libelleGrade.toLowerCase().startsWith("i")
+				|| libelleGrade.toLowerCase().startsWith("o") || libelleGrade.toLowerCase().startsWith("u") ? "d'" + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")
+				: "de " + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")) + filiere;
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
 			String res = avct.getGradeNouveau().getBarem().getIban();
@@ -109,8 +100,7 @@ public class ArreteDto {
 			this.ib = avct.getGradeNouveau().getBarem().getIban();
 		}
 		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
-		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20"
-				+ carr.getReferenceArrete().toString().substring(0, 2) + "/"
+		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20" + carr.getReferenceArrete().toString().substring(0, 2) + "/"
 				+ carr.getReferenceArrete().toString().substring(2, carr.getReferenceArrete().toString().length());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
@@ -129,20 +119,18 @@ public class ArreteDto {
 		return dureeAvct;
 	}
 
-	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade,
-			EntiteDto direction, EntiteDto service) throws ParseException {
-		this.baseReglement = carr.getModReg();
+	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade, EntiteDto direction, EntiteDto service) throws ParseException {
+		//#19171 : on affiche le statut de l'agent maintenant
+		this.baseReglement = carr.getCategorie().getCodeCategorie().toString().equals("4") ? "C" : carr.getCategorie().getCodeCategorie().toString().equals("7") ? "CC" : "F";
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7
-				|| avct.getIdModifAvancement() == 6 ? false : true;
+		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
-		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
-				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getLibDeliberation()
-						.toLowerCase().replace("/cp", "/CP");
-		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? ""
-				: avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale().getTexteCap();
+		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale()
+				.getLibDeliberation().toLowerCase().replace("/cp", "/CP");
+		this.deliberationCapText = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale()
+				.getTexteCap();
 		this.dateCap = null;
 		SimpleDateFormat dateMoisAnnee = new SimpleDateFormat("MMMM y", new Locale("fr", "FR"));
 		SimpleDateFormat date = new SimpleDateFormat("d MMMM y", new Locale("fr", "FR"));
@@ -157,13 +145,11 @@ public class ArreteDto {
 
 		this.dureeAvct = "";
 
-		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", "
-				+ classeGrade.getLibCla().trim();
+		String classe = classeGrade == null || classeGrade.getLibCla().trim().equals("") ? "" : ", " + classeGrade.getLibCla().trim();
 		if (classe.contains("1°")) {
 			classe = classe.replace("1°", "1er");
 		}
-		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", "
-				+ echelonGrade.getLibEch().trim();
+		String echelon = echelonGrade == null || echelonGrade.getLibEch().trim().equals("") ? "" : ", " + echelonGrade.getLibEch().trim();
 		if (echelon.contains("1°")) {
 			echelon = echelon.replace("1°", "1er");
 		}
@@ -176,12 +162,9 @@ public class ArreteDto {
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
 
-		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e")
-				|| libelleGrade.toLowerCase().startsWith("i") || libelleGrade.toLowerCase().startsWith("o")
-				|| libelleGrade.toLowerCase().startsWith("u") ? "d'"
-				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon") : "de "
-				+ libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon"))
-				+ filiere;
+		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e") || libelleGrade.toLowerCase().startsWith("i")
+				|| libelleGrade.toLowerCase().startsWith("o") || libelleGrade.toLowerCase().startsWith("u") ? "d'" + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")
+				: "de " + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")) + filiere;
 
 		this.ina = avct.getGradeNouveau().getBarem().getIna();
 		if (avct.getGradeNouveau().getBarem().getIban().startsWith("0")) {
@@ -194,8 +177,7 @@ public class ArreteDto {
 			this.ib = avct.getGradeNouveau().getBarem().getIban();
 		}
 		this.feminin = avct.getAgent().getTitre().equals("Monsieur") ? false : true;
-		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20"
-				+ carr.getReferenceArrete().toString().substring(0, 2) + "/"
+		this.numeroArrete = carr.getReferenceArrete().toString().equals("0") ? "" : "20" + carr.getReferenceArrete().toString().substring(0, 2) + "/"
 				+ carr.getReferenceArrete().toString().substring(2, carr.getReferenceArrete().toString().length());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		this.dateArrete = carr.getDateArrete() == 0 ? null : sdf.parse(carr.getDateArrete().toString());
@@ -220,8 +202,7 @@ public class ArreteDto {
 	}
 
 	private String getNomCompletAgent(Agent agent) {
-		return agent.getTitre() + " " + agent.getPrenomUsage().substring(0, 1).toUpperCase()
-				+ agent.getPrenomUsage().substring(1, agent.getPrenomUsage().length()).toLowerCase() + " "
+		return agent.getTitre() + " " + agent.getPrenomUsage().substring(0, 1).toUpperCase() + agent.getPrenomUsage().substring(1, agent.getPrenomUsage().length()).toLowerCase() + " "
 				+ agent.getNomUsage().toUpperCase();
 	}
 
