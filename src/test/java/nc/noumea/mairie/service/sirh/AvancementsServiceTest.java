@@ -538,11 +538,14 @@ public class AvancementsServiceTest {
 
 		List<Integer> listId = new ArrayList<Integer>();
 		listId.add(1);
+		
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(4);
 
 		Spcarr carr = new Spcarr();
 		carr.setReferenceArrete(2013);
 		carr.setDateArrete(0);
-		carr.setModReg("REG");
+		carr.setCategorie(categorie);
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Spcarr> mockQuerySpcarr = Mockito.mock(TypedQuery.class);
@@ -583,7 +586,7 @@ public class AvancementsServiceTest {
 		assertEquals("de grade initial", result.getArretes().get(0).getGradeLabel());
 		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0).getAcc());
 		assertEquals(2013, result.getArretes().get(0).getAnnee());
-		assertEquals("REG", result.getArretes().get(0).getBaseReglement());
+		assertEquals("C", result.getArretes().get(0).getBaseReglement());
 		assertNull(result.getArretes().get(0).getDateArrete());
 		assertEquals("1er mars 2011", result.getArretes().get(0).getDateAvct());
 		assertNull(result.getArretes().get(0).getDateCap());
@@ -596,7 +599,7 @@ public class AvancementsServiceTest {
 		assertEquals("de grade initial", result.getArretes().get(1).getGradeLabel());
 		assertEquals("1 mois, 2 jours ", result.getArretes().get(1).getAcc());
 		assertEquals(2014, result.getArretes().get(1).getAnnee());
-		assertEquals("REG", result.getArretes().get(1).getBaseReglement());
+		assertEquals("C", result.getArretes().get(1).getBaseReglement());
 		assertNull(result.getArretes().get(1).getDateArrete());
 		assertEquals("14 avril 2010", result.getArretes().get(1).getDateAvct());
 		assertNull(result.getArretes().get(1).getDateCap());
@@ -713,7 +716,7 @@ public class AvancementsServiceTest {
 		assertEquals("de grade initial", result.getArretes().get(0).getGradeLabel());
 		assertEquals("1 an, 1 mois, 1 jour ", result.getArretes().get(0).getAcc());
 		assertEquals(2013, result.getArretes().get(0).getAnnee());
-		assertEquals("REG", result.getArretes().get(0).getBaseReglement());
+		assertEquals("CC", result.getArretes().get(0).getBaseReglement());
 		assertNull(result.getArretes().get(0).getDateArrete());
 		assertEquals("1er mars 2011", result.getArretes().get(0).getDateAvct());
 		assertNull(result.getArretes().get(0).getDateCap());
