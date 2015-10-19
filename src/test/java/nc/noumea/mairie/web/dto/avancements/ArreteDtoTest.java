@@ -326,8 +326,12 @@ public class ArreteDtoTest {
 		barem.setIban("0000956");
 		barem.setIna(125);
 
+		Spfili filiere = new Spfili();
+		filiere.setLibelleFili("technique");
+		
 		Spgeng gradeGen = new Spgeng();
 		gradeGen.setCdgeng("TECH");
+		gradeGen.setFiliere(filiere);
 
 		Spgradn gradeNouveau = new Spgradn();
 		gradeNouveau.setCdgrad("T123");
@@ -378,8 +382,9 @@ public class ArreteDtoTest {
 		assertEquals("épuisée", dto.getAcc());
 		assertEquals("F", dto.getBaseReglement());
 		assertEquals("SN (S)", dto.getServiceAgent());
-		assertEquals("de titi, nono e", dto.getGradeLabel());
+		assertEquals("de titi, nono e de la filière technique", dto.getGradeLabel());
 		assertEquals(true, dto.isAgentVDN());
+		assertEquals("TECHNIQUE", dto.getFiliere());
 	}
 
 	@Test
@@ -619,5 +624,6 @@ public class ArreteDtoTest {
 		assertEquals("", dto.getDureeAvct());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
 		assertEquals(false, dto.isAgentVDN());
+		assertEquals("", dto.getFiliere());
 	}
 }
