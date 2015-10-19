@@ -40,6 +40,7 @@ public class ArreteDto {
 	private String baseReglement;
 	private String serviceAgent;
 	private boolean agentVDN;
+	private String filiere;
 
 	public ArreteDto() {
 		super();
@@ -88,6 +89,8 @@ public class ArreteDto {
 
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
+
+		this.filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toUpperCase();
 
 		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e") || libelleGrade.toLowerCase().startsWith("i")
 				|| libelleGrade.toLowerCase().startsWith("o") || libelleGrade.toLowerCase().startsWith("u") ? "d'" + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")
@@ -166,6 +169,8 @@ public class ArreteDto {
 		String filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : " de la filière "
 				+ avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toLowerCase();
 
+		this.filiere = avct.getGradeNouveau().getGradeGenerique().getFiliere() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getFiliere().getLibelleFili().trim().toUpperCase();
+		
 		this.gradeLabel = (libelleGrade.toLowerCase().startsWith("a") || libelleGrade.toLowerCase().startsWith("e") || libelleGrade.toLowerCase().startsWith("i")
 				|| libelleGrade.toLowerCase().startsWith("o") || libelleGrade.toLowerCase().startsWith("u") ? "d'" + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")
 				: "de " + libelleGrade.replace("°", "ème").toLowerCase().replace("echelon", "échelon")) + filiere;
@@ -376,5 +381,13 @@ public class ArreteDto {
 
 	public void setAgentVDN(boolean agentVDN) {
 		this.agentVDN = agentVDN;
+	}
+
+	public String getFiliere() {
+		return filiere;
+	}
+
+	public void setFiliere(String filiere) {
+		this.filiere = filiere;
 	}
 }
