@@ -29,6 +29,7 @@ public class ArreteDtoTest {
 	public void testArreteDto_ctor_FemmeMarie() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomatr(5138);
@@ -82,10 +83,13 @@ public class ArreteDtoTest {
 		avct.setNouvAccMois(0);
 		avct.setNouvAccJour(0);
 
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
+
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("I");
+		carr.setCategorie(categorie);
 
 		// Siserv service = new Siserv();
 		// service.setServi("TATA");
@@ -123,14 +127,16 @@ public class ArreteDtoTest {
 		assertEquals("956", dto.getIb());
 		assertEquals(false, dto.isChangementClasse());
 		assertEquals(true, dto.isFeminin());
-		assertEquals("I", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_Homme() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomatr(5138);
@@ -167,10 +173,13 @@ public class ArreteDtoTest {
 		avct.setNouvAccMois(1);
 		avct.setNouvAccJour(0);
 
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
+
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("I");
+		carr.setCategorie(categorie);
 
 		// Siserv service = new Siserv();
 		// service.setServi("TATA");
@@ -203,14 +212,16 @@ public class ArreteDtoTest {
 		assertEquals(false, dto.isRegularisation());
 		assertEquals("1 mois", dto.getAcc());
 		assertEquals("5138", dto.getMatriculeAgent());
-		assertEquals("I", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_SansDeliberation() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomPatronymique("TOTO");
@@ -258,10 +269,13 @@ public class ArreteDtoTest {
 		avct.setNouvAccMois(0);
 		avct.setNouvAccJour(0);
 
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
+
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("M");
+		carr.setCategorie(categorie);
 
 		// Siserv service = new Siserv();
 		// service.setServi("TATA");
@@ -288,14 +302,16 @@ public class ArreteDtoTest {
 		assertEquals("", dto.getDeliberationLabel());
 		assertEquals("", dto.getDeliberationCapText());
 		assertEquals("néant", dto.getAcc());
-		assertEquals("M", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("de titi, nono 1", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_Carriere() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomPatronymique("TOTO");
@@ -320,10 +336,13 @@ public class ArreteDtoTest {
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
 
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
+
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("M");
+		carr.setCategorie(categorie);
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -357,15 +376,17 @@ public class ArreteDtoTest {
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("épuisée", dto.getAcc());
-		assertEquals("M", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("SN (S)", dto.getServiceAgent());
 		assertEquals("de titi, nono e", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_CarriereSansAcc() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomatr(5138);
@@ -394,10 +415,13 @@ public class ArreteDtoTest {
 		gradeNouveau.setGradeGenerique(gradeGen);
 		gradeNouveau.setBarem(barem);
 
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
+
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("I");
+		carr.setCategorie(categorie);
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
@@ -436,14 +460,16 @@ public class ArreteDtoTest {
 		assertEquals(null, dto.getDateArrete());
 		assertEquals("2012/125", dto.getNumeroArrete());
 		assertEquals("néant", dto.getAcc());
-		assertEquals("I", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("de titi, nono 1, nono e de la filière filiere nono", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_FichePoste() throws ParseException {
 		// Given
 		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setAgentVDN(true);
 
 		Agent ag = new Agent();
 		ag.setNomPatronymique("TOTO");
@@ -453,11 +479,14 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
 		ag.setNomatr(5138);
+		
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(46);
 
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("I");
+		carr.setCategorie(categorie);
 
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
@@ -508,14 +537,16 @@ public class ArreteDtoTest {
 		assertEquals(2013, dto.getAnnee());
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
-		assertEquals("I", dto.getBaseReglement());
+		assertEquals("F", dto.getBaseReglement());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
+		assertEquals(true, dto.isAgentVDN());
 	}
 
 	@Test
 	public void testArreteDto_ctor_AvctDetache() throws ParseException {
 		// Given
 		AvancementDetache avct = new AvancementDetache();
+		avct.setAgentVDN(false);
 
 		Agent ag = new Agent();
 		ag.setNomPatronymique("TOTO");
@@ -525,7 +556,7 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
 		ag.setNomatr(5138);
-		
+
 		Spcatg categorie = new Spcatg();
 		categorie.setCodeCategorie(4);
 
@@ -587,5 +618,6 @@ public class ArreteDtoTest {
 		assertEquals(null, dto.getDateCap());
 		assertEquals("", dto.getDureeAvct());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
+		assertEquals(false, dto.isAgentVDN());
 	}
 }
