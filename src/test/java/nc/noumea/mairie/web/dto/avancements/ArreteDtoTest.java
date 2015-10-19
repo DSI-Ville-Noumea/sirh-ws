@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 
 import nc.noumea.mairie.model.bean.Spbarem;
 import nc.noumea.mairie.model.bean.Spcarr;
+import nc.noumea.mairie.model.bean.Spcatg;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
 import nc.noumea.mairie.model.bean.Spfili;
@@ -524,11 +525,14 @@ public class ArreteDtoTest {
 		ag.setPrenomUsage("Martine");
 		ag.setTitre("1");
 		ag.setNomatr(5138);
+		
+		Spcatg categorie = new Spcatg();
+		categorie.setCodeCategorie(4);
 
 		Spcarr carr = new Spcarr();
 		carr.setDateArrete(0);
 		carr.setReferenceArrete(12125);
-		carr.setModReg("I");
+		carr.setCategorie(categorie);
 
 		Spbarem barem = new Spbarem();
 		barem.setIban("0000956");
@@ -579,7 +583,7 @@ public class ArreteDtoTest {
 		assertEquals(2013, dto.getAnnee());
 		assertEquals(" (SN)", dto.getDirectionAgent());
 		assertEquals("2 jours ", dto.getAcc());
-		assertEquals("I", dto.getBaseReglement());
+		assertEquals("C", dto.getBaseReglement());
 		assertEquals(null, dto.getDateCap());
 		assertEquals("", dto.getDureeAvct());
 		assertEquals("de titi, nono 1, nono e", dto.getGradeLabel());
