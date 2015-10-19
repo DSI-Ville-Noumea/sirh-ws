@@ -39,13 +39,16 @@ public class ArreteDto {
 	private String matriculeAgent;
 	private String baseReglement;
 	private String serviceAgent;
+	private boolean agentVDN;
 
 	public ArreteDto() {
 		super();
 	}
 
 	public ArreteDto(AvancementFonctionnaire avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade, EntiteDto direction, EntiteDto service) throws ParseException {
-		this.baseReglement = carr.getModReg();
+		this.agentVDN = avct.isAgentVDN();
+		// #19171 : on affiche le statut de l'agent maintenant
+		this.baseReglement = carr.getCategorie().getCodeCategorie().toString().equals("4") ? "C" : carr.getCategorie().getCodeCategorie().toString().equals("7") ? "CC" : "F";
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
@@ -120,7 +123,8 @@ public class ArreteDto {
 	}
 
 	public ArreteDto(AvancementDetache avct, FichePoste fp, Spcarr carr, Spclas classeGrade, Speche echelonGrade, EntiteDto direction, EntiteDto service) throws ParseException {
-		//#19171 : on affiche le statut de l'agent maintenant
+		this.agentVDN = avct.isAgentVDN();
+		// #19171 : on affiche le statut de l'agent maintenant
 		this.baseReglement = carr.getCategorie().getCodeCategorie().toString().equals("4") ? "C" : carr.getCategorie().getCodeCategorie().toString().equals("7") ? "CC" : "F";
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
@@ -364,5 +368,13 @@ public class ArreteDto {
 
 	public void setServiceAgent(String serviceAgent) {
 		this.serviceAgent = serviceAgent;
+	}
+
+	public boolean isAgentVDN() {
+		return agentVDN;
+	}
+
+	public void setAgentVDN(boolean agentVDN) {
+		this.agentVDN = agentVDN;
 	}
 }
