@@ -205,93 +205,12 @@ public class CalculEaeService implements ICalculEaeService {
 		if (listAff.size() > 0) {
 			derniereAff = listAff.get(0);
 		}
-		for (int i = 0; i < listAff.size(); i++) {
-			Affectation aff = listAff.get(i);
-			FichePoste fp = fichePosteRepository.chercherFichePoste(aff.getFichePoste().getIdFichePoste());
 
-			EntiteDto service = null;
-			EntiteDto direction = null;
-			if (fp == null || fp.getIdServiceADS() == null) {
-				if (fp.getIdServi() == null) {
-					continue;
-				} else {
-					Siserv siserv = mairieRepository.chercherSiserv(fp.getIdServi());
-					if (siserv != null && siserv.getServi() != null) {
-						service = new EntiteDto();
-						service.setLabel(siserv.getLiserv());
-						service.setSigle(siserv.getSigle());
-					} else {
-						continue;
-					}
-				}
-			} else {
-				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
-				direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
-			}
-
-			if (service == null && direction == null) {
-				continue;
-			}
-
-			if (aff.getDateFinAff() == null) {
-				// on crée une ligne pour affectation
-				ParcoursProDto parcoursProDto = new ParcoursProDto();
-				parcoursProDto.setDateDebut(aff.getDateDebutAff());
-				parcoursProDto.setDateFin(aff.getDateFinAff());
-
-				parcoursProDto.setService(service == null ? "" : service.getLabel());
-				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
-
-				if (!listParcoursPro.contains(parcoursProDto))
-					listParcoursPro.add(parcoursProDto);
-			} else {
-				// on regarde si il y a des lignes suivantes
-				DateTime dateFin = new DateTime(aff.getDateFinAff());
-				Affectation affSuiv = affectationRepository.chercherAffectationAgentAvecDateDebut(idAgent, dateFin.plusDays(1).toDate());
-				if (affSuiv == null) {
-
-					// on crée une ligne pour affectation
-					ParcoursProDto parcoursProDto = new ParcoursProDto();
-					parcoursProDto.setDateDebut(aff.getDateDebutAff());
-					parcoursProDto.setDateFin(aff.getDateFinAff());
-
-					parcoursProDto.setService(service == null ? "" : service.getLabel());
-					parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
-
-					if (!listParcoursPro.contains(parcoursProDto))
-						listParcoursPro.add(parcoursProDto);
-				} else {
-					boolean fin = false;
-					DateTime dateSortie = null;
-					if (affSuiv.getDateFinAff() == null) {
-						dateSortie = new DateTime(aff.getDateFinAff());
-						fin = true;
-					} else {
-						dateSortie = new DateTime(affSuiv.getDateFinAff());
-					}
-
-					while (!fin) {
-						affSuiv = affectationRepository.chercherAffectationAgentAvecDateDebut(idAgent, dateSortie == null ? null : dateSortie.plusDays(1).toDate());
-						if (affSuiv == null) {
-							fin = true;
-						} else {
-							dateSortie = new DateTime(affSuiv.getDateFinAff());
-						}
-					}
-
-					// on crée une ligne pour affectation
-					ParcoursProDto parcoursProDto = new ParcoursProDto();
-					parcoursProDto.setDateDebut(aff.getDateDebutAff());
-					parcoursProDto.setDateFin(dateSortie == null ? null : dateSortie.toDate());
-
-					parcoursProDto.setService(service == null ? "" : service.getLabel());
-					parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
-
-					if (!listParcoursPro.contains(parcoursProDto))
-						listParcoursPro.add(parcoursProDto);
-
-				}
-			}
+		// on fait les parcours pro vis à vis des affectations
+		List<ParcoursProDto> listParcoursProAff = getListeParcoursAff(listAff, idAgent);
+		for (ParcoursProDto pAff : listParcoursProAff) {
+			if (!listParcoursPro.contains(pAff))
+				listParcoursPro.add(pAff);
 		}
 
 		// on cherche dans SPMTSR pour l'historique
@@ -302,6 +221,20 @@ public class CalculEaeService implements ICalculEaeService {
 		} else {
 			listSpmtsr = (ArrayList<Spmtsr>) mairieRepository.listerSpmtsrAvecAgentAPartirDateOrderDateDeb(noMatr, new Integer(sdfMairie.format(derniereAff.getDateDebutAff())));
 		}
+		// on fait les parcours pro vis à vis des affectations
+		List<ParcoursProDto> listParcoursProSpmtsr = getListeParcoursSpmtsr(listSpmtsr, noMatr);
+		for (ParcoursProDto pSpmtsr : listParcoursProSpmtsr) {
+			if (!listParcoursPro.contains(pSpmtsr))
+				listParcoursPro.add(pSpmtsr);
+		}
+
+		Collections.sort(listParcoursPro, new EaeParcoursProByDateDebutInverseComparator());
+		return listParcoursPro;
+	}
+
+	private List<ParcoursProDto> getListeParcoursSpmtsr(ArrayList<Spmtsr> listSpmtsr, Integer noMatr) throws ParseException {
+		List<ParcoursProDto> listParcoursPro = new ArrayList<ParcoursProDto>();
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		for (int i = 0; i < listSpmtsr.size(); i++) {
@@ -361,65 +294,238 @@ public class CalculEaeService implements ICalculEaeService {
 					if (!listParcoursPro.contains(parcoursProDto))
 						listParcoursPro.add(parcoursProDto);
 				} else {
-					boolean fin = false;
-					Integer dateSortie = null;
-					if (spSuiv.getDatfin() == null || spSuiv.getDatfin() == 0) {
-						Integer dateFinSP = Integer.valueOf(sp.getDatfin());
-						String anneeDateDebSpmtsr = dateFinSP.toString().substring(0, 4);
-						String moisDateDebSpmtsr = dateFinSP.toString().substring(4, 6);
-						String jourDateDebSpmtsr = dateFinSP.toString().substring(6, 8);
-						String dateDebSpmtsr = anneeDateDebSpmtsr + moisDateDebSpmtsr + jourDateDebSpmtsr;
-						dateSortie = Integer.valueOf(dateDebSpmtsr);
-						fin = true;
-					} else {
-						Integer dateFinSP = Integer.valueOf(spSuiv.getId().getDatdeb());
-						String anneeDateDebSpmtsr = dateFinSP.toString().substring(0, 4);
-						String moisDateDebSpmtsr = dateFinSP.toString().substring(4, 6);
-						String jourDateDebSpmtsr = dateFinSP.toString().substring(6, 8);
-						String dateDebSpmtsr = anneeDateDebSpmtsr + moisDateDebSpmtsr + jourDateDebSpmtsr;
-						dateSortie = Integer.valueOf(dateDebSpmtsr);
-					}
-					while (!fin) {
-						spSuiv = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(noMatr,
-								dateSortie == null ? 0 : new Integer(sdfMairie.format(new DateTime(sdfMairie.parse(dateSortie.toString())).plusDays(1).toDate())));
-						if (spSuiv == null) {
+					if (spSuiv.getId().getServi().equals(sp.getId().getServi())) {
+						i++;
+						boolean fin = false;
+						Integer dateSortie = null;
+						if (spSuiv.getDatfin() == null || spSuiv.getDatfin() == 0) {
 							fin = true;
 						} else {
-							try {
-								Integer dateFinSP = Integer.valueOf(spSuiv.getDatfin());
-								String anneeDateDebSpmtsr = dateFinSP.toString().substring(0, 4);
-								String moisDateDebSpmtsr = dateFinSP.toString().substring(4, 6);
-								String jourDateDebSpmtsr = dateFinSP.toString().substring(6, 8);
-								String dateDebSpmtsr = anneeDateDebSpmtsr + moisDateDebSpmtsr + jourDateDebSpmtsr;
-								dateSortie = Integer.valueOf(dateDebSpmtsr);
-							} catch (Exception e) {
+							Integer dateFinSP = Integer.valueOf(spSuiv.getDatfin());
+							String anneeDateDebSpmtsr = dateFinSP.toString().substring(0, 4);
+							String moisDateDebSpmtsr = dateFinSP.toString().substring(4, 6);
+							String jourDateDebSpmtsr = dateFinSP.toString().substring(6, 8);
+							String dateDebSpmtsr = anneeDateDebSpmtsr + moisDateDebSpmtsr + jourDateDebSpmtsr;
+							dateSortie = Integer.valueOf(dateDebSpmtsr);
+						}
+						while (!fin) {
+							spSuiv = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(noMatr,
+									dateSortie == null ? 0 : new Integer(sdfMairie.format(new DateTime(sdfMairie.parse(dateSortie.toString())).plusDays(1).toDate())));
+							if (spSuiv == null) {
 								fin = true;
+							} else {
+								i++;
+								try {
+									Integer dateFinSP = Integer.valueOf(spSuiv.getDatfin());
+									String anneeDateDebSpmtsr = dateFinSP.toString().substring(0, 4);
+									String moisDateDebSpmtsr = dateFinSP.toString().substring(4, 6);
+									String jourDateDebSpmtsr = dateFinSP.toString().substring(6, 8);
+									String dateDebSpmtsr = anneeDateDebSpmtsr + moisDateDebSpmtsr + jourDateDebSpmtsr;
+									dateSortie = Integer.valueOf(dateDebSpmtsr);
+								} catch (Exception e) {
+									fin = true;
+								}
 							}
 						}
-					}
-					// on crée la ligne
-					ParcoursProDto parcoursProDto = new ParcoursProDto();
-					String anneeDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(0, 4);
-					String moisDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(4, 6);
-					String jourDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(6, 8);
-					String dateDebSpmtsr = jourDateDebSpmtsr + "/" + moisDateDebSpmtsr + "/" + anneeDateDebSpmtsr;
-					parcoursProDto.setDateDebut(sdf.parse(dateDebSpmtsr));
-					Date dateFinale = null;
-					if (sp.getDatfin() != null && sp.getDatfin() != 0) {
-						dateFinale = sdfMairie.parse(sp.getDatfin().toString());
-					}
+						// on crée la ligne
+						ParcoursProDto parcoursProDto = new ParcoursProDto();
+						String anneeDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(0, 4);
+						String moisDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(4, 6);
+						String jourDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(6, 8);
+						String dateDebSpmtsr = jourDateDebSpmtsr + "/" + moisDateDebSpmtsr + "/" + anneeDateDebSpmtsr;
+						parcoursProDto.setDateDebut(sdf.parse(dateDebSpmtsr));
+						parcoursProDto.setDateFin(dateSortie == null ? null : new SimpleDateFormat("yyyyMMdd").parse(dateSortie.toString()));
+						parcoursProDto.setService(service == null ? "" : service.getLabel());
+						parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+						if (!listParcoursPro.contains(parcoursProDto))
+							listParcoursPro.add(parcoursProDto);
+					} else {
 
-					parcoursProDto.setDateFin(dateFinale);
-					parcoursProDto.setService(service == null ? "" : service.getLabel());
-					parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
-					if (!listParcoursPro.contains(parcoursProDto))
-						listParcoursPro.add(parcoursProDto);
+						// on crée une ligne pour administration
+						ParcoursProDto parcoursProDto = new ParcoursProDto();
+						String anneeDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(0, 4);
+						String moisDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(4, 6);
+						String jourDateDebSpmtsr = sp.getId().getDatdeb().toString().substring(6, 8);
+						String dateDebSpmtsr = jourDateDebSpmtsr + "/" + moisDateDebSpmtsr + "/" + anneeDateDebSpmtsr;
+						parcoursProDto.setDateDebut(sdf.parse(dateDebSpmtsr));
+						Date dateFinSp = null;
+						if (sp.getDatfin() != null && sp.getDatfin() != 0) {
+							String anneeDateFinSpmtsr = sp.getDatfin().toString().substring(0, 4);
+							String moisDateFinSpmtsr = sp.getDatfin().toString().substring(4, 6);
+							String jourDateFinSpmtsr = sp.getDatfin().toString().substring(6, 8);
+							String dateFinSpmtsr = jourDateFinSpmtsr + "/" + moisDateFinSpmtsr + "/" + anneeDateFinSpmtsr;
+							dateFinSp = sdf.parse(dateFinSpmtsr);
+						}
+						parcoursProDto.setDateFin(dateFinSp);
+						parcoursProDto.setService(service == null ? "" : service.getLabel());
+						parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+						if (!listParcoursPro.contains(parcoursProDto))
+							listParcoursPro.add(parcoursProDto);
+					}
 
 				}
 			}
 		}
+		return listParcoursPro;
+	}
 
-		Collections.sort(listParcoursPro, new EaeParcoursProByDateDebutInverseComparator());
+	private List<ParcoursProDto> getListeParcoursAff(List<Affectation> listAff, Integer idAgent) {
+		List<ParcoursProDto> listParcoursPro = new ArrayList<ParcoursProDto>();
+		for (int i = 0; i < listAff.size(); i++) {
+			Affectation aff = listAff.get(i);
+			FichePoste fp = fichePosteRepository.chercherFichePoste(aff.getFichePoste().getIdFichePoste());
+
+			EntiteDto service = null;
+			EntiteDto direction = null;
+			if (fp == null || fp.getIdServiceADS() == null) {
+				if (fp.getIdServi() == null) {
+					continue;
+				} else {
+					Siserv siserv = mairieRepository.chercherSiserv(fp.getIdServi());
+					if (siserv != null && siserv.getServi() != null) {
+						service = new EntiteDto();
+						service.setLabel(siserv.getLiserv());
+						service.setSigle(siserv.getSigle());
+					} else {
+						continue;
+					}
+				}
+			} else {
+				service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				direction = adsWSConsumer.getAffichageDirection(aff.getFichePoste().getIdServiceADS());
+			}
+
+			if (service == null && direction == null) {
+				continue;
+			}
+
+			if (aff.getDateFinAff() == null) {
+				// on crée une ligne pour affectation
+				ParcoursProDto parcoursProDto = new ParcoursProDto();
+				parcoursProDto.setDateDebut(aff.getDateDebutAff());
+				parcoursProDto.setDateFin(aff.getDateFinAff());
+
+				parcoursProDto.setService(service == null ? "" : service.getLabel());
+				parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+
+				if (!listParcoursPro.contains(parcoursProDto))
+					listParcoursPro.add(parcoursProDto);
+			} else {
+				// on regarde si il y a des lignes suivantes
+				DateTime dateFin = new DateTime(aff.getDateFinAff());
+				Affectation affSuiv = affectationRepository.chercherAffectationAgentAvecDateDebut(idAgent, dateFin.plusDays(1).toDate());
+				if (affSuiv == null) {
+
+					// on crée une ligne pour affectation
+					ParcoursProDto parcoursProDto = new ParcoursProDto();
+					parcoursProDto.setDateDebut(aff.getDateDebutAff());
+					parcoursProDto.setDateFin(aff.getDateFinAff());
+
+					parcoursProDto.setService(service == null ? "" : service.getLabel());
+					parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+
+					if (!listParcoursPro.contains(parcoursProDto))
+						listParcoursPro.add(parcoursProDto);
+				} else {
+					boolean traiteSuivant = false;
+					// on verifie qu c'est sur le même service
+					if (aff.getFichePoste().getIdServiceADS() == null) {
+						if (affSuiv.getFichePoste().getIdServiceADS() == null) {
+							if (aff.getFichePoste().getIdServi().equals(affSuiv.getFichePoste().getIdServi())) {
+								traiteSuivant = true;
+							}
+						} else {
+							if (aff.getFichePoste().getIdServi().equals(affSuiv.getFichePoste().getIdServi())) {
+								traiteSuivant = true;
+							}
+						}
+					} else {
+						if (affSuiv.getFichePoste().getIdServiceADS() != null) {
+							if (aff.getFichePoste().getIdServiceADS().toString().equals(affSuiv.getFichePoste().getIdServiceADS().toString())) {
+								traiteSuivant = true;
+							}
+						}
+					}
+
+					if (traiteSuivant) {
+						if (affSuiv.getFichePoste().getIdServiceADS() != null) {
+							service = adsWSConsumer.getEntiteByIdEntite(affSuiv.getFichePoste().getIdServiceADS());
+							direction = adsWSConsumer.getAffichageDirection(affSuiv.getFichePoste().getIdServiceADS());
+						}
+						i++;
+						boolean fin = false;
+						DateTime dateSortie = null;
+						if (affSuiv.getDateFinAff() == null) {
+							fin = true;
+						} else {
+							dateSortie = new DateTime(affSuiv.getDateFinAff());
+						}
+
+						while (!fin) {
+							affSuiv = affectationRepository.chercherAffectationAgentAvecDateDebut(idAgent, dateSortie == null ? null : dateSortie.plusDays(1).toDate());
+
+							if (affSuiv == null) {
+								fin = true;
+							} else {
+								boolean traiteSuivantBoucle = false;
+								// on verifie qu c'est sur le même service
+								if (aff.getFichePoste().getIdServiceADS() == null) {
+									if (affSuiv.getFichePoste().getIdServiceADS() == null) {
+										if (aff.getFichePoste().getIdServi().equals(affSuiv.getFichePoste().getIdServi())) {
+											traiteSuivantBoucle = true;
+										}
+									} else {
+										if (aff.getFichePoste().getIdServi().equals(affSuiv.getFichePoste().getIdServi())) {
+											traiteSuivantBoucle = true;
+										}
+									}
+								} else {
+									if (affSuiv.getFichePoste().getIdServiceADS() != null) {
+										if (aff.getFichePoste().getIdServiceADS().toString().equals(affSuiv.getFichePoste().getIdServiceADS().toString())) {
+											traiteSuivantBoucle = true;
+										}
+									}
+								}
+
+								if (traiteSuivantBoucle) {
+									if (affSuiv.getFichePoste().getIdServiceADS() != null) {
+										service = adsWSConsumer.getEntiteByIdEntite(affSuiv.getFichePoste().getIdServiceADS());
+										direction = adsWSConsumer.getAffichageDirection(affSuiv.getFichePoste().getIdServiceADS());
+									}
+									i++;
+									dateSortie = new DateTime(affSuiv.getDateFinAff());
+								} else {
+									fin = true;
+								}
+
+							}
+						}
+
+						// on crée une ligne pour affectation
+						ParcoursProDto parcoursProDto = new ParcoursProDto();
+						parcoursProDto.setDateDebut(aff.getDateDebutAff());
+						parcoursProDto.setDateFin(dateSortie == null ? null : dateSortie.toDate());
+
+						parcoursProDto.setService(service == null ? "" : service.getLabel());
+						parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+
+						if (!listParcoursPro.contains(parcoursProDto))
+							listParcoursPro.add(parcoursProDto);
+					} else {
+						// on crée une ligne pour affectation
+						ParcoursProDto parcoursProDto = new ParcoursProDto();
+						parcoursProDto.setDateDebut(aff.getDateDebutAff());
+						parcoursProDto.setDateFin(aff.getDateFinAff());
+
+						parcoursProDto.setService(service == null ? "" : service.getLabel());
+						parcoursProDto.setDirection(direction == null ? "" : direction.getLabel());
+
+						if (!listParcoursPro.contains(parcoursProDto))
+							listParcoursPro.add(parcoursProDto);
+					}
+				}
+			}
+		}
 		return listParcoursPro;
 	}
 

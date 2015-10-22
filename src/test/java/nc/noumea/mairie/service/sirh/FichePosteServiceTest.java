@@ -605,6 +605,7 @@ public class FichePosteServiceTest {
 
 	@Test
 	public void getInfoFDP_MultipleEnfant_Result() {
+		Date dateJour = new Date();
 		EntiteDto enfant1 = new EntiteDto();
 		enfant1.setIdEntite(2);
 
@@ -631,14 +632,14 @@ public class FichePosteServiceTest {
 		InfoFichePosteDto infoFichePosteDto2 = new InfoFichePosteDto();
 		infoFichePosteDto2.setNumFP("numFP2");
 
-		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP(), new Date())).thenReturn(Arrays.asList(infoFichePosteDto));
-		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP(), new Date())).thenReturn(Arrays.asList(infoFichePosteDto2));
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo1.getTitreFDP(), dateJour)).thenReturn(Arrays.asList(infoFichePosteDto));
+		Mockito.when(fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(2, 1), listInfo2.getTitreFDP(), dateJour)).thenReturn(Arrays.asList(infoFichePosteDto2));
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		InfoEntiteDto result = ficheService.getInfoFDP(1, true);
+		InfoEntiteDto result = ficheService.getInfoFDP(1, true, dateJour);
 
 		assertNotNull(result);
 		assertEquals(2, result.getListeInfoFDP().size());
@@ -666,7 +667,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
-		InfoEntiteDto result = ficheService.getInfoFDP(1, true);
+		InfoEntiteDto result = ficheService.getInfoFDP(1, true, new Date());
 
 		assertNotNull(result);
 		assertEquals(1, result.getListeInfoFDP().size());
@@ -3147,18 +3148,18 @@ public class FichePosteServiceTest {
 		fp2.setNumFP("2015/2");
 		FichePoste fp3 = new FichePoste();
 		fp3.setNumFP("2015/3");
-		
+
 		EntiteDto siservAs400 = new EntiteDto();
 		siservAs400.setCodeServi("DDCA");
 
-		Sppost sppost= new Sppost();
+		Sppost sppost = new Sppost();
 		SpmtsrId id = new SpmtsrId();
-		Spmtsr spmtsr= new Spmtsr();
+		Spmtsr spmtsr = new Spmtsr();
 		spmtsr.setId(id);
-		
+
 		Agent agent = new Agent();
 		agent.setNomatr(5138);
-		
+
 		Affectation aff = new Affectation();
 		aff.setDateDebutAff(new Date());
 		aff.setAgent(agent);
@@ -3173,8 +3174,7 @@ public class FichePosteServiceTest {
 						Arrays.asList(idEntiteSource),
 						Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
 								EnumStatutFichePoste.EN_CREATION.getStatut()))).thenReturn(listFichesPoste);
-		Mockito.when(
-				fichePosteDao.chercherSppost(Mockito.anyInt(),Mockito.anyInt())).thenReturn(sppost);
+		Mockito.when(fichePosteDao.chercherSppost(Mockito.anyInt(), Mockito.anyInt())).thenReturn(sppost);
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3195,13 +3195,12 @@ public class FichePosteServiceTest {
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entiteSource);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(2)).thenReturn(entiteCible);
 
-
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
-		Mockito.when(mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(Mockito.anyInt(),Mockito.anyInt())).thenReturn(spmtsr);
+		Mockito.when(mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(Mockito.anyInt(), Mockito.anyInt())).thenReturn(spmtsr);
 
 		IAffectationService affSrv = Mockito.mock(IAffectationService.class);
 		Mockito.when(affSrv.getListAffectationActiveByIdFichePoste(Mockito.anyInt())).thenReturn(listAff);
-		
+
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getInfoSiservByIdEntite(Mockito.anyInt())).thenReturn(siservAs400);
 
