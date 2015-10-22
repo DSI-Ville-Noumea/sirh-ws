@@ -18,6 +18,11 @@ public class RefTypeSaisiCongeAnnuelDto {
 	public RefTypeSaisiCongeAnnuelDto() {
 	}
 
+	public RefTypeSaisiCongeAnnuelDto(Integer idBaseConge) {
+		this();
+		this.idRefTypeSaisiCongeAnnuel = idBaseConge;
+	}
+
 	public Integer getIdRefTypeSaisiCongeAnnuel() {
 		return idRefTypeSaisiCongeAnnuel;
 	}
