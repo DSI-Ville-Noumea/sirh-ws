@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,8 @@ import javax.persistence.PersistenceContext;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.PrimePointageAff;
+import nc.noumea.mairie.model.pk.sirh.PrimePointageAffPK;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -1173,6 +1176,150 @@ public class AffectationRepositoryTest {
 		List<Affectation> result = repository.getListAffectationActiveByIdFichePoste(fichePoste.getIdFichePoste());
 
 		assertEquals(result.size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeAffectationsForListAgentByPeriode_1Affectation_1Prime() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		PrimePointageAffPK primePointageAffPK = new PrimePointageAffPK();
+		primePointageAffPK.setNumRubrique(7704);
+		
+		PrimePointageAff primeAff = new PrimePointageAff();
+		primeAff.setPrimePointageAffPK(primePointageAffPK);
+		primeAff.setLibelle("INDEMNITE DE PANIER");
+		
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new DateTime(2015, 01, 01, 00, 00).toDate());
+		a.setDateFinAff(null);
+		a.setIdBaseHoraireAbsence(5);
+		a.getPrimePointageAff().add(primeAff);
+		
+		primeAff.setAffectation(a);
+		primePointageAffPK.setIdAffectation(a.getIdAffectation());
+
+		sirhPersistenceUnit.persist(a);
+		sirhPersistenceUnit.persist(primeAff);
+		
+		List<Affectation> result = repository.getListeAffectationsForListAgentByPeriode(
+				Arrays.asList(9005138), 
+				new DateTime(2015, 01, 01, 00, 00).toDate(), 
+				new DateTime(2015, 10, 01, 00, 00).toDate());
+		
+		assertEquals(result.size(), 1);
+		assertEquals(result.get(0).getIdBaseHoraireAbsence().intValue(), 5);
+		assertEquals(result.get(0).getPrimePointageAff().size(), 1);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListeAffectationsForListAgentByPeriode_2Affectations_2Primes() {
+		
+		// 1er affecation/agent
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		PrimePointageAffPK primePointageAffPK = new PrimePointageAffPK();
+		primePointageAffPK.setNumRubrique(7704);
+		
+		PrimePointageAff primeAff = new PrimePointageAff();
+		primeAff.setPrimePointageAffPK(primePointageAffPK);
+		primeAff.setLibelle("INDEMNITE DE PANIER");
+		
+		Affectation a = new Affectation();
+		a.setAgent(ag);
+		a.setIdAffectation(1);
+		a.setTempsTravail("tempsTravail");
+		a.setDateDebutAff(new DateTime(2015, 01, 01, 00, 00).toDate());
+		a.setDateFinAff(null);
+		a.setIdBaseHoraireAbsence(5);
+		a.getPrimePointageAff().add(primeAff);
+		
+		primeAff.setAffectation(a);
+		primePointageAffPK.setIdAffectation(a.getIdAffectation());
+
+		sirhPersistenceUnit.persist(a);
+		sirhPersistenceUnit.persist(primeAff);
+		
+		// 2e affecation/agent
+		Agent ag2 = new Agent();
+		ag2.setIdAgent(9002990);
+		ag2.setNomatr(2990);
+		ag2.setPrenom("NON");
+		ag2.setDateNaissance(new Date());
+		ag2.setNomPatronymique("TEST");
+		ag2.setNomUsage("USAGE");
+		ag2.setPrenomUsage("NONO");
+		ag2.setSexe("H");
+		ag2.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag2);
+		
+		PrimePointageAffPK primePointageAffPK2 = new PrimePointageAffPK();
+		primePointageAffPK2.setNumRubrique(7713);
+		
+		PrimePointageAff primeAff2 = new PrimePointageAff();
+		primeAff2.setPrimePointageAffPK(primePointageAffPK2);
+		primeAff2.setLibelle("INDEMNITE DE PANIER DPM");
+		
+		PrimePointageAffPK primePointageAffPK3 = new PrimePointageAffPK();
+		primePointageAffPK3.setNumRubrique(7720);
+		
+		PrimePointageAff primeAff3 = new PrimePointageAff();
+		primeAff3.setPrimePointageAffPK(primePointageAffPK3);
+		primeAff3.setLibelle("INDEMNITE TVX INSAL. DANG. 100%");
+		
+		Affectation a2 = new Affectation();
+		a2.setAgent(ag2);
+		a2.setIdAffectation(2);
+		a2.setTempsTravail("tempsTravail");
+		a2.setDateDebutAff(new DateTime(2015, 1, 15, 0, 0).toDate());
+		a2.setDateFinAff(new DateTime(2015, 2, 15, 0, 0).toDate());
+		a2.setIdBaseHoraireAbsence(3);
+		a2.getPrimePointageAff().add(primeAff2);
+		a2.getPrimePointageAff().add(primeAff3);
+
+		sirhPersistenceUnit.persist(a2);
+		
+		List<Affectation> result = repository.getListeAffectationsForListAgentByPeriode(
+				Arrays.asList(9005138, 9002990), 
+				new DateTime(2015, 1, 1, 0, 0).toDate(), 
+				new DateTime(2015, 1, 31, 0, 0).toDate());
+		
+		assertEquals(result.size(), 2);
+		assertEquals(result.get(0).getIdBaseHoraireAbsence().intValue(), 3);
+		assertEquals(result.get(0).getPrimePointageAff().size(), 2);
+		assertEquals(result.get(1).getIdBaseHoraireAbsence().intValue(), 5);
+		assertEquals(result.get(1).getPrimePointageAff().size(), 1);
 
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();

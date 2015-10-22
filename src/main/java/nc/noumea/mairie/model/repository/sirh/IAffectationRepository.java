@@ -27,4 +27,7 @@ public interface IAffectationRepository {
 	Agent getAffectationAgent(Integer idAgent, Date dateDonnee);
 
 	List<Affectation> getListAffectationActiveByIdFichePoste(Integer idFichePoste);
+
+	List<Affectation> getListeAffectationsForListAgentByPeriode(
+			List<Integer> listIdsAgent, Date dateDebut, Date dateFin);
 }
