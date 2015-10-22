@@ -1,6 +1,8 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -83,6 +87,10 @@ public class Affectation {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_BASE_HORAIRE_POINTAGE", referencedColumnName = "ID_BASE_HORAIRE_POINTAGE")
 	private BaseHorairePointage baseHorairePointage;
+	
+	@OneToMany(mappedBy = "affectation", fetch = FetchType.LAZY)
+	@OrderBy("primePointageAffPK.numRubrique asc")
+	private Set<PrimePointageAff> primePointageAff = new HashSet<PrimePointageAff>();
 	
 	public Integer getIdAffectation() {
 		return idAffectation;
@@ -164,4 +172,12 @@ public class Affectation {
 		this.baseHorairePointage = baseHorairePointage;
 	}
 
+	public Set<PrimePointageAff> getPrimePointageAff() {
+		return primePointageAff;
+	}
+
+	public void setPrimePointageAff(Set<PrimePointageAff> primePointageAff) {
+		this.primePointageAff = primePointageAff;
+	}
+	
 }
