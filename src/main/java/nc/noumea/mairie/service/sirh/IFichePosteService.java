@@ -12,8 +12,7 @@ import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 public interface IFichePosteService {
 
-	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour,
-			boolean withCompetenceAndActivities);
+	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour, boolean withCompetenceAndActivities);
 
 	public boolean estResponsable(Integer idAgent);
 
@@ -45,10 +44,9 @@ public interface IFichePosteService {
 
 	SpbhorDto getSpbhorDtoById(Integer idSpbhor);
 
-	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite,
-			List<Integer> listStatutFDP, boolean withEntiteChildren);
+	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP, boolean withEntiteChildren);
 
-	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren);
+	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren, Date date);
 
 	// Pour ADS
 
@@ -68,6 +66,5 @@ public interface IFichePosteService {
 
 	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires);
 
-	ReturnMessageDto deplaceFichePosteFromEntityToOtherEntity(
-			Integer idEntiteSource, Integer idEntiteCible, Integer idAgent);
+	ReturnMessageDto deplaceFichePosteFromEntityToOtherEntity(Integer idEntiteSource, Integer idEntiteCible, Integer idAgent);
 }
