@@ -413,11 +413,8 @@ public class FichePosteController {
 	@RequestMapping(value = "/deleteFichePosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> deleteFichePosteByIdEntite(
-			@RequestParam(value = "idEntite", required = true) Integer idEntite, 
-			@RequestParam(value = "idAgent", required = true) Long idAgent,
-			@RequestParam(value = "sigle", required = true) String sigle)
-			throws ParseException {
+	public ResponseEntity<String> deleteFichePosteByIdEntite(@RequestParam(value = "idEntite", required = true) Integer idEntite, @RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "sigle", required = true) String sigle) throws ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -442,7 +439,7 @@ public class FichePosteController {
 	public ResponseEntity<String> getInfoFDPByEntite(@RequestParam(value = "idEntite", required = true) Integer idEntite,
 			@RequestParam(value = "withEntiteChildren", required = false, defaultValue = "false") boolean withEntiteChildren) throws ParseException {
 
-		InfoEntiteDto result = fpSrv.getInfoFDP(idEntite, withEntiteChildren);
+		InfoEntiteDto result = fpSrv.getInfoFDP(idEntite, withEntiteChildren, new Date());
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
 

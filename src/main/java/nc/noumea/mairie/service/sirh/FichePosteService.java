@@ -725,7 +725,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren) {
+	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren,Date date) {
 
 		InfoEntiteDto result = new InfoEntiteDto();
 
@@ -738,7 +738,7 @@ public class FichePosteService implements IFichePosteService {
 			result.setIdEntite(idEntite);
 			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
-			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant,date);
 
 		} else {
 			result.setIdEntite(idEntite);
@@ -746,19 +746,19 @@ public class FichePosteService implements IFichePosteService {
 			listeEnfant.add(idEntite);
 			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
-			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant,date);
 		}
 
 		return result;
 
 	}
 
-	private void getListeNumFPByIdServiceADSAndTitrePoste(InfoEntiteDto result, List<Integer> listeIdServiceAds) {
+	private void getListeNumFPByIdServiceADSAndTitrePoste(InfoEntiteDto result, List<Integer> listeIdServiceAds, Date date) {
 
 		if (null != result.getListeInfoFDP()) {
 			for (GroupeInfoFichePosteDto resFDP : result.getListeInfoFDP()) {
 
-				List<InfoFichePosteDto> listInfoFichePosteDto = fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(listeIdServiceAds, resFDP.getTitreFDP(), new Date());
+				List<InfoFichePosteDto> listInfoFichePosteDto = fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(listeIdServiceAds, resFDP.getTitreFDP(), date);
 
 				if (null != listInfoFichePosteDto)
 					resFDP.setListInfoFichePosteDto(listInfoFichePosteDto);
