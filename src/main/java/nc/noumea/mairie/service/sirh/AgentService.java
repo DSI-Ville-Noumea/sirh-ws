@@ -90,7 +90,7 @@ public class AgentService implements IAgentService {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent) {
-		String sql = "select a.* from Affectation aff, Agent a " + "where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
+		String sql = "select a.* from Affectation aff, Agent a where  aff.id_Agent = a.id_Agent and aff.id_Fiche_Poste = "
 				+ "( select fpAgent.id_responsable from Fiche_Poste fpAgent, Affectation aff "
 				+ "where aff.id_Fiche_Poste = fpAgent.id_Fiche_Poste and aff.id_Agent=:idAgent and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)) "
 				+ "and aff.date_Debut_Aff<=:dateJour and (aff.date_Fin_Aff is null or aff.date_Fin_Aff>=:dateJour)";
@@ -300,6 +300,68 @@ public class AgentService implements IAgentService {
 			for (Agent agent : listAgents) {
 				result.add(new AgentGeneriqueDto(agent));
 			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent) {
+
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
+		sb.append("WHERE aff.dateDebutAff = (select MAX(aff2.dateDebutAff) from Affectation aff2 where aff2.agent.idAgent=aff.agent.idAgent group by aff2.agent.idAgent ) ");
+		sb.append("and aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
+		// if we're restraining search with service codes
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			sb.append("and fp.idServiceADS in (:idServiceADS) ");
+		// if we're restraining search with idAgents...
+		if (listIdsAgent != null && listIdsAgent.size() != 0)
+			sb.append("and aff.agent.idAgent in (:idAgents) ");
+
+		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+		// if we're restraining search with service codes
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			query.setParameter("idServiceADS", idServiceADS);
+
+		// if we're restraining search with idAgent...
+		if (listIdsAgent != null && listIdsAgent.size() != 0)
+			query.setParameter("idAgents", listIdsAgent);
+
+		// optimisation #18391
+		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
+		// verifier)
+		// dans leur cas, on recherche qu un seul agent
+		// cela ne sert donc a rien d appeler l arbre entier ADS
+		EntiteDto root = null;
+		if (null == listIdsAgent || 1 < listIdsAgent.size()) {
+			root = adsWSConsumer.getWholeTree();
+		}
+
+		List<Affectation> lag = query.getResultList();
+		for (Affectation aff : lag) {
+			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
+			EntiteDto service = null;
+			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
+
+				if (null != root) {
+					service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(aff.getFichePoste().getIdServiceADS(), root);
+				} else {
+					service = adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				}
+
+				// adsWSConsumer.getEntiteByIdEntite(aff.getFichePoste().getIdServiceADS());
+				EntiteDto direction = adsService.getAffichageDirectionWithoutCallADS(service);
+				agDto.setDirection(direction == null ? "" : direction.getLabel());
+				agDto.setSigleDirection(direction == null ? "" : direction.getSigle());
+			}
+
+			agDto.setService(service == null ? "" : service.getLabel().trim());
+			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
+			agDto.setSigleService(service == null ? "" : service.getSigle());
+			result.add(agDto);
 		}
 
 		return result;

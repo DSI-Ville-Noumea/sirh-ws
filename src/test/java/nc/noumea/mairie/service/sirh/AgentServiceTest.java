@@ -327,4 +327,54 @@ public class AgentServiceTest {
 
 	}
 
+	@Test
+	public void listAgentsOfServicesOldAffectation_returnListOfAgent() {
+		// Given
+		List<Affectation> listeAgent = new ArrayList<Affectation>();
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+		Agent ag = new Agent();
+		ag.setTitre("0");
+		ag.setIdAgent(9005138);
+		Affectation ag1 = new Affectation();
+		ag1.setFichePoste(fichePoste);
+		ag1.setAgent(ag);
+		listeAgent.add(ag1);
+		EntiteDto direction = new EntiteDto();
+		direction.setIdEntite(3);
+		direction.setLabel("direction");
+		EntiteDto service = new EntiteDto();
+		service.setIdEntite(1);
+		service.setSigle("SIGLE");
+		service.setLabel("Label");
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Affectation> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listeAgent);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
+		
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);		
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(fichePoste.getIdServiceADS())).thenReturn(service);
+		
+		IAdsService adsService = Mockito.mock(IAdsService.class);		
+		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(service)).thenReturn(direction);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
+		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(agtService, "adsService", adsService);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesOldAffectation(null, Arrays.asList(9005138));
+
+		// Then
+		assertEquals(1, result.size());
+		assertEquals(ag.getIdAgent(), result.get(0).getIdAgent());
+		assertEquals(service.getLabel(), result.get(0).getService());
+		assertEquals(direction.getLabel(), result.get(0).getDirection());
+
+	}
+
 }
