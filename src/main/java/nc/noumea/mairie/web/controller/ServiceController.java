@@ -36,8 +36,8 @@ public class ServiceController {
 	private IADSWSConsumer adsWSConsumer;
 
 	/**
-	 * Returns the list of agents in a service and its sub services
-	 * Attention, verifier si SHAREPOINT APPELLE ce WS
+	 * Returns the list of agents in a service and its sub services Attention,
+	 * verifier si SHAREPOINT APPELLE ce WS
 	 * 
 	 * @param idAgent
 	 * @param date
@@ -67,26 +67,25 @@ public class ServiceController {
 	/**
 	 * Returns the list of agents with theirs services
 	 * 
-	 * @param idsAgent List<Integer>
-	 * @param date 
+	 * @param idsAgent
+	 *            List<Integer>
+	 * @param date
 	 *            (optional)
-	 * @return List<AgentWithServiceDto> liste des agents passes en parametre avec leur service
+	 * @return List<AgentWithServiceDto> liste des agents passes en parametre
+	 *         avec leur service
 	 */
-	@RequestMapping(value = "/listAgentsWithService", headers = "Accept=application/json",  produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/listAgentsWithService", headers = "Accept=application/json", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListAgentsWithService(@RequestBody String agentsApprouvesJson,
-			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
+	public ResponseEntity<String> getListAgentsWithService(@RequestBody String agentsApprouvesJson, @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
-		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class)
-				.use("values", Integer.class).deserialize(agentsApprouvesJson);
-		
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsApprouvesJson);
+
 		// Si la date n'est pas spécifiée, prendre la date du jour
 		if (date == null)
 			date = new Date();
-		
-		if(null == listIdsAgent
-				|| listIdsAgent.isEmpty()) {
+
+		if (null == listIdsAgent || listIdsAgent.isEmpty()) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
@@ -111,8 +110,7 @@ public class ServiceController {
 	@RequestMapping(value = "/agents", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getServiceAgents(
-			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
+	public ResponseEntity<String> getServiceAgents(@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		EntiteDto serviceAgent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
@@ -121,7 +119,7 @@ public class ServiceController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		List<Integer> services = new ArrayList<Integer>();
-		
+
 		for (EntiteDto enfant : serviceAgent.getEnfants()) {
 			if (!services.contains(enfant.getIdEntite()))
 				services.add(enfant.getIdEntite());
@@ -152,8 +150,7 @@ public class ServiceController {
 	@RequestMapping(value = "/agentsWithEntiteParent", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getServiceAgentsWithEntiteParent(
-			@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
+	public ResponseEntity<String> getServiceAgentsWithEntiteParent(@RequestParam(value = "idServiceADS", required = true) Integer idServiceADS,
 			@RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
 
 		EntiteDto serviceAgent = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
@@ -163,7 +160,7 @@ public class ServiceController {
 
 		List<Integer> services = new ArrayList<Integer>();
 		services.add(serviceAgent.getIdEntite());
-		
+
 		for (EntiteDto enfant : serviceAgent.getEnfants()) {
 			if (!services.contains(enfant.getIdEntite()))
 				services.add(enfant.getIdEntite());
@@ -177,6 +174,37 @@ public class ServiceController {
 
 		if (result.size() == 0)
 			new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
+	/**
+	 * Returns the list of agents with theirs services
+	 * 
+	 * @param idsAgent
+	 *            List<Integer>
+	 * @param date
+	 *            (optional)
+	 * @return List<AgentWithServiceDto> liste des agents passes en parametre
+	 *         avec leur service
+	 */
+	@RequestMapping(value = "/listAgentsWithServiceOldAffectation", headers = "Accept=application/json", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListAgentsWithServiceOldAffectation(@RequestBody String agentsApprouvesJson) {
+
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsApprouvesJson);
+
+		if (null == listIdsAgent || listIdsAgent.isEmpty()) {
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
+
+		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServicesOldAffectation(null, listIdsAgent);
+
+		if (result.size() == 0)
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
 
