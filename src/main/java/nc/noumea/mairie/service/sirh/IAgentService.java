@@ -21,8 +21,7 @@ public interface IAgentService {
 
 	public List<Agent> listAgentServiceSansAgent(Integer idServiceADS, Integer idAgent);
 
-	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable,
-			List<Integer> listeIdServiceADS);
+	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<Integer> listeIdServiceADS);
 
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
@@ -48,5 +47,7 @@ public interface IAgentService {
 	EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee);
 
 	List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent);
+
+	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
 }
