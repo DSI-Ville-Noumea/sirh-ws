@@ -7,6 +7,7 @@ import java.util.List;
 import nc.noumea.mairie.service.sirh.HelperService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IPointageService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AffectationDto;
 import nc.noumea.mairie.web.dto.BaseHorairePointageDto;
 
@@ -99,7 +100,7 @@ public class PointageController {
 	 * @return List<AffectationDto>
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/listeAffectationDtosForListAgentByPeriode", method = RequestMethod.GET)
+	@RequestMapping(value = "/listeAffectationDtosForListAgentByPeriode", method = RequestMethod.POST)
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAffectationDtosForListAgentByPeriode(
 			@RequestParam(value = "dateDebut", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebut,
@@ -126,7 +127,7 @@ public class PointageController {
 		if (result.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		String json = new JSONSerializer().exclude("*.class").serialize(result);
+		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
