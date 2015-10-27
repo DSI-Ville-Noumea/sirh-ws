@@ -245,7 +245,7 @@ public class FichePosteService implements IFichePosteService {
 
 		List<Integer> agents = new ArrayList<Integer>();
 
-		if (!getFichePosteTree().containsKey(idFichePosteResponsable))
+		if (!getFichePosteTree(true).containsKey(idFichePosteResponsable))
 			return agents;
 
 		listSubAgents(getFichePosteTree().get(idFichePosteResponsable), agents, maxDepth, nom);
