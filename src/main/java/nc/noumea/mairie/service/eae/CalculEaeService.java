@@ -83,7 +83,7 @@ public class CalculEaeService implements ICalculEaeService {
 	@Override
 	public CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation) throws NumberFormatException, ParseException {
 
-		Affectation affectation = affectationRepository.getAffectationActiveByAgent(idAgent);
+		Affectation affectation = affectationRepository.getAffectationActiveByAgentPourEAE(idAgent);
 
 		CalculEaeInfosDto dto = new CalculEaeInfosDto();
 
