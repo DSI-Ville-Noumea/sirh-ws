@@ -24,7 +24,7 @@ public class AffectationRepository implements IAffectationRepository {
 	private EntityManager sirhEntityManager;
 
 	@Override
-	public Affectation getAffectationActiveByAgent(int idAgent) {
+	public Affectation getAffectationActiveByAgentPourEAE(Integer idAgent) {
 
 		TypedQuery<Affectation> q = sirhEntityManager.createNamedQuery("getAffectationActiveByAgentPourCalculEAE", Affectation.class);
 		q.setParameter("idAgent", idAgent);
@@ -224,6 +224,23 @@ public class AffectationRepository implements IAffectationRepository {
 		query.setParameter("dateFin", dateFin);
 		
 		return query.getResultList();
+	}
+
+	@Override
+	public Affectation getAffectationActiveByAgent(Integer idAgent) {
+
+		TypedQuery<Affectation> q = sirhEntityManager.createNamedQuery("getAffectationActiveByAgent", Affectation.class);
+		q.setParameter("idAgent", idAgent);
+		q.setParameter("today", new Date());
+
+		List<Affectation> result = q.getResultList();
+
+		if (result.size() != 1) {
+			logger.warn("Une erreur s'est produite lors de la recherche d'une affectation pour l'agent {}. Le nombre de résultat est {} affectations au lieu de 1.", idAgent, result.size());
+			return null;
+		}
+
+		return result.get(0);
 	}
 
 }
