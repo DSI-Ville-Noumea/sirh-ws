@@ -22,6 +22,8 @@ public class AgentAnnuaireDto {
 	private String sexe;
 	private String villeDomicile;
 	private Integer codePostalDomicile;
+	private String villeBp;
+	private Integer codePostalBp;
 	/*
 	 * Champs concernant les contacts
 	 */
@@ -62,8 +64,12 @@ public class AgentAnnuaireDto {
 		this.nomPatronymique = ag.getNomPatronymique() == null ? null : ag.getNomPatronymique().trim();
 		this.dateNaissance = ag.getDateNaissance();
 		this.sexe = ag.getSexe() == null ? null : ag.getSexe().trim();
+		//#19389
 		this.villeDomicile = ag.getCodeCommuneVilleDom() == null ? null : ag.getCodeCommuneVilleDom().getLibVil().trim();
 		this.codePostalDomicile = ag.getCodePostalVilleDom() == null || ag.getCodePostalVilleDom().toString().equals("0") ? null : ag.getCodePostalVilleDom();
+		this.villeBp = ag.getCodeCommuneVilleBP() == null ? null : ag.getCodeCommuneVilleBP().getLibVil().trim();
+		this.codePostalBp = ag.getCodePostalVilleBP() == null || ag.getCodePostalVilleBP().toString().equals("0") ? null
+				: ag.getCodePostalVilleBP();
 		// Contacts
 		List<ContactAgentDto> listeContact = new ArrayList<ContactAgentDto>();
 		for (Contact c : lc) {
@@ -271,6 +277,22 @@ public class AgentAnnuaireDto {
 
 	public void setCodePostalDomicile(Integer codePostalDomicile) {
 		this.codePostalDomicile = codePostalDomicile;
+	}
+
+	public String getVilleBp() {
+		return villeBp;
+	}
+
+	public void setVilleBp(String villeBp) {
+		this.villeBp = villeBp;
+	}
+
+	public Integer getCodePostalBp() {
+		return codePostalBp;
+	}
+
+	public void setCodePostalBp(Integer codePostalBp) {
+		this.codePostalBp = codePostalBp;
 	}
 
 }
