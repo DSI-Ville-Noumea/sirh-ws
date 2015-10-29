@@ -167,7 +167,7 @@ public class CalculEaeServiceTest {
 		listFormationAgent.add(formationAgent);
 
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
-		Mockito.when(affectationRepository.getAffectationActiveByAgent(Mockito.anyInt())).thenReturn(aff);
+		Mockito.when(affectationRepository.getAffectationActiveByAgentPourEAE(Mockito.anyInt())).thenReturn(aff);
 
 		ISirhRepository sirhRepository = Mockito.mock(ISirhRepository.class);
 		Mockito.when(sirhRepository.getListDiplomeByAgent(Mockito.anyInt())).thenReturn(lstDiplome);
