@@ -20,6 +20,8 @@ public class AgentAnnuaireDto {
 	private String nomPatronymique;
 	private Date dateNaissance;
 	private String sexe;
+	private String villeDomicile;
+	private Integer codePostalDomicile;
 	/*
 	 * Champs concernant les contacts
 	 */
@@ -50,8 +52,7 @@ public class AgentAnnuaireDto {
 	public AgentAnnuaireDto() {
 	}
 
-	public AgentAnnuaireDto(Agent ag, Spadmn position, List<Contact> lc, TitrePosteDto posteDto,
-			Integer idAgentSuperieur, String servi4, String servi16, EntiteDto entite, EntiteDto direction,
+	public AgentAnnuaireDto(Agent ag, Spadmn position, List<Contact> lc, TitrePosteDto posteDto, Integer idAgentSuperieur, String servi4, String servi16, EntiteDto entite, EntiteDto direction,
 			FichePoste fichePoste, PositDesc positDesc) {
 		this.idAgent = ag.getIdAgent();
 		this.nomatr = ag.getNomatr();
@@ -61,6 +62,8 @@ public class AgentAnnuaireDto {
 		this.nomPatronymique = ag.getNomPatronymique() == null ? null : ag.getNomPatronymique().trim();
 		this.dateNaissance = ag.getDateNaissance();
 		this.sexe = ag.getSexe() == null ? null : ag.getSexe().trim();
+		this.villeDomicile = ag.getCodeCommuneVilleDom() == null ? null : ag.getCodeCommuneVilleDom().getLibVil().trim();
+		this.codePostalDomicile = ag.getCodePostalVilleDom() == null || ag.getCodePostalVilleDom().toString().equals("0") ? null : ag.getCodePostalVilleDom();
 		// Contacts
 		List<ContactAgentDto> listeContact = new ArrayList<ContactAgentDto>();
 		for (Contact c : lc) {
@@ -69,16 +72,13 @@ public class AgentAnnuaireDto {
 		}
 		this.contacts = listeContact;
 		// PA
-		this.cdpadm = position.getPositionAdministrative() == null ? null : position.getPositionAdministrative()
-				.getCdpAdm().trim();
-		this.lipadm = position.getPositionAdministrative() == null ? null : position.getPositionAdministrative()
-				.getLibelle().trim();
+		this.cdpadm = position.getPositionAdministrative() == null ? null : position.getPositionAdministrative().getCdpAdm().trim();
+		this.lipadm = position.getPositionAdministrative() == null ? null : position.getPositionAdministrative().getLibelle().trim();
 		this.positDesc = positDesc == null ? null : positDesc.getDescription();
 		// FDP
 		this.poste = posteDto;
 		this.idAgentSuperieurHierarchique = idAgentSuperieur;
-		this.lieuPoste = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? ""
-				: fichePoste.getLieuPoste().getLibelleLieu().trim();
+		this.lieuPoste = null == fichePoste.getLieuPoste() || fichePoste.getLieuPoste().getLibelleLieu() == null ? "" : fichePoste.getLieuPoste().getLibelleLieu().trim();
 		// Entite
 		this.servi4 = servi4;
 		this.servi16 = servi16;
@@ -255,6 +255,22 @@ public class AgentAnnuaireDto {
 
 	public void setPrenomUsage(String prenomUsage) {
 		this.prenomUsage = prenomUsage;
+	}
+
+	public String getVilleDomicile() {
+		return villeDomicile;
+	}
+
+	public void setVilleDomicile(String villeDomicile) {
+		this.villeDomicile = villeDomicile;
+	}
+
+	public Integer getCodePostalDomicile() {
+		return codePostalDomicile;
+	}
+
+	public void setCodePostalDomicile(Integer codePostalDomicile) {
+		this.codePostalDomicile = codePostalDomicile;
 	}
 
 }
