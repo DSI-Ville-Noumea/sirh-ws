@@ -8,7 +8,9 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 
 public interface IAffectationRepository {
 
-	Affectation getAffectationActiveByAgent(int idAgent);
+	Affectation getAffectationActiveByAgentPourEAE(Integer idAgent);
+
+	Affectation getAffectationActiveByAgent(Integer idAgent);
 
 	List<Affectation> getListeAffectationsAgentAvecService(Integer idAgent, Integer idServiceADS);
 
@@ -28,6 +30,5 @@ public interface IAffectationRepository {
 
 	List<Affectation> getListAffectationActiveByIdFichePoste(Integer idFichePoste);
 
-	List<Affectation> getListeAffectationsForListAgentByPeriode(
-			List<Integer> listIdsAgent, Date dateDebut, Date dateFin);
+	List<Affectation> getListeAffectationsForListAgentByPeriode(List<Integer> listIdsAgent, Date dateDebut, Date dateFin);
 }

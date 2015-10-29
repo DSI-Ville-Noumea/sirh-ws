@@ -7,6 +7,8 @@ import nc.noumea.mairie.service.sirh.IAnnuaireService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentAnnuaireDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,8 @@ import flexjson.JSONSerializer;
 @RequestMapping("/annuaire")
 public class AnnuaireController {
 
+	private Logger logger = LoggerFactory.getLogger(AnnuaireController.class);
+
 	@Autowired
 	private IAnnuaireService annuaireSrv;
 
@@ -35,11 +39,12 @@ public class AnnuaireController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> listAgentActiviteAnnuaire() {
 
+		logger.debug("entered GET [annuaire/listAgentActiviteAnnuaire] => listAgentActiviteAnnuaire");
+
 		// on cherche si l'agent a une affectation active
 		List<Integer> listIdAgent = annuaireSrv.listAgentActiviteAnnuaire();
 
-		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").deepSerialize(listIdAgent),
-				HttpStatus.OK);
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").deepSerialize(listIdAgent), HttpStatus.OK);
 	}
 
 	/**
@@ -60,8 +65,7 @@ public class AnnuaireController {
 		// on recup les infos de l'agent pour l'annuaire
 		AgentAnnuaireDto res = annuaireSrv.getInfoAgent(new Integer(newIdAgent));
 
-		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class)
-				.deepSerialize(res);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(res);
 
 		if (res == null || res.getIdAgent() == null) {
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);

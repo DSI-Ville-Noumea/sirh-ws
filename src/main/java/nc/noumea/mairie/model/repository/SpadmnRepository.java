@@ -87,6 +87,7 @@ public class SpadmnRepository implements ISpadmnRepository {
 		sb.append("select a.id.nomatr as nomatr from Spadmn a ");
 		sb.append("where  a.positionAdministrative.cdpAdm in (select an.cdpAdm from SpposaAnnuaire an) ");
 		sb.append("AND  a.id.datdeb <= :dateFormatMairie and (a.datfin > :dateFormatMairie or a.datfin = 0 or a.datfin is null) ");
+		sb.append("AND  a.id.nomatr < 9000 ");
 		sb.append("ORDER BY nomatr ");
 
 		TypedQuery<Integer> q = sirhEntityManager.createQuery(sb.toString(), Integer.class);
