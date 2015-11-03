@@ -127,7 +127,7 @@ public class PointageController {
 		if (result.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		String json = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).serialize(result);
+		String json = new JSONSerializer().exclude("*.class").include("listPrimesAff").transform(new MSDateTransformer(), Date.class).serialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
