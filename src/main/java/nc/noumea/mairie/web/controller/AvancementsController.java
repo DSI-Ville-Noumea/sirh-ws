@@ -102,6 +102,25 @@ public class AvancementsController {
 		return new ResponseEntity<String>(new JSONSerializer().serialize(eaeIds), HttpStatus.OK);
 	}
 
+	/**
+	 * bug #19585 : on recrée le WS /getEaesGedIds
+	 * car on a un doute sur son utilisation par sharepoint
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/getEaesGedIdsForSIRHJobs", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getEaesGedIdsForSIRHJobs(@RequestParam("idCap") int idCap,
+			@RequestParam("idCadreEmploi") int idCadreEmploi) {
+
+		ReturnMessageDto eaeIds = avancementsService.getAvancementsEaesForCapAndCadreEmploi(idCap, idCadreEmploi);
+		List<String> res = new ArrayList<String>();
+		for (int i = 0; i < eaeIds.getInfos().size(); i++) {
+			res.add(eaeIds.getInfos().get(i));
+		}
+		// bug #19585
+		return new ResponseEntity<String>(new JSONSerializer().serialize(res), HttpStatus.OK);
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "/xml/getArretes", produces = "application/xml", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
