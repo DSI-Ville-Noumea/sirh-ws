@@ -5,7 +5,7 @@
 	<groupId>nc.noumea.mairie</groupId>
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
-	<version>4.8</version>
+	<version>4.9</version>
 	<name>sirh-ws</name>
 	<organization>
 		<name>Mairie de Nouméa</name>
@@ -253,6 +253,7 @@
 		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
+
 			<artifactId>cglib-nodep</artifactId>
 			<version>3.1</version>
 		</dependency>
