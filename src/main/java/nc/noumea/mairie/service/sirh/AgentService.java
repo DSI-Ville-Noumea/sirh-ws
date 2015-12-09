@@ -19,6 +19,7 @@ import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,10 +189,87 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, Integer idServiceADS) {
+	public List<AgentWithServiceDto> listAgentsEnActiviteWithServiceAds(String nom, Integer idServiceADS) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
+		List<Object[]> list = getListAgentsEnActivite(nom, idServiceADS);
+
+		// optimisation #18176
+		EntiteDto root = adsWSConsumer.getWholeTree();
+
+		if(null != list) {
+			for (Object[] res : list) {
+				AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
+				FichePoste fp = (FichePoste) res[1];
+				EntiteDto service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(fp.getIdServiceADS(), root);
+	
+				// on construit le dto de l'agent
+				agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
+				agDto.setService(service == null ? null : service.getLabel().trim());
+				result.add(agDto);
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByService(Integer idServiceADS) {
+
+		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
+
+		if(null == entite) 
+			return null;
+		
+		EntiteWithAgentWithServiceDto entiteWithAgents = new EntiteWithAgentWithServiceDto(entite);
+		List<Object[]> list = getListAgentsEnActivite(null, idServiceADS);
+
+		if(null != list) {
+			for (Object[] res : list) {
+				AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
+				// on construit le dto de l'agent
+				agDto.setIdServiceADS(entite.getIdEntite());
+				agDto.setService(entite.getLabel().trim());
+				
+				entiteWithAgents.getListAgentWithServiceDto().add(agDto);
+			}
+		}
+		
+		getArbreServicesWithListAgentsByService(entiteWithAgents);
+		
+		return entiteWithAgents;
+	}
+	
+	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite) {
+		
+		if(null != entite
+				&& null != entite.getEnfants()) {
+			for(EntiteDto enfant : entite.getEnfants()) {
+				
+				EntiteWithAgentWithServiceDto enfantsWithAgents = new EntiteWithAgentWithServiceDto(enfant);
+				
+				List<Object[]> list = getListAgentsEnActivite(null, enfant.getIdEntite());
+				if(null != list) {
+					for (Object[] res : list) {
+						AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
+						// on construit le dto de l'agent
+						agDto.setIdServiceADS(entite.getIdEntite());
+						agDto.setService(entite.getLabel().trim());
+						
+						enfantsWithAgents.getListAgentWithServiceDto().add(agDto);
+					}
+				}
+				
+				entite.getEntiteEnfantWithAgents().add(enfantsWithAgents);
+				
+				getArbreServicesWithListAgentsByService(enfantsWithAgents);
+			}
+		}
+	}
+	
+	private List<Object[]> getListAgentsEnActivite(String nom, Integer idServiceADS) {
+		
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select ag, fp from AgentRecherche ag , Affectation aff, FichePoste fp, Spadmn pa ");
@@ -206,7 +284,8 @@ public class AgentService implements IAgentService {
 		if (idServiceADS != null)
 			sb.append("and fp.idServiceADS= :idServiceADS ");
 		// if we're restraining search with nomAgent...
-		if (!nom.equals(""))
+		if (null != nom 
+				&& !nom.equals(""))
 			sb.append("and ag.nomUsage like :nom ");
 
 		Query query = sirhEntityManager.createQuery(sb.toString());
@@ -220,26 +299,14 @@ public class AgentService implements IAgentService {
 			query.setParameter("idServiceADS", idServiceADS);
 
 		// if we're restraining search with nomAgent...
-		if (!nom.equals(""))
+		if (null != nom
+				&& !nom.equals(""))
 			query.setParameter("nom", nom + "%");
-
-		// optimisation #18176
-		EntiteDto root = adsWSConsumer.getWholeTree();
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> list = query.getResultList();
-		for (Object[] res : list) {
-			AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
-			FichePoste fp = (FichePoste) res[1];
-			EntiteDto service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(fp.getIdServiceADS(), root);
-
-			// on construit le dto de l'agent
-			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
-			agDto.setService(service == null ? null : service.getLabel().trim());
-			result.add(agDto);
-		}
-
-		return result;
+		
+		return list;
 	}
 
 	@Override

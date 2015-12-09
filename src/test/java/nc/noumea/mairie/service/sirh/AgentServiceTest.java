@@ -73,7 +73,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "adsService", adsService);
 
 		// When
-		List<AgentWithServiceDto> result = agtService.listAgentsEnActivite("QUIN", null);
+		List<AgentWithServiceDto> result = agtService.listAgentsEnActiviteWithServiceAds("QUIN", null);
 
 		// Then
 		assertEquals(2, result.size());
@@ -100,7 +100,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(service, "adsService", adsService);
 
 		// When
-		List<AgentWithServiceDto> result = service.listAgentsEnActivite("", null);
+		List<AgentWithServiceDto> result = service.listAgentsEnActiviteWithServiceAds("", null);
 
 		// Then
 		assertEquals(0, result.size());
