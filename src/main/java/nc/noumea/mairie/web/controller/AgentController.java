@@ -30,6 +30,7 @@ import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ContactAgentDto;
 import nc.noumea.mairie.web.dto.EnfantDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
 import org.apache.log4j.Logger;
@@ -160,7 +161,7 @@ public class AgentController {
 
 		// id service ADS pour le kiosque RH
 		EntiteDto entite = agentSrv.getServiceAgent(new Integer(newIdAgent), new Date());
-		dto.setIdServiceAds(entite.getIdEntite());
+		dto.setIdServiceAds(null != entite ? entite.getIdEntite() : null);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(dto);
 
@@ -403,11 +404,27 @@ public class AgentController {
 
 		logger.debug("DEBUT getListeAgentsMairie [agents/listeAgentsMairie]");
 
-		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActivite(nom, idServiceADS);
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActiviteWithServiceAds(nom, idServiceADS);
 
 		logger.debug("FIN getListeAgentsMairie [agents/listeAgentsMairie]");
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/arbreServicesWithListAgentsByService", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getArbreServicesWithListAgentsByService(@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS) 
+			throws ParseException {
+
+		logger.debug("DEBUT getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByService]");
+
+		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByService(idServiceADS);
+
+		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByService]");
+
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
+				.include("*.entiteEnfantWithAgents").include("*.listAgentWithServiceDto").transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
 	}
 
 	@ResponseBody
