@@ -7,6 +7,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 
 public interface IAgentService {
 
@@ -40,7 +41,7 @@ public interface IAgentService {
 
 	public Agent findAgentWithName(Integer idAgent, String nom);
 
-	public List<AgentWithServiceDto> listAgentsEnActivite(String nom, Integer idServiceADS);
+	public List<AgentWithServiceDto> listAgentsEnActiviteWithServiceAds(String nom, Integer idServiceADS);
 
 	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee);
 
@@ -49,5 +50,8 @@ public interface IAgentService {
 	List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent);
 
 	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent);
+
+	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByService(
+			Integer idServiceADS);
 
 }
