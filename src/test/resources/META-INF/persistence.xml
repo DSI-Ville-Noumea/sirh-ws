@@ -97,7 +97,8 @@
 		<class>nc.noumea.mairie.model.bean.Sppost</class>
 		<class>nc.noumea.mairie.model.bean.PositDesc</class>
 		<class>nc.noumea.mairie.model.bean.Siserv</class>
-		<class>nc.noumea.mairie.model.bean.SpposaAnnuaire</class>		
+		<class>nc.noumea.mairie.model.bean.SpposaAnnuaire</class>	
+		<class>nc.noumea.mairie.model.bean.SiBanqGuichet</class>	
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
