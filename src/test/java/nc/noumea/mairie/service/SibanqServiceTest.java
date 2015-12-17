@@ -96,7 +96,7 @@ public class SibanqServiceTest {
 	public void getListBanqueAvecGuichet_1result() {
 		SiguicId id = new SiguicId();
 		id.setCodeBanque(1);
-		id.setCodeGuichet(2);
+		id.setCodeGuichet(20);
 		SiBanqGuichet banq1 = new SiBanqGuichet();
 		banq1.setId(id);
 		banq1.setLiBanque("banque");
@@ -118,9 +118,9 @@ public class SibanqServiceTest {
 		List<BanqueGuichetDto> result = service.getListBanqueAvecGuichet();
 
 		assertEquals(1, result.size());
-		assertEquals(new Integer(1), result.get(0).getCodeBanque());
+		assertEquals("00001", result.get(0).getCodeBanque());
 		assertEquals("banque", result.get(0).getLibelleBanque());
-		assertEquals(new Integer(2), result.get(0).getCodeGuichet());
+		assertEquals("00020", result.get(0).getCodeGuichet());
 		assertEquals("guichet", result.get(0).getLibelleGuichet());
 	}
 }
