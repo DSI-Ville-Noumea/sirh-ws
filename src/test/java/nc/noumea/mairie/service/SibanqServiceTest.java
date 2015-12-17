@@ -9,7 +9,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.SiBanqGuichet;
 import nc.noumea.mairie.model.bean.Sibanq;
+import nc.noumea.mairie.model.pk.SiguicId;
+import nc.noumea.mairie.web.dto.BanqueGuichetDto;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -69,5 +72,55 @@ public class SibanqServiceTest {
 		// Then
 		assertNull(result);
 
+	}
+
+	@Test
+	public void getListBanqueAvecGuichet_noResult() {
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<SiBanqGuichet> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(new ArrayList<SiBanqGuichet>());
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(SiBanqGuichet.class))).thenReturn(mockQuery);
+
+		SibanqService service = new SibanqService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		List<BanqueGuichetDto> result = service.getListBanqueAvecGuichet();
+
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void getListBanqueAvecGuichet_1result() {
+		SiguicId id = new SiguicId();
+		id.setCodeBanque(1);
+		id.setCodeGuichet(2);
+		SiBanqGuichet banq1 = new SiBanqGuichet();
+		banq1.setId(id);
+		banq1.setLiBanque("banque");
+		banq1.setLiGuichet("guichet");
+
+		List<SiBanqGuichet> listBanqu = new ArrayList<SiBanqGuichet>();
+		listBanqu.add(banq1);
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<SiBanqGuichet> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listBanqu);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(SiBanqGuichet.class))).thenReturn(mockQuery);
+
+		SibanqService service = new SibanqService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+
+		List<BanqueGuichetDto> result = service.getListBanqueAvecGuichet();
+
+		assertEquals(1, result.size());
+		assertEquals(new Integer(1), result.get(0).getCodeBanque());
+		assertEquals("banque", result.get(0).getLibelleBanque());
+		assertEquals(new Integer(2), result.get(0).getCodeGuichet());
+		assertEquals("guichet", result.get(0).getLibelleGuichet());
 	}
 }
