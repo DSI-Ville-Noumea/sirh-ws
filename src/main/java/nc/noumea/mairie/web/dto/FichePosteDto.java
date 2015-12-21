@@ -321,7 +321,7 @@ public class FichePosteDto {
 		this.gradePoste = fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste().getGradeInitial().trim();
 		this.agent = "";
 		this.categorie = "";
-
+		
 		if (null != fichePoste.getAgent()) {
 			for (Affectation agt : fichePoste.getAgent()) {
 				this.agent = agt.getAgent().getDisplayNom() + " " + agt.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
@@ -331,6 +331,13 @@ public class FichePosteDto {
 
 		if (null != fichePoste.getGradePoste() && null != fichePoste.getGradePoste().getGradeGenerique() && null != fichePoste.getGradePoste().getGradeGenerique().getCdcadr()) {
 			this.categorie = fichePoste.getGradePoste().getGradeGenerique().getCdcadr().trim();
+		}
+		// #20579 pour ORGANIGRAMME > YED
+		if (null != fichePoste.getGradePoste().getGradeGenerique() && null != fichePoste.getGradePoste().getGradeGenerique().getFiliere()) {
+			try {
+				this.filiere = fichePoste.getGradePoste().getGradeGenerique().getFiliere().getLibelleFili().trim();
+			} catch (Exception e) {
+			}
 		}
 	}
 
