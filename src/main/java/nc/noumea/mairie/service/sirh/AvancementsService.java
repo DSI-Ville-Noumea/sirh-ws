@@ -80,8 +80,8 @@ public class AvancementsService implements IAvancementsService {
 			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(),
 					corp.getCdgeng(), getStatutFromCap(cap), capVDN);
 
-			if (avcts.size() == 0)
-				continue;
+//			if (avcts.size() == 0)
+//				continue;
 
 			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, avisEAE);
 			result.getCommissionsParCorps().add(comCorps);
