@@ -51,7 +51,6 @@ public interface IAgentService {
 
 	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
-	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByService(
-			Integer idServiceADS);
+	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(Integer idServiceADS, Integer idAgent);
 
 }
