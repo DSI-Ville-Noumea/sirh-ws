@@ -198,12 +198,12 @@ public class AgentService implements IAgentService {
 		// optimisation #18176
 		EntiteDto root = adsWSConsumer.getWholeTree();
 
-		if(null != list) {
+		if (null != list) {
 			for (Object[] res : list) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
 				FichePoste fp = (FichePoste) res[1];
 				EntiteDto service = adsService.getEntiteByIdEntiteOptimiseWithWholeTree(fp.getIdServiceADS(), root);
-	
+
 				// on construit le dto de l'agent
 				agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 				agDto.setService(service == null ? null : service.getLabel().trim());
@@ -215,61 +215,68 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByService(Integer idServiceADS) {
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(Integer idServiceADS, Integer idAgent) {
 
 		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
 
-		if(null == entite) 
+		if (null == entite)
 			return null;
-		
+
 		EntiteWithAgentWithServiceDto entiteWithAgents = new EntiteWithAgentWithServiceDto(entite);
 		List<Object[]> list = getListAgentsEnActivite(null, idServiceADS);
 
-		if(null != list) {
+		if (null != list) {
 			for (Object[] res : list) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
+				// #20666 : on n'ajoute pas l'agent lui-meme
+				if (idAgent != null && idAgent.toString().equals(agDto.getIdAgent().toString())) {
+					continue;
+				}
 				// on construit le dto de l'agent
 				agDto.setIdServiceADS(entite.getIdEntite());
 				agDto.setService(entite.getLabel().trim());
-				
+
 				entiteWithAgents.getListAgentWithServiceDto().add(agDto);
 			}
 		}
-		
-		getArbreServicesWithListAgentsByService(entiteWithAgents);
-		
+
+		getArbreServicesWithListAgentsByService(entiteWithAgents, idAgent);
+
 		return entiteWithAgents;
 	}
-	
-	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite) {
-		
-		if(null != entite
-				&& null != entite.getEnfants()) {
-			for(EntiteDto enfant : entite.getEnfants()) {
-				
+
+	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite, Integer idAgent) {
+
+		if (null != entite && null != entite.getEnfants()) {
+			for (EntiteDto enfant : entite.getEnfants()) {
+
 				EntiteWithAgentWithServiceDto enfantsWithAgents = new EntiteWithAgentWithServiceDto(enfant);
-				
+
 				List<Object[]> list = getListAgentsEnActivite(null, enfant.getIdEntite());
-				if(null != list) {
+				if (null != list) {
 					for (Object[] res : list) {
 						AgentWithServiceDto agDto = new AgentWithServiceDto((AgentRecherche) res[0]);
+						// #20666 : on n'ajoute pas l'agent lui-meme
+						if (idAgent != null && idAgent.toString().equals(agDto.getIdAgent().toString())) {
+							continue;
+						}
 						// on construit le dto de l'agent
 						agDto.setIdServiceADS(entite.getIdEntite());
 						agDto.setService(entite.getLabel().trim());
-						
+
 						enfantsWithAgents.getListAgentWithServiceDto().add(agDto);
 					}
 				}
-				
+
 				entite.getEntiteEnfantWithAgents().add(enfantsWithAgents);
-				
-				getArbreServicesWithListAgentsByService(enfantsWithAgents);
+
+				getArbreServicesWithListAgentsByService(enfantsWithAgents, idAgent);
 			}
 		}
 	}
-	
+
 	private List<Object[]> getListAgentsEnActivite(String nom, Integer idServiceADS) {
-		
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select ag, fp from AgentRecherche ag , Affectation aff, FichePoste fp, Spadmn pa ");
@@ -284,8 +291,7 @@ public class AgentService implements IAgentService {
 		if (idServiceADS != null)
 			sb.append("and fp.idServiceADS= :idServiceADS ");
 		// if we're restraining search with nomAgent...
-		if (null != nom 
-				&& !nom.equals(""))
+		if (null != nom && !nom.equals(""))
 			sb.append("and ag.nomUsage like :nom ");
 
 		Query query = sirhEntityManager.createQuery(sb.toString());
@@ -299,13 +305,12 @@ public class AgentService implements IAgentService {
 			query.setParameter("idServiceADS", idServiceADS);
 
 		// if we're restraining search with nomAgent...
-		if (null != nom
-				&& !nom.equals(""))
+		if (null != nom && !nom.equals(""))
 			query.setParameter("nom", nom + "%");
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> list = query.getResultList();
-		
+
 		return list;
 	}
 
