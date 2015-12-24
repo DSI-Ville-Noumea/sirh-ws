@@ -412,19 +412,19 @@ public class AgentController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/arbreServicesWithListAgentsByService", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/arbreServicesWithListAgentsByServiceWithoutAgentConnecte", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getArbreServicesWithListAgentsByService(@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS) 
-			throws ParseException {
+	public ResponseEntity<String> getArbreServicesWithListAgentsByService(@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS,
+			@RequestParam(value = "idAgent", required = false) Integer idAgent) throws ParseException {
 
-		logger.debug("DEBUT getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByService]");
+		logger.debug("DEBUT getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
-		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByService(idServiceADS);
+		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent);
 
-		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByService]");
+		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
-		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
-				.include("*.entiteEnfantWithAgents").include("*.listAgentWithServiceDto").transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents").include("*.listAgentWithServiceDto")
+				.transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
 	}
 
 	@ResponseBody
