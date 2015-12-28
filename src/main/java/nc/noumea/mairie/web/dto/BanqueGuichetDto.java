@@ -3,9 +3,9 @@ package nc.noumea.mairie.web.dto;
 import nc.noumea.mairie.model.bean.SiBanqGuichet;
 
 public class BanqueGuichetDto {
-	private String codeBanque;
+	private Integer codeBanque;
 	private String libelleBanque;
-	private String codeGuichet;
+	private Integer codeGuichet;
 	private String libelleGuichet;
 
 	public BanqueGuichetDto() {
@@ -14,17 +14,17 @@ public class BanqueGuichetDto {
 
 	public BanqueGuichetDto(SiBanqGuichet bq) {
 		// on ajoute des 0 sur 5 caracteres
-		this.codeBanque = String.format("%05d", bq.getId().getCodeBanque());
+		this.codeBanque = bq.getId().getCodeBanque();
 		this.libelleBanque = bq.getLiBanque();
-		this.codeGuichet = String.format("%05d", bq.getId().getCodeGuichet());
+		this.codeGuichet = bq.getId().getCodeGuichet();
 		this.libelleGuichet = bq.getLiGuichet();
 	}
 
-	public String getCodeBanque() {
+	public Integer getCodeBanque() {
 		return codeBanque;
 	}
 
-	public void setCodeBanque(String codeBanque) {
+	public void setCodeBanque(Integer codeBanque) {
 		this.codeBanque = codeBanque;
 	}
 
@@ -36,11 +36,11 @@ public class BanqueGuichetDto {
 		this.libelleBanque = libelleBanque;
 	}
 
-	public String getCodeGuichet() {
+	public Integer getCodeGuichet() {
 		return codeGuichet;
 	}
 
-	public void setCodeGuichet(String codeGuichet) {
+	public void setCodeGuichet(Integer codeGuichet) {
 		this.codeGuichet = codeGuichet;
 	}
 

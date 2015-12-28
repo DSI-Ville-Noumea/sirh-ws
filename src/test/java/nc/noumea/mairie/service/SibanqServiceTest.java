@@ -118,9 +118,9 @@ public class SibanqServiceTest {
 		List<BanqueGuichetDto> result = service.getListBanqueAvecGuichet();
 
 		assertEquals(1, result.size());
-		assertEquals("00001", result.get(0).getCodeBanque());
+		assertEquals(new Integer(1), result.get(0).getCodeBanque());
 		assertEquals("banque", result.get(0).getLibelleBanque());
-		assertEquals("00020", result.get(0).getCodeGuichet());
+		assertEquals(new Integer(20), result.get(0).getCodeGuichet());
 		assertEquals("guichet", result.get(0).getLibelleGuichet());
 	}
 }
