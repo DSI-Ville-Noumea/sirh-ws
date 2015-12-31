@@ -8,8 +8,9 @@ public interface IAdsService {
 
 	EntiteDto getEntiteByIdEntiteOptimise(Integer idEntite, List<EntiteDto> listEntiteDto);
 
-	String getSigleEntityInEntiteDtoTreeByIdEntite(EntiteDto entite,
-			Integer idServiceAds);
+	String getSigleEntityInEntiteDtoTreeByIdEntite(EntiteDto entite, Integer idServiceAds);
+
+	String getLibelleEntityInEntiteDtoTreeByIdEntite(EntiteDto entite, Integer idServiceAds);
 
 	EntiteDto getInfoSiservByIdEntite(Integer idEntite);
 

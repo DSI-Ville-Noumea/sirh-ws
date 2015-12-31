@@ -289,7 +289,7 @@ public class FichePosteDto {
 		}
 	}
 
-	public FichePosteDto(FichePoste fichePoste, String sigle) {
+	public FichePosteDto(FichePoste fichePoste, String sigle, String libEntite) {
 		this.idFichePoste = fichePoste.getIdFichePoste();
 		this.numero = fichePoste.getNumFP();
 		this.commentaire = fichePoste.getObservation();
@@ -318,6 +318,7 @@ public class FichePosteDto {
 
 		this.idServiceADS = fichePoste.getIdServiceADS();
 		this.sigle = sigle == null ? "" : sigle;
+		this.service = libEntite == null ? "" : libEntite;
 		this.gradePoste = fichePoste.getGradePoste() == null || fichePoste.getGradePoste().getGradeInitial() == null ? "" : fichePoste.getGradePoste().getGradeInitial().trim();
 		this.agent = "";
 		this.categorie = "";
