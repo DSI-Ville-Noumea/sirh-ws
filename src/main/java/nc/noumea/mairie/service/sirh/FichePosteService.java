@@ -424,7 +424,7 @@ public class FichePosteService implements IFichePosteService {
 
 			if (null != fichePoste && (withFichesPosteNonReglemente || null == fichePoste.getReglementaire() || !fichePoste.getReglementaire().getCdThor().equals(0))) {
 				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
-				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste, entite == null ? "" : entite.getSigle());
+				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste, entite == null ? "" : entite.getSigle(), entite == null ? "" : entite.getLabel());
 
 				if (null != root.getFichePostesEnfant()) {
 					for (FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
@@ -670,7 +670,8 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		for (FichePoste fp : listeFDP) {
-			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
+			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()), adsService.getLibelleEntityInEntiteDtoTreeByIdEntite(
+					entiteRoot, fp.getIdServiceADS()));
 			result.add(dto);
 		}
 		return result;
@@ -725,7 +726,7 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren,Date date) {
+	public InfoEntiteDto getInfoFDP(Integer idEntite, boolean withEntiteChildren, Date date) {
 
 		InfoEntiteDto result = new InfoEntiteDto();
 
@@ -738,7 +739,7 @@ public class FichePosteService implements IFichePosteService {
 			result.setIdEntite(idEntite);
 			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
-			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant,date);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant, date);
 
 		} else {
 			result.setIdEntite(idEntite);
@@ -746,7 +747,7 @@ public class FichePosteService implements IFichePosteService {
 			listeEnfant.add(idEntite);
 			List<GroupeInfoFichePosteDto> resFDP = fichePosteDao.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(listeEnfant);
 			result.getListeInfoFDP().addAll(resFDP);
-			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant,date);
+			getListeNumFPByIdServiceADSAndTitrePoste(result, listeEnfant, date);
 		}
 
 		return result;
