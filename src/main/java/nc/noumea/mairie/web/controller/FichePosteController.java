@@ -71,6 +71,8 @@ public class FichePosteController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> rebuildFichePosteTree() throws ParseException {
 
+		logger.debug("entered GET [fichePostes/rebuildFichePosteTree] => rebuildFichePosteTree");
+		
 		try {
 			fpSrv.construitArbreFichePostes();
 		} catch (Exception ex) {
@@ -84,6 +86,8 @@ public class FichePosteController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
+		logger.debug("entered GET [fichePostes/getSubFichePostes] => getSubFichePostes with parameter idAgent = {}", idAgent);
+		
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -579,7 +583,10 @@ public class FichePosteController {
 	@ResponseBody
 	public ResponseEntity<String> getTreeFichesPosteByIdEntite(@RequestParam(value = "idEntite") Integer idEntite,
 			@RequestParam(value = "withFichesPosteNonReglemente") boolean withFichesPosteNonReglemente) {
-
+		
+		logger.debug("entered GET [fichePostes/treeFichesPosteByIdEntite/] => getTreeFichesPosteByIdEntite with idEntite = {} and withFichesPosteNonReglemente = {}", idEntite,
+				withFichesPosteNonReglemente);
+		
 		List<FichePosteTreeNodeDto> result = fpSrv.getTreeFichesPosteByIdEntite(idEntite, withFichesPosteNonReglemente);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);

@@ -33,7 +33,8 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,8 @@ import flexjson.JSONSerializer;
 @Controller
 @RequestMapping("/agents")
 public class AgentController {
+	
+	private Logger logger = LoggerFactory.getLogger(AgentController.class);
 
 	@Autowired
 	private IAgentService agentSrv;
@@ -85,8 +88,6 @@ public class AgentController {
 
 	@Autowired
 	private HelperService helperService;
-
-	private Logger logger = Logger.getLogger(AgentController.class);
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -331,6 +332,8 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
+		logger.debug("entered GET [agents/sousAgents] => getSubAgents with parameter idAgent = {}", idAgent);
+		
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -351,6 +354,8 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
+		logger.debug("entered GET [agents/agentsShd] => getShdAgents with parameter idAgent = {}", idAgent);
+		
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -372,6 +377,8 @@ public class AgentController {
 	public ResponseEntity<String> getAgentsSubordonnes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "nom", required = false, defaultValue = "") String nom,
 			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
+		logger.debug("entered GET [agents/agentsSubordonnes] => getAgentsSubordonnes with parameter idAgent = {}", idAgent);
+		
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);

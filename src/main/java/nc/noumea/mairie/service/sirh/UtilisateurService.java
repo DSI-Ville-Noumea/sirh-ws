@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UtilisateurService implements IUtilisateurService {
 
-	Logger logger = LoggerFactory.getLogger(UtilisateurService.class);
+	private Logger logger = LoggerFactory.getLogger(UtilisateurService.class);
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
