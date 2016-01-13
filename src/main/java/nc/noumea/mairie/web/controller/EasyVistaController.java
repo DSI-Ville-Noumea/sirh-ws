@@ -7,6 +7,8 @@ import nc.noumea.mairie.service.ISpprimService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.ws.dto.EasyVistaDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class EasyVistaController {
 
 	@Autowired
 	private IAffectationRepository affectationRepository;
+	
+	private Logger logger = LoggerFactory.getLogger(EasyVistaController.class);
 
 	/**
 	 * Returns le chef de service d'un agent
@@ -41,6 +45,9 @@ public class EasyVistaController {
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getChefServiceAgent(@RequestParam(value = "nomatr", required = true) Integer nomatr) {
+
+		logger.debug("entered GET [easyVista/chefAgent] => getChefServiceAgent with parameter nomatr = {}", nomatr);
+		
 		EasyVistaDto result = new EasyVistaDto();
 
 		// on récupere l'idAgent à partir du nomatr

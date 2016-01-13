@@ -245,7 +245,7 @@ public class FichePosteService implements IFichePosteService {
 
 		List<Integer> agents = new ArrayList<Integer>();
 
-		if (!getFichePosteTree(true).containsKey(idFichePosteResponsable))
+		if (!getFichePosteTree().containsKey(idFichePosteResponsable))
 			return agents;
 
 		listSubAgents(getFichePosteTree().get(idFichePosteResponsable), agents, maxDepth, nom);
@@ -519,6 +519,8 @@ public class FichePosteService implements IFichePosteService {
 	 */
 	private TreeMap<Integer, FichePosteTreeNode> construitArbreWithFPAffecteesEtNonAffectees() {
 
+		logger.debug("Debut construitArbre Fiche Poste Affectees Et Non Affectees");
+		
 		TreeMap<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePoste(new Date());
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
@@ -558,10 +560,12 @@ public class FichePosteService implements IFichePosteService {
 	/**
 	 * Construit un arbre hiérarchique des fiches de postes actives
 	 * 
-	 * @return Hashtablel'arbre des fiches de postes
+	 * @return Hashtable l'arbre des fiches de postes
 	 */
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
+		logger.debug("Debut construitArbre Fiche Poste");
+		
 		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePosteAndAffectedAgents(new Date());
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
