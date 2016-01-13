@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.service.sirh.FichePosteService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
@@ -13,6 +14,8 @@ import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,8 @@ import flexjson.JSONSerializer;
 @Controller
 @RequestMapping("/eaes")
 public class EaeController {
+	
+	private Logger logger = LoggerFactory.getLogger(EaeController.class);
 
 	@Autowired
 	private IAgentService agentSrv;
@@ -57,6 +62,8 @@ public class EaeController {
 	public ResponseEntity<String> getAgentHabilite(@RequestParam(value = "idAgent", required = true) Long idAgent)
 			throws ParseException {
 
+		logger.debug("entered GET [eaes/estHabiliteEAE] => getAgentHabilite with parameter idAgent = {}", idAgent);
+		
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
