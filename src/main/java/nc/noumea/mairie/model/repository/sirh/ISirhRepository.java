@@ -7,6 +7,7 @@ import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.bean.sirh.JourFerie;
+import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 
 public interface ISirhRepository {
 
@@ -19,4 +20,6 @@ public interface ISirhRepository {
 	List<FormationAgent> getListFormationAgentByAnnee(Integer idAgent, Integer anneeFormation);
 
 	List<JourFerie> getListeJoursFeries(Date dateDebut, Date dateFin);
+
+	List<Utilisateur> getListeUtilisateur();
 }

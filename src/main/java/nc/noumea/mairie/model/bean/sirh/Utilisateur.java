@@ -9,12 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "UTILISATEUR")
 @PersistenceUnit(unitName = "sirhPersistenceUnit")
+@NamedQueries({
+		@NamedQuery(name = "getAllUtilisateurs", query = "select u from Utilisateur u ")
+})
 public class Utilisateur {
 
 	@Id
