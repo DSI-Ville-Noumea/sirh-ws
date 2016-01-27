@@ -1,11 +1,13 @@
 package nc.noumea.mairie.web.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IUtilisateurService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
@@ -63,6 +65,32 @@ public class UtilisateurController {
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(srm);
 
 		if (!srm.getErrors().isEmpty()) {
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/listeUtilisateurSIRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListeUtilisateurSIRH(@RequestParam(value = "idAgent", required = false) Integer idAgent) {
+
+		logger.debug("entered GET [utilisateur/listeUtilisateurSIRH] => getListeUtilisateurSIRH with parameters idAgent = {}",
+				idAgent);
+
+		// on remanie l'idAgent
+		Integer newIdAgent = null;
+		
+		if(null != idAgent) {
+			newIdAgent = new Integer(remanieIdAgent(idAgent));
+		}
+		
+		List<AgentDto> srm = utilisateurSrv.getListeUtilisateurSIRH(newIdAgent);
+
+		String response = new JSONSerializer().exclude("*.class").deepSerialize(srm);
+
+		if (null == srm || srm.isEmpty()) {
 			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		} else {
 			return new ResponseEntity<>(response, HttpStatus.OK);
