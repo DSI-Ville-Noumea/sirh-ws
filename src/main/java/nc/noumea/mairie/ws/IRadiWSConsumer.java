@@ -17,4 +17,6 @@ public interface IRadiWSConsumer {
 	public String getNomatrWithIdAgent(Integer idAgent);
 
 	public String getNomatrWithEmployeeNumber(Integer employeeNumber);
+
+	Integer getIdAgentWithEmployeeNumber(Integer employeeNumber);
 }
