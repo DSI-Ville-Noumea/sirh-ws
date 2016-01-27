@@ -88,4 +88,10 @@ public class RadiWSConsumer extends BaseWsConsumer implements IRadiWSConsumer {
 	public String getNomatrWithEmployeeNumber(Integer employeeNumber) {
 		return employeeNumber.toString().substring(2, employeeNumber.toString().length());
 	}
+
+	@Override
+	public Integer getIdAgentWithEmployeeNumber(Integer employeeNumber) {
+		return new Integer(employeeNumber.toString().substring(0, 2) 
+				+ "0" + employeeNumber.toString().substring(2, employeeNumber.toString().length()));
+	}
 }

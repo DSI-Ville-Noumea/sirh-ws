@@ -1,5 +1,6 @@
 package nc.noumea.mairie.service.sirh;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,7 +14,9 @@ import nc.noumea.mairie.model.bean.sirh.DroitsGroupeEnum;
 import nc.noumea.mairie.model.bean.sirh.TypeDroitEnum;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
+import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -39,6 +42,9 @@ public class UtilisateurService implements IUtilisateurService {
 
 	@Autowired
 	private IDroitsRepository droitsRepository;
+
+	@Autowired
+	private ISirhRepository sirhRepository;
 
 	@Override
 	public Utilisateur chercherUtilisateurSIRHByLogin(String login) {
@@ -82,6 +88,60 @@ public class UtilisateurService implements IUtilisateurService {
 		}
 
 		return res;
+	}
+
+	@Override
+	public List<AgentDto> getListeUtilisateurSIRH(Integer idAgent) {
+
+		List<AgentDto> result = new ArrayList<AgentDto>();
+
+		// on cherche si l'agent existe
+		if(null != idAgent) {
+		
+			Agent ag = agentSrv.getAgent(idAgent);
+			if (ag == null) {
+				return result;
+			}
+	
+			// on fait la correspondance entre le login et l'agent via RADI
+			LightUserDto user = radiWSConsumer.getAgentCompteAD(Integer.valueOf(radiWSConsumer.getNomatrWithIdAgent(Integer
+					.valueOf(idAgent))));
+			if (user == null || user.getsAMAccountName() == null) {
+				logger.debug("L'agent " + idAgent + " n'a pas de compte AD ou n'a pas son login renseigné.");
+				return result;
+			}
+			// on verifie que son login est dans la table des utilisateurs SIRH
+			Utilisateur utilisateurSIRH = chercherUtilisateurSIRHByLogin(user.getsAMAccountName());
+			if (utilisateurSIRH == null) {
+				logger.debug("L'agent " + idAgent + " n'est pas un utilisateur SIRH.");
+				return result;
+			}
+			
+			AgentDto dto = new AgentDto();
+			dto.setNom(ag.getNomUsage());
+			dto.setPrenom(ag.getPrenomUsage());
+			dto.setIdAgent(idAgent);
+			
+			result.add(dto);
+		} else {
+			
+			List<Utilisateur> listUtilisateurs = sirhRepository.getListeUtilisateur();
+			
+			if(null != listUtilisateurs) {
+				for(Utilisateur utilisateur : listUtilisateurs) {
+				
+					LightUserDto user = radiWSConsumer.getAgentCompteADByLogin(utilisateur.getLogin());
+					
+					if(null != user
+							&& 0 < user.getEmployeeNumber()) {
+						Agent agentSIRH = agentSrv.getAgent(radiWSConsumer.getIdAgentWithEmployeeNumber(user.getEmployeeNumber()));
+						result.add(new AgentDto(agentSIRH));
+					}
+				}
+			}
+		}
+
+		return result;
 	}
 
 	@Override

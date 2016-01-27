@@ -11,6 +11,7 @@ import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.bean.sirh.JourFerie;
+import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 
 import org.springframework.stereotype.Repository;
 
@@ -90,6 +91,14 @@ public class SirhRepository implements ISirhRepository {
 		q.setParameter("dateDebut", dateDebut);
 		q.setParameter("dateFin", dateFin);
 
+		return q.getResultList();
+	}
+	
+	@Override
+	public List<Utilisateur> getListeUtilisateur() {
+
+		TypedQuery<Utilisateur> q = sirhEntityManager.createNamedQuery("getAllUtilisateurs", Utilisateur.class);
+		
 		return q.getResultList();
 	}
 }
