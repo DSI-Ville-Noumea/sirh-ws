@@ -16,7 +16,6 @@ import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.model.repository.sirh.IDroitsRepository;
 import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
-import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
@@ -91,9 +90,9 @@ public class UtilisateurService implements IUtilisateurService {
 	}
 
 	@Override
-	public List<AgentDto> getListeUtilisateurSIRH(Integer idAgent) {
+	public List<LightUserDto> getListeUtilisateurSIRH(Integer idAgent) {
 
-		List<AgentDto> result = new ArrayList<AgentDto>();
+		List<LightUserDto> result = new ArrayList<LightUserDto>();
 
 		// on cherche si l'agent existe
 		if(null != idAgent) {
@@ -117,12 +116,7 @@ public class UtilisateurService implements IUtilisateurService {
 				return result;
 			}
 			
-			AgentDto dto = new AgentDto();
-			dto.setNom(ag.getNomUsage());
-			dto.setPrenom(ag.getPrenomUsage());
-			dto.setIdAgent(idAgent);
-			
-			result.add(dto);
+			result.add(user);
 		} else {
 			
 			List<Utilisateur> listUtilisateurs = sirhRepository.getListeUtilisateur();
@@ -134,8 +128,7 @@ public class UtilisateurService implements IUtilisateurService {
 					
 					if(null != user
 							&& 0 < user.getEmployeeNumber()) {
-						Agent agentSIRH = agentSrv.getAgent(radiWSConsumer.getIdAgentWithEmployeeNumber(user.getEmployeeNumber()));
-						result.add(new AgentDto(agentSIRH));
+						result.add(user);
 					}
 				}
 			}
