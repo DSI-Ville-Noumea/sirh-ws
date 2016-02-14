@@ -7,7 +7,7 @@ import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IUtilisateurService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
-import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class UtilisateurController {
 			newIdAgent = new Integer(remanieIdAgent(idAgent));
 		}
 		
-		List<AgentDto> srm = utilisateurSrv.getListeUtilisateurSIRH(newIdAgent);
+		List<LightUserDto> srm = utilisateurSrv.getListeUtilisateurSIRH(newIdAgent);
 
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(srm);
 
