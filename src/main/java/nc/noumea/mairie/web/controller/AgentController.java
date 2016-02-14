@@ -227,7 +227,7 @@ public class AgentController {
 		List<Integer> listService = new ArrayList<Integer>();
 		if (null != idService) {
 			listService.add(idService);
-		} else {
+		} else if(null != ag.getIdServiceADS()) {
 			listService.add(ag.getIdServiceADS());
 		}
 
@@ -430,7 +430,7 @@ public class AgentController {
 
 		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
-		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents").include("*.listAgentWithServiceDto")
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents.*").include("*.listAgentWithServiceDto.*")
 				.transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
 	}
 
