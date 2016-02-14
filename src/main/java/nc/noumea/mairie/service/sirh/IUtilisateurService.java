@@ -4,7 +4,6 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
 import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
-import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
@@ -18,6 +17,6 @@ public interface IUtilisateurService {
 
 	LightUserDto getLoginByIdAgent(Integer idAgent);
 
-	List<AgentDto> getListeUtilisateurSIRH(Integer idAgent);
+	List<LightUserDto> getListeUtilisateurSIRH(Integer idAgent);
 
 }
