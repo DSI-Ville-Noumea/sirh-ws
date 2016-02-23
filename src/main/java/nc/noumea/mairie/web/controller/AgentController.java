@@ -419,18 +419,35 @@ public class AgentController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/arbreServicesWithListAgentsByServiceWithoutAgentConnecte", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/arbreServicesWithListAgentsByServiceWithoutAgentConnecte", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getArbreServicesWithListAgentsByService(@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS,
-			@RequestParam(value = "idAgent", required = false) Integer idAgent) throws ParseException {
+	public ResponseEntity<String> getArbreServicesWithListAgentsByService(
+			@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS,
+			@RequestParam(value = "idAgent", required = false) Integer idAgent,
+			@RequestBody(required = false) String agentsAInclureJson) throws ParseException {
 
 		logger.debug("DEBUT getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
-		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent);
+		List<Integer> listIdsAgentRemanie = new ArrayList<Integer>();
+		if(null != agentsAInclureJson
+				&& !"".equals(agentsAInclureJson)) {
+			List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>()
+					.use(null, ArrayList.class).use("values", Integer.class)
+					.deserialize(agentsAInclureJson);
+	
+			// on remanie l'idAgent
+			for (Integer idAgentAInclure : listIdsAgent) {
+				listIdsAgentRemanie.add(helperService.remanieIdAgent(idAgentAInclure));
+			}
+		}
+		
+		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
+				idServiceADS, idAgent, listIdsAgentRemanie);
 
 		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
-		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents.*").include("*.listAgentWithServiceDto.*")
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents.*")
+				.include("*.listAgentWithServiceDto.*")
 				.transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
 	}
 

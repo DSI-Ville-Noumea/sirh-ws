@@ -1,8 +1,12 @@
 package nc.noumea.mairie.service.ads;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.ADSWSConsumer;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
@@ -173,6 +177,42 @@ public class AdsService implements IAdsService {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Retourne la liste des agents contenu dans l arbre des services
+	 * en parametre.
+	 */
+	@Override
+	public List<AgentDto> getListeAgentsOfEntiteTree(EntiteWithAgentWithServiceDto tree) {
+		
+		List<AgentDto> result = new ArrayList<AgentDto>();
+		
+		for(AgentWithServiceDto agent : tree.getListAgentWithServiceDto()) {
+			AgentDto agentTmp = new AgentDto(agent);
+			if(!result.contains(agentTmp)) {
+				result.add(agentTmp);
+			}
+		}
+		
+		parcoursTreeToAddAgent(tree, result);
+		
+		return result;
+	}
+	
+	private void parcoursTreeToAddAgent(EntiteWithAgentWithServiceDto tree, List<AgentDto> result) {
+		
+		for(EntiteWithAgentWithServiceDto nodeEnfant : tree.getEntiteEnfantWithAgents()) {
+			
+			for(AgentWithServiceDto agent : nodeEnfant.getListAgentWithServiceDto()) {
+				AgentDto agentTmp = new AgentDto(agent);
+				if(!result.contains(agentTmp)) {
+					result.add(agentTmp);
+				}
+			}
+			
+			parcoursTreeToAddAgent(nodeEnfant, result);
+		}
 	}
 
 }
