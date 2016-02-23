@@ -51,6 +51,31 @@ public interface IAgentService {
 
 	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
-	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(Integer idServiceADS, Integer idAgent);
+	/**
+	 * Retourne un arbre d entite avec les agents associés a chaque entite.
+	 * On exclut l agent passe en parametre.
+	 * On ajoute les agents en plus dans la lliste en parametre listIdsAgentAInclure.
+	 * 
+	 * @param idServiceADS Integer L entite root que l on recherche
+	 * @param idAgent Integer L agent a exclure de l arbre
+	 * @param listIdsAgentAInclure List<Integer> Cette liste comprend la liste des agents que l on voir dans l arbre
+	 * 		en plus des autres, MEME s ils ne font pas partis de l arbre des entites
+	 * 		dans ce cas on rajoute les entites manquantes 
+	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
+	 */
+	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure);
+
+	/**
+	 * 
+	 * Retourne un arbre d entite avec les agents associés a chaque entite.
+	 * On exclut l agent passe en parametre
+	 * 
+	 * @param idServiceADS Integer L entite root que l on recherche
+	 * @param idAgent Integer L agent a exclure de l arbre
+	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
+	 */
+	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
+			Integer idServiceADS, Integer idAgent);
 
 }
