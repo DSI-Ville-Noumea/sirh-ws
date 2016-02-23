@@ -2,7 +2,9 @@ package nc.noumea.mairie.service.ads;
 
 import java.util.List;
 
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 
 public interface IAdsService {
 
@@ -17,4 +19,13 @@ public interface IAdsService {
 	EntiteDto getEntiteByIdEntiteOptimiseWithWholeTree(Integer idEntite, EntiteDto root);
 
 	EntiteDto getAffichageDirectionWithoutCallADS(EntiteDto entite);
+
+	/**
+	 * Retourne la liste des agents contenu dans l arbre des services
+	 * en parametre.
+	 * 
+	 * @param tree EntiteWithAgentWithServiceDto
+	 * @return List<AgentDto>
+	 */
+	List<AgentDto> getListeAgentsOfEntiteTree(EntiteWithAgentWithServiceDto tree);
 }

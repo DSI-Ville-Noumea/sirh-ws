@@ -16,6 +16,7 @@ import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentGeneriqueDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
@@ -214,8 +215,99 @@ public class AgentService implements IAgentService {
 		return result;
 	}
 
+	/**
+	 * Retourne un arbre d entite avec les agents associés a chaque entite.
+	 * On exclut l agent passe en parametre.
+	 * On ajoute les agents en plus dans la lliste en parametre listIdsAgentAInclure.
+	 * 
+	 * @param idServiceADS Integer L entite root que l on recherche
+	 * @param idAgent Integer L agent a exclure de l arbre
+	 * @param listIdsAgentAInclure List<Integer> Cette liste comprend la liste des agents que l on voir dans l arbre
+	 * 		en plus des autres, MEME s ils ne font pas partis de l arbre des entites
+	 * 		dans ce cas on rajoute les entites manquantes 
+	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
+	 */
 	@Override
-	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(Integer idServiceADS, Integer idAgent) {
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure) {
+
+		// on recherche d abord l arbre principal
+		// du service ADS passe en parametre
+		EntiteWithAgentWithServiceDto entiteWithAgents = getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent);
+		
+		if(null == entiteWithAgents) {
+			return null;
+		}
+		
+		if(null != listIdsAgentAInclure
+				&& !listIdsAgentAInclure.isEmpty()) {
+			List<AgentDto> listAgentInTree = adsService.getListeAgentsOfEntiteTree(entiteWithAgents);
+			
+			List<Integer> listIdsAgentsNotInSameServiceOfApprobateur = new ArrayList<Integer>();
+			for(Integer agentNotInTree : listIdsAgentAInclure) {
+				AgentDto agentTmp = new AgentDto();
+				agentTmp.setIdAgent(agentNotInTree);
+				if(!listAgentInTree.contains(agentTmp)) {
+					listIdsAgentsNotInSameServiceOfApprobateur.add(agentNotInTree);
+				}
+			}
+			
+			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, new Date(), listIdsAgentsNotInSameServiceOfApprobateur);
+			
+			// on construit un arbre de EntiteWithAgentWithServiceDto avec ces agents
+			List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur);
+			
+			// si on a d autres arbres a ajouter
+			// alors on cree un noeaud parent ficitif auquel on rattache tous les arbres
+			if(null != treeWithAgentsOthersServices
+					&& !treeWithAgentsOthersServices.isEmpty()) {
+				EntiteWithAgentWithServiceDto root = new  EntiteWithAgentWithServiceDto();
+				root.setSigle("Services");
+				root.setLabel("Les Services");
+				root.getEntiteEnfantWithAgents().add(entiteWithAgents);
+				root.getEntiteEnfantWithAgents().addAll(treeWithAgentsOthersServices);
+				return root;
+			}
+		}
+		
+		return entiteWithAgents;
+	}
+	
+	private List<EntiteWithAgentWithServiceDto> getArbrewithAgentsNotInSameServiceOfApprobateur(
+			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur) {
+		
+		List<EntiteWithAgentWithServiceDto> result = new ArrayList<EntiteWithAgentWithServiceDto>();
+		
+		if(null != listAgentsNotInSameServiceOfApprobateur) {
+			for(AgentWithServiceDto agent : listAgentsNotInSameServiceOfApprobateur) {
+				boolean isTrouve = false;
+				for(EntiteWithAgentWithServiceDto entite : result) {
+					if(entite.getIdEntite().equals(agent.getIdServiceADS())) {
+						entite.getListAgentWithServiceDto().add(agent);
+						isTrouve = true;
+						break;
+					}
+				}
+				if(!isTrouve) {
+					EntiteWithAgentWithServiceDto newEntite = new EntiteWithAgentWithServiceDto();
+					newEntite.setIdEntite(agent.getIdServiceADS());
+					newEntite.setSigle(agent.getSigleService());
+					newEntite.getListAgentWithServiceDto().add(agent);
+					result.add(newEntite);
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Retourne un arbre d entite avec les agents associés a chaque entite.
+	 * On exclut l agent passe en parametre
+	 */
+	@Override
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
+			Integer idServiceADS, Integer idAgent) {
 
 		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
 

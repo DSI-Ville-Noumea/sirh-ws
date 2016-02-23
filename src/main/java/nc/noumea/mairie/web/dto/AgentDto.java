@@ -28,6 +28,14 @@ public class AgentDto {
 
 	private FichePosteDto fichePoste;
 
+	
+	public AgentDto(AgentWithServiceDto agent) {
+		this();
+		nom = agent.getNom();
+		prenom = agent.getPrenom();
+		idAgent = agent.getIdAgent();
+	}
+	
 	public AgentDto() {
 	}
 
