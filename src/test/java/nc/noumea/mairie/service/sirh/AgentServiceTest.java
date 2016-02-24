@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +17,12 @@ import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
+import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
+import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.junit.Test;
@@ -35,54 +39,6 @@ public class AgentServiceTest {
 	private EntityManager sirhPersistenceUnit;
 
 	@Test
-	public void testlistAgentsEnActivite_returnListOfAgentDto() {
-		// Given
-		List<AgentRecherche> listeAgentRecherche = new ArrayList<AgentRecherche>();
-		AgentRecherche ag1 = new AgentRecherche();
-		ag1.setIdAgent(9005138);
-		ag1.setNomatr(5138);
-		AgentRecherche ag2 = new AgentRecherche();
-		ag2.setIdAgent(9005131);
-		ag2.setNomUsage("TEST NOM");
-		listeAgentRecherche.add(ag1);
-		listeAgentRecherche.add(ag2);
-
-		List<Object[]> listResult = new ArrayList<Object[]>();
-		Object[] obj1 = new Object[2];
-		obj1[0] = ag1;
-		obj1[1] = new FichePoste();
-		Object[] obj2 = new Object[2];
-		obj2[0] = ag2;
-		obj2[1] = new FichePoste();
-
-		listResult.add(obj1);
-		listResult.add(obj2);
-
-		Query mockQuery = Mockito.mock(Query.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(listResult);
-
-		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString())).thenReturn(mockQuery);
-
-		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		IAdsService adsService = Mockito.mock(IAdsService.class);
-
-		AgentService agtService = new AgentService();
-		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
-		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
-		ReflectionTestUtils.setField(agtService, "adsService", adsService);
-
-		// When
-		List<AgentWithServiceDto> result = agtService.listAgentsEnActiviteWithServiceAds("QUIN", null);
-
-		// Then
-		assertEquals(2, result.size());
-		assertEquals(ag1.getIdAgent(), result.get(0).getIdAgent());
-		assertEquals("TEST NOM", result.get(1).getNom());
-
-	}
-
-	@Test
 	public void testlistAgentsEnActivite_AgentDtoListIsEmpty_setPAramAsnull() {
 		// Given
 		Query mockQuery = Mockito.mock(Query.class);
@@ -93,11 +49,14 @@ public class AgentServiceTest {
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		IAdsService adsService = Mockito.mock(IAdsService.class);
-
+		
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		
 		AgentService service = new AgentService();
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 		ReflectionTestUtils.setField(service, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(service, "adsService", adsService);
+		ReflectionTestUtils.setField(service, "agentRepository", agentRepository);
 
 		// When
 		List<AgentWithServiceDto> result = service.listAgentsEnActiviteWithServiceAds("", null);
@@ -270,12 +229,9 @@ public class AgentServiceTest {
 		List<Affectation> listeAffectation = new ArrayList<Affectation>();
 		listeAffectation.add(aff1);
 
-		@SuppressWarnings("unchecked")
-		TypedQuery<Affectation> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(listeAffectation);
-
-		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
-		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Affectation.class))).thenReturn(mockQuery);
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyList(), Mockito.any(Date.class), Mockito.anyList()))
+			.thenReturn(listeAffectation);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(noeud1);
@@ -285,9 +241,9 @@ public class AgentServiceTest {
 		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(noeud1)).thenReturn(noeudDirection);
 
 		AgentService agtService = new AgentService();
-		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(agtService, "adsService", adsService);
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
 
 		// When
 		List<AgentWithServiceDto> result = agtService.listAgentsOfServices(null, new Date(), null);
@@ -298,7 +254,6 @@ public class AgentServiceTest {
 		assertEquals("NOM USAGE", result.get(0).getNom());
 		assertEquals("TEST", result.get(0).getService());
 		assertEquals("DIRECTION", result.get(0).getDirection());
-
 	}
 
 	@Test
@@ -358,7 +313,7 @@ public class AgentServiceTest {
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);		
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(fichePoste.getIdServiceADS())).thenReturn(service);
 		
-		IAdsService adsService = Mockito.mock(IAdsService.class);		
+		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(service)).thenReturn(direction);
 
 		AgentService agtService = new AgentService();
@@ -374,7 +329,221 @@ public class AgentServiceTest {
 		assertEquals(ag.getIdAgent(), result.get(0).getIdAgent());
 		assertEquals(service.getLabel(), result.get(0).getService());
 		assertEquals(direction.getLabel(), result.get(0).getDirection());
+	}
+	
+	@Test
+	public void getArbreServicesWithListAgentsByServiceWithoutAgentConnecte_EntiteNotExist() {
 
+		Integer idServiceADS = 1;
+		
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS)).thenReturn(null);
+		
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
+		
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+		
+		assertNull(result);
+	}
+	
+	@Test
+	public void getArbreServicesWithListAgentsByServiceWithoutAgentConnecte_3niveaux_3agents() {
+
+		Integer idServiceADS = 1;
+		
+		EntiteDto entiteRoot = new EntiteDto();
+		entiteRoot.setIdEntite(idServiceADS);
+		entiteRoot.setLabel("label root");
+		
+		EntiteDto entiteEnfant = new EntiteDto();
+		entiteEnfant.setIdEntite(idServiceADS+1);
+		entiteEnfant.setLabel("label enfant");
+		entiteRoot.getEnfants().add(entiteEnfant);
+		
+		EntiteDto entitePetitEnfant = new EntiteDto();
+		entitePetitEnfant.setIdEntite(entiteEnfant.getIdEntite()+1);
+		entitePetitEnfant.setLabel("label petit enfant");
+		entiteEnfant.getEnfants().add(entitePetitEnfant);
+		
+		AgentRecherche agentRecherche1 = new AgentRecherche();
+		agentRecherche1.setIdAgent(9005138);
+		Object[] agent1 = new Object[1];
+		agent1[0] = agentRecherche1;
+
+		List<Object[]> listAgent1 = new ArrayList<Object[]>();
+		listAgent1.add(agent1);
+		
+		AgentRecherche agentRecherche2 = new AgentRecherche();
+		agentRecherche2.setIdAgent(9005110);
+		Object[] agent2 = new Object[1];
+		agent2[0] = agentRecherche2;
+
+		List<Object[]> listAgent2 = new ArrayList<Object[]>();
+		listAgent2.add(agent2);
+		
+		AgentRecherche agentRecherche3 = new AgentRecherche();
+		agentRecherche3.setIdAgent(9005142);
+		Object[] agent3 = new Object[1];
+		agent3[0] = agentRecherche3;
+
+		List<Object[]> listAgent3 = new ArrayList<Object[]>();
+		listAgent3.add(agent3);
+		
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS)).thenReturn(entiteRoot);
+		
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entiteRoot.getIdEntite())).thenReturn(listAgent1);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entiteEnfant.getIdEntite())).thenReturn(listAgent2);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entitePetitEnfant.getIdEntite())).thenReturn(listAgent3);
+				
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+		
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+		
+		assertEquals(result.getIdEntite(), entiteRoot.getIdEntite());
+		assertEquals(result.getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche1.getIdAgent());
+		// entite enfant
+		assertEquals(result.getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getIdEntite(), entiteEnfant.getIdEntite());
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche2.getIdAgent());
+		// petit enfant
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entitePetitEnfant.getIdEntite());
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche3.getIdAgent());
+	}
+	
+	@Test
+	public void getArbreServicesWithListAgentsByServiceWithoutAgentConnecte_3niveaux_3agents_And_oneOtherService() {
+
+		List<Integer> listOtherAgents = new ArrayList<Integer>();
+		listOtherAgents.add(9004999);
+		
+		Integer idServiceADS = 1;
+		
+		EntiteDto entiteRoot = new EntiteDto();
+		entiteRoot.setIdEntite(idServiceADS);
+		entiteRoot.setLabel("label root");
+		
+		EntiteDto entiteEnfant = new EntiteDto();
+		entiteEnfant.setIdEntite(idServiceADS+1);
+		entiteEnfant.setLabel("label enfant");
+		entiteRoot.getEnfants().add(entiteEnfant);
+		
+		EntiteDto entitePetitEnfant = new EntiteDto();
+		entitePetitEnfant.setIdEntite(entiteEnfant.getIdEntite()+1);
+		entitePetitEnfant.setLabel("label petit enfant");
+		entiteEnfant.getEnfants().add(entitePetitEnfant);
+		
+		AgentRecherche agentRecherche1 = new AgentRecherche();
+		agentRecherche1.setIdAgent(9005138);
+		Object[] agent1 = new Object[1];
+		agent1[0] = agentRecherche1;
+
+		List<Object[]> listAgent1 = new ArrayList<Object[]>();
+		listAgent1.add(agent1);
+		
+		AgentRecherche agentRecherche2 = new AgentRecherche();
+		agentRecherche2.setIdAgent(9005110);
+		Object[] agent2 = new Object[1];
+		agent2[0] = agentRecherche2;
+
+		List<Object[]> listAgent2 = new ArrayList<Object[]>();
+		listAgent2.add(agent2);
+		
+		AgentRecherche agentRecherche3 = new AgentRecherche();
+		agentRecherche3.setIdAgent(9005142);
+		Object[] agent3 = new Object[1];
+		agent3[0] = agentRecherche3;
+
+		List<Object[]> listAgent3 = new ArrayList<Object[]>();
+		listAgent3.add(agent3);
+		
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS)).thenReturn(entiteRoot);
+		
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entiteRoot.getIdEntite())).thenReturn(listAgent1);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entiteEnfant.getIdEntite())).thenReturn(listAgent2);
+		Mockito.when(agentRepository.getListAgentsEnActivite(null, entitePetitEnfant.getIdEntite())).thenReturn(listAgent3);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+		
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+
+		assertEquals(result.getIdEntite(), entiteRoot.getIdEntite());
+		assertEquals(result.getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche1.getIdAgent());
+		// entite enfant
+		assertEquals(result.getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getIdEntite(), entiteEnfant.getIdEntite());
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche2.getIdAgent());
+		// petit enfant
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entitePetitEnfant.getIdEntite());
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche3.getIdAgent());
+		
+		IAdsService adsService = Mockito.mock(IAdsService.class);
+		Mockito.when(adsService.getListeAgentsOfEntiteTree(result)).thenReturn(
+				Arrays.asList(new AgentDto(result.getListAgentWithServiceDto().get(0)),
+						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0)),
+						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0))));
+
+		ReflectionTestUtils.setField(agtService, "adsService", adsService);
+		
+		Agent agent = new Agent();
+		agent.setTitre("Mr");
+		agent.setIdAgent(9004999);
+		FichePoste fp = new FichePoste();
+		fp.setIdServiceADS(99);
+		Affectation aff = new Affectation();
+		aff.setFichePoste(fp);
+		aff.setAgent(agent);
+		
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyList(), Mockito.any(Date.class), Mockito.anyList()))
+			.thenReturn(Arrays.asList(aff));
+		
+		EntiteDto otherEntite = new EntiteDto();
+		otherEntite.setIdEntite(fp.getIdServiceADS());
+		otherEntite.setLabel("other service");
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS())).thenReturn(otherEntite);
+
+		EntiteWithAgentWithServiceDto result2 = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, listOtherAgents);
+		
+		// entite fictive
+		assertEquals("Services", result2.getSigle());
+		assertEquals("Les services", result2.getLabel());
+		assertEquals(result2.getListAgentWithServiceDto().size(), 0);
+		assertEquals(result2.getEntiteEnfantWithAgents().size(), 2);
+		// entite root
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getIdEntite(), entiteRoot.getIdEntite());
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche1.getIdAgent());
+		// entite other service
+		assertEquals(result2.getEntiteEnfantWithAgents().get(1).getIdEntite(), otherEntite.getIdEntite());
+		assertEquals(result2.getEntiteEnfantWithAgents().get(1).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(1).getListAgentWithServiceDto().get(0).getIdAgent(), agent.getIdAgent());
+		// enfant
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entiteEnfant.getIdEntite());
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche2.getIdAgent());
+
+		// petit enfant
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entitePetitEnfant.getIdEntite());
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche3.getIdAgent());
 	}
 
 }
