@@ -520,7 +520,7 @@ public class FichePosteService implements IFichePosteService {
 	private TreeMap<Integer, FichePosteTreeNode> construitArbreWithFPAffecteesEtNonAffectees() {
 
 		logger.debug("Debut construitArbre Fiche Poste Affectees Et Non Affectees");
-		
+
 		TreeMap<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePoste(new Date());
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
@@ -565,7 +565,7 @@ public class FichePosteService implements IFichePosteService {
 	private Hashtable<Integer, FichePosteTreeNode> construitArbre() {
 
 		logger.debug("Debut construitArbre Fiche Poste");
-		
+
 		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePosteAndAffectedAgents(new Date());
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
@@ -834,8 +834,12 @@ public class FichePosteService implements IFichePosteService {
 			supprimerFDP(fichePoste, user.getsAMAccountName());
 			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est supprimée.");
 		} catch (Exception e) {
-			logger.debug(e.getMessage());
-			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être suprimée.");
+			logger.error("Erreur deleteFichePosteByIdFichePoste : " + e.getMessage());
+			String erreur = "La FDP " + fichePoste.getNumFP() + " n'a pu être suprimée : " + e.getMessage();
+			if (erreur.length() > 255) {
+				erreur = erreur.substring(0, 255);
+			}
+			result.getErrors().add(erreur);
 		}
 
 		return result;
@@ -911,8 +915,12 @@ public class FichePosteService implements IFichePosteService {
 			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est dupliquée en " + newFDP.getNumFP() + ".");
 			result.setId(newFDP.getIdFichePoste());
 		} catch (Exception e) {
-			logger.debug("Erreur dupliqueFichePosteByIdFichePoste : " + e.getMessage());
-			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée : " + e.getMessage());
+			logger.error("Erreur dupliqueFichePosteByIdFichePoste : " + e.getMessage());
+			String erreur = "La FDP " + fichePoste.getNumFP() + " n'a pu être dupliquée : " + e.getMessage();
+			if (erreur.length() > 255) {
+				erreur = erreur.substring(0, 255);
+			}
+			result.getErrors().add(erreur);
 		}
 
 		return result;
@@ -1245,7 +1253,12 @@ public class FichePosteService implements IFichePosteService {
 			activerFDP(fichePoste, entite, user.getsAMAccountName());
 			result.getInfos().add("La FDP " + fichePoste.getNumFP() + " est activée.");
 		} catch (Exception e) {
-			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'a pu être activée.");
+			logger.error("Erreur activeFichePosteByIdFichePoste : " + e.getMessage());
+			String erreur = "La FDP " + fichePoste.getNumFP() + " n'a pu être activée : " + e.getMessage();
+			if (erreur.length() > 255) {
+				erreur = erreur.substring(0, 255);
+			}
+			result.getErrors().add(erreur);
 		}
 
 		return result;
