@@ -176,21 +176,21 @@ public class KiosqueRhServiceTest {
 		ref1.setAgent(true);
 		ref1.setApprobateurABS(true);
 		ref1.setOperateurABS(true);
-		ref1.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
-		ref1.setDateFin(new DateTime().plusDays(7).toDate());
+		ref1.setDateDebut(new DateTime(2016, 1, 2, 0, 0, 0).toDate());
+		ref1.setDateFin(new DateTime().plusDays(365).toDate());
 		sirhPersistenceUnit.persist(ref1);
 		AlerteRh ref2 = new AlerteRh();
 		ref2.setIdAlerteKiosque(2);
 		ref2.setTexteAlerteKiosque("texte 2");
 		ref2.setAgent(true);
-		ref2.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
-		ref2.setDateFin(new DateTime().plusDays(7).toDate());
+		ref2.setDateDebut(new DateTime(2016, 1, 2, 0, 0, 0).toDate());
+		ref2.setDateFin(new DateTime().plusDays(365).toDate());
 		sirhPersistenceUnit.persist(ref2);
 		AlerteRh ref3 = new AlerteRh();
 		ref3.setIdAlerteKiosque(3);
 		ref3.setTexteAlerteKiosque("texte 3");
-		ref3.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
-		ref3.setDateFin(new DateTime().plusDays(7).toDate());
+		ref3.setDateDebut(new DateTime(2016, 1, 2, 0, 0, 0).toDate());
+		ref3.setDateFin(new DateTime().plusDays(365).toDate());
 		sirhPersistenceUnit.persist(ref3);
 
 		// When
