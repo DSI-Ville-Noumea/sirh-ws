@@ -121,7 +121,7 @@ public class AgentService implements IAgentService {
 		// dans leur cas, on recherche qu un seul agent
 		// cela ne sert donc a rien d appeler l arbre entier ADS
 		EntiteDto root = null;
-		if (null == idAgents || 1 < idAgents.size()) {
+		if (null == idAgents || idAgents.isEmpty() || 1 < idAgents.size()) {
 			root = adsWSConsumer.getWholeTree();
 		}
 
@@ -230,21 +230,25 @@ public class AgentService implements IAgentService {
 				}
 			}
 			
-			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, new Date(), listIdsAgentsNotInSameServiceOfApprobateur);
-			
-			// on construit un arbre de EntiteWithAgentWithServiceDto avec ces agents
-			List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur);
-			
-			// si on a d autres arbres a ajouter
-			// alors on cree un noeaud parent ficitif auquel on rattache tous les arbres
-			if(null != treeWithAgentsOthersServices
-					&& !treeWithAgentsOthersServices.isEmpty()) {
-				EntiteWithAgentWithServiceDto root = new  EntiteWithAgentWithServiceDto();
-				root.setSigle("Services");
-				root.setLabel("Les services");
-				root.getEntiteEnfantWithAgents().add(entiteWithAgents);
-				root.getEntiteEnfantWithAgents().addAll(treeWithAgentsOthersServices);
-				return root;
+			// bug #29215
+			if(null != listIdsAgentsNotInSameServiceOfApprobateur
+					&& !listIdsAgentsNotInSameServiceOfApprobateur.isEmpty()) {
+				List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, new Date(), listIdsAgentsNotInSameServiceOfApprobateur);
+				
+				// on construit un arbre de EntiteWithAgentWithServiceDto avec ces agents
+				List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur);
+				
+				// si on a d autres arbres a ajouter
+				// alors on cree un noeaud parent ficitif auquel on rattache tous les arbres
+				if(null != treeWithAgentsOthersServices
+						&& !treeWithAgentsOthersServices.isEmpty()) {
+					EntiteWithAgentWithServiceDto root = new  EntiteWithAgentWithServiceDto();
+					root.setSigle("Services");
+					root.setLabel("Les services");
+					root.getEntiteEnfantWithAgents().add(entiteWithAgents);
+					root.getEntiteEnfantWithAgents().addAll(treeWithAgentsOthersServices);
+					return root;
+				}
 			}
 		}
 		
