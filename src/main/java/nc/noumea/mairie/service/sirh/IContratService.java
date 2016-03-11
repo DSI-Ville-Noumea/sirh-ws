@@ -11,4 +11,6 @@ public interface IContratService {
 	public Integer getNbJoursPeriodeEssai(Date dateDebutContrat, Date dateFinPeriodeEssai);
 
 	public Contrat getContratById(Integer idContrat);
+
+	boolean isPeriodeEssai(Integer idAgent, Date dateRecherche);
 }

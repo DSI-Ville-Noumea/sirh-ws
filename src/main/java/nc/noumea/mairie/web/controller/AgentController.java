@@ -22,6 +22,7 @@ import nc.noumea.mairie.service.sirh.HelperService;
 import nc.noumea.mairie.service.sirh.IAgentMatriculeConverterService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IContactService;
+import nc.noumea.mairie.service.sirh.IContratService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AgentDto;
@@ -88,6 +89,9 @@ public class AgentController {
 
 	@Autowired
 	private HelperService helperService;
+	
+	@Autowired
+	private IContratService contratService;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -553,6 +557,30 @@ public class AgentController {
 		AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
 
 		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+	
+	/**
+	 * WS qui retourne TRUE ou FALSE selon que l agent est en periode d essai ou non
+	 * 
+	 * @param idAgent Long ID de l agent
+	 * @param dateJour Date date de la recherche
+	 * @return TRUE ou FALSE
+	 */
+	@RequestMapping(value = "/isPeriodeEssai", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> isPeriodeEssai(@RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateJour) {
+		
+		logger.debug(String.format("DEBUT isPeriodeEssai [agents/isPeriodeEssai] with idAgent = {} and dateJour = {}", idAgent, dateJour));
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+		
+		boolean result = contratService.isPeriodeEssai(new Integer(newIdAgent), dateJour);
+		
+		String response = new JSONSerializer().exclude("*.class").deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
