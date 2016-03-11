@@ -40,6 +40,21 @@ public class ContratService implements IContratService {
 
 		return res;
 	}
+	
+	@Override 
+	public boolean isPeriodeEssai(Integer idAgent, Date dateRecherche) {
+		
+		Contrat contrat = getContratBetweenDate(idAgent, dateRecherche);
+		
+		if(null == contrat)
+			return false;
+		
+		if(contrat.getDateFinPeriodeEssai().after(dateRecherche)) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	@Override
 	public Integer getNbJoursPeriodeEssai(Date dateDebutContrat, Date dateFinPeriodeEssai) {

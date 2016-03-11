@@ -1,12 +1,11 @@
 package nc.noumea.mairie.service.sirh;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -166,6 +165,71 @@ public class ContratServiceTest {
 		// Then
 		assertNull(result);
 		Mockito.verify(mockQuery, Mockito.times(1)).setParameter("idContrat", idContrat);
+	}
+	
+	@Test
+	public void isPeriodeEssai_pasContrat() {
+		
+		Integer idAgent = 9005138;
+		Date dateRecherche = new Date();
+		
+		TypedQuery<Contrat> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(null);
 
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Contrat.class))).thenReturn(mockQuery);
+
+		ContratService service = new ContratService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+		
+		assertFalse(service.isPeriodeEssai(idAgent, dateRecherche));
+	}
+	
+	@Test
+	public void isPeriodeEssai_false() {
+		
+		Integer idAgent = 9005138;
+		Date dateRecherche = new Date();
+		
+		List<Contrat> listContrats = new ArrayList<Contrat>();
+		Contrat contrat = new Contrat();
+		contrat.setDateFinPeriodeEssai(new DateTime(dateRecherche).minusDays(1).toDate());
+		
+		listContrats.add(contrat);
+		
+		TypedQuery<Contrat> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listContrats);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Contrat.class))).thenReturn(mockQuery);
+
+		ContratService service = new ContratService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+		
+		assertFalse(service.isPeriodeEssai(idAgent, dateRecherche));
+	}
+	
+	@Test
+	public void isPeriodeEssai_true() {
+		
+		Integer idAgent = 9005138;
+		Date dateRecherche = new Date();
+		
+		List<Contrat> listContrats = new ArrayList<Contrat>();
+		Contrat contrat = new Contrat();
+		contrat.setDateFinPeriodeEssai(new DateTime(dateRecherche).plusDays(1).toDate());
+		
+		listContrats.add(contrat);
+		
+		TypedQuery<Contrat> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getResultList()).thenReturn(listContrats);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Contrat.class))).thenReturn(mockQuery);
+
+		ContratService service = new ContratService();
+		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
+		
+		assertTrue(service.isPeriodeEssai(idAgent, dateRecherche));
 	}
 }
