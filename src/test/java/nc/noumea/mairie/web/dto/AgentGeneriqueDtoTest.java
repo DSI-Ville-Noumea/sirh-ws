@@ -2,6 +2,9 @@ package nc.noumea.mairie.web.dto;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import java.util.Date;
+
 import nc.noumea.mairie.model.bean.sirh.Agent;
 
 import org.junit.Test;
@@ -18,6 +21,7 @@ public class AgentGeneriqueDtoTest {
 		ag.setTitre("0");
 		ag.setNomMarital("nom");
 		ag.setNomatr(5138);
+		ag.setDateDerniereEmbauche(new Date());
 
 		// When
 		AgentGeneriqueDto dto = new AgentGeneriqueDto(ag);
@@ -27,6 +31,7 @@ public class AgentGeneriqueDtoTest {
 		assertEquals(ag.getPrenomUsage(), dto.getPrenomUsage());
 		assertEquals(ag.getIdAgent(), dto.getIdAgent());
 		assertEquals(ag.getNomatr(), dto.getNomatr());
+		assertEquals(ag.getDateDerniereEmbauche(), dto.getDateDerniereEmbauche());
 	}
 
 	@Test
@@ -42,5 +47,6 @@ public class AgentGeneriqueDtoTest {
 		assertNull(dto.getPrenomUsage());
 		assertNull(dto.getIdAgent());
 		assertNull(dto.getNomatr());
+		assertNull(dto.getDateDerniereEmbauche());
 	}
 }
