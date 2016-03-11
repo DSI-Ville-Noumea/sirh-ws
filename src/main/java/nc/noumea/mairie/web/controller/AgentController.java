@@ -578,11 +578,11 @@ public class AgentController {
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 		
-		boolean result = contratService.isPeriodeEssai(new Integer(newIdAgent), dateJour);
-		
-		String response = new JSONSerializer().exclude("*.class").deepSerialize(result);
-
-		return new ResponseEntity<String>(response, HttpStatus.OK);
+		if(contratService.isPeriodeEssai(new Integer(newIdAgent), dateJour)) {
+			return new ResponseEntity<String>(HttpStatus.OK);
+		}else{
+			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		}
 	}
 
 }
