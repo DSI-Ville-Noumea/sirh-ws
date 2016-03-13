@@ -488,7 +488,7 @@ public class AgentController {
 		}
 		AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
 
-		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
