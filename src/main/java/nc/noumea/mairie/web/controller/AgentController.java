@@ -516,7 +516,7 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		String response = new JSONSerializer().exclude("*.class").deepSerialize(result);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
@@ -556,7 +556,7 @@ public class AgentController {
 
 		AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
 
-		String response = new JSONSerializer().exclude("*.class").deepSerialize(dto);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
