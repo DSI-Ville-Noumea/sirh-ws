@@ -445,8 +445,8 @@ public class AgentController {
 			}
 		}
 		
-		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-				idServiceADS, idAgent, listIdsAgentRemanie);
+		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(
+				idServiceADS, idAgent, listIdsAgentRemanie, new Date());
 
 		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 

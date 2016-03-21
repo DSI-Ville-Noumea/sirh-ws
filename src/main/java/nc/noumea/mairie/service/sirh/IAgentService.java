@@ -54,7 +54,7 @@ public interface IAgentService {
 	/**
 	 * Retourne un arbre d entite avec les agents associés a chaque entite.
 	 * On exclut l agent passe en parametre.
-	 * On ajoute les agents en plus dans la lliste en parametre listIdsAgentAInclure.
+	 * On ajoute les agents en plus dans la liste en parametre listIdsAgentAInclure.
 	 * 
 	 * @param idServiceADS Integer L entite root que l on recherche
 	 * @param idAgent Integer L agent a exclure de l arbre
@@ -63,8 +63,8 @@ public interface IAgentService {
 	 * 		dans ce cas on rajoute les entites manquantes 
 	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
 	 */
-	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure);
+	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour);
 
 	/**
 	 * 
@@ -76,6 +76,6 @@ public interface IAgentService {
 	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
 	 */
 	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-			Integer idServiceADS, Integer idAgent);
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour);
 
 }
