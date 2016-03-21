@@ -342,7 +342,7 @@ public class AgentServiceTest {
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		
-		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, null, new Date());
 		
 		assertNull(result);
 	}
@@ -402,7 +402,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
 		
-		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, null, new Date());
 		
 		assertEquals(result.getIdEntite(), entiteRoot.getIdEntite());
 		assertEquals(result.getListAgentWithServiceDto().size(), 1);
@@ -422,6 +422,7 @@ public class AgentServiceTest {
 	@Test
 	public void getArbreServicesWithListAgentsByServiceWithoutAgentConnecte_3niveaux_3agents_And_oneOtherService() {
 
+		Date dateJour = Mockito.spy(new Date());
 		List<Integer> listOtherAgents = new ArrayList<Integer>();
 		listOtherAgents.add(9004999);
 		
@@ -477,7 +478,7 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
 		
-		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null);
+		EntiteWithAgentWithServiceDto result = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, null, dateJour);
 
 		assertEquals(result.getIdEntite(), entiteRoot.getIdEntite());
 		assertEquals(result.getListAgentWithServiceDto().size(), 1);
@@ -509,8 +510,11 @@ public class AgentServiceTest {
 		Affectation aff = new Affectation();
 		aff.setFichePoste(fp);
 		aff.setAgent(agent);
+
+		List<Integer> listSameAgents = new ArrayList<Integer>();
+		listSameAgents.add(agentRecherche1.getIdAgent());
 		
-		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyList(), Mockito.any(Date.class), Mockito.anyList()))
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(null, dateJour, listSameAgents))
 			.thenReturn(Arrays.asList(aff));
 		
 		/////////////////////
@@ -519,9 +523,7 @@ public class AgentServiceTest {
 				Arrays.asList(new AgentDto(result.getListAgentWithServiceDto().get(0)),
 						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0)),
 						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0))));
-		List<Integer> listSameAgents = new ArrayList<Integer>();
-		listSameAgents.add(agentRecherche1.getIdAgent());
-		EntiteWithAgentWithServiceDto result3 = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, listSameAgents);
+		EntiteWithAgentWithServiceDto result3 = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, listSameAgents, dateJour);
 		
 		assertEquals(result3.getIdEntite(), entiteRoot.getIdEntite());
 		assertEquals(result3.getListAgentWithServiceDto().size(), 1);
@@ -544,7 +546,36 @@ public class AgentServiceTest {
 		otherEntite.setLabel("other service");
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(fp.getIdServiceADS())).thenReturn(otherEntite);
 
-		EntiteWithAgentWithServiceDto result2 = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, null, listOtherAgents);
+		// bug #29570
+		Agent agent12 = new Agent();
+		agent12.setTitre("Mr");
+		agent12.setIdAgent(9005195);
+		FichePoste fp2 = new FichePoste();
+		fp2.setIdServiceADS(idServiceADS);
+		Affectation aff2 = new Affectation();
+		aff2.setFichePoste(fp2);
+		aff2.setAgent(agent12);
+		
+		AgentDto agentDto5195 = new AgentDto();
+		agentDto5195.setIdAgent(agent12.getIdAgent());
+
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(null, dateJour, listOtherAgents))
+			.thenReturn(Arrays.asList(aff));
+		List<Integer> listOtherAgents2 = new ArrayList<Integer>();
+		listOtherAgents2.addAll(listOtherAgents);
+		listOtherAgents2.add(9005195);
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(null, dateJour, listOtherAgents2))
+			.thenReturn(Arrays.asList(aff, aff2));
+		Mockito.when(adsWSConsumer.getEntiteByIdEntite(fp2.getIdServiceADS())).thenReturn(entiteRoot);
+		
+		Mockito.when(adsService.getListeAgentsOfEntiteTree(Mockito.isA(EntiteWithAgentWithServiceDto.class))).thenReturn(
+				Arrays.asList(new AgentDto(result.getListAgentWithServiceDto().get(0)),
+						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0)),
+						new AgentDto(result.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0)),
+						agentDto5195));
+		// fin bug #29570
+		
+		EntiteWithAgentWithServiceDto result2 = agtService.getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(idServiceADS, null, listOtherAgents2, dateJour);
 		
 		// entite fictive
 		assertEquals("Services", result2.getSigle());
@@ -553,8 +584,10 @@ public class AgentServiceTest {
 		assertEquals(result2.getEntiteEnfantWithAgents().size(), 2);
 		// entite root
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getIdEntite(), entiteRoot.getIdEntite());
-		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 2);
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche1.getIdAgent());
+		// bug #29570
+		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(1).getIdAgent(), agent12.getIdAgent());
 		// entite other service
 		assertEquals(result2.getEntiteEnfantWithAgents().get(1).getIdEntite(), otherEntite.getIdEntite());
 		assertEquals(result2.getEntiteEnfantWithAgents().get(1).getListAgentWithServiceDto().size(), 1);
@@ -570,6 +603,8 @@ public class AgentServiceTest {
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entitePetitEnfant.getIdEntite());
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche3.getIdAgent());
+		
+
 	}
 
 }
