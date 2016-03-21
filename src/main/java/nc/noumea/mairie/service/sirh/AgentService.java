@@ -206,12 +206,12 @@ public class AgentService implements IAgentService {
 	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
 	 */
 	@Override
-	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure) {
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour) {
 
 		// on recherche d abord l arbre principal
 		// du service ADS passe en parametre
-		EntiteWithAgentWithServiceDto entiteWithAgents = getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent);
+		EntiteWithAgentWithServiceDto entiteWithAgents = getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent, listIdsAgentAInclure, dateJour);
 		
 		if(null == entiteWithAgents) {
 			return null;
@@ -233,10 +233,10 @@ public class AgentService implements IAgentService {
 			// bug #29215
 			if(null != listIdsAgentsNotInSameServiceOfApprobateur
 					&& !listIdsAgentsNotInSameServiceOfApprobateur.isEmpty()) {
-				List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, new Date(), listIdsAgentsNotInSameServiceOfApprobateur);
+				List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, dateJour, listIdsAgentsNotInSameServiceOfApprobateur);
 				
 				// on construit un arbre de EntiteWithAgentWithServiceDto avec ces agents
-				List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur);
+				List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur, entiteWithAgents);
 				
 				// si on a d autres arbres a ajouter
 				// alors on cree un noeaud parent ficitif auquel on rattache tous les arbres
@@ -256,12 +256,17 @@ public class AgentService implements IAgentService {
 	}
 	
 	private List<EntiteWithAgentWithServiceDto> getArbrewithAgentsNotInSameServiceOfApprobateur(
-			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur) {
+			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur, EntiteWithAgentWithServiceDto originalEntiteWithAgents) {
 		
 		List<EntiteWithAgentWithServiceDto> result = new ArrayList<EntiteWithAgentWithServiceDto>();
 		
 		if(null != listAgentsNotInSameServiceOfApprobateur) {
 			for(AgentWithServiceDto agent : listAgentsNotInSameServiceOfApprobateur) {
+				
+				// on cherche d abord si l agent n est pa en PA inactive 
+				// mais qu il faut tout de meme l ajouter a une entite existante
+				
+				
 				boolean isTrouve = false;
 				for(EntiteWithAgentWithServiceDto entite : result) {
 					if(entite.getIdEntite().equals(agent.getIdServiceADS())) {
@@ -289,7 +294,7 @@ public class AgentService implements IAgentService {
 	 */
 	@Override
 	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-			Integer idServiceADS, Integer idAgent) {
+			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour) {
 
 		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
 
@@ -310,16 +315,30 @@ public class AgentService implements IAgentService {
 				agDto.setIdServiceADS(entite.getIdEntite());
 				agDto.setService(entite.getLabel().trim());
 
-				entiteWithAgents.getListAgentWithServiceDto().add(agDto);
+				if(!entiteWithAgents.getListAgentWithServiceDto().contains(agDto))
+					entiteWithAgents.getListAgentWithServiceDto().add(agDto);
 			}
 		}
 
-		getArbreServicesWithListAgentsByService(entiteWithAgents, idAgent);
+		// #29570
+		// dans le cas d agents avec PA inactive non retournes par la requete
+		List<AgentWithServiceDto> listAgentDtoAInclure = listAgentsOfServices(null, dateJour, listIdsAgentAInclure);
+		if(null != listAgentDtoAInclure) {
+			for(AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
+				if(null != agentDtoAInclure.getIdServiceADS()
+						&& agentDtoAInclure.getIdServiceADS().equals(entiteWithAgents.getIdEntite())
+						&& !entiteWithAgents.getListAgentWithServiceDto().contains(agentDtoAInclure)) {
+					entiteWithAgents.getListAgentWithServiceDto().add(agentDtoAInclure);
+				}
+			}
+		}
 
+		getArbreServicesWithListAgentsByService(entiteWithAgents, idAgent, listAgentDtoAInclure);
+		
 		return entiteWithAgents;
 	}
 
-	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite, Integer idAgent) {
+	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite, Integer idAgent, List<AgentWithServiceDto> listAgentDtoAInclure) {
 
 		if (null != entite && null != entite.getEnfants()) {
 			for (EntiteDto enfant : entite.getEnfants()) {
@@ -338,13 +357,26 @@ public class AgentService implements IAgentService {
 						agDto.setIdServiceADS(entite.getIdEntite());
 						agDto.setService(entite.getLabel().trim());
 
-						enfantsWithAgents.getListAgentWithServiceDto().add(agDto);
+						if(!enfantsWithAgents.getListAgentWithServiceDto().contains(agDto))
+							enfantsWithAgents.getListAgentWithServiceDto().add(agDto);
+					}
+				}
+				
+				// #29570
+				// dans le cas d agents avec PA inactive non retournes par la requete
+				if(null != listAgentDtoAInclure) {
+					for(AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
+						if(null != agentDtoAInclure.getIdServiceADS()
+								&& agentDtoAInclure.getIdServiceADS().equals(enfantsWithAgents.getIdEntite())
+								&& !enfantsWithAgents.getListAgentWithServiceDto().contains(agentDtoAInclure)) {
+							enfantsWithAgents.getListAgentWithServiceDto().add(agentDtoAInclure);
+						}
 					}
 				}
 
 				entite.getEntiteEnfantWithAgents().add(enfantsWithAgents);
 
-				getArbreServicesWithListAgentsByService(enfantsWithAgents, idAgent);
+				getArbreServicesWithListAgentsByService(enfantsWithAgents, idAgent, listAgentDtoAInclure);
 			}
 		}
 	}
