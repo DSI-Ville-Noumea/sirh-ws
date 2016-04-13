@@ -34,10 +34,14 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class FichePosteRepository implements IFichePosteRepository {
+
+	private Logger logger = LoggerFactory.getLogger(FichePosteRepository.class);
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
@@ -116,6 +120,10 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@Override
 	public List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(List<Integer> listIdsEntite, List<Integer> listStatutFDP) {
+
+		logger.debug("getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation with parameter listIdsEntite = {}, listStatutFDP = {}",
+				listIdsEntite, listStatutFDP);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp ");
 		sb.append("left join fetch fp.statutFP statut ");
@@ -145,6 +153,10 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@Override
 	public FichePoste chercherFichePoste(Integer idFichePoste) {
+
+		logger.debug("chercherFichePoste with parameter idFichePoste = {}",
+				idFichePoste);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp ");
 		sb.append("left join fetch fp.statutFP statut ");
@@ -158,13 +170,18 @@ public class FichePosteRepository implements IFichePosteRepository {
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherFichePoste with parameter idFichePoste = {} and Exception = {}",
+					idFichePoste, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public List<FichePoste> chercherListFichesPosteByListIdsFichePoste(List<Integer> listIdsFichePoste) {
+
+		logger.debug("chercherListFichesPosteByListIdsFichePoste with parameter listIdsFichePoste = {}",
+				listIdsFichePoste);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp ");
 		sb.append("left join fetch fp.statutFP statut ");
@@ -400,17 +417,20 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@Override
 	public Sppost chercherSppost(Integer poanne, Integer ponuor) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from Sppost fp where fp.id.poanne = :poanne and fp.id.ponuor = :ponuor ");
 
 		TypedQuery<Sppost> query = sirhEntityManager.createQuery(sb.toString(), Sppost.class);
 		query.setParameter("poanne", poanne);
 		query.setParameter("ponuor", ponuor);
+		
 		Sppost res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherSppost with parameter poanne = {} and ponuor = {} and Exception = {}",
+					poanne, ponuor, e.getMessage());
 		}
 		return res;
 	}
@@ -423,11 +443,13 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@Override
 	public FichePoste chercherDerniereFichePosteByYear(Integer annee) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp where fp.annee = :annee order by fp.idFichePoste desc ");
 
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("annee", annee);
+		
 		FichePoste res = null;
 		try {
 			List<FichePoste> resTemp = query.getResultList();
@@ -435,104 +457,123 @@ public class FichePosteRepository implements IFichePosteRepository {
 				return resTemp.get(0);
 			}
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherDerniereFichePosteByYear with parameter annee = {} and Exception = {}",
+					annee, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public FeFp chercherFEFPAvecFP(Integer idFichePoste, Integer isPrimaire) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FeFp fp where fp.id.idFichePoste = :idFichePoste and fp.fePrimaire = :fePrimaire ");
 
 		TypedQuery<FeFp> query = sirhEntityManager.createQuery(sb.toString(), FeFp.class);
 		query.setParameter("idFichePoste", idFichePoste);
 		query.setParameter("fePrimaire", isPrimaire);
+		
 		FeFp res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherFEFPAvecFP with parameter idFichePoste = {} and isPrimaire = {} and Exception = {}",
+					idFichePoste, isPrimaire, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public FicheEmploi chercherFicheEmploi(Integer idFicheEmploi) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FicheEmploi fp where fp.idFicheEmploi = :idFicheEmploi ");
 
 		TypedQuery<FicheEmploi> query = sirhEntityManager.createQuery(sb.toString(), FicheEmploi.class);
 		query.setParameter("idFicheEmploi", idFicheEmploi);
+		
 		FicheEmploi res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherFicheEmploi with parameter idFicheEmploi = {} and Exception = {}",
+					idFicheEmploi, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public NiveauEtude chercherNiveauEtude(Integer idNiveauEtude) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from NiveauEtude fp where fp.idNiveauEtude = :idNiveauEtude ");
 
 		TypedQuery<NiveauEtude> query = sirhEntityManager.createQuery(sb.toString(), NiveauEtude.class);
 		query.setParameter("idNiveauEtude", idNiveauEtude);
+		
 		NiveauEtude res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherNiveauEtude with parameter idNiveauEtude = {} and Exception = {}",
+					idNiveauEtude, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public Activite chercherActivite(Integer idActivite) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from Activite fp where fp.idActivite = :idActivite ");
 
 		TypedQuery<Activite> query = sirhEntityManager.createQuery(sb.toString(), Activite.class);
 		query.setParameter("idActivite", idActivite);
+		
 		Activite res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherActivite with parameter idActivite = {} and Exception = {}",
+					idActivite, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public Competence chercherCompetence(Integer idCompetence) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from Competence fp where fp.idCompetence = :idCompetence ");
 
 		TypedQuery<Competence> query = sirhEntityManager.createQuery(sb.toString(), Competence.class);
 		query.setParameter("idCompetence", idCompetence);
+		
 		Competence res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherCompetence with parameter idCompetence = {} and Exception = {}",
+					idCompetence, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public AvantageNature chercherAvantageNature(Integer idAvantage) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from AvantageNature fp where fp.idAvantage = :idAvantage ");
 
 		TypedQuery<AvantageNature> query = sirhEntityManager.createQuery(sb.toString(), AvantageNature.class);
 		query.setParameter("idAvantage", idAvantage);
+		
 		AvantageNature res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherAvantageNature with parameter idAvantage = {} and Exception = {}",
+					idAvantage, e.getMessage());
 		}
 		return res;
 	}
@@ -548,7 +589,8 @@ public class FichePosteRepository implements IFichePosteRepository {
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherDelegation with parameter idDelegation = {} and Exception = {}",
+					idDelegation, e.getMessage());
 		}
 		return res;
 	}
@@ -564,7 +606,8 @@ public class FichePosteRepository implements IFichePosteRepository {
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherRegimeIndemnitaire with parameter idRegime = {} and Exception = {}",
+					idRegime, e.getMessage());
 		}
 		return res;
 	}
@@ -580,13 +623,18 @@ public class FichePosteRepository implements IFichePosteRepository {
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherStatutFPByIdStatut with parameter idStatut = {} and Exception = {}",
+					idStatut, e.getMessage());
 		}
 		return res;
 	}
 
 	@Override
 	public FichePoste chercherFichePosteByNumFP(String numFP) {
+
+		logger.debug("chercherFichePosteByNumFP with parameter numFP = {}",
+				numFP);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp ");
 		sb.append("left join fetch fp.statutFP statut ");
@@ -594,31 +642,39 @@ public class FichePosteRepository implements IFichePosteRepository {
 		sb.append("left join fetch fp.reglementaire reglementaire ");
 		sb.append("left join fetch fp.titrePoste titrePoste ");
 		sb.append("where fp.numFP=:numFP ");
+		
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("numFP", numFP);
+		
 		FichePoste res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherFichePosteByNumFP with parameter numFP = {} and Exception = {}",
+				numFP, e.getMessage());
 		}
+		
 		return res;
 	}
 
 	@Override
 	public ActionFdpJob chercherActionFDPParentDuplication(Integer idFichePoste) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from ActionFdpJob fp ");
 		sb.append("where fp.idFichePoste=:idFichePoste ");
 		sb.append("and fp.typeAction='DUPLICATION' ");
 		sb.append("order by fp.idActionFdpJob desc ");
+		
 		TypedQuery<ActionFdpJob> query = sirhEntityManager.createQuery(sb.toString(), ActionFdpJob.class);
 		query.setParameter("idFichePoste", idFichePoste);
+		
 		ActionFdpJob res = null;
 		try {
 			res = query.getSingleResult();
 		} catch (Exception e) {
-
+			logger.debug("Exception chercherActionFDPParentDuplication with parameter idFichePoste = {} and Exception = {}",
+					idFichePoste, e.getMessage());
 		}
 		return res;
 	}
