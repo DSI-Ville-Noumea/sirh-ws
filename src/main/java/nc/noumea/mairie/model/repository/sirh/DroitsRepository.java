@@ -8,17 +8,24 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Droits;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DroitsRepository implements IDroitsRepository {
 
+	private Logger logger = LoggerFactory.getLogger(DroitsRepository.class);
+	
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
 
 	@Override
 	public List<Droits> getDroitsByElementAndAgent(Integer idElement, String login) {
 
+		logger.debug("getDroitsByElementAndAgent with parameter idElement = {}, login = {}",
+				idElement, login);
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select d from Droits d ");
 		sb.append("inner join fetch d.droitsGroupe dg ");
@@ -36,6 +43,9 @@ public class DroitsRepository implements IDroitsRepository {
 
 	@Override
 	public List<Droits> getDroitsByGroupeAndAgent(Integer idGroupe, String login) {
+
+		logger.debug("getDroitsByGroupeAndAgent with parameter idGroupe = {}, login = {}",
+				idGroupe, login);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("select d from Droits d ");

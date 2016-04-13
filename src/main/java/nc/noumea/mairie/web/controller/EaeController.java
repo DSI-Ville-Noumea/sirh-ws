@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Agent;
-import nc.noumea.mairie.service.sirh.FichePosteService;
 import nc.noumea.mairie.service.sirh.IAgentService;
 import nc.noumea.mairie.service.sirh.IFichePosteService;
 import nc.noumea.mairie.tools.transformer.MSDateTransformer;
