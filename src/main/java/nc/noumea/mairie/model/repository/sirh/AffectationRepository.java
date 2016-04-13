@@ -209,6 +209,9 @@ public class AffectationRepository implements IAffectationRepository {
 	@Override
 	public List<Affectation> getListeAffectationsForListAgentByPeriode(List<Integer> listIdsAgent, Date dateDebut, Date dateFin) {
 
+		logger.debug("getListeAffectationsForListAgentByPeriode with parameter listIdsAgent = {}, dateDebut = {}, dateFin = {}",
+				listIdsAgent, dateDebut, dateFin);
+		
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select a from Affectation a ");
