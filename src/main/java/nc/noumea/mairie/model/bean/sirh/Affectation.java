@@ -26,24 +26,11 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
 		@NamedQuery(name = "getCurrentAffectation", query = "select a.fichePoste.idFichePoste from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
 		@NamedQuery(name = "getAffectationActiveByAgent", query = "select a from Affectation a where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)"),
+		// #30357 on retire les join FETCH car ca retourne trop de ligne
+		// et le setMaxResult de hibernate ne fonctionne pas avec
 		@NamedQuery(name = "getAffectationActiveByAgentPourCalculEAE", query = "select a "
 				+ " from Affectation a "
-				+ " join fetch a.fichePoste fp "
-				+ " left  join fetch a.fichePosteSecondaire fpSec "
-				+ " left  join fetch fp.titrePoste tp "
-				+ " left  join fetch fp.budget budget "
-				+ " left  join fetch fp.lieuPoste lieu "
-				+ " left  join fetch fp.gradePoste grade "
-				+ " left  join fetch grade.gradeGenerique gradeGen "
-				+ " left  join fetch fp.budgete budgete "
-				+ " left  join fetch fp.niveauEtude niveauEtude "
-				+ " left  join fetch fp.superieurHierarchique superieurHierarchique "
-				+ " left  join fetch superieurHierarchique.agent agentHierarchique "
-				+ " left  join fetch superieurHierarchique.titrePoste titrePosteHierarchique "
-				+ " left  join fetch fp.activites "
-				+ " left join fetch fp.competencesFDP "
-				+ " left join fetch fp.ficheEmploiPrimaire "
-				+ " left join fetch fp.ficheEmploiSecondaire "
+				+ " join a.fichePoste fp "
 				+ " where a.agent.idAgent = :idAgent and a.dateDebutAff <= :today and (a.dateFinAff is null or a.dateFinAff >= :today)") })
 public class Affectation {
 
