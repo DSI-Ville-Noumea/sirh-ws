@@ -111,6 +111,12 @@
 			</pluginRepository> -->
 	</pluginRepositories>
 	<dependencies>
+		<!-- PDF -->
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+		</dependency>
 		<!-- General dependencies for standard applications -->
 		<dependency>
 			<groupId>junit</groupId>

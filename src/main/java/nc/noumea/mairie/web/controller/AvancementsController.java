@@ -40,41 +40,25 @@ public class AvancementsController {
 	private IReportingService reportingService;
 
 	@ResponseBody
-	@RequestMapping(value = "/xml/getTableauAvancements", produces = "application/xml", method = RequestMethod.GET)
+	@RequestMapping(value = "/downloadTableauAvancementsPDF", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ModelAndView getTableauAvancements(@RequestParam("idCap") int idCap,
-			@RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE)
+	public ResponseEntity<byte[]> downloadTableauAvancementsPDF(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE)
 			throws ParseException {
 
-		logger.debug(
-				"entered GET [avancements/xml/getTableauAvancements] => getTableauAvancements with parameter idCap = {} and idCadreEmploi = {} and avisEAE = {}",
-				idCap, idCadreEmploi, avisEAE);
-
-		if (avancementsService.getCap(idCap) == null)
-			return new ModelAndView("xmlView", "object", new CommissionAvancementDto());
-
-		Cap cap = avancementsService.getCap(idCap);
-
-		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi,
-				avisEAE, cap.isCapVDN());
-
-		return new ModelAndView("xmlView", "object", dto);
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/downloadTableauAvancements", method = RequestMethod.GET)
-	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadTableauAvancements(@RequestParam("idCap") int idCap,
-			@RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE)
-			throws ParseException {
+		logger.debug("entered GET [avancements/downloadTableauAvancementsPDF] => downloadTableauAvancementsPDF with parameter idCap = {} and idCadreEmploi = {} and avisEAE = {}", idCap,
+				idCadreEmploi, avisEAE);
 
 		if (avancementsService.getCap(idCap) == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 
+		Cap cap = avancementsService.getCap(idCap);
+
+		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi, avisEAE, cap.isCapVDN());
+
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getTableauAvancementsReportAsByteArray(idCap, idCadreEmploi, avisEAE);
+			responseData = reportingService.getTableauAvancementPDF(dto);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
