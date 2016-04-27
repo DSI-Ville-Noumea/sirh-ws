@@ -276,7 +276,11 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			listValuesEmployeur.add(new CellVo(""));
 			writeLine(tableEmployeur, 3, listValuesEmployeur, false);
 		}
-		table.addCell(tableEmployeur);
+		PdfPCell cellEmployeur = new PdfPCell();
+		cellEmployeur.addElement(tableEmployeur);
+		cellEmployeur.setFixedHeight(tableEmployeur.getTotalHeight());
+		cellEmployeur.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellEmployeur);
 
 		// table titulaires
 		PdfPTable tableTitulaire = writeTableau(document, new float[] { 10, 7 });
@@ -286,7 +290,11 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			listValuesTitulaire.add(new CellVo(""));
 			writeLine(tableTitulaire, 10, listValuesTitulaire, false);
 		}
-		table.addCell(tableTitulaire);
+		PdfPCell cellTitulaire = new PdfPCell();
+		cellTitulaire.addElement(tableTitulaire);
+		cellTitulaire.setFixedHeight(tableTitulaire.getTotalHeight());
+		cellTitulaire.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellTitulaire);
 
 		// table suppleants
 		PdfPTable tableSuppleant = writeTableau(document, new float[] { 10, 7 });
@@ -297,7 +305,11 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			writeLine(tableSuppleant, 10, listValuesSupp, false);
 
 		}
-		table.addCell(tableSuppleant);
+		PdfPCell cellSuppleant = new PdfPCell();
+		cellSuppleant.addElement(tableSuppleant);
+		cellSuppleant.setFixedHeight(tableSuppleant.getTotalHeight());
+		cellSuppleant.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellSuppleant);
 
 		// Cachet et Visa
 		PdfPTable tableCachetVisa = writeTableau(document, new float[] { 17 });
