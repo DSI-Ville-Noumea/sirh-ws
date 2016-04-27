@@ -179,6 +179,7 @@ public class KiosqueRhServiceTest {
 		ref1.setDateDebut(new DateTime(2016, 1, 2, 0, 0, 0).toDate());
 		ref1.setDateFin(new DateTime().plusDays(365).toDate());
 		sirhPersistenceUnit.persist(ref1);
+		
 		AlerteRh ref2 = new AlerteRh();
 		ref2.setIdAlerteKiosque(2);
 		ref2.setTexteAlerteKiosque("texte 2");
@@ -186,6 +187,7 @@ public class KiosqueRhServiceTest {
 		ref2.setDateDebut(new DateTime(2016, 1, 2, 0, 0, 0).toDate());
 		ref2.setDateFin(new DateTime().plusDays(365).toDate());
 		sirhPersistenceUnit.persist(ref2);
+		
 		AlerteRh ref3 = new AlerteRh();
 		ref3.setIdAlerteKiosque(3);
 		ref3.setTexteAlerteKiosque("texte 3");
@@ -198,8 +200,8 @@ public class KiosqueRhServiceTest {
 
 		// Then
 		assertEquals(2, result.size());
-		assertEquals("texte 1", result.get(0).getTexteAlerteKiosque());
-		assertEquals("texte 2", result.get(1).getTexteAlerteKiosque());
+		assertEquals("texte 1", result.get(1).getTexteAlerteKiosque());
+		assertEquals("texte 2", result.get(0).getTexteAlerteKiosque());
 	}
 
 	@Test

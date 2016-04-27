@@ -126,6 +126,7 @@ public class KiosqueRhService implements IKiosqueRhService {
 		if (viseurABS)
 			sb.append("or a.viseurABS =:viseurABS ");
 		sb.append(")and :date between a.dateDebut and a.dateFin ");
+		sb.append("order by a.idAlerteKiosque desc ");
 
 		TypedQuery<AlerteRh> q = sirhEntityManager.createQuery(sb.toString(), AlerteRh.class);
 		q.setParameter("agent", true);
