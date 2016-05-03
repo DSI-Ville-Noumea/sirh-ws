@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.repository.sirh;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
 
 import org.springframework.stereotype.Repository;
 
@@ -141,18 +143,19 @@ public class AgentRepository implements IAgentRepository {
 	public List<Affectation> getListAgentsByServicesAndListAgentsAndDate(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
-		sb.append("WHERE aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
-		// if we're restraining search with service codes
-		if (idServiceADS != null && idServiceADS.size() != 0)
-			sb.append("and fp.idServiceADS in (:idServiceADS) ");
+		
+		sb.append("select aff.id_affectation , ag.nom_usage, ag.prenom_usage, ag.id_agent, ag.civilite, fp.id_service_ads from affectation aff ");
+		sb.append("inner join agent ag on aff.id_agent=ag.id_agent ");
+		sb.append("inner join fiche_poste fp on aff.id_fiche_poste=fp.id_fiche_poste ");
+		sb.append("where aff.date_debut_aff <= :dateJour and (aff.date_fin_aff is null or aff.date_fin_aff >= :dateJour) ");
 		// if we're restraining search with idAgents...
 		if (idAgents != null && idAgents.size() != 0)
-			sb.append("and aff.agent.idAgent in (:idAgents) ");
-		sb.append("and aff.dateDebutAff<=:dateJour and ");
-		sb.append("(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)");
-
-		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
+			sb.append("and aff.id_agent in (:idAgents) ");
+		// if we're restraining search with service codes
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			sb.append("and fp.id_service_ads in (:idServiceADS) ");
+		
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
 		query.setParameter("dateJour", date);
 
 		// if we're restraining search with service codes
@@ -163,6 +166,95 @@ public class AgentRepository implements IAgentRepository {
 		if (idAgents != null && idAgents.size() != 0)
 			query.setParameter("idAgents", idAgents);
 
-		return query.getResultList();
+		@SuppressWarnings("unchecked")
+		List<Object[]> l = (List<Object[]>) query.getResultList();
+		
+		List<Affectation> result = new ArrayList<Affectation>();
+		for (Object[] r : l) {
+			Integer idAffectation = (Integer) r[0];
+			String nomUsage = (String) r[1];
+			String prenomUsage = (String) r[2];
+			Integer idAgent = (Integer) r[3];
+			String civilite = (String) r[4];
+			Integer idServiceAds = (Integer) r[5];
+			
+			Agent agent = new Agent();
+			agent.setIdAgent(idAgent);
+			agent.setNomUsage(nomUsage);
+			agent.setPrenomUsage(prenomUsage);
+			agent.setTitre(civilite);
+			
+			Affectation affectation = new Affectation();
+			affectation.setIdAffectation(idAffectation);
+			affectation.setAgent(agent);
+			
+			FichePoste fichePoste = new FichePoste();
+			fichePoste.setIdServiceADS(idServiceAds);
+			
+			affectation.setFichePoste(fichePoste);
+			
+			result.add(affectation);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public List<Affectation> getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(List<Integer> idServiceADS, List<Integer> idAgents) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select aff.id_affectation , ag.nom_usage, ag.prenom_usage, ag.id_agent, ag.civilite, fp.id_service_ads from affectation aff ");
+		sb.append("inner join agent ag on aff.id_agent=ag.id_agent ");
+		sb.append("inner join fiche_poste fp on aff.id_fiche_poste=fp.id_fiche_poste ");
+		sb.append("where aff.date_debut_aff = (select max(aff2.date_debut_aff) from affectation aff2 where aff2.id_agent=aff.id_agent group by aff2.id_agent ) ");
+		// if we're restraining search with idAgents...
+		if (idAgents != null && idAgents.size() != 0)
+			sb.append("and aff.id_agent in (:idAgents) ");
+		// if we're restraining search with service codes
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			sb.append("and fp.id_service_ads in (:idServiceADS) ");
+		
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+
+		// if we're restraining search with service codes
+		if (idServiceADS != null && idServiceADS.size() != 0)
+			query.setParameter("idServiceADS", idServiceADS);
+
+		// if we're restraining search with idAgent...
+		if (idAgents != null && idAgents.size() != 0)
+			query.setParameter("idAgents", idAgents);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> l = (List<Object[]>) query.getResultList();
+		
+		List<Affectation> result = new ArrayList<Affectation>();
+		for (Object[] r : l) {
+			Integer idAffectation = (Integer) r[0];
+			String nomUsage = (String) r[1];
+			String prenomUsage = (String) r[2];
+			Integer idAgent = (Integer) r[3];
+			String civilite = (String) r[4];
+			Integer idServiceAds = (Integer) r[5];
+			
+			Agent agent = new Agent();
+			agent.setIdAgent(idAgent);
+			agent.setNomUsage(nomUsage);
+			agent.setPrenomUsage(prenomUsage);
+			agent.setTitre(civilite);
+			
+			Affectation affectation = new Affectation();
+			affectation.setIdAffectation(idAffectation);
+			affectation.setAgent(agent);
+			
+			FichePoste fichePoste = new FichePoste();
+			fichePoste.setIdServiceADS(idServiceAds);
+			
+			affectation.setFichePoste(fichePoste);
+			
+			result.add(affectation);
+		}
+		
+		return result;
 	}
 }
