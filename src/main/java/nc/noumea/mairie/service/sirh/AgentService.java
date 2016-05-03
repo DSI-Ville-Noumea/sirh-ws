@@ -112,9 +112,14 @@ public class AgentService implements IAgentService {
 	public List<AgentWithServiceDto> listAgentsOfServices(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
-
+		
 		List<Affectation> listAffectations = agentRepository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, date, idAgents);
-
+		
+		if(null == listAffectations
+				|| listAffectations.isEmpty()) {
+			return result;
+		}
+		
 		// optimisation #18391
 		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
 		// verifier)
@@ -122,9 +127,9 @@ public class AgentService implements IAgentService {
 		// cela ne sert donc a rien d appeler l arbre entier ADS
 		EntiteDto root = null;
 		if (null == idAgents || idAgents.isEmpty() || 1 < idAgents.size()) {
-			root = adsWSConsumer.getWholeTree();
+			root = adsWSConsumer.getWholeTreeLight();
 		}
-
+		
 		for (Affectation aff : listAffectations) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
@@ -146,6 +151,26 @@ public class AgentService implements IAgentService {
 			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setSigleService(service == null ? "" : service.getSigle());
 			result.add(agDto);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public List<AgentWithServiceDto> listAgentsOfServicesWithoutLibelleService(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
+
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
+		
+		List<Affectation> listAffectations = agentRepository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, date, idAgents);
+		
+		if(null != listAffectations) {
+			for (Affectation aff : listAffectations) {
+				AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
+				if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
+					agDto.setIdServiceADS(aff.getFichePoste().getIdServiceADS());
+				}
+				result.add(agDto);
+			}
 		}
 
 		return result;
@@ -449,26 +474,8 @@ public class AgentService implements IAgentService {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT aff FROM Affectation aff JOIN FETCH aff.agent AS ag JOIN FETCH aff.fichePoste AS fp ");
-		sb.append("WHERE aff.dateDebutAff = (select MAX(aff2.dateDebutAff) from Affectation aff2 where aff2.agent.idAgent=aff.agent.idAgent group by aff2.agent.idAgent ) ");
-		sb.append("and aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste ");
-		// if we're restraining search with service codes
-		if (idServiceADS != null && idServiceADS.size() != 0)
-			sb.append("and fp.idServiceADS in (:idServiceADS) ");
-		// if we're restraining search with idAgents...
-		if (listIdsAgent != null && listIdsAgent.size() != 0)
-			sb.append("and aff.agent.idAgent in (:idAgents) ");
-
-		TypedQuery<Affectation> query = sirhEntityManager.createQuery(sb.toString(), Affectation.class);
-		// if we're restraining search with service codes
-		if (idServiceADS != null && idServiceADS.size() != 0)
-			query.setParameter("idServiceADS", idServiceADS);
-
-		// if we're restraining search with idAgent...
-		if (listIdsAgent != null && listIdsAgent.size() != 0)
-			query.setParameter("idAgents", listIdsAgent);
-
+		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, listIdsAgent);
+		
 		// optimisation #18391
 		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
 		// verifier)
@@ -476,11 +483,10 @@ public class AgentService implements IAgentService {
 		// cela ne sert donc a rien d appeler l arbre entier ADS
 		EntiteDto root = null;
 		if (null == listIdsAgent || 1 < listIdsAgent.size()) {
-			root = adsWSConsumer.getWholeTree();
+			root = adsWSConsumer.getWholeTreeLight();
 		}
 
-		List<Affectation> lag = query.getResultList();
-		for (Affectation aff : lag) {
+		for (Affectation aff : listAffectations) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
 			if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
@@ -501,6 +507,26 @@ public class AgentService implements IAgentService {
 			agDto.setIdServiceADS(service == null ? null : service.getIdEntite());
 			agDto.setSigleService(service == null ? "" : service.getSigle());
 			result.add(agDto);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectationWithoutLibelleService(List<Integer> idServiceADS, List<Integer> listIdsAgent) {
+
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
+
+		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, listIdsAgent);
+		
+		if(null != listAffectations) {
+			for (Affectation aff : listAffectations) {
+				AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
+				if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
+					agDto.setIdServiceADS(aff.getFichePoste().getIdServiceADS());
+				}
+				result.add(agDto);
+			}
 		}
 
 		return result;
