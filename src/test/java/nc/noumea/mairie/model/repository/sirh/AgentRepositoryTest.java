@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,8 +14,8 @@ import javax.persistence.PersistenceContext;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,5 +237,223 @@ public class AgentRepositoryTest {
 		Agent result = repository.getAgent(9005184);
 
 		assertNull(result);
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsByServicesAndListAgentsAndDate_testDate() {
+		
+		List<Integer> idServiceADS = null;
+		List<Integer> idAgents = null;
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(11);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setDateDebutAff(new Date());
+		aff.setDateFinAff(new DateTime().plusDays(10).toDate());
+		aff.setFichePoste(fichePoste);
+		aff.setTempsTravail("temps travail");
+		aff.setAgent(ag);
+		sirhPersistenceUnit.persist(aff);
+		
+		// un jour apres le debut de l affectation
+		List<Affectation> result = repository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, new DateTime().plusDays(1).toDate(), idAgents);
+		assertEquals(1, result.size());
+		
+		// un jour avant le debut de l affectation
+		result = repository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, new DateTime().minusDays(1).toDate(), idAgents);
+		assertEquals(0, result.size());
+		
+		// un jour apres la fin de l affectation
+		result = repository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, new DateTime().plusDays(11).toDate(), idAgents);
+		assertEquals(0, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsByServicesAndListAgentsAndDate_testAgents() {
+		
+		List<Integer> idServiceADS = null;
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(11);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setDateDebutAff(new Date());
+		aff.setDateFinAff(new DateTime().plusDays(10).toDate());
+		aff.setFichePoste(fichePoste);
+		aff.setTempsTravail("temps travail");
+		aff.setAgent(ag);
+		sirhPersistenceUnit.persist(aff);
+		
+		List<Affectation> result = repository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, new DateTime().plusDays(1).toDate(), Arrays.asList(9005138));
+		assertEquals(1, result.size());
+		
+		result = repository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, new DateTime().plusDays(1).toDate(), Arrays.asList(9005138+10));
+		assertEquals(0, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsByServicesAndListAgentsAndDate_testIdServiceADS() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(11);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setDateDebutAff(new Date());
+		aff.setDateFinAff(new DateTime().plusDays(10).toDate());
+		aff.setFichePoste(fichePoste);
+		aff.setTempsTravail("temps travail");
+		aff.setAgent(ag);
+		sirhPersistenceUnit.persist(aff);
+		
+		List<Affectation> result = repository.getListAgentsByServicesAndListAgentsAndDate(Arrays.asList(fichePoste.getIdServiceADS()), new DateTime().plusDays(1).toDate(), Arrays.asList(9005138));
+		assertEquals(1, result.size());
+		
+		result = repository.getListAgentsByServicesAndListAgentsAndDate(Arrays.asList(fichePoste.getIdServiceADS()+2), new DateTime().plusDays(1).toDate(), Arrays.asList(9005138+10));
+		assertEquals(0, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithoutAffectationByServicesAndListAgentsAndDate_testAgents() {
+		
+		List<Integer> idServiceADS = null;
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(11);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setDateDebutAff(new Date());
+		aff.setDateFinAff(new DateTime().plusDays(10).toDate());
+		aff.setFichePoste(fichePoste);
+		aff.setTempsTravail("temps travail");
+		aff.setAgent(ag);
+		sirhPersistenceUnit.persist(aff);
+		
+		List<Affectation> result = repository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, Arrays.asList(9005138));
+		assertEquals(1, result.size());
+		
+		result = repository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, Arrays.asList(9005138+10));
+		assertEquals(0, result.size());
+	}
+	
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListAgentsWithoutAffectationByServicesAndListAgentsAndDate_testIdServiceADS() {
+		
+		Agent ag = new Agent();
+		ag.setIdAgent(9005138);
+		ag.setNomatr(5138);
+		ag.setPrenom("NON");
+		ag.setDateNaissance(new Date());
+		ag.setNomPatronymique("TEST");
+		ag.setNomUsage("USAGE");
+		ag.setPrenomUsage("NONO");
+		ag.setSexe("H");
+		ag.setTitre("Mr");
+		sirhPersistenceUnit.persist(ag);
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(11);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(1);
+		aff.setDateDebutAff(new Date());
+		aff.setDateFinAff(new DateTime().plusDays(10).toDate());
+		aff.setFichePoste(fichePoste);
+		aff.setTempsTravail("temps travail");
+		aff.setAgent(ag);
+		sirhPersistenceUnit.persist(aff);
+		
+		List<Affectation> result = repository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(Arrays.asList(fichePoste.getIdServiceADS()), Arrays.asList(9005138));
+		assertEquals(1, result.size());
+		
+		result = repository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(Arrays.asList(fichePoste.getIdServiceADS()+2), Arrays.asList(9005138+10));
+		assertEquals(0, result.size());
 	}
 }
