@@ -7,7 +7,7 @@
 <TITLE>SIRH WebServices - <%= this.getServletContext().getInitParameter("VERSION") %></TITLE>
 </HEAD>
 	<BODY background="RH_final.jpg">	
-	<P>Ceci est l'URL des Web Services du Kiosque.</P>
+	<P>Ceci est l'URL des Web Services du module SIRH-WS.</P>
 	</BODY>
 </HTML>
 
