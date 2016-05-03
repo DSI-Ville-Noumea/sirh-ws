@@ -29,4 +29,13 @@ public interface IAgentRepository {
 	 */
 	List<Affectation> getListAgentsByServicesAndListAgentsAndDate(
 			List<Integer> idServiceADS, Date date, List<Integer> idAgents);
+
+	/**
+	 * Retoune la derniere affectation de chaque agent passe en parametre.
+	 * 
+	 * @param idServiceADS List<Integer>
+	 * @param idAgents List<Integer>
+	 * @return List<Affectation>
+	 */
+	List<Affectation> getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(List<Integer> idServiceADS, List<Integer> idAgents);
 }
