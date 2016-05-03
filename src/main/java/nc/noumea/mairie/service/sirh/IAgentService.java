@@ -27,15 +27,18 @@ public interface IAgentService {
 	public Agent getSuperieurHierarchiqueAgent(Integer idAgent);
 
 	/**
-	 * Retourne une liste d'agents (avec leur service)
+	 * Retourne une liste d'agents (avec leur service (idServiceADS + libelle))
+	 * Appel ADS
 	 * 
-	 * @param servis
-	 *            = liste services codes dans lesquels chercher
+	 * Pour ne pas appeler ADS, voir la methode listAgentsOfServicesWithoutLibelleService
+	 * 
+	 * @param idServiceADS
+	 *            = liste id services ADS dans lesquels chercher
 	 * @param date
 	 *            = date à laquelle effectuer la recherche
 	 * @param idAgent
 	 *            = agents a restreindre
-	 * @return
+	 * @return List<AgentWithServiceDto> liste d agents
 	 */
 	public List<AgentWithServiceDto> listAgentsOfServices(List<Integer> idServiceADS, Date date, List<Integer> idAgents);
 
@@ -49,6 +52,18 @@ public interface IAgentService {
 
 	List<AgentGeneriqueDto> getListAgents(List<Integer> listIdsAgent);
 
+	/**
+	 * Retourne une liste d'agents avec leur service le plus recent (idServiceADS + libelle)
+	 * Appel ADS
+	 * 
+	 * Pour ne pas appeler ADS et avoir les libelles de service, voir la methode listAgentsOfServicesOldAffectationWithoutLibelleService
+	 * 
+	 * @param idServiceADS
+	 *            = liste id services ADS dans lesquels chercher
+	 * @param idAgent
+	 *            = agents a restreindre
+	 * @return List<AgentWithServiceDto> liste d agents
+	 */
 	public List<AgentWithServiceDto> listAgentsOfServicesOldAffectation(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
 	/**
@@ -77,5 +92,35 @@ public interface IAgentService {
 	 */
 	EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
 			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour);
+
+	/**
+	 * Retourne une liste d'agents (avec leur service (uniquement idServiceADS))
+	 * PAS d appel ADS
+	 * 
+	 * Pour appeler ADS et avoir les libelles de service, voir la methode listAgentsOfServices
+	 * 
+	 * @param idServiceADS
+	 *            = liste id services ADS dans lesquels chercher
+	 * @param date
+	 *            = date à laquelle effectuer la recherche
+	 * @param idAgent
+	 *            = agents a restreindre
+	 * @return List<AgentWithServiceDto> liste d agents
+	 */
+	List<AgentWithServiceDto> listAgentsOfServicesWithoutLibelleService(List<Integer> idServiceADS, Date date, List<Integer> idAgents);
+
+	/**
+	 * Retourne une liste d'agents avec leur service le plus recent (uniquement idServiceADS)
+	 * PAS d appel ADS
+	 * 
+	 * Pour appeler ADS et avoir les libelles de service, voir la methode listAgentsOfServicesOldAffectation
+	 * 
+	 * @param idServiceADS
+	 *            = liste id services ADS dans lesquels chercher
+	 * @param idAgent
+	 *            = agents a restreindre
+	 * @return List<AgentWithServiceDto> liste d agents
+	 */
+	List<AgentWithServiceDto> listAgentsOfServicesOldAffectationWithoutLibelleService(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
 }
