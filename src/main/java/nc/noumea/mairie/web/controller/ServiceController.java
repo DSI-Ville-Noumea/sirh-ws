@@ -67,17 +67,23 @@ public class ServiceController {
 	/**
 	 * Returns the list of agents with theirs services
 	 * 
+	 * Le parametre withoutLibelleService permet de faire appel ou non a ADS
+	 * Dans un souci de performances, nous n avons pas toujours besoin des libelles de service mais uniquement de idServiceADS
+	 * (utile a SIRH-ABS-WS/filtre/services)
+	 * 
 	 * @param idsAgent
 	 *            List<Integer>
 	 * @param date
 	 *            (optional)
+	 * @param withoutLibelleService si true alors pas d appel de ADS pour recuperer les libelles des services
 	 * @return List<AgentWithServiceDto> liste des agents passes en parametre
 	 *         avec leur service
 	 */
 	@RequestMapping(value = "/listAgentsWithService", headers = "Accept=application/json", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListAgentsWithService(@RequestBody String agentsApprouvesJson, @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date) {
+	public ResponseEntity<String> getListAgentsWithService(@RequestBody String agentsApprouvesJson, @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date date,
+			@RequestParam(value = "withoutLibelleService", required = false) Boolean withoutLibelleService) {
 
 		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsApprouvesJson);
 
@@ -89,9 +95,16 @@ public class ServiceController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServices(null, date, listIdsAgent);
-
-		if (result.size() == 0)
+		List<AgentWithServiceDto> result = null;
+		
+		if(null != withoutLibelleService 
+				&& withoutLibelleService) {
+			result = agentSrv.listAgentsOfServicesWithoutLibelleService(null, date, listIdsAgent);
+		} else {
+			result = agentSrv.listAgentsOfServices(null, date, listIdsAgent);
+		}
+		
+		if (null == result || result.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
@@ -183,17 +196,22 @@ public class ServiceController {
 	/**
 	 * Returns the list of agents with theirs services
 	 * 
+	 * Le parametre withoutLibelleService permet de faire appel ou non a ADS
+	 * Dans un souci de performances, nous n avons pas toujours besoin des libelles de service mais uniquement de idServiceADS
+	 * (utile a SIRH-ABS-WS/filtre/services)
+	 * 
 	 * @param idsAgent
 	 *            List<Integer>
-	 * @param date
-	 *            (optional)
+	 * @param withoutLibelleService 
+	 * 			  si true alors pas d appel de ADS pour recuperer les libelles des services
 	 * @return List<AgentWithServiceDto> liste des agents passes en parametre
 	 *         avec leur service
 	 */
 	@RequestMapping(value = "/listAgentsWithServiceOldAffectation", headers = "Accept=application/json", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getListAgentsWithServiceOldAffectation(@RequestBody String agentsApprouvesJson) {
+	public ResponseEntity<String> getListAgentsWithServiceOldAffectation(@RequestParam(value = "withoutLibelleService", required = false) Boolean withoutLibelleService,
+			@RequestBody String agentsApprouvesJson) {
 
 		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsApprouvesJson);
 
@@ -201,9 +219,17 @@ public class ServiceController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 
-		List<AgentWithServiceDto> result = agentSrv.listAgentsOfServicesOldAffectation(null, listIdsAgent);
-
-		if (result.size() == 0)
+		List<AgentWithServiceDto> result = null;
+		
+		if(null != withoutLibelleService 
+				&& withoutLibelleService) {
+			result = agentSrv.listAgentsOfServicesOldAffectationWithoutLibelleService(null, listIdsAgent);
+		} else {
+			result = agentSrv.listAgentsOfServicesOldAffectation(null, listIdsAgent);
+		}
+		
+		if (null == result 
+				|| result.size() == 0)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		String json = new JSONSerializer().exclude("*.class").serialize(result);
