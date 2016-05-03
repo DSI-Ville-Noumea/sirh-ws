@@ -26,4 +26,12 @@ public interface IADSWSConsumer {
 	EntiteDto getInfoSiservByIdEntite(Integer idEntite);
 
 	EntiteDto getWholeTree();
+
+	/**
+	 * Retourne un arbre des service avec un minimum de donnees :
+	 * plus rapide que getWholeTree()
+	 * 
+	 * @return EntiteDto
+	 */
+	EntiteDto getWholeTreeLight();
 }

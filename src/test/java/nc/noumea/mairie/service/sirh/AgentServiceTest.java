@@ -207,6 +207,26 @@ public class AgentServiceTest {
 	}
 
 	@Test
+	public void listAgentsOfServices_returnNoAgent() {
+		// Given
+		List<Affectation> listeAffectation = new ArrayList<Affectation>();
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyListOf(Integer.class), 
+				Mockito.any(Date.class), Mockito.anyListOf(Integer.class)))
+			.thenReturn(listeAffectation);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServices(null, new Date(), null);
+
+		// Then
+		assertEquals(0, result.size());
+	}
+
+	@Test
 	public void listAgentsOfServices_returnListOfAgentWithServiceDto() {
 		// Given
 
@@ -230,7 +250,7 @@ public class AgentServiceTest {
 		listeAffectation.add(aff1);
 
 		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
-		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyList(), Mockito.any(Date.class), Mockito.anyList()))
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyListOf(Integer.class), Mockito.any(Date.class), Mockito.anyListOf(Integer.class)))
 			.thenReturn(listeAffectation);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
@@ -257,6 +277,71 @@ public class AgentServiceTest {
 	}
 
 	@Test
+	public void listAgentsOfServicesWithoutLibelleService_returnNoAgent() {
+		// Given
+		List<Affectation> listeAffectation = new ArrayList<Affectation>();
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyListOf(Integer.class), 
+				Mockito.any(Date.class), Mockito.anyListOf(Integer.class)))
+			.thenReturn(listeAffectation);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesWithoutLibelleService(null, new Date(), null);
+
+		// Then
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void listAgentsOfServicesWithoutLibelleService_returnListOfAgentWithServiceDto() {
+		// Given
+		Agent ag1 = new Agent();
+		ag1.setIdAgent(9005138);
+		ag1.setNomUsage("NOM USAGE");
+		ag1.setTitre("0");
+
+		FichePoste fp1 = new FichePoste();
+		fp1.setAnnee(2014);
+		fp1.setIdServiceADS(1);
+		
+		Affectation aff1 = new Affectation();
+		aff1.setAgent(ag1);
+		aff1.setFichePoste(fp1);
+		
+		EntiteDto noeudDirection = new EntiteDto();
+		noeudDirection.setLabel("DIRECTION");
+		
+		EntiteDto noeud1 = new EntiteDto();
+		noeud1.setLabel("TEST");
+
+		List<Affectation> listeAffectation = new ArrayList<Affectation>();
+		listeAffectation.add(aff1);
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsByServicesAndListAgentsAndDate(Mockito.anyListOf(Integer.class), 
+				Mockito.any(Date.class), Mockito.anyListOf(Integer.class)))
+			.thenReturn(listeAffectation);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesWithoutLibelleService(null, new Date(), null);
+
+		// Then
+		assertEquals(1, result.size());
+		assertEquals(ag1.getIdAgent(), result.get(0).getIdAgent());
+		assertEquals("NOM USAGE", result.get(0).getNom());
+		assertNull(result.get(0).getService());
+		assertNull(result.get(0).getDirection());
+		assertEquals(result.get(0).getIdServiceADS(), fp1.getIdServiceADS());
+	}
+
+	@Test
 	public void findAgentWithName_returnAgent() {
 		// Given
 
@@ -279,7 +364,27 @@ public class AgentServiceTest {
 
 		// Then
 		assertEquals(ag1.getIdAgent(), result.getIdAgent());
+	}
 
+	@Test
+	public void listAgentsOfServicesOldAffectation_returnNoAgent() {
+		// Given
+		List<Affectation> listeAgent = new ArrayList<Affectation>();
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(null, Arrays.asList(9005138))).thenReturn(listeAgent);
+		
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesOldAffectation(null, Arrays.asList(9005138));
+
+		// Then
+		assertEquals(0, result.size());
 	}
 
 	@Test
@@ -316,10 +421,14 @@ public class AgentServiceTest {
 		IAdsService adsService = Mockito.mock(IAdsService.class);
 		Mockito.when(adsService.getAffichageDirectionWithoutCallADS(service)).thenReturn(direction);
 
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(null, Arrays.asList(9005138))).thenReturn(listeAgent);
+		
 		AgentService agtService = new AgentService();
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 		ReflectionTestUtils.setField(agtService, "adsWSConsumer", adsWSConsumer);
 		ReflectionTestUtils.setField(agtService, "adsService", adsService);
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
 
 		// When
 		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesOldAffectation(null, Arrays.asList(9005138));
@@ -329,6 +438,61 @@ public class AgentServiceTest {
 		assertEquals(ag.getIdAgent(), result.get(0).getIdAgent());
 		assertEquals(service.getLabel(), result.get(0).getService());
 		assertEquals(direction.getLabel(), result.get(0).getDirection());
+	}
+
+	@Test
+	public void listAgentsOfServicesOldAffectationWithoutLibelleService_returnNoAgent() {
+		// Given
+		List<Affectation> listeAgent = new ArrayList<Affectation>();
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(null, Arrays.asList(9005138))).thenReturn(listeAgent);
+		
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesOldAffectationWithoutLibelleService(null, Arrays.asList(9005138));
+
+		// Then
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void listAgentsOfServicesOldAffectationWithoutLibelleService_returnListOfAgent() {
+		// Given
+		List<Affectation> listeAgent = new ArrayList<Affectation>();
+		
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setIdServiceADS(1);
+		
+		Agent ag = new Agent();
+		ag.setTitre("0");
+		ag.setIdAgent(9005138);
+		
+		Affectation ag1 = new Affectation();
+		ag1.setFichePoste(fichePoste);
+		ag1.setAgent(ag);
+		listeAgent.add(ag1);
+
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(null, Arrays.asList(9005138))).thenReturn(listeAgent);
+		
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+
+		// When
+		List<AgentWithServiceDto> result = agtService.listAgentsOfServicesOldAffectationWithoutLibelleService(null, Arrays.asList(9005138));
+
+		// Then
+		assertEquals(1, result.size());
+		assertEquals(ag.getIdAgent(), result.get(0).getIdAgent());
+		assertNull(result.get(0).getService());
+		assertNull(result.get(0).getDirection());
+		assertEquals(fichePoste.getIdServiceADS(), result.get(0).getIdServiceADS());
 	}
 	
 	@Test
