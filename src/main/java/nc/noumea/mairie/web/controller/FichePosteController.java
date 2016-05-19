@@ -72,7 +72,7 @@ public class FichePosteController {
 	public ResponseEntity<String> rebuildFichePosteTree() throws ParseException {
 
 		logger.debug("entered GET [fichePostes/rebuildFichePosteTree] => rebuildFichePosteTree");
-		
+
 		try {
 			fpSrv.construitArbreFichePostes();
 		} catch (Exception ex) {
@@ -87,7 +87,7 @@ public class FichePosteController {
 	public ResponseEntity<String> getSubFichePostes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		logger.debug("entered GET [fichePostes/getSubFichePostes] => getSubFichePostes with parameter idAgent = {}", idAgent);
-		
+
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -583,10 +583,10 @@ public class FichePosteController {
 	@ResponseBody
 	public ResponseEntity<String> getTreeFichesPosteByIdEntite(@RequestParam(value = "idEntite") Integer idEntite,
 			@RequestParam(value = "withFichesPosteNonReglemente") boolean withFichesPosteNonReglemente) {
-		
+
 		logger.debug("entered GET [fichePostes/treeFichesPosteByIdEntite/] => getTreeFichesPosteByIdEntite with idEntite = {} and withFichesPosteNonReglemente = {}", idEntite,
 				withFichesPosteNonReglemente);
-		
+
 		List<FichePosteTreeNodeDto> result = fpSrv.getTreeFichesPosteByIdEntite(idEntite, withFichesPosteNonReglemente);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
@@ -617,6 +617,59 @@ public class FichePosteController {
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		ReturnMessageDto result = fpSrv.deplaceFichePosteFromEntityToOtherEntity(idEntiteSource, idEntiteCible, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Utile à ADS lors de l'inactivation de fiches de poste d une entite
+	 * 
+	 * @param idEntite
+	 *            Integer Entite
+	 * @param idAgent
+	 *            Integer Agent effectuant l action
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/inactiveFichePosteFromEntity", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> inactiveFichePosteFromEntity(@RequestParam(value = "idEntite", required = true) Integer idEntite, @RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.inactiveFichePosteFromEntity(idEntite, new Integer(newIdAgent));
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+
+	/**
+	 * Utile à ADS lors du passage en transitoire de fiches de poste d une
+	 * entite
+	 * 
+	 * @param idEntite
+	 *            Integer Entite
+	 * @param idAgent
+	 *            Integer Agent effectuant l action
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/transiteFichePosteFromEntity", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> transiteFichePosteFromEntity(@RequestParam(value = "idEntite", required = true) Integer idEntite, @RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
+
+		// on remanie l'idAgent
+		String newIdAgent = remanieIdAgent(idAgent);
+
+		ReturnMessageDto result = fpSrv.transiteFichePosteFromEntity(idEntite, new Integer(newIdAgent));
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
 

@@ -1,15 +1,14 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 public enum EnumStatutFichePoste {
-	EN_CREATION("1", "En création"), VALIDEE("2", "Validée"), INACTIVE("4", "Inactive"), TRANSITOIRE("5", "Transitoire"), GELEE(
-			"6", "Gelée");
+	EN_CREATION(1, "En création"), VALIDEE(2, "Validée"), INACTIVE(4, "Inactive"), TRANSITOIRE(5, "Transitoire"), GELEE(6, "Gelée");
 
 	/** L'attribut qui contient le libelle long associe a l'enum */
 	private final String libLong;
-	private final String id;
+	private final Integer id;
 
 	/** Le constructeur qui associe une valeur a l'enum */
-	private EnumStatutFichePoste(String id, String libLong) {
+	private EnumStatutFichePoste(Integer id, String libLong) {
 		this.libLong = libLong;
 		this.id = id;
 	}
@@ -20,7 +19,7 @@ public enum EnumStatutFichePoste {
 	}
 
 	/** La methode accesseur qui renvoit la valeur de l'enum */
-	public String getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
