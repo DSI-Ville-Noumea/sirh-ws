@@ -702,7 +702,7 @@ public class FichePosteService implements IFichePosteService {
 		// on regarde que toutes les FDP soient en statut "En creation" et que
 		// la FDP n'est jamais été affectée à un agent
 		for (FichePoste fp : listeFDP) {
-			if (!fp.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
+			if (!fp.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId().toString())) {
 				result.getErrors().add("La FDP " + fp.getNumFP() + " n'est pas en statut 'En création'.");
 			}
 			if (affSrv.getListAffectationByIdFichePoste(fp.getIdFichePoste()).size() > 0) {
@@ -777,10 +777,10 @@ public class FichePosteService implements IFichePosteService {
 		// on cherche toutes les FDP validées
 		// #18431 : on ajoute de nouveaux statut
 		List<Integer> listStatut = new ArrayList<Integer>();
-		listStatut.add(new Integer(EnumStatutFichePoste.VALIDEE.getId()));
-		listStatut.add(new Integer(EnumStatutFichePoste.EN_CREATION.getId()));
-		listStatut.add(new Integer(EnumStatutFichePoste.TRANSITOIRE.getId()));
-		listStatut.add(new Integer(EnumStatutFichePoste.GELEE.getId()));
+		listStatut.add(EnumStatutFichePoste.VALIDEE.getId());
+		listStatut.add(EnumStatutFichePoste.EN_CREATION.getId());
+		listStatut.add(EnumStatutFichePoste.TRANSITOIRE.getId());
+		listStatut.add(EnumStatutFichePoste.GELEE.getId());
 		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteOld), listStatut);
 
 		// on crée un job de lancement de duplication des FDP
@@ -811,7 +811,7 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "en création"
-		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId().toString())) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
 			return result;
 		}
@@ -883,10 +883,10 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "validée"
-		if (!(fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.VALIDEE.getId())
-				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())
-				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.TRANSITOIRE.getId()) || fichePoste.getStatutFP().getIdStatutFp().toString()
-				.equals(EnumStatutFichePoste.GELEE.getId()))) {
+		if (!(fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.VALIDEE.getId().toString())
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId().toString())
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.TRANSITOIRE.getId().toString()) || fichePoste.getStatutFP().getIdStatutFp().toString()
+				.equals(EnumStatutFichePoste.GELEE.getId().toString()))) {
 			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'est pas en statut 'validée','en création','transitoire' ou 'gelée'.");
 			return result;
 		}
@@ -930,7 +930,7 @@ public class FichePosteService implements IFichePosteService {
 
 		FichePoste fichePDupliquee = cloneFDP(fichePoste);
 		fichePDupliquee.setIdFichePoste(null);
-		StatutFichePoste statutCreation = fichePosteDao.chercherStatutFPByIdStatut(1);
+		StatutFichePoste statutCreation = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.EN_CREATION.getId());
 		fichePDupliquee.setStatutFP(statutCreation);
 		fichePDupliquee.setNumFP(null);
 		fichePDupliquee.setRemplace(null);
@@ -1220,7 +1220,7 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// on verifie que la FDP est bien "en création"
-		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId())) {
+		if (!fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId().toString())) {
 			result.getErrors().add("La FDP id " + idFichePoste + " n'est pas en statut 'en création'.");
 			return result;
 		}
@@ -1437,7 +1437,7 @@ public class FichePosteService implements IFichePosteService {
 			fichePoste.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		}
 		// on met à jour le statut en "validée"
-		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(2);
+		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.VALIDEE.getId());
 		fichePoste.setStatutFP(statutFP);
 
 		// on historise
@@ -1487,7 +1487,6 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 
-		// on crée un job de lancement de duplication des FDP
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		for (FichePoste fp : listeFDP) {
 			fp.setIdServiceADS(idEntiteCible);
@@ -1519,6 +1518,103 @@ public class FichePosteService implements IFichePosteService {
 			result.getInfos().add(listeFDP.size() + " FDP est déplacée de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		} else {
 			result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional(value = "sirhTransactionManager")
+	public ReturnMessageDto inactiveFichePosteFromEntity(Integer idEntite, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(idEntite);
+		if (entite == null) {
+			result.getErrors().add("L'entité " + idEntite + " n'existe pas.");
+			return result;
+		}
+
+		// on cherche le login de l'agent qui fait l'action
+		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
+		if (user == null || user.getsAMAccountName() == null) {
+			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
+			return result;
+		}
+
+		// on cherche toutes les FDP non affectées
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(idEntite);
+
+		if (null == listeFDP || listeFDP.isEmpty()) {
+			result.getInfos().add("Aucune FDP non affectées sur l'entité " + entite.getSigle() + ".");
+			return result;
+		}
+
+		for (FichePoste fp : listeFDP) {
+			StatutFichePoste statutInactif = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId());
+			fp.setStatutFP(statutInactif);
+			fp.setSuperieurHierarchique(null);
+
+			// #18977 : on met à jour sppost et spmtsr
+			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+			sppost.setPomatr(null);
+			sppost.setCodact("I");
+			fichePosteDao.persisEntity(sppost);
+
+			HistoFichePoste histo = new HistoFichePoste(fp);
+			histo.setDateHisto(new Date());
+			histo.setUserHisto(user.getsAMAccountName());
+			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
+			fichePosteDao.persisEntity(histo);
+		}
+		if (listeFDP.size() == 1) {
+			result.getInfos().add(listeFDP.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " va passer en inactive.");
+		} else {
+			result.getInfos().add(listeFDP.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " vont passer en inactives.");
+		}
+		return result;
+	}
+
+	@Override
+	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent) {
+		ReturnMessageDto result = new ReturnMessageDto();
+
+		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(idEntite);
+		if (entite == null) {
+			result.getErrors().add("L'entité " + idEntite + " n'existe pas.");
+			return result;
+		}
+
+		// on cherche le login de l'agent qui fait l'action
+		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
+		if (user == null || user.getsAMAccountName() == null) {
+			result.getErrors().add("L'agent qui tente de faire l'action n'a pas de login dans l'AD.");
+			return result;
+		}
+
+		// on cherche toutes les FDP affectées
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteAffecteeByIdServiceADS(idEntite);
+
+		if (null == listeFDP || listeFDP.isEmpty()) {
+			result.getInfos().add("Aucune FDP affectées sur l'entité " + entite.getSigle() + ".");
+			return result;
+		}
+
+		for (FichePoste fp : listeFDP) {
+			StatutFichePoste statutTransitoire = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.TRANSITOIRE.getId());
+			fp.setStatutFP(statutTransitoire);
+			Spbhor nonReglNonBudgete = mairieRepository.getSpbhorById(0);
+			fp.setReglementaire(nonReglNonBudgete);
+			fp.setBudgete(nonReglNonBudgete);
+
+			HistoFichePoste histo = new HistoFichePoste(fp);
+			histo.setDateHisto(new Date());
+			histo.setUserHisto(user.getsAMAccountName());
+			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
+			fichePosteDao.persisEntity(histo);
+		}
+		if (listeFDP.size() == 1) {
+			result.getInfos().add(listeFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " va passer en transitoire.");
+		} else {
+			result.getInfos().add(listeFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " vont passer en transitoire.");
 		}
 		return result;
 	}
