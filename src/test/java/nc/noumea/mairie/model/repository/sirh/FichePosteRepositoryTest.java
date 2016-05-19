@@ -1049,7 +1049,7 @@ public class FichePosteRepositoryTest {
 		aff.setFichePoste(fichePoste2);
 		sirhPersistenceUnit.persist(aff);
 
-		List<FichePoste> result = repository.getListFichePosteAffecteeByIdServiceADS(2);
+		List<Integer> result = repository.getListFichePosteAffecteeByIdServiceADS(2);
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
@@ -1099,7 +1099,7 @@ public class FichePosteRepositoryTest {
 		aff.setFichePoste(fichePoste2);
 		sirhPersistenceUnit.persist(aff);
 
-		List<FichePoste> result = repository.getListFichePosteNonAffecteeByIdServiceADS(2);
+		List<Integer> result = repository.getListFichePosteNonAffecteeByIdServiceADS(2);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
