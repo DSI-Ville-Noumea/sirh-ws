@@ -3234,20 +3234,17 @@ public class FichePosteServiceTest {
 		statutInactif.setIdStatutFp(4);
 		statutInactif.setLibStatut("Inactive");
 
-		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
+		List<Integer> listFichesPoste = new ArrayList<Integer>();
 		FichePoste fp = new FichePoste();
 		fp.setNumFP("2015/1");
-		FichePoste fp2 = new FichePoste();
-		fp2.setNumFP("2015/2");
-		FichePoste fp3 = new FichePoste();
-		fp3.setNumFP("2015/3");
 
 		Sppost sppost = new Sppost();
 
-		listFichesPoste.addAll(Arrays.asList(fp, fp2, fp3));
+		listFichesPoste.addAll(Arrays.asList(1,2,3));
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(listFichesPoste);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fp);
 		Mockito.when(fichePosteDao.chercherSppost(Mockito.anyInt(), Mockito.anyInt())).thenReturn(sppost);
 		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId())).thenReturn(statutInactif);
 
@@ -3289,7 +3286,7 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<FichePoste>());
+		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<Integer>());
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3380,23 +3377,20 @@ public class FichePosteServiceTest {
 		statutTransitoire.setIdStatutFp(5);
 		statutTransitoire.setLibStatut("Transitoire");
 
-		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
+		List<Integer> listFichesPoste = new ArrayList<Integer>();
 		FichePoste fp = new FichePoste();
 		fp.setNumFP("2015/1");
-		FichePoste fp2 = new FichePoste();
-		fp2.setNumFP("2015/2");
-		FichePoste fp3 = new FichePoste();
-		fp3.setNumFP("2015/3");
 
 		Spbhor spbhor = new Spbhor();
 
-		listFichesPoste.addAll(Arrays.asList(fp, fp2, fp3));
+		listFichesPoste.addAll(Arrays.asList(1, 2, 3));
 
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getSpbhorById(0)).thenReturn(spbhor);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.getListFichePosteAffecteeByIdServiceADS(1)).thenReturn(listFichesPoste);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fp);
 		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.TRANSITOIRE.getId())).thenReturn(statutTransitoire);
 
 		LightUserDto user = new LightUserDto();
@@ -3437,7 +3431,7 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<FichePoste>());
+		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<Integer>());
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
