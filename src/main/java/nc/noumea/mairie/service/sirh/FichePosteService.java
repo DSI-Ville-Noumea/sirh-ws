@@ -1541,21 +1541,22 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP non affectées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(idEntite);
+		List<Integer> listeIdFDP = fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(idEntite);
 
-		if (null == listeFDP || listeFDP.isEmpty()) {
+		if (null == listeIdFDP || listeIdFDP.isEmpty()) {
 			result.getInfos().add("Aucune FDP non affectées sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
 
-		for (FichePoste fp : listeFDP) {
+		for (Integer idfp : listeIdFDP) {
+			FichePoste fp = fichePosteDao.chercherFichePoste(idfp);
 			StatutFichePoste statutInactif = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId());
 			fp.setStatutFP(statutInactif);
 			fp.setSuperieurHierarchique(null);
 
 			// #18977 : on met à jour sppost et spmtsr
 			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
-			sppost.setPomatr(null);
+			sppost.setPomatr(0);
 			sppost.setCodact("I");
 			fichePosteDao.persisEntity(sppost);
 
@@ -1565,10 +1566,10 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		if (listeFDP.size() == 1) {
-			result.getInfos().add(listeFDP.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " va passer en inactive.");
+		if (listeIdFDP.size() == 1) {
+			result.getInfos().add(listeIdFDP.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " va passer en inactive.");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " vont passer en inactives.");
+			result.getInfos().add(listeIdFDP.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " vont passer en inactives.");
 		}
 		return result;
 	}
@@ -1591,14 +1592,15 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP affectées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteAffecteeByIdServiceADS(idEntite);
+		List<Integer> listeIdFDP = fichePosteDao.getListFichePosteAffecteeByIdServiceADS(idEntite);
 
-		if (null == listeFDP || listeFDP.isEmpty()) {
+		if (null == listeIdFDP || listeIdFDP.isEmpty()) {
 			result.getInfos().add("Aucune FDP affectées sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
 
-		for (FichePoste fp : listeFDP) {
+		for (Integer idfp : listeIdFDP) {
+			FichePoste fp = fichePosteDao.chercherFichePoste(idfp);
 			StatutFichePoste statutTransitoire = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.TRANSITOIRE.getId());
 			fp.setStatutFP(statutTransitoire);
 			Spbhor nonReglNonBudgete = mairieRepository.getSpbhorById(0);
@@ -1611,10 +1613,10 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		if (listeFDP.size() == 1) {
-			result.getInfos().add(listeFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " va passer en transitoire.");
+		if (listeIdFDP.size() == 1) {
+			result.getInfos().add(listeIdFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " va passer en transitoire.");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " vont passer en transitoire.");
+			result.getInfos().add(listeIdFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " vont passer en transitoire.");
 		}
 		return result;
 	}
