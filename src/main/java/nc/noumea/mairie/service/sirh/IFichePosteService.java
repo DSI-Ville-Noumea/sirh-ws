@@ -67,4 +67,8 @@ public interface IFichePosteService {
 	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires);
 
 	ReturnMessageDto deplaceFichePosteFromEntityToOtherEntity(Integer idEntiteSource, Integer idEntiteCible, Integer idAgent);
+
+	public ReturnMessageDto inactiveFichePosteFromEntity(Integer idEntite, Integer idAgent);
+
+	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent);
 }

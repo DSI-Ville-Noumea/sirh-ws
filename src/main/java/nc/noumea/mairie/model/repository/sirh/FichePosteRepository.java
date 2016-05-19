@@ -678,4 +678,46 @@ public class FichePosteRepository implements IFichePosteRepository {
 		}
 		return res;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FichePoste> getListFichePosteAffecteeByIdServiceADS(Integer idEntite) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select fp.* from Fiche_Poste fp ");
+		sb.append(" inner join Affectation aff on fp.id_fiche_poste = aff.id_fiche_poste ");
+		sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
+		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
+		sb.append(" and fp.ID_SERVICE_ADS = :idEntite ");
+
+		Query query = sirhEntityManager.createNativeQuery(sb.toString(), FichePoste.class);
+
+		query.setParameter("dateJourSIRH", new Date());
+		query.setParameter("idEntite", idEntite);
+
+
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FichePoste> getListFichePosteNonAffecteeByIdServiceADS(Integer idEntite) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select fp.* from Fiche_Poste fp where fp.ID_SERVICE_ADS = :idEntite and fp.id_fiche_poste not in( ");
+		sb.append(" select fp.id_fiche_poste from Fiche_Poste fp inner join Affectation aff on fp.id_fiche_poste = aff.id_fiche_poste ");
+		sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
+		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
+		sb.append(" and fp.ID_SERVICE_ADS = :idEntite) ");
+
+		Query query = sirhEntityManager.createNativeQuery(sb.toString(), FichePoste.class);
+
+		query.setParameter("dateJourSIRH", new Date());
+		query.setParameter("idEntite", idEntite);
+
+
+		return query.getResultList();
+	}
 }

@@ -144,8 +144,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1),
-				Arrays.asList(2));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(2));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -181,8 +180,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statutFP);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1),
-				Arrays.asList(1));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), Arrays.asList(1));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -333,8 +331,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setTitrePoste(titrePoste);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<GroupeInfoFichePosteDto> result = repository
-				.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(1));
+		List<GroupeInfoFichePosteDto> result = repository.getInfoFichePosteForOrganigrammeByIdServiceADSGroupByTitrePoste(Arrays.asList(1));
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
@@ -351,7 +348,7 @@ public class FichePosteRepositoryTest {
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getListInfoFichePosteDtoByIdServiceADSAndTitrePoste() {
-		
+
 		Spbhor reglementaire = new Spbhor();
 		reglementaire.setCdThor(1);
 		reglementaire.setTaux(0.75);
@@ -407,8 +404,7 @@ public class FichePosteRepositoryTest {
 		fichePoste.setTitrePoste(titrePoste2);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<InfoFichePosteDto> result = repository
-				.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(1), "titrePoste", new Date());
+		List<InfoFichePosteDto> result = repository.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(Arrays.asList(1), "titrePoste", new Date());
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
@@ -716,196 +712,188 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_1Result() {
-		
+
 		StatutFichePoste statut = new StatutFichePoste();
 		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
 		sirhPersistenceUnit.persist(statut);
-		
+
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdServiceADS(1);
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
-			
-		List<FichePoste> result = repository
-				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-						Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
-		
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+
 		assertEquals(result.size(), 1);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_badService() {
-		
+
 		StatutFichePoste statut = new StatutFichePoste();
 		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
 		sirhPersistenceUnit.persist(statut);
-		
+
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdServiceADS(1);
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
-			
-		List<FichePoste> result = repository
-				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-						Arrays.asList(2), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
-		
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(2), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+
 		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation_badStatut() {
-		
+
 		StatutFichePoste statut = new StatutFichePoste();
 		statut.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
 		sirhPersistenceUnit.persist(statut);
-		
+
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setIdServiceADS(1);
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
-			
-		List<FichePoste> result = repository
-				.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-						Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.TRANSITOIRE.getStatut()));
-		
+
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+
 		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
-	
+
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getAllFichePoste() {
-		
+
 		// 1er fiche de poste EN CREATION
 		StatutFichePoste statutEN_CREATION = new StatutFichePoste();
 		statutEN_CREATION.setIdStatutFp(EnumStatutFichePoste.EN_CREATION.getStatut());
 		sirhPersistenceUnit.persist(statutEN_CREATION);
-		
-//		Agent agentEN_CREATION = new Agent();
-//		agentEN_CREATION.setIdAgent(9005138);
-//		sirhPersistenceUnit.persist(agentEN_CREATION);
-		
+
+		// Agent agentEN_CREATION = new Agent();
+		// agentEN_CREATION.setIdAgent(9005138);
+		// sirhPersistenceUnit.persist(agentEN_CREATION);
+
 		AgentRecherche agentRechercheEN_CREATION = new AgentRecherche();
 		agentRechercheEN_CREATION.setIdAgent(9005138);
 		sirhPersistenceUnit.persist(agentRechercheEN_CREATION);
-		
+
 		Affectation affEN_CREATION = new Affectation();
 		affEN_CREATION.setIdAffectation(1);
-//		affEN_CREATION.setAgent(agentEN_CREATION);
+		// affEN_CREATION.setAgent(agentEN_CREATION);
 		affEN_CREATION.setAgentrecherche(agentRechercheEN_CREATION);
 		affEN_CREATION.setDateDebutAff(new DateTime().minusDays(1).toDate());
 		affEN_CREATION.setDateFinAff(null);
 		sirhPersistenceUnit.persist(affEN_CREATION);
-		
+
 		FichePoste fichePosteEN_CREATION = new FichePoste();
 		fichePosteEN_CREATION.setIdServiceADS(1);
 		fichePosteEN_CREATION.setStatutFP(statutEN_CREATION);
 		fichePosteEN_CREATION.getAgent().add(affEN_CREATION);
 		sirhPersistenceUnit.persist(fichePosteEN_CREATION);
-		
+
 		// 2e fiche de poste GELEE
 		StatutFichePoste statutGELEE = new StatutFichePoste();
 		statutGELEE.setIdStatutFp(EnumStatutFichePoste.GELEE.getStatut());
 		sirhPersistenceUnit.persist(statutGELEE);
-		
+
 		Agent agentGELEE = new Agent();
 		agentGELEE.setIdAgent(9001111);
 		sirhPersistenceUnit.persist(agentGELEE);
-		
+
 		Affectation affGELEE = new Affectation();
 		affGELEE.setIdAffectation(2);
 		affGELEE.setAgent(agentGELEE);
 		affGELEE.setDateDebutAff(new DateTime().minusDays(1).toDate());
 		sirhPersistenceUnit.persist(affGELEE);
-		
+
 		FichePoste fichePosteGELEE = new FichePoste();
 		fichePosteGELEE.setIdServiceADS(1);
 		fichePosteGELEE.setStatutFP(statutGELEE);
 		fichePosteGELEE.getAgent().add(affGELEE);
 		sirhPersistenceUnit.persist(fichePosteGELEE);
-		
+
 		// 3e fiche de poste INACTIVE
 		StatutFichePoste statutINACTIVE = new StatutFichePoste();
 		statutINACTIVE.setIdStatutFp(EnumStatutFichePoste.INACTIVE.getStatut());
 		sirhPersistenceUnit.persist(statutINACTIVE);
-		
+
 		Agent agentINACTIVE = new Agent();
 		agentINACTIVE.setIdAgent(9004444);
 		sirhPersistenceUnit.persist(agentINACTIVE);
-		
+
 		Affectation affINACTIVE = new Affectation();
 		affINACTIVE.setIdAffectation(3);
 		affINACTIVE.setAgent(agentINACTIVE);
 		sirhPersistenceUnit.persist(affINACTIVE);
-		
+
 		FichePoste fichePosteINACTIVE = new FichePoste();
 		fichePosteINACTIVE.setIdServiceADS(1);
 		fichePosteINACTIVE.setStatutFP(statutINACTIVE);
 		fichePosteINACTIVE.getAgent().add(affINACTIVE);
 		sirhPersistenceUnit.persist(fichePosteINACTIVE);
-		
+
 		// 4e fiche de poste TRANSITOIRE
 		StatutFichePoste statutTRANSITOIRE = new StatutFichePoste();
 		statutTRANSITOIRE.setIdStatutFp(EnumStatutFichePoste.TRANSITOIRE.getStatut());
 		sirhPersistenceUnit.persist(statutTRANSITOIRE);
-		
+
 		Agent agentTRANSITOIRE = new Agent();
 		agentTRANSITOIRE.setIdAgent(9002222);
 		sirhPersistenceUnit.persist(agentTRANSITOIRE);
-		
+
 		Affectation affTRANSITOIRE = new Affectation();
 		affTRANSITOIRE.setIdAffectation(4);
 		affTRANSITOIRE.setAgent(agentTRANSITOIRE);
 		sirhPersistenceUnit.persist(affTRANSITOIRE);
-		
+
 		FichePoste fichePosteTRANSITOIRE = new FichePoste();
 		fichePosteTRANSITOIRE.setIdServiceADS(1);
 		fichePosteTRANSITOIRE.setStatutFP(statutTRANSITOIRE);
 		fichePosteTRANSITOIRE.getAgent().add(affTRANSITOIRE);
 		sirhPersistenceUnit.persist(fichePosteTRANSITOIRE);
-		
+
 		// 5e fiche de poste VALIDEE
 		StatutFichePoste statutVALIDEE = new StatutFichePoste();
 		statutVALIDEE.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getStatut());
 		sirhPersistenceUnit.persist(statutVALIDEE);
-		
+
 		Agent agentVALIDEE = new Agent();
 		agentVALIDEE.setIdAgent(9003333);
 		sirhPersistenceUnit.persist(agentVALIDEE);
-		
+
 		Affectation affVALIDEE = new Affectation();
 		affVALIDEE.setIdAffectation(5);
 		affVALIDEE.setAgent(agentVALIDEE);
 		sirhPersistenceUnit.persist(affVALIDEE);
-		
+
 		FichePoste fichePosteVALIDEE = new FichePoste();
 		fichePosteVALIDEE.setIdServiceADS(1);
 		fichePosteVALIDEE.setStatutFP(statutVALIDEE);
 		fichePosteVALIDEE.getAgent().add(affVALIDEE);
 		sirhPersistenceUnit.persist(fichePosteVALIDEE);
-		
-		
+
 		TreeMap<Integer, FichePosteTreeNode> result = repository.getAllFichePoste(new Date());
-		
+
 		// la FDP inactive n est pas retournee
 		assertEquals(result.size(), 4);
-//		assertEquals(result.get(1).getIdAgent().intValue(), 9005138);
-//		assertEquals(result.get(2).getIdAgent().intValue(), 9001111);
-//		assertEquals(result.get(4).getIdAgent().intValue(), 9002222);
-//		assertEquals(result.get(5).getIdAgent().intValue(), 9003333);
+		// assertEquals(result.get(1).getIdAgent().intValue(), 9005138);
+		// assertEquals(result.get(2).getIdAgent().intValue(), 9001111);
+		// assertEquals(result.get(4).getIdAgent().intValue(), 9002222);
+		// assertEquals(result.get(5).getIdAgent().intValue(), 9003333);
 	}
-
 
 	@Test
 	@Transactional("sirhTransactionManager")
@@ -978,7 +966,6 @@ public class FichePosteRepositoryTest {
 		sirhPersistenceUnit.clear();
 	}
 
-
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void chercherActionFDPParentDuplication_returnResult() {
@@ -1016,6 +1003,106 @@ public class FichePosteRepositoryTest {
 		ActionFdpJob result = repository.chercherActionFDPParentDuplication(1);
 
 		assertNull(result);
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteAffecteeByIdServiceADS_returnResult() {
+
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setAnnee(2010);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("numFP2");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		Affectation aff4 = new Affectation();
+		aff4.setIdAffectation(1);
+		aff4.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		aff4.setDateFinAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff4.setFichePoste(fichePoste3);
+		sirhPersistenceUnit.persist(aff4);
+
+		Affectation aff3 = new Affectation();
+		aff3.setIdAffectation(2);
+		aff3.setDateDebutAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff3.setFichePoste(fichePoste3);
+		sirhPersistenceUnit.persist(aff3);
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(3);
+		aff.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		aff.setDateFinAff(new DateTime(2017, 05, 01, 0, 0, 0).toDate());
+		aff.setFichePoste(fichePoste2);
+		sirhPersistenceUnit.persist(aff);
+
+		List<FichePoste> result = repository.getListFichePosteAffecteeByIdServiceADS(2);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListFichePosteNonAffecteeByIdServiceADS_returnResult() {
+
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setAnnee(2010);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("numFP2");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		Affectation aff4 = new Affectation();
+		aff4.setIdAffectation(1);
+		aff4.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		aff4.setDateFinAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff4.setFichePoste(fichePoste3);
+		sirhPersistenceUnit.persist(aff4);
+
+		Affectation aff3 = new Affectation();
+		aff3.setIdAffectation(2);
+		aff3.setDateDebutAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff3.setFichePoste(fichePoste3);
+		sirhPersistenceUnit.persist(aff3);
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setAnnee(2010);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("numFP");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(3);
+		aff.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		aff.setDateFinAff(new DateTime(2015, 05, 01, 0, 0, 0).toDate());
+		aff.setFichePoste(fichePoste2);
+		sirhPersistenceUnit.persist(aff);
+
+		List<FichePoste> result = repository.getListFichePosteNonAffecteeByIdServiceADS(2);
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
