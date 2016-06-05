@@ -212,8 +212,8 @@ public class KiosqueRhServiceTest {
 		ref3.setIdAlerteKiosque(3);
 		ref3.setAgent(true);
 		ref3.setTexteAlerteKiosque("texte 3");
-		ref3.setDateDebut(new DateTime(2014, 2, 2, 0, 0, 0).toDate());
-		ref3.setDateFin(new DateTime(2016, 6, 2, 0, 0, 0).toDate());
+		ref3.setDateDebut(new DateTime().minusDays(10).toDate());
+		ref3.setDateFin(new DateTime().plusDays(10).toDate());
 		sirhPersistenceUnit.persist(ref3);
 
 		// When
