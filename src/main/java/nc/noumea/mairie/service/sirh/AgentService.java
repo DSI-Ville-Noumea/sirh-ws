@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AgentService implements IAgentService {
+	
+	//TODO
+	public final static Integer NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM = 7718; 
+	public final static Integer NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM = 7719; 
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
@@ -42,6 +47,9 @@ public class AgentService implements IAgentService {
 
 	@Autowired
 	private IAgentRepository agentRepository;
+	
+	@Autowired
+	private IAbsenceService absenceService;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -525,6 +533,24 @@ public class AgentService implements IAgentService {
 				if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
 					agDto.setIdServiceADS(aff.getFichePoste().getIdServiceADS());
 				}
+				result.add(agDto);
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<AgentWithServiceDto> getListeAgentWithIndemniteForfaitTravailDPM(List<Integer> listIdsAgent) {
+
+		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
+		
+		List<AgentRecherche> listAgent = agentRepository.getListAgentsEnActiviteByPrimeSurAffectation(Arrays.asList(NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM,
+				NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM), listIdsAgent);
+
+		if (null != listAgent) {
+			for (AgentRecherche agent : listAgent) {
+				AgentWithServiceDto agDto = new AgentWithServiceDto(agent);
 				result.add(agDto);
 			}
 		}
