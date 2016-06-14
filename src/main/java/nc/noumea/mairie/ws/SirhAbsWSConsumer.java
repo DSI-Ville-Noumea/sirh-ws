@@ -1,7 +1,10 @@
 package nc.noumea.mairie.ws;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +23,7 @@ public class SirhAbsWSConsumer extends BaseWsConsumer implements ISirhAbsWSConsu
 	private static final String sirhAbsUserApprobateur = "droits/isUserApprobateur";
 	private static final String sirhAbsUserOperateur = "droits/isUserOperateur";
 	private static final String sirhAbsUserViseur = "droits/isUserViseur";
+	private static final String getListeTypeAbsenceUrl = "typeAbsence/getListeTypeAbsence";
 
 	@Override
 	public boolean isUserApprobateur(Integer idAgent) {
@@ -67,5 +71,17 @@ public class SirhAbsWSConsumer extends BaseWsConsumer implements ISirhAbsWSConsu
 		if (res.getStatus() == HttpStatus.OK.value())
 			return true;
 		return false;
+	}
+
+	@Override
+	public List<RefTypeSaisiCongeAnnuelDto> getListeTypAbsenceCongeAnnuel() {
+
+		String url = String.format(absWsBaseUrl + getListeTypeAbsenceUrl);
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("idRefGroupeAbsence", "5"); // CONGES ANNUELS
+		
+		ClientResponse response = createAndFireGetRequest(parameters, url);
+		return readResponseAsList(RefTypeSaisiCongeAnnuelDto.class, response, url);
 	}
 }

@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 
 import org.springframework.stereotype.Repository;
@@ -256,5 +257,36 @@ public class AgentRepository implements IAgentRepository {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public List<AgentRecherche> getListAgentsEnActiviteByPrimeSurAffectation(List<Integer> noRubrPrimePtg, List<Integer> listIdsAgent) {
+
+		if(null == noRubrPrimePtg)
+			return null;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select ag from AgentRecherche ag, Affectation aff ");
+		sb.append("inner join aff.primePointageAff ppAff ");
+		sb.append("where ag.idAgent=aff.agentrecherche.idAgent ");
+		
+		if(null != listIdsAgent 
+				&& !listIdsAgent.isEmpty())
+			sb.append("and ag.idAgent in :listIdsAgent ");
+		
+		sb.append("and aff.dateDebutAff<=:dateJour and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour) ");
+		sb.append("and ppAff.primePointageAffPK.numRubrique in :noRubrPrimePtg ");
+
+		TypedQuery<AgentRecherche> query = sirhEntityManager.createQuery(sb.toString(), AgentRecherche.class);
+
+		query.setParameter("dateJour", new Date());
+		query.setParameter("noRubrPrimePtg", noRubrPrimePtg);
+		
+		if(null != listIdsAgent 
+				&& !listIdsAgent.isEmpty())
+			query.setParameter("listIdsAgent", listIdsAgent);
+
+		return query.getResultList();
 	}
 }

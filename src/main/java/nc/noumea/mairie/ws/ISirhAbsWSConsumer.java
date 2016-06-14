@@ -1,5 +1,9 @@
 package nc.noumea.mairie.ws;
 
+import java.util.List;
+
+import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
+
 
 public interface ISirhAbsWSConsumer {
 
@@ -8,4 +12,6 @@ public interface ISirhAbsWSConsumer {
 	boolean isUserOperateur(Integer idAgent);
 
 	boolean isUserViseur(Integer idAgent);
+	
+	List<RefTypeSaisiCongeAnnuelDto> getListeTypAbsenceCongeAnnuel();
 }
