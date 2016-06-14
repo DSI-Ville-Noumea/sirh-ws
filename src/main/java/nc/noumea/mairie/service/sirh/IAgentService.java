@@ -123,4 +123,12 @@ public interface IAgentService {
 	 */
 	List<AgentWithServiceDto> listAgentsOfServicesOldAffectationWithoutLibelleService(List<Integer> idServiceADS, List<Integer> listIdsAgent);
 
+	/**
+	 * Retourne la liste des agents ayant droit a l Indemnite Forfaitaire de travail de DPM :
+	 *  - avec la prime Indemnite Forfaitaire de travail de DPM sur leur affectation
+	 * 
+	 * @return List<AgentWithServiceDto> La liste des agents ayant droit à l indemnite
+	 */
+	List<AgentWithServiceDto> getListeAgentWithIndemniteForfaitTravailDPM(List<Integer> listIdsAgent);
+
 }
