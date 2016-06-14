@@ -5,6 +5,7 @@ import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 
 public interface IAgentRepository {
 
@@ -38,4 +39,13 @@ public interface IAgentRepository {
 	 * @return List<Affectation>
 	 */
 	List<Affectation> getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(List<Integer> idServiceADS, List<Integer> idAgents);
+
+	/**
+	 * Retourne les agents en activite avec une affectation actuve ayant la prime passee en parametre sur leur affectation
+	 * 
+	 * @param noRubrPrimePtg List<Integer> le numero de rubrique de la prime
+	 * @param listIdsAgent liste d ID agent pour filtrer
+	 * @return List<AgentRecherche> La liste des agents
+	 */
+	List<AgentRecherche> getListAgentsEnActiviteByPrimeSurAffectation(List<Integer> noRubrPrimePtg, List<Integer> listIdsAgent);
 }

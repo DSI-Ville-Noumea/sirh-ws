@@ -584,5 +584,27 @@ public class AgentController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 	}
+	
+	/**
+	 * Retourne la liste des agents ayant la prime pointage Indemnité forfaitaire travail DPM
+	 * sur leur affectation active. Filtre également avec les agents passés en parametre.
+	 * #30544
+	 * 
+	 * @param agentsJson Liste des agents pour filtre
+	 * @return List<AgentWithServiceDto> La liste des agents avec la prime Indemnité forfaitaire travail DPM 
+	 */
+	@RequestMapping(value = "/listeAgentWithIndemniteForfaitTravailDPM", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListeAgentWithIndemniteForfaitTravailDPM(@RequestBody String agentsJson) {
+		
+		logger.debug("DEBUT getListeAgentWithIndemniteForfaitTravailDPM [agents/listeAgentWithIndemniteForfaitTravailDPM] with parameter json = {}", agentsJson);
+
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsJson);
+
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.getListeAgentWithIndemniteForfaitTravailDPM(listIdsAgent);
+
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
+	}
 
 }

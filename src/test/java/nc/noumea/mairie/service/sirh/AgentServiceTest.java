@@ -767,8 +767,41 @@ public class AgentServiceTest {
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getIdEntite(), entitePetitEnfant.getIdEntite());
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().size(), 1);
 		assertEquals(result2.getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getEntiteEnfantWithAgents().get(0).getListAgentWithServiceDto().get(0).getIdAgent(), agentRecherche3.getIdAgent());
+	}
+	
+	@Test
+	public void getListeAgentEnNonCycleWithIndemniteForfaitTravailDPM_noResult() {
 		
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsEnActiviteByPrimeSurAffectation(
+				Arrays.asList(AgentService.NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM, AgentService.NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM), null))
+			.thenReturn(null);
 
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+		
+		assertEquals(0, agtService.getListeAgentWithIndemniteForfaitTravailDPM(null).size());
+	}
+	
+	@Test
+	public void getListeAgentEnNonCycleWithIndemniteForfaitTravailDPM_2Results() {
+		
+		AgentRecherche agent1 = new AgentRecherche();
+		AgentRecherche agent2 = new AgentRecherche();
+		
+		List<AgentRecherche> listAgents = new ArrayList<AgentRecherche>();
+		listAgents.add(agent1);
+		listAgents.add(agent2);
+		
+		IAgentRepository agentRepository = Mockito.mock(IAgentRepository.class);
+		Mockito.when(agentRepository.getListAgentsEnActiviteByPrimeSurAffectation(
+				Arrays.asList(AgentService.NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM, AgentService.NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM), null))
+			.thenReturn(listAgents);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "agentRepository", agentRepository);
+		
+		assertEquals(2, agtService.getListeAgentWithIndemniteForfaitTravailDPM(null).size());
 	}
 
 }
