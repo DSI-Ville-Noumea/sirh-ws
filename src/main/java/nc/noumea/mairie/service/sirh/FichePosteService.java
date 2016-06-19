@@ -1235,6 +1235,13 @@ public class FichePosteService implements IFichePosteService {
 			result.getErrors().add("L'entite id " + fichePoste.getIdServiceADS() + " n'est pas en statut 'actif'.");
 			return result;
 		}
+		// #31427
+		// on verifie que l entite a bienun CODE SERVI (AS400)
+		if(null == entite.getCodeServi()
+				 || "".equals(entite.getCodeServi().trim())) {
+			result.getErrors().add("L'entite id " + fichePoste.getIdServiceADS() + " n'a pas de CODE SERVI (AS400).");
+			return result;
+		}
 		// on cherche le login de l'agent qui fait l'action
 		LightUserDto user = utilisateurSrv.getLoginByIdAgent(idAgent);
 		if (user == null || user.getsAMAccountName() == null) {
@@ -1436,6 +1443,9 @@ public class FichePosteService implements IFichePosteService {
 		if (fichePoste.getNfa() == null) {
 			fichePoste.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		}
+		// bug #31427
+		// on met a jour le code SERVI utile a la paie lors de l affectation d un agent a une fiche de poste
+		fichePoste.setIdServi(entite.getCodeServi());
 		// on met à jour le statut en "validée"
 		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.VALIDEE.getId());
 		fichePoste.setStatutFP(statutFP);
@@ -1449,7 +1459,6 @@ public class FichePosteService implements IFichePosteService {
 		histo.setUserHisto(login);
 		histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 		fichePosteDao.persisEntity(histo);
-
 	}
 
 	@Override
