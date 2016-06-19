@@ -1316,6 +1316,7 @@ public class FichePosteServiceTest {
 		fiche.setIdServiceADS(1);
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 		Mockito.when(fichePosteDao.chercherFichePoste(1)).thenReturn(fiche);
@@ -1350,6 +1351,7 @@ public class FichePosteServiceTest {
 		fiche.setIdServiceADS(1);
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1387,6 +1389,7 @@ public class FichePosteServiceTest {
 		fiche.setAnnee(2015);
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1424,6 +1427,7 @@ public class FichePosteServiceTest {
 		fiche.setGradePoste(new Spgradn());
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1463,6 +1467,7 @@ public class FichePosteServiceTest {
 		fiche.setTitrePoste(new TitrePoste());
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1503,6 +1508,7 @@ public class FichePosteServiceTest {
 		fiche.setBudget(new Budget());
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1544,6 +1550,7 @@ public class FichePosteServiceTest {
 		fiche.setLieuPoste(new Silieu());
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1586,6 +1593,7 @@ public class FichePosteServiceTest {
 		fiche.setNiveauEtude(new NiveauEtude());
 		EntiteDto entite = new EntiteDto();
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1630,6 +1638,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1675,6 +1684,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1721,6 +1731,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1768,6 +1779,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1818,6 +1830,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1869,6 +1882,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1925,6 +1939,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -1980,6 +1995,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2036,6 +2052,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2093,6 +2110,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2155,6 +2173,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2217,6 +2236,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2279,6 +2299,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2344,6 +2365,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2408,6 +2430,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2475,6 +2498,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 
@@ -2542,6 +2566,7 @@ public class FichePosteServiceTest {
 		entite.setIdStatut(StatutEntiteEnum.ACTIF.getIdRefStatutEntite());
 		entite.setDateDeliberationActif(new Date());
 		entite.setRefDeliberationActif("blabl");
+		entite.setCodeServi("CGAA");
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("chata73");
 		StatutFichePoste statutValide = new StatutFichePoste();
