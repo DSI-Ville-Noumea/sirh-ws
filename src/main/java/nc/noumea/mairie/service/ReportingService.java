@@ -15,6 +15,7 @@ import java.util.Map;
 
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
+import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 import org.apache.commons.io.IOUtils;
@@ -42,16 +43,16 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 	@Autowired
 	@Qualifier("reportingBaseUrl")
-	private String reportingBaseUrl;
+	private String				reportingBaseUrl;
 
 	@Autowired
 	@Qualifier("reportServerPath")
-	private String reportServerPath;
+	private String				reportServerPath;
 
-	private static final String REPORT_PAGE = "frameset";
-	private static final String PARAM_REPORT = "__report";
-	private static final String PARAM_FORMAT = "__format";
-	private static final String PARAM_LOCALE = "__locale";
+	private static final String	REPORT_PAGE		= "frameset";
+	private static final String	PARAM_REPORT	= "__report";
+	private static final String	PARAM_FORMAT	= "__format";
+	private static final String	PARAM_LOCALE	= "__locale";
 
 	@Override
 	public byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception {
@@ -83,8 +84,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 		Client client = Client.create();
 
-		WebResource webResource = client.resource(reportingBaseUrl + REPORT_PAGE).queryParam(PARAM_REPORT, reportServerPath + reportName).queryParam(PARAM_FORMAT, format)
-				.queryParam(PARAM_LOCALE, "FR");
+		WebResource webResource = client.resource(reportingBaseUrl + REPORT_PAGE).queryParam(PARAM_REPORT, reportServerPath + reportName)
+				.queryParam(PARAM_FORMAT, format).queryParam(PARAM_LOCALE, "FR");
 
 		for (String key : reportParameters.keySet()) {
 			webResource = webResource.queryParam(key, reportParameters.get(key));
@@ -98,8 +99,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	public byte[] readResponseAsByteArray(ClientResponse response, Map<String, String> reportParameters) throws Exception {
 
 		if (response.getStatus() != HttpStatus.OK.value()) {
-			throw new Exception(String.format("An error occured while querying the reporting server '%s' with ids '%s'. HTTP Status code is : %s.", reportingBaseUrl,
-					getListOfParamsFromMap(reportParameters), response.getStatus()));
+			throw new Exception(String.format("An error occured while querying the reporting server '%s' with ids '%s'. HTTP Status code is : %s.",
+					reportingBaseUrl, getListOfParamsFromMap(reportParameters), response.getStatus()));
 		}
 
 		byte[] reponseData = null;
@@ -204,7 +205,15 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 		if (dto.getCommissionsParCorps().size() > 0) {
 			// on ecrit dans le document les avancements diff
-			writeTabDiff(document, dto);
+			for (CommissionAvancementCorpsDto dtoCorps : dto.getCommissionsParCorps()) {
+				writeTabDiff(document, dtoCorps);
+
+				// on fait un saut de page
+				document.newPage();
+				document.add(new Paragraph(""));
+				document.newPage();
+
+			}
 
 			// on fait un saut de page
 			document.newPage();
@@ -212,7 +221,15 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			document.newPage();
 
 			// on ecrit dans le document les changements de classe
-			writeTabChgtClasse(document, dto);
+			for (CommissionAvancementCorpsDto dtoCorps : dto.getCommissionsParCorps()) {
+				writeTabChgtClasse(document, dtoCorps);
+
+				// on fait un saut de page
+				document.newPage();
+				document.add(new Paragraph(""));
+				document.newPage();
+
+			}
 		} else {
 			genereEnteteDocument(document, "images/logo_gouv.jpg", true, "Aucune correspondance");
 		}
@@ -224,23 +241,23 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 	}
 
-	private void writeTabDiff(Document document, CommissionAvancementDto dto) throws DocumentException, MalformedURLException, IOException {
+	private void writeTabDiff(Document document, CommissionAvancementCorpsDto dto) throws DocumentException, MalformedURLException, IOException {
 		// les données en entête du document
 		String titre = "Direction des ressources humaines de la fonction publique de Nouvelle-Calédonie";
-		titre += "\nAVANCEMENT DIFFERENCIE - ANNEE " + dto.getCommissionsParCorps().get(0).getAvancementsDifferencies().getAnnee();
+		titre += "\nAVANCEMENT DIFFERENCIE - ANNEE " + dto.getAvancementsDifferencies().getAnnee();
 		genereEnteteDocument(document, "images/logo_gouv.jpg", true, titre);
 
 		// le titre
-		genereTitreJaune(document, dto.getCommissionsParCorps().get(0).getAvancementsDifferencies());
+		genereTitreJaune(document, dto.getAvancementsDifferencies());
 
 		// les infos CAP
-		genereInfoCAP(document, dto.getCommissionsParCorps().get(0).getAvancementsDifferencies(), true);
+		genereInfoCAP(document, dto.getAvancementsDifferencies(), true);
 
 		// genere entete tableau
-		genereTableauDiff(document, dto.getCommissionsParCorps().get(0).getAvancementsDifferencies());
+		genereTableauDiff(document, dto.getAvancementsDifferencies());
 
 		// genere bas de page
-		genereBasPage(document, dto.getCommissionsParCorps().get(0).getAvancementsDifferencies());
+		genereBasPage(document, dto.getAvancementsDifferencies());
 
 	}
 
@@ -315,7 +332,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		PdfPTable tableCachetVisa = writeTableau(document, new float[] { 17 });
 		tableCachetVisa.setWidthPercentage(40f);
 		tableCachetVisa.setHorizontalAlignment(Element.ALIGN_LEFT);
-		tableCachetVisa.addCell(writeCell(3, null, new CellVo("CACHET + VISA EMPLOYEUR : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8), true, true, 80f, Element.ALIGN_TOP));
+		tableCachetVisa.addCell(writeCell(3, null, new CellVo("CACHET + VISA EMPLOYEUR : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8), true, true,
+				80f, Element.ALIGN_TOP));
 		table.addCell(tableCachetVisa);
 		writeLine(table, 0, Arrays.asList(new CellVo("", false, 3, null, Element.ALIGN_LEFT, false, fontNormal8)), false);
 
@@ -429,8 +447,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesByAgent.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
 
 		// on ecrit les date avancement min
-		listValuesByAgent.add(new CellVo(agentDto.getDateAncienAvancementMinimale() == null ? "" : new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDateAncienAvancementMinimale()), 1,
-				Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo(agentDto.getDateAncienAvancementMinimale() == null ? "" : new SimpleDateFormat("dd/MM/yyyy").format(agentDto
+				.getDateAncienAvancementMinimale()), 1, Element.ALIGN_CENTER));
 
 		// on ecrit les durées
 		listValuesByAgent.add(new CellVo(agentDto.isDureeMin() ? "X" : "", 1, Element.ALIGN_CENTER));
@@ -465,7 +483,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		writeLine(table, 2, listValuesLigne2, false);
 		// 3eme ligne
 		List<CellVo> listValuesLigne3 = new ArrayList<CellVo>();
-		listValuesLigne3.add(new CellVo(withQuota ? "Quota d'avancement à la durée minimale (ratio = 30%) : " : "", true, 1, null, Element.ALIGN_LEFT, false, fontBold8));
+		listValuesLigne3.add(new CellVo(withQuota ? "Quota d'avancement à la durée minimale (ratio = 30%) : " : "", true, 1, null, Element.ALIGN_LEFT, false,
+				fontBold8));
 		listValuesLigne3.add(new CellVo("Catégorie : " + dto.getCategorie(), true, 1, null, Element.ALIGN_LEFT, false, fontBold8));
 		writeLine(table, 2, listValuesLigne3, false);
 
@@ -516,22 +535,22 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		document.add(table);
 	}
 
-	private void writeTabChgtClasse(Document document, CommissionAvancementDto dto) throws DocumentException {
+	private void writeTabChgtClasse(Document document, CommissionAvancementCorpsDto dto) throws DocumentException {
 		// les données en entête du document
 		String titre = "GOUVERNEMENT DE LA NOUVELLE-CALEDONIE";
 		titre += "\nDRHFPNC - SERVICE DE LA GESTION STATUTAIRE ET DES ORGANISMES PARITAIRES - SECTION EMPLOYEURS";
 		genereEnteteDocument(document, "images/logo_gouv.jpg", true, titre);
 
 		// le titre
-		genereTitreJaune(document, dto.getCommissionsParCorps().get(0).getChangementClasses());
+		genereTitreJaune(document, dto.getChangementClasses());
 
 		// les infos CAP
-		genereInfoCAP(document, dto.getCommissionsParCorps().get(0).getChangementClasses(), false);
+		genereInfoCAP(document, dto.getChangementClasses(), false);
 
 		// genere entete tableau
-		genereTableauChgtClasse(document, dto.getCommissionsParCorps().get(0).getChangementClasses());
+		genereTableauChgtClasse(document, dto.getChangementClasses());
 
 		// genere bas de page
-		genereBasPage(document, dto.getCommissionsParCorps().get(0).getChangementClasses());
+		genereBasPage(document, dto.getChangementClasses());
 	}
 }
