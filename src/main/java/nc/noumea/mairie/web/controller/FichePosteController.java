@@ -579,6 +579,13 @@ public class FichePosteController {
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
 
+	/**
+	 * Utile a ORGANIGRAMME
+	 * 
+	 * @param idEntite 
+	 * @param withFichesPosteNonReglemente
+	 * @return Arbre de fiches de poste
+	 */
 	@RequestMapping(value = "/treeFichesPosteByIdEntite", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> getTreeFichesPosteByIdEntite(@RequestParam(value = "idEntite") Integer idEntite,

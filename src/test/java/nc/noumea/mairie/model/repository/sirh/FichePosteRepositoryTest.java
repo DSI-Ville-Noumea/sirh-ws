@@ -1020,6 +1020,7 @@ public class FichePosteRepositoryTest {
 		fichePoste3.setIdServiceADS(2);
 		sirhPersistenceUnit.persist(fichePoste3);
 
+		////// dans le passe
 		Affectation aff4 = new Affectation();
 		aff4.setIdAffectation(1);
 		aff4.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
@@ -1027,10 +1028,20 @@ public class FichePosteRepositoryTest {
 		aff4.setFichePoste(fichePoste3);
 		sirhPersistenceUnit.persist(aff4);
 
+		FichePoste fichePoste1 = new FichePoste();
+		fichePoste1.setAnnee(2010);
+		fichePoste1.setMissions("missions");
+		fichePoste1.setNumFP("numFP2");
+		fichePoste1.setOpi("opi");
+		fichePoste1.setNfa("nfa");
+		fichePoste1.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste1);
+		
+		//// present : sans date de fin
 		Affectation aff3 = new Affectation();
 		aff3.setIdAffectation(2);
 		aff3.setDateDebutAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
-		aff3.setFichePoste(fichePoste3);
+		aff3.setFichePoste(fichePoste1);
 		sirhPersistenceUnit.persist(aff3);
 
 		FichePoste fichePoste2 = new FichePoste();
@@ -1042,17 +1053,51 @@ public class FichePosteRepositoryTest {
 		fichePoste2.setIdServiceADS(2);
 		sirhPersistenceUnit.persist(fichePoste2);
 
+		//// present : avec date de fin
 		Affectation aff = new Affectation();
 		aff.setIdAffectation(3);
 		aff.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
-		aff.setDateFinAff(new DateTime(2017, 05, 01, 0, 0, 0).toDate());
+		aff.setDateFinAff(new DateTime().plusMonths(1).toDate());
 		aff.setFichePoste(fichePoste2);
 		sirhPersistenceUnit.persist(aff);
 
-		List<Integer> result = repository.getListFichePosteAffecteeByIdServiceADS(2);
+		FichePoste fichePoste5 = new FichePoste();
+		fichePoste5.setAnnee(2010);
+		fichePoste5.setMissions("missions");
+		fichePoste5.setNumFP("numFP");
+		fichePoste5.setOpi("opi");
+		fichePoste5.setNfa("nfa");
+		fichePoste5.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste5);
+
+		//// dans le futur : avec date de fin
+		Affectation aff5 = new Affectation();
+		aff5.setIdAffectation(4);
+		aff5.setDateDebutAff(new DateTime().plusMonths(2).toDate());
+		aff5.setDateFinAff(new DateTime().plusMonths(10).toDate());
+		aff5.setFichePoste(fichePoste5);
+		sirhPersistenceUnit.persist(aff5);
+
+		FichePoste fichePoste6 = new FichePoste();
+		fichePoste6.setAnnee(2010);
+		fichePoste6.setMissions("missions");
+		fichePoste6.setNumFP("numFP");
+		fichePoste6.setOpi("opi");
+		fichePoste6.setNfa("nfa");
+		fichePoste6.setIdServiceADS(2);
+		sirhPersistenceUnit.persist(fichePoste6);
+
+		//// dans le futur : sans date de fin
+		Affectation aff6 = new Affectation();
+		aff6.setIdAffectation(5);
+		aff6.setDateDebutAff(new DateTime().plusMonths(2).toDate());
+		aff6.setFichePoste(fichePoste6);
+		sirhPersistenceUnit.persist(aff6);
+
+		List<Integer> result = repository.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(2);
 
 		assertNotNull(result);
-		assertEquals(2, result.size());
+		assertEquals(4, result.size());
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
@@ -1061,6 +1106,32 @@ public class FichePosteRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void getListFichePosteNonAffecteeByIdServiceADS_returnResult() {
 
+		StatutFichePoste statutFPInactif = new StatutFichePoste();
+		statutFPInactif.setIdStatutFp(EnumStatutFichePoste.INACTIVE.getId());
+		sirhPersistenceUnit.persist(statutFPInactif);
+
+		StatutFichePoste statutFPValide = new StatutFichePoste();
+		statutFPValide.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getId());
+		sirhPersistenceUnit.persist(statutFPValide);
+		
+		// FP inactive
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2010);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("numFP25");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(2);
+		fichePoste.setStatutFP(statutFPInactif);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		Affectation aff = new Affectation();
+		aff.setIdAffectation(5);
+		aff.setDateDebutAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff.setDateFinAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
+		aff.setFichePoste(fichePoste);
+		sirhPersistenceUnit.persist(aff);
+
 		FichePoste fichePoste3 = new FichePoste();
 		fichePoste3.setAnnee(2010);
 		fichePoste3.setMissions("missions");
@@ -1068,8 +1139,10 @@ public class FichePosteRepositoryTest {
 		fichePoste3.setOpi("opi");
 		fichePoste3.setNfa("nfa");
 		fichePoste3.setIdServiceADS(2);
+		fichePoste3.setStatutFP(statutFPValide);
 		sirhPersistenceUnit.persist(fichePoste3);
 
+		// affectation inactive => non affectee
 		Affectation aff4 = new Affectation();
 		aff4.setIdAffectation(1);
 		aff4.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
@@ -1077,12 +1150,14 @@ public class FichePosteRepositoryTest {
 		aff4.setFichePoste(fichePoste3);
 		sirhPersistenceUnit.persist(aff4);
 
+		// affectation active
 		Affectation aff3 = new Affectation();
 		aff3.setIdAffectation(2);
 		aff3.setDateDebutAff(new DateTime(2012, 05, 01, 0, 0, 0).toDate());
 		aff3.setFichePoste(fichePoste3);
 		sirhPersistenceUnit.persist(aff3);
 
+		// non affecte
 		FichePoste fichePoste2 = new FichePoste();
 		fichePoste2.setAnnee(2010);
 		fichePoste2.setMissions("missions");
@@ -1090,19 +1165,21 @@ public class FichePosteRepositoryTest {
 		fichePoste2.setOpi("opi");
 		fichePoste2.setNfa("nfa");
 		fichePoste2.setIdServiceADS(2);
+		fichePoste2.setStatutFP(statutFPValide);
 		sirhPersistenceUnit.persist(fichePoste2);
 
-		Affectation aff = new Affectation();
-		aff.setIdAffectation(3);
-		aff.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
-		aff.setDateFinAff(new DateTime(2015, 05, 01, 0, 0, 0).toDate());
-		aff.setFichePoste(fichePoste2);
-		sirhPersistenceUnit.persist(aff);
+		Affectation aff2 = new Affectation();
+		aff2.setIdAffectation(3);
+		aff2.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
+		aff2.setDateFinAff(new DateTime(2015, 05, 01, 0, 0, 0).toDate());
+		aff2.setFichePoste(fichePoste2);
+		sirhPersistenceUnit.persist(aff2);
 
-		List<Integer> result = repository.getListFichePosteNonAffecteeByIdServiceADS(2);
+		List<Integer> result = repository.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(2);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
+		assertEquals(fichePoste2.getIdFichePoste(), result.get(0));
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}
