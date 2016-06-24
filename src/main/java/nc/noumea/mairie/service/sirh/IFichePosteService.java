@@ -67,8 +67,24 @@ public interface IFichePosteService {
 	List<FichePosteTreeNodeDto> getTreeFichesPosteByIdEntite(int idEntite, boolean withFichesPosteNonReglementaires);
 
 	ReturnMessageDto deplaceFichePosteFromEntityToOtherEntity(Integer idEntiteSource, Integer idEntiteCible, Integer idAgent);
-
+	
+	/**
+	 * Rendre inactives toutes les fiches de poste 
+	 * a condition qu elles soient toutes non affectées (dans le futur egalement)
+	 * 
+	 * @param idEntite Integer ID de l entite
+	 * @param idAgent Integer Agent faisant l operation
+	 * @return ReturnMessageDto Message d info et erreur
+	 */
 	public ReturnMessageDto inactiveFichePosteFromEntity(Integer idEntite, Integer idAgent);
 
+	/**
+	 * Rendre transitoire toutes les fiches de poste quelques soit leur statut
+	 * affectees ou non
+	 * 
+	 * @param idEntite Integer ID de l entite
+	 * @param idAgent Integer Agent faisant l operation
+	 * @return ReturnMessageDto Message d info et erreur
+	 */
 	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent);
 }
