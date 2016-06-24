@@ -3256,19 +3256,24 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		StatutFichePoste statutInactif = new StatutFichePoste();
-		statutInactif.setIdStatutFp(4);
+		statutInactif.setIdStatutFp(EnumStatutFichePoste.INACTIVE.getId());
 		statutInactif.setLibStatut("Inactive");
+		
+		StatutFichePoste statutValide = new StatutFichePoste();
+		statutInactif.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getId());
+		statutInactif.setLibStatut("Valide");
 
 		List<Integer> listFichesPoste = new ArrayList<Integer>();
 		FichePoste fp = new FichePoste();
 		fp.setNumFP("2015/1");
+		fp.setStatutFP(statutValide);
 
 		Sppost sppost = new Sppost();
 
 		listFichesPoste.addAll(Arrays.asList(1,2,3));
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(listFichesPoste);
+		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(1)).thenReturn(listFichesPoste);
 		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fp);
 		Mockito.when(fichePosteDao.chercherSppost(Mockito.anyInt(), Mockito.anyInt())).thenReturn(sppost);
 		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId())).thenReturn(statutInactif);
@@ -3289,7 +3294,7 @@ public class FichePosteServiceTest {
 		}).when(fichePosteDao).persisEntity(Mockito.isA(HistoFichePoste.class));
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
@@ -3297,7 +3302,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
 		ReturnMessageDto result = ficheService.inactiveFichePosteFromEntity(1, idAgent);
-		assertEquals("3 FDP non affectées sur l'entité SOURCE vont passer en inactives.", result.getInfos().get(0));
+		assertEquals("3 FDP non affectées sur l'entité SOURCE sont passées en inactives.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(Sppost.class));
@@ -3311,7 +3316,7 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<Integer>());
+		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(1)).thenReturn(new ArrayList<Integer>());
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3329,7 +3334,7 @@ public class FichePosteServiceTest {
 		}).when(fichePosteDao).persisEntity(Mockito.isA(HistoFichePoste.class));
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
@@ -3339,6 +3344,83 @@ public class FichePosteServiceTest {
 		ReturnMessageDto result = ficheService.inactiveFichePosteFromEntity(1, idAgent);
 		assertEquals("Aucune FDP non affectées sur l'entité SOURCE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(Sppost.class));
+	}
+
+	@Test
+	public void inactiveFichePosteFromEntity_FichesPosteAffectees_error() {
+		
+		EntiteDto entite = new EntiteDto();
+		entite.setIdEntite(1);
+		entite.setSigle("SOURCE");
+
+		Integer idAgent = 9005138;
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(1)).thenReturn(Arrays.asList(1));
+
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("rebjo84");
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(user);
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.inactiveFichePosteFromEntity(1, idAgent);
+		assertEquals("Il reste des FDP affectées sur l'entité SOURCE.", result.getErrors().get(0));
+		assertTrue(result.getInfos().isEmpty());
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(Sppost.class));
+	}
+
+	@Test
+	public void inactiveFichePosteFromEntity_FichesPosteAffecteesSurEntiteEnfant_error() {
+		
+		EntiteDto entite = new EntiteDto();
+		entite.setIdEntite(1);
+		entite.setSigle("SOURCE");
+
+		EntiteDto entiteEnfant = new EntiteDto();
+		entiteEnfant.setIdEntite(2);
+		entiteEnfant.setSigle("SOURCE enfant");
+
+		EntiteDto entitePetitEnfant = new EntiteDto();
+		entitePetitEnfant.setIdEntite(3);
+		entitePetitEnfant.setSigle("SOURCE petit enfant");
+		
+		entiteEnfant.getEnfants().add(entitePetitEnfant);
+		entite.getEnfants().add(entiteEnfant);
+		
+		Integer idAgent = 9005138;
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(1)).thenReturn(null);
+		Mockito.when(fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(2)).thenReturn(new ArrayList<Integer>());
+		Mockito.when(fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(3)).thenReturn(Arrays.asList(1));
+
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("rebjo84");
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(user);
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.inactiveFichePosteFromEntity(1, idAgent);
+		assertEquals("Il reste des FDP affectées sur l'entité SOURCE petit enfant.", result.getErrors().get(0));
+		assertTrue(result.getInfos().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(Sppost.class));
 	}
@@ -3354,7 +3436,7 @@ public class FichePosteServiceTest {
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(null);
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 
@@ -3376,7 +3458,7 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
-		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(null);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(null);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
 
@@ -3402,21 +3484,28 @@ public class FichePosteServiceTest {
 		statutTransitoire.setIdStatutFp(5);
 		statutTransitoire.setLibStatut("Transitoire");
 
-		List<Integer> listFichesPoste = new ArrayList<Integer>();
-		FichePoste fp = new FichePoste();
-		fp.setNumFP("2015/1");
+		List<FichePoste> listFichesPoste = new ArrayList<FichePoste>();
+		
+		fp1 = new FichePoste();
+		fp1.setNumFP("2015/1");
+
+		fp2 = new FichePoste();
+		fp2.setNumFP("2015/2");
+
+		fp3 = new FichePoste();
+		fp3.setNumFP("2015/3");
 
 		Spbhor spbhor = new Spbhor();
 
-		listFichesPoste.addAll(Arrays.asList(1, 2, 3));
+		listFichesPoste.addAll(Arrays.asList(fp1, fp2, fp3));
 
 		IMairieRepository mairieRepository = Mockito.mock(IMairieRepository.class);
 		Mockito.when(mairieRepository.getSpbhorById(0)).thenReturn(spbhor);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteAffecteeByIdServiceADS(1)).thenReturn(listFichesPoste);
-		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fp);
-		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.TRANSITOIRE.getId())).thenReturn(statutTransitoire);
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), 
+				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId())))
+					.thenReturn(listFichesPoste);
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
@@ -3443,7 +3532,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "mairieRepository", mairieRepository);
 
 		ReturnMessageDto result = ficheService.transiteFichePosteFromEntity(1, idAgent);
-		assertEquals("3 FDP affectées sur l'entité SOURCE vont passer en transitoire.", result.getInfos().get(0));
+		assertEquals("3 FDP affectées sur l'entité SOURCE sont passées en transitoire.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
@@ -3456,22 +3545,14 @@ public class FichePosteServiceTest {
 		Integer idAgent = 9005138;
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(1)).thenReturn(new ArrayList<Integer>());
+		Mockito.when(fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(1), 
+				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId())))
+				.thenReturn(new ArrayList<FichePoste>());
 
 		LightUserDto user = new LightUserDto();
 		user.setsAMAccountName("rebjo84");
 		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
 		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(user);
-
-		Mockito.doAnswer(new Answer<Object>() {
-			@Override
-			public Object answer(InvocationOnMock invocation) {
-				HistoFichePoste histo = (HistoFichePoste) invocation.getArguments()[0];
-				assertEquals(histo.getUserHisto(), "rebjo84");
-				assertEquals(histo.getTypeHisto(), EnumTypeHisto.MODIFICATION.getValue());
-				return null;
-			}
-		}).when(fichePosteDao).persisEntity(Mockito.isA(HistoFichePoste.class));
 
 		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
 		Mockito.when(adsWSConsumer.getEntiteByIdEntite(1)).thenReturn(entite);
@@ -3482,7 +3563,7 @@ public class FichePosteServiceTest {
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
 
 		ReturnMessageDto result = ficheService.transiteFichePosteFromEntity(1, idAgent);
-		assertEquals("Aucune FDP affectées sur l'entité SOURCE.", result.getInfos().get(0));
+		assertEquals("Aucune FDP en statut En Création, Validée ou Gelée sur l'entité SOURCE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.never()).persisEntity(Mockito.isA(HistoFichePoste.class));
 	}
