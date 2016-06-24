@@ -1236,7 +1236,7 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 		// #31427
-		// on verifie que l entite a bienun CODE SERVI (AS400)
+		// on verifie que l entite a bien un CODE SERVI (AS400)
 		if(null == entite.getCodeServi()
 				 || "".equals(entite.getCodeServi().trim())) {
 			result.getErrors().add("L'entite id " + fichePoste.getIdServiceADS() + " n'a pas de CODE SERVI (AS400).");
@@ -1512,6 +1512,7 @@ public class FichePosteService implements IFichePosteService {
 			for (Affectation aff : listeAffFP) {
 				Spmtsr spmtsr = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(aff.getAgent().getNomatr(), new Integer(sdf.format(aff.getDateDebutAff())));
 				spmtsr.getId().setServi(fp.getIdServi());
+				// remettre a jour des donnees erronees eventuellement
 				sppost.setPomatr(aff.getAgent().getNomatr());
 				fichePosteDao.persisEntity(spmtsr);
 			}
@@ -1523,20 +1524,26 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
+		
 		if (listeFDP.size() == 1) {
 			result.getInfos().add(listeFDP.size() + " FDP est déplacée de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		} else {
 			result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		}
+		
 		return result;
 	}
 
+	/**
+	 * Rendre inactives toutes les fiches de poste 
+	 * a condition qu elles soient toutes non affectées (dans le futur egalement)
+	 */
 	@Override
 	@Transactional(value = "sirhTransactionManager")
 	public ReturnMessageDto inactiveFichePosteFromEntity(Integer idEntite, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
 
-		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(idEntite);
+		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
 		if (entite == null) {
 			result.getErrors().add("L'entité " + idEntite + " n'existe pas.");
 			return result;
@@ -1549,40 +1556,115 @@ public class FichePosteService implements IFichePosteService {
 			return result;
 		}
 
-		// on cherche toutes les FDP non affectées
-		List<Integer> listeIdFDP = fichePosteDao.getListFichePosteNonAffecteeByIdServiceADS(idEntite);
+		// on cherche toutes les FDP affectées
+		result = checkFichesPosteAffecteesOnEntiteAndTheirsChildren(entite, result);
 
-		if (null == listeIdFDP || listeIdFDP.isEmpty()) {
+		if (null != result.getErrors() 
+				&& !result.getErrors().isEmpty()) {
+			return result;
+		}
+		
+		// on check que toutes les fiches de poste sont inactives sur les entités enfant
+		checkFichesPosteValideGeleeTransitoireInEntiteChildren(entite, result);
+
+		if (null != result.getErrors() 
+				&& !result.getErrors().isEmpty()) {
+			return result;
+		}
+		
+		// on cherche toutes les FDP NON affectées
+		List<Integer> listeIdFDPNonAffectées = fichePosteDao.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(idEntite);
+		
+		if (null == listeIdFDPNonAffectées 
+				|| listeIdFDPNonAffectées.isEmpty()) {
 			result.getInfos().add("Aucune FDP non affectées sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
 
-		for (Integer idfp : listeIdFDP) {
+		for (Integer idfp : listeIdFDPNonAffectées) {
 			FichePoste fp = fichePosteDao.chercherFichePoste(idfp);
-			StatutFichePoste statutInactif = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId());
-			fp.setStatutFP(statutInactif);
-			fp.setSuperieurHierarchique(null);
-
-			// #18977 : on met à jour sppost et spmtsr
-			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
-			sppost.setPomatr(0);
-			sppost.setCodact("I");
-			fichePosteDao.persisEntity(sppost);
-
-			HistoFichePoste histo = new HistoFichePoste(fp);
-			histo.setDateHisto(new Date());
-			histo.setUserHisto(user.getsAMAccountName());
-			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
-			fichePosteDao.persisEntity(histo);
+			
+			if(!EnumStatutFichePoste.INACTIVE.getId().equals(fp.getStatutFP().getIdStatutFp())) {
+				StatutFichePoste statutInactif = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId());
+				fp.setStatutFP(statutInactif);
+	
+				// #18977 : on met à jour sppost
+				Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+				sppost.setCodact("I");
+				fichePosteDao.persisEntity(sppost);
+	
+				HistoFichePoste histo = new HistoFichePoste(fp);
+				histo.setDateHisto(new Date());
+				histo.setUserHisto(user.getsAMAccountName());
+				histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
+				fichePosteDao.persisEntity(histo);
+			}
 		}
-		if (listeIdFDP.size() == 1) {
-			result.getInfos().add(listeIdFDP.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " va passer en inactive.");
+		
+		if (listeIdFDPNonAffectées.size() == 1) {
+			result.getInfos().add(listeIdFDPNonAffectées.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " est passée en inactive.");
 		} else {
-			result.getInfos().add(listeIdFDP.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " vont passer en inactives.");
+			result.getInfos().add(listeIdFDPNonAffectées.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " sont passées en inactives.");
 		}
+		
+		return result;
+	}
+	
+	private ReturnMessageDto checkFichesPosteAffecteesOnEntiteAndTheirsChildren(EntiteDto entite, ReturnMessageDto result) {
+		
+		// on cherche toutes les FDP affectées
+		List<Integer> listeIdFDPAffectees = fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(entite.getIdEntite());
+
+		if (null != listeIdFDPAffectees 
+				&& !listeIdFDPAffectees.isEmpty()) {
+			result.getErrors().add("Il reste des FDP affectées sur l'entité " + entite.getSigle() + ".");
+			return result;
+		}
+		
+		if(null != entite.getEnfants()
+				&& !entite.getEnfants().isEmpty()) {
+			for(EntiteDto enfant : entite.getEnfants()) {
+				result = checkFichesPosteAffecteesOnEntiteAndTheirsChildren(enfant, result);
+				
+				if(!result.getErrors().isEmpty()) {
+					return result;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private ReturnMessageDto checkFichesPosteValideGeleeTransitoireInEntiteChildren(EntiteDto entite, ReturnMessageDto result) {
+		
+		if(null != entite.getEnfants()
+				&& !entite.getEnfants().isEmpty()) {
+			for(EntiteDto enfant : entite.getEnfants()) {
+				
+				List<FichePoste> listFP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(enfant.getIdEntite()), 
+						Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId()));
+				
+				if(null != listFP
+					&& !listFP.isEmpty()) {
+					result.getErrors().add("Il y a des fiches de poste en statut En création, Validée, Gelée ou Transitoire sur l'entité enfant " + enfant.getSigle());
+					return result;
+				}
+				
+				result = checkFichesPosteValideGeleeTransitoireInEntiteChildren(enfant, result);
+				
+				if(!result.getErrors().isEmpty()) {
+					return result;
+				}
+			}
+		}
+		
 		return result;
 	}
 
+	/**
+	 * Rendre transitoire toutes les fiches de poste En Creation, Gelee ET Valide
+	 * affectees ou non
+	 */
 	@Override
 	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent) {
 		ReturnMessageDto result = new ReturnMessageDto();
@@ -1601,20 +1683,17 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP affectées
-		List<Integer> listeIdFDP = fichePosteDao.getListFichePosteAffecteeByIdServiceADS(idEntite);
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), 
+				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId()));
 
-		if (null == listeIdFDP || listeIdFDP.isEmpty()) {
-			result.getInfos().add("Aucune FDP affectées sur l'entité " + entite.getSigle() + ".");
+		if (null == listeFDP || listeFDP.isEmpty()) {
+			result.getInfos().add("Aucune FDP en statut En Création, Validée ou Gelée sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
 
-		for (Integer idfp : listeIdFDP) {
-			FichePoste fp = fichePosteDao.chercherFichePoste(idfp);
+		for (FichePoste fp : listeFDP) {
 			StatutFichePoste statutTransitoire = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.TRANSITOIRE.getId());
 			fp.setStatutFP(statutTransitoire);
-			Spbhor nonReglNonBudgete = mairieRepository.getSpbhorById(0);
-			fp.setReglementaire(nonReglNonBudgete);
-			fp.setBudgete(nonReglNonBudgete);
 
 			HistoFichePoste histo = new HistoFichePoste(fp);
 			histo.setDateHisto(new Date());
@@ -1622,11 +1701,13 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		if (listeIdFDP.size() == 1) {
-			result.getInfos().add(listeIdFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " va passer en transitoire.");
+		
+		if (listeFDP.size() == 1) {
+			result.getInfos().add(listeFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " est passée en transitoire.");
 		} else {
-			result.getInfos().add(listeIdFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " vont passer en transitoire.");
+			result.getInfos().add(listeFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " sont passées en transitoire.");
 		}
+		
 		return result;
 	}
 }

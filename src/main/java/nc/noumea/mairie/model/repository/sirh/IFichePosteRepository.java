@@ -94,8 +94,8 @@ public interface IFichePosteRepository {
 
 	ActionFdpJob chercherActionFDPParentDuplication(Integer idFichePoste);
 
-	List<Integer> getListFichePosteAffecteeByIdServiceADS(Integer idEntite);
+	List<Integer> getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(Integer idEntite);
 
-	List<Integer> getListFichePosteNonAffecteeByIdServiceADS(Integer idEntite);
+	List<Integer> getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(Integer idEntite);
 
 }

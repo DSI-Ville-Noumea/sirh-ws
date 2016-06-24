@@ -21,6 +21,7 @@ import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.Delegation;
 import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.FeFp;
 import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
@@ -662,14 +663,13 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Integer> getListFichePosteAffecteeByIdServiceADS(Integer idEntite) {
+	public List<Integer> getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(Integer idEntite) {
 
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select fp.id_fiche_poste from Fiche_Poste fp ");
 		sb.append(" inner join Affectation aff on fp.id_fiche_poste = aff.id_fiche_poste ");
-		sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
-		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
+		sb.append(" where ( aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
 		sb.append(" and fp.ID_SERVICE_ADS = :idEntite ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());
@@ -682,20 +682,22 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Integer> getListFichePosteNonAffecteeByIdServiceADS(Integer idEntite) {
+	public List<Integer> getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(Integer idEntite) {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("select fp.id_fiche_poste from Fiche_Poste fp where fp.ID_SERVICE_ADS = :idEntite and fp.id_fiche_poste not in( ");
-		sb.append(" select fp.id_fiche_poste from Fiche_Poste fp inner join Affectation aff on fp.id_fiche_poste = aff.id_fiche_poste ");
-		sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
-		sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
-		sb.append(" and fp.ID_SERVICE_ADS = :idEntite) ");
+		sb.append("select fp.id_fiche_poste from Fiche_Poste fp where fp.ID_SERVICE_ADS = :idEntite and fp.ID_STATUT_FP <> :inactif ");
+		sb.append(" and fp.id_fiche_poste not in ( ");
+			sb.append(" select fp2.id_fiche_poste from Fiche_Poste fp2 inner join Affectation aff on fp2.id_fiche_poste = aff.id_fiche_poste ");
+			sb.append(" where aff.date_Debut_Aff <= :dateJourSIRH ");
+			sb.append(" and (aff.date_Fin_Aff is null or aff.date_Fin_Aff >= :dateJourSIRH ) ");
+			sb.append(" and fp2.ID_SERVICE_ADS = :idEntite ) ");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());
 
 		query.setParameter("dateJourSIRH", new Date());
 		query.setParameter("idEntite", idEntite);
+		query.setParameter("inactif", EnumStatutFichePoste.INACTIVE.getId());
 
 		return query.getResultList();
 	}
