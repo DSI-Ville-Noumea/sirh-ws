@@ -551,7 +551,9 @@ public class AgentService implements IAgentService {
 		if (null != listAgent) {
 			for (AgentRecherche agent : listAgent) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto(agent);
-				result.add(agDto);
+				if(!result.contains(agDto)){
+					result.add(agDto);					
+				}
 			}
 		}
 
