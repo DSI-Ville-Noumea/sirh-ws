@@ -158,28 +158,6 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	}
 
 	@Override
-	public byte[] getConvocationSIRHReportAsByteArray(String csvIdSuiviMedical, String typePopulation) throws Exception {
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("csvIdSuiviMedical", csvIdSuiviMedical);
-		map.put("typePopulation", typePopulation);
-		ClientResponse response = createAndFireRequest(map, "convocationSM.rptdesign", "DOCX");
-
-		return readResponseAsByteArray(response, map);
-	}
-
-	@Override
-	public byte[] getAccompagnementSIRHReportAsByteArray(String csvIdSuiviMedical, String typePopulation) throws Exception {
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("csvIdSuiviMedical", csvIdSuiviMedical);
-		map.put("typePopulation", typePopulation);
-		ClientResponse response = createAndFireRequest(map, "accompagnementSM.rptdesign", "DOCX");
-
-		return readResponseAsByteArray(response, map);
-	}
-
-	@Override
 	public byte[] getContratSIRHReportAsByteArray(Integer idAgent, Integer idContrat) throws Exception {
 
 		Map<String, String> map = new HashMap<String, String>();
@@ -332,8 +310,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		PdfPTable tableCachetVisa = writeTableau(document, new float[] { 17 });
 		tableCachetVisa.setWidthPercentage(40f);
 		tableCachetVisa.setHorizontalAlignment(Element.ALIGN_LEFT);
-		tableCachetVisa.addCell(writeCell(3, null, new CellVo("CACHET + VISA EMPLOYEUR : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8), true, true,
-				80f, Element.ALIGN_TOP));
+		tableCachetVisa.addCell(writeCell(3, null, new CellVo("CACHET + VISA EMPLOYEUR : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8), true,
+				true, 80f, Element.ALIGN_TOP));
 		table.addCell(tableCachetVisa);
 		writeLine(table, 0, Arrays.asList(new CellVo("", false, 3, null, Element.ALIGN_LEFT, false, fontNormal8)), false);
 
@@ -420,7 +398,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesByAgent.add(new CellVo(agentDto.getGrade(), 1, Element.ALIGN_LEFT));
 
 		// on ecrit les date previsionnelles
-		listValuesByAgent.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
+		listValuesByAgent
+				.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
 
 		// on ecrit les durées
 		listValuesByAgent.add(new CellVo(agentDto.isFavorable() ? "X" : "", 1, Element.ALIGN_CENTER));
@@ -444,11 +423,12 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesByAgent.add(new CellVo(agentDto.getGrade(), 1, Element.ALIGN_LEFT));
 
 		// on ecrit les date previsionnelles
-		listValuesByAgent.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
+		listValuesByAgent
+				.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
 
 		// on ecrit les date avancement min
-		listValuesByAgent.add(new CellVo(agentDto.getDateAncienAvancementMinimale() == null ? "" : new SimpleDateFormat("dd/MM/yyyy").format(agentDto
-				.getDateAncienAvancementMinimale()), 1, Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo(agentDto.getDateAncienAvancementMinimale() == null ? ""
+				: new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDateAncienAvancementMinimale()), 1, Element.ALIGN_CENTER));
 
 		// on ecrit les durées
 		listValuesByAgent.add(new CellVo(agentDto.isDureeMin() ? "X" : "", 1, Element.ALIGN_CENTER));
@@ -483,8 +463,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		writeLine(table, 2, listValuesLigne2, false);
 		// 3eme ligne
 		List<CellVo> listValuesLigne3 = new ArrayList<CellVo>();
-		listValuesLigne3.add(new CellVo(withQuota ? "Quota d'avancement à la durée minimale (ratio = 30%) : " : "", true, 1, null, Element.ALIGN_LEFT, false,
-				fontBold8));
+		listValuesLigne3.add(new CellVo(withQuota ? "Quota d'avancement à la durée minimale (ratio = 30%) : " : "", true, 1, null, Element.ALIGN_LEFT,
+				false, fontBold8));
 		listValuesLigne3.add(new CellVo("Catégorie : " + dto.getCategorie(), true, 1, null, Element.ALIGN_LEFT, false, fontBold8));
 		writeLine(table, 2, listValuesLigne3, false);
 
