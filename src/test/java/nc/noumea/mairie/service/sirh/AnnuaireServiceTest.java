@@ -6,8 +6,11 @@ import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import nc.noumea.mairie.model.bean.PositDesc;
 import nc.noumea.mairie.model.bean.Silieu;
@@ -23,10 +26,6 @@ import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.web.dto.AgentAnnuaireDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class AnnuaireServiceTest {
 
