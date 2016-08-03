@@ -4,17 +4,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.service.ISpCarrService;
-import nc.noumea.mairie.service.ISpadmnService;
-import nc.noumea.mairie.service.eae.ICalculEaeService;
-import nc.noumea.mairie.service.sirh.IAvancementsService;
-import nc.noumea.mairie.tools.transformer.MSDateTransformer;
-import nc.noumea.mairie.web.dto.AgentDto;
-import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
-import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
-import nc.noumea.mairie.web.dto.DateAvctDto;
-import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import flexjson.JSONSerializer;
+import nc.noumea.mairie.service.eae.ICalculEaeService;
+import nc.noumea.mairie.service.sirh.IAvancementsService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.AgentDto;
+import nc.noumea.mairie.web.dto.AutreAdministrationAgentDto;
+import nc.noumea.mairie.web.dto.CalculEaeInfosDto;
+import nc.noumea.mairie.web.dto.DateAvctDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementEaeDto;
 
 @Controller
 @RequestMapping("/calculEae")
@@ -40,13 +37,6 @@ public class CalculEaeController {
 
 	@Autowired
 	private IAvancementsService avancementsService;
-
-	@Autowired
-	private ISpCarrService spCarrService;
-
-	@Autowired
-	private ISpadmnService spadmnService;
-
 	@ResponseBody
 	@RequestMapping(value = "/listeAgentEligibleEAESansAffectes", method = RequestMethod.GET)
 	@Transactional(readOnly = true)

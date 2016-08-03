@@ -8,13 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.sirh.Affectation;
-import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
-import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
-import nc.noumea.mairie.web.dto.AffectationDto;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
+import nc.noumea.mairie.web.dto.AffectationDto;
 
 @Service
 public class AffectationService implements IAffectationService {
@@ -23,16 +22,7 @@ public class AffectationService implements IAffectationService {
 	transient EntityManager sirhEntityManager;
 
 	@Autowired
-	private IFichePosteRepository fdpRepo;
-
-	@Autowired
 	private IAffectationRepository affRepo;
-
-	@Autowired
-	private IFichePosteService fpSrv;
-
-	@Autowired
-	private IAgentService agentSrv;
 
 	@Override
 	public Affectation getAffectationById(Integer idAffectation) {

@@ -3,13 +3,6 @@ package nc.noumea.mairie.web.controller;
 import java.util.Date;
 import java.util.List;
 
-import nc.noumea.mairie.service.sirh.IAgentService;
-import nc.noumea.mairie.service.sirh.IUtilisateurService;
-import nc.noumea.mairie.tools.transformer.MSDateTransformer;
-import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
-import nc.noumea.mairie.ws.dto.LightUserDto;
-import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import flexjson.JSONSerializer;
+import nc.noumea.mairie.service.sirh.IUtilisateurService;
+import nc.noumea.mairie.tools.transformer.MSDateTransformer;
+import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
+import nc.noumea.mairie.ws.dto.LightUserDto;
+import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 @Controller
 @RequestMapping("/utilisateur")
@@ -32,9 +30,6 @@ public class UtilisateurController {
 
 	@Autowired
 	private IUtilisateurService utilisateurSrv;
-
-	@Autowired
-	private IAgentService agentSrv;
 
 	private String remanieIdAgent(Integer idAgent) {
 		String newIdAgent;
