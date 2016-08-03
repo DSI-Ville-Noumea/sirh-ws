@@ -210,10 +210,6 @@ public class AnnuaireServiceTest {
 		Mockito.when(spadmnRepository.chercherPositionAdmAgentEnCours(ag.getNomatr())).thenReturn(spAdm);
 		Mockito.when(spadmnRepository.chercherPositDescByPosit(spAdm.getPositionAdministrative().getPosition())).thenReturn(posit);
 
-		IFichePosteService fichePosteService = Mockito.mock(IFichePosteService.class);
-		Mockito.when(fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(Mockito.anyInt(), Mockito.any(Date.class))).thenReturn(1);
-		Mockito.when(fichePosteService.getFichePosteById(1)).thenReturn(fichePoste);
-
 		IAffectationRepository affectationRepository = Mockito.mock(IAffectationRepository.class);
 		Mockito.when(affectationRepository.getAffectationActiveByAgent(idAgent)).thenReturn(affAgent);
 
@@ -228,7 +224,6 @@ public class AnnuaireServiceTest {
 		AnnuaireService service = new AnnuaireService();
 		ReflectionTestUtils.setField(service, "agSrv", agSrv);
 		ReflectionTestUtils.setField(service, "spadmnRepository", spadmnRepository);
-		ReflectionTestUtils.setField(service, "fichePosteService", fichePosteService);
 		ReflectionTestUtils.setField(service, "affectationRepository", affectationRepository);
 		ReflectionTestUtils.setField(service, "contactSrv", contactSrv);
 		ReflectionTestUtils.setField(service, "adsWSConsumer", adsWSConsumer);
