@@ -3,6 +3,11 @@ package nc.noumea.mairie.service.sirh;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import nc.noumea.mairie.model.bean.PositDesc;
 import nc.noumea.mairie.model.bean.Spadmn;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
@@ -11,16 +16,10 @@ import nc.noumea.mairie.model.bean.sirh.Contact;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.repository.ISpadmnRepository;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
-import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.web.dto.AgentAnnuaireDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.TitrePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AnnuaireService implements IAnnuaireService {
@@ -43,16 +42,10 @@ public class AnnuaireService implements IAnnuaireService {
 	private IAffectationService affSrv;
 
 	@Autowired
-	private IFichePosteService fichePosteService;
-
-	@Autowired
 	private IAgentMatriculeConverterService agentMatriculeConverterService;
 
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
-
-	@Autowired
-	private ISivietService sivietSrv;
 
 	@Override
 	public List<Integer> listAgentActiviteAnnuaire() {
