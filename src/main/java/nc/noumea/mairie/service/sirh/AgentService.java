@@ -10,6 +10,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
@@ -23,33 +26,24 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class AgentService implements IAgentService {
-	
-	//TODO
-	public final static Integer NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM = 7718; 
-	public final static Integer NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM = 7719; 
+
+	// TODO
+	public final static Integer	NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM	= 7718;
+	public final static Integer	NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM		= 7719;
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	transient EntityManager sirhEntityManager;
+	transient EntityManager		sirhEntityManager;
 
 	@Autowired
-	private IUtilisateurService utilisateurSrv;
+	private IADSWSConsumer		adsWSConsumer;
 
 	@Autowired
-	private IADSWSConsumer adsWSConsumer;
+	private IAdsService			adsService;
 
 	@Autowired
-	private IAdsService adsService;
-
-	@Autowired
-	private IAgentRepository agentRepository;
-	
-	@Autowired
-	private IAbsenceService absenceService;
+	private IAgentRepository	agentRepository;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -68,11 +62,11 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public List<Agent> listAgentServiceSansAgent(Integer idServiceADS, Integer idAgent) {
-		TypedQuery<Agent> query = sirhEntityManager
-				.createQuery(
-						"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-								+ " and fp.idServiceADS =:idServiceADS  and aff.agent.idAgent != :idAgent " + " and aff.dateDebutAff<=:dateJour and "
-								+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery(
+				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
+						+ " and fp.idServiceADS =:idServiceADS  and aff.agent.idAgent != :idAgent " + " and aff.dateDebutAff<=:dateJour and "
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)",
+				Agent.class);
 		query.setParameter("idServiceADS", idServiceADS);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", new Date());
@@ -85,8 +79,9 @@ public class AgentService implements IAgentService {
 	public List<Agent> listAgentPlusieursServiceSansAgentSansSuperieur(Integer idAgent, Integer idAgentResponsable, List<Integer> listeIdServiceADS) {
 		TypedQuery<Agent> query = sirhEntityManager.createQuery(
 				"select ag from Agent ag , Affectation aff, FichePoste fp where aff.agent.idAgent = ag.idAgent and fp.idFichePoste = aff.fichePoste.idFichePoste "
-						+ " and fp.idServiceADS in (:listeIdServiceADS)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp " + " and aff.dateDebutAff<=:dateJour and "
-						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ", Agent.class);
+						+ " and fp.idServiceADS in (:listeIdServiceADS)  and aff.agent.idAgent != :idAgent and aff.agent.idAgent != :idAgentResp "
+						+ " and aff.dateDebutAff<=:dateJour and " + "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour) order by ag.nomUsage ",
+				Agent.class);
 		query.setParameter("listeIdServiceADS", listeIdServiceADS);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("idAgentResp", idAgentResponsable);
@@ -120,14 +115,13 @@ public class AgentService implements IAgentService {
 	public List<AgentWithServiceDto> listAgentsOfServices(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
-		
+
 		List<Affectation> listAffectations = agentRepository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, date, idAgents);
-		
-		if(null == listAffectations
-				|| listAffectations.isEmpty()) {
+
+		if (null == listAffectations || listAffectations.isEmpty()) {
 			return result;
 		}
-		
+
 		// optimisation #18391
 		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
 		// verifier)
@@ -137,7 +131,7 @@ public class AgentService implements IAgentService {
 		if (null == idAgents || idAgents.isEmpty() || 1 < idAgents.size()) {
 			root = adsWSConsumer.getWholeTreeLight();
 		}
-		
+
 		for (Affectation aff : listAffectations) {
 			AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 			EntiteDto service = null;
@@ -163,15 +157,15 @@ public class AgentService implements IAgentService {
 
 		return result;
 	}
-	
+
 	@Override
 	public List<AgentWithServiceDto> listAgentsOfServicesWithoutLibelleService(List<Integer> idServiceADS, Date date, List<Integer> idAgents) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
-		
+
 		List<Affectation> listAffectations = agentRepository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, date, idAgents);
-		
-		if(null != listAffectations) {
+
+		if (null != listAffectations) {
 			for (Affectation aff : listAffectations) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 				if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
@@ -188,7 +182,8 @@ public class AgentService implements IAgentService {
 	public Agent findAgentWithName(Integer idAgent, String nom) {
 		Agent res = null;
 
-		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager
+				.createQuery("select ag from Agent ag where ag.idAgent = :idAgent and upper(ag.nomUsage) like :nom", Agent.class);
 
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("nom", nom.toUpperCase() + "%");
@@ -227,55 +222,62 @@ public class AgentService implements IAgentService {
 	}
 
 	/**
-	 * Retourne un arbre d entite avec les agents associés a chaque entite.
-	 * On exclut l agent passe en parametre.
-	 * On ajoute les agents en plus dans la lliste en parametre listIdsAgentAInclure.
+	 * Retourne un arbre d entite avec les agents associés a chaque entite. On
+	 * exclut l agent passe en parametre. On ajoute les agents en plus dans la
+	 * lliste en parametre listIdsAgentAInclure.
 	 * 
-	 * @param idServiceADS Integer L entite root que l on recherche
-	 * @param idAgent Integer L agent a exclure de l arbre
-	 * @param listIdsAgentAInclure List<Integer> Cette liste comprend la liste des agents que l on voir dans l arbre
-	 * 		en plus des autres, MEME s ils ne font pas partis de l arbre des entites
-	 * 		dans ce cas on rajoute les entites manquantes 
-	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents associés a chaque entite
+	 * @param idServiceADS
+	 *            Integer L entite root que l on recherche
+	 * @param idAgent
+	 *            Integer L agent a exclure de l arbre
+	 * @param listIdsAgentAInclure
+	 *            List<Integer> Cette liste comprend la liste des agents que l
+	 *            on voir dans l arbre en plus des autres, MEME s ils ne font
+	 *            pas partis de l arbre des entites dans ce cas on rajoute les
+	 *            entites manquantes
+	 * @return EntiteWithAgentWithServiceDto un arbre d entite avec les agents
+	 *         associés a chaque entite
 	 */
 	@Override
-	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(
-			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour) {
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(Integer idServiceADS,
+			Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour) {
 
 		// on recherche d abord l arbre principal
 		// du service ADS passe en parametre
-		EntiteWithAgentWithServiceDto entiteWithAgents = getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent, listIdsAgentAInclure, dateJour);
-		
-		if(null == entiteWithAgents) {
+		EntiteWithAgentWithServiceDto entiteWithAgents = getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(idServiceADS, idAgent,
+				listIdsAgentAInclure, dateJour);
+
+		if (null == entiteWithAgents) {
 			return null;
 		}
-		
-		if(null != listIdsAgentAInclure
-				&& !listIdsAgentAInclure.isEmpty()) {
+
+		if (null != listIdsAgentAInclure && !listIdsAgentAInclure.isEmpty()) {
 			List<AgentDto> listAgentInTree = adsService.getListeAgentsOfEntiteTree(entiteWithAgents);
-			
+
 			List<Integer> listIdsAgentsNotInSameServiceOfApprobateur = new ArrayList<Integer>();
-			for(Integer agentNotInTree : listIdsAgentAInclure) {
+			for (Integer agentNotInTree : listIdsAgentAInclure) {
 				AgentDto agentTmp = new AgentDto();
 				agentTmp.setIdAgent(agentNotInTree);
-				if(!listAgentInTree.contains(agentTmp)) {
+				if (!listAgentInTree.contains(agentTmp)) {
 					listIdsAgentsNotInSameServiceOfApprobateur.add(agentNotInTree);
 				}
 			}
-			
+
 			// bug #29215
-			if(null != listIdsAgentsNotInSameServiceOfApprobateur
-					&& !listIdsAgentsNotInSameServiceOfApprobateur.isEmpty()) {
-				List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, dateJour, listIdsAgentsNotInSameServiceOfApprobateur);
-				
-				// on construit un arbre de EntiteWithAgentWithServiceDto avec ces agents
-				List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(listAgentsNotInSameServiceOfApprobateur, entiteWithAgents);
-				
+			if (null != listIdsAgentsNotInSameServiceOfApprobateur && !listIdsAgentsNotInSameServiceOfApprobateur.isEmpty()) {
+				List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur = listAgentsOfServices(null, dateJour,
+						listIdsAgentsNotInSameServiceOfApprobateur);
+
+				// on construit un arbre de EntiteWithAgentWithServiceDto avec
+				// ces agents
+				List<EntiteWithAgentWithServiceDto> treeWithAgentsOthersServices = getArbrewithAgentsNotInSameServiceOfApprobateur(
+						listAgentsNotInSameServiceOfApprobateur, entiteWithAgents);
+
 				// si on a d autres arbres a ajouter
-				// alors on cree un noeaud parent ficitif auquel on rattache tous les arbres
-				if(null != treeWithAgentsOthersServices
-						&& !treeWithAgentsOthersServices.isEmpty()) {
-					EntiteWithAgentWithServiceDto root = new  EntiteWithAgentWithServiceDto();
+				// alors on cree un noeaud parent ficitif auquel on rattache
+				// tous les arbres
+				if (null != treeWithAgentsOthersServices && !treeWithAgentsOthersServices.isEmpty()) {
+					EntiteWithAgentWithServiceDto root = new EntiteWithAgentWithServiceDto();
 					root.setSigle("Services");
 					root.setLabel("Les services");
 					root.getEntiteEnfantWithAgents().add(entiteWithAgents);
@@ -284,31 +286,30 @@ public class AgentService implements IAgentService {
 				}
 			}
 		}
-		
+
 		return entiteWithAgents;
 	}
-	
+
 	private List<EntiteWithAgentWithServiceDto> getArbrewithAgentsNotInSameServiceOfApprobateur(
 			List<AgentWithServiceDto> listAgentsNotInSameServiceOfApprobateur, EntiteWithAgentWithServiceDto originalEntiteWithAgents) {
-		
+
 		List<EntiteWithAgentWithServiceDto> result = new ArrayList<EntiteWithAgentWithServiceDto>();
-		
-		if(null != listAgentsNotInSameServiceOfApprobateur) {
-			for(AgentWithServiceDto agent : listAgentsNotInSameServiceOfApprobateur) {
-				
-				// on cherche d abord si l agent n est pa en PA inactive 
+
+		if (null != listAgentsNotInSameServiceOfApprobateur) {
+			for (AgentWithServiceDto agent : listAgentsNotInSameServiceOfApprobateur) {
+
+				// on cherche d abord si l agent n est pa en PA inactive
 				// mais qu il faut tout de meme l ajouter a une entite existante
-				
-				
+
 				boolean isTrouve = false;
-				for(EntiteWithAgentWithServiceDto entite : result) {
-					if(entite.getIdEntite().equals(agent.getIdServiceADS())) {
+				for (EntiteWithAgentWithServiceDto entite : result) {
+					if (entite.getIdEntite().equals(agent.getIdServiceADS())) {
 						entite.getListAgentWithServiceDto().add(agent);
 						isTrouve = true;
 						break;
 					}
 				}
-				if(!isTrouve) {
+				if (!isTrouve) {
 					EntiteWithAgentWithServiceDto newEntite = new EntiteWithAgentWithServiceDto();
 					newEntite.setIdEntite(agent.getIdServiceADS());
 					newEntite.setSigle(agent.getSigleService());
@@ -317,17 +318,17 @@ public class AgentService implements IAgentService {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Retourne un arbre d entite avec les agents associés a chaque entite.
-	 * On exclut l agent passe en parametre
+	 * Retourne un arbre d entite avec les agents associés a chaque entite. On
+	 * exclut l agent passe en parametre
 	 */
 	@Override
-	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(
-			Integer idServiceADS, Integer idAgent, List<Integer> listIdsAgentAInclure, Date dateJour) {
+	public EntiteWithAgentWithServiceDto getArbreServicesWithListAgentsByServiceWithoutAgentConnecte(Integer idServiceADS, Integer idAgent,
+			List<Integer> listIdsAgentAInclure, Date dateJour) {
 
 		EntiteDto entite = adsWSConsumer.getEntiteWithChildrenByIdEntite(idServiceADS);
 
@@ -348,7 +349,7 @@ public class AgentService implements IAgentService {
 				agDto.setIdServiceADS(entite.getIdEntite());
 				agDto.setService(entite.getLabel().trim());
 
-				if(!entiteWithAgents.getListAgentWithServiceDto().contains(agDto))
+				if (!entiteWithAgents.getListAgentWithServiceDto().contains(agDto))
 					entiteWithAgents.getListAgentWithServiceDto().add(agDto);
 			}
 		}
@@ -356,22 +357,27 @@ public class AgentService implements IAgentService {
 		// #29570
 		// dans le cas d agents avec PA inactive non retournes par la requete
 		List<AgentWithServiceDto> listAgentDtoAInclure = listAgentsOfServices(null, dateJour, listIdsAgentAInclure);
-		if(null != listAgentDtoAInclure) {
-			for(AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
-				if(null != agentDtoAInclure.getIdServiceADS()
-						&& agentDtoAInclure.getIdServiceADS().equals(entiteWithAgents.getIdEntite())
+		if (null != listAgentDtoAInclure) {
+			for (AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
+				if (null != agentDtoAInclure.getIdServiceADS() && agentDtoAInclure.getIdServiceADS().equals(entiteWithAgents.getIdEntite())
 						&& !entiteWithAgents.getListAgentWithServiceDto().contains(agentDtoAInclure)) {
+
+					// #20666 : on n'ajoute pas l'agent lui-meme
+					if (idAgent != null && idAgent.toString().equals(agentDtoAInclure.getIdAgent().toString())) {
+						continue;
+					}
 					entiteWithAgents.getListAgentWithServiceDto().add(agentDtoAInclure);
 				}
 			}
 		}
 
 		getArbreServicesWithListAgentsByService(entiteWithAgents, idAgent, listAgentDtoAInclure);
-		
+
 		return entiteWithAgents;
 	}
 
-	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite, Integer idAgent, List<AgentWithServiceDto> listAgentDtoAInclure) {
+	private void getArbreServicesWithListAgentsByService(EntiteWithAgentWithServiceDto entite, Integer idAgent,
+			List<AgentWithServiceDto> listAgentDtoAInclure) {
 
 		if (null != entite && null != entite.getEnfants()) {
 			for (EntiteDto enfant : entite.getEnfants()) {
@@ -390,17 +396,17 @@ public class AgentService implements IAgentService {
 						agDto.setIdServiceADS(entite.getIdEntite());
 						agDto.setService(entite.getLabel().trim());
 
-						if(!enfantsWithAgents.getListAgentWithServiceDto().contains(agDto))
+						if (!enfantsWithAgents.getListAgentWithServiceDto().contains(agDto))
 							enfantsWithAgents.getListAgentWithServiceDto().add(agDto);
 					}
 				}
-				
+
 				// #29570
-				// dans le cas d agents avec PA inactive non retournes par la requete
-				if(null != listAgentDtoAInclure) {
-					for(AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
-						if(null != agentDtoAInclure.getIdServiceADS()
-								&& agentDtoAInclure.getIdServiceADS().equals(enfantsWithAgents.getIdEntite())
+				// dans le cas d agents avec PA inactive non retournes par la
+				// requete
+				if (null != listAgentDtoAInclure) {
+					for (AgentWithServiceDto agentDtoAInclure : listAgentDtoAInclure) {
+						if (null != agentDtoAInclure.getIdServiceADS() && agentDtoAInclure.getIdServiceADS().equals(enfantsWithAgents.getIdEntite())
 								&& !enfantsWithAgents.getListAgentWithServiceDto().contains(agentDtoAInclure)) {
 							enfantsWithAgents.getListAgentWithServiceDto().add(agentDtoAInclure);
 						}
@@ -416,7 +422,8 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public EntiteDto getServiceAgent(Integer idAgent, Date dateDonnee) {
-		String hql = "select fp from FichePoste fp, Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+		String hql = "select fp from FichePoste fp, Affectation aff "
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
@@ -440,7 +447,8 @@ public class AgentService implements IAgentService {
 
 	@Override
 	public EntiteDto getDirectionOfAgent(Integer idAgent, Date dateDonnee) {
-		String hql = "select fp from FichePoste fp ,Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
+		String hql = "select fp from FichePoste fp ,Affectation aff "
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and  aff.agent.idAgent =:idAgent and aff.dateDebutAff<=:dateJour "
 				+ "and (aff.dateFinAff is null or aff.dateFinAff >= :dateJour)";
 		Query query = sirhEntityManager.createQuery(hql, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
@@ -482,8 +490,9 @@ public class AgentService implements IAgentService {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
-		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, listIdsAgent);
-		
+		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS,
+				listIdsAgent);
+
 		// optimisation #18391
 		// ce service est appele aussi par le kiosque RH et SHAREPOINT (a
 		// verifier)
@@ -525,9 +534,10 @@ public class AgentService implements IAgentService {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
-		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS, listIdsAgent);
-		
-		if(null != listAffectations) {
+		List<Affectation> listAffectations = agentRepository.getListAgentsWithoutAffectationByServicesAndListAgentsAndDate(idServiceADS,
+				listIdsAgent);
+
+		if (null != listAffectations) {
 			for (Affectation aff : listAffectations) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto(aff.getAgent());
 				if (aff.getFichePoste() != null && aff.getFichePoste().getIdServiceADS() != null) {
@@ -544,15 +554,15 @@ public class AgentService implements IAgentService {
 	public List<AgentWithServiceDto> getListeAgentWithIndemniteForfaitTravailDPM(List<Integer> listIdsAgent) {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
-		
-		List<AgentRecherche> listAgent = agentRepository.getListAgentsEnActiviteByPrimeSurAffectation(Arrays.asList(NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM,
-				NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM), listIdsAgent);
+
+		List<AgentRecherche> listAgent = agentRepository.getListAgentsEnActiviteByPrimeSurAffectation(
+				Arrays.asList(NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM, NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM), listIdsAgent);
 
 		if (null != listAgent) {
 			for (AgentRecherche agent : listAgent) {
 				AgentWithServiceDto agDto = new AgentWithServiceDto(agent);
-				if(!result.contains(agDto)){
-					result.add(agDto);					
+				if (!result.contains(agDto)) {
+					result.add(agDto);
 				}
 			}
 		}
