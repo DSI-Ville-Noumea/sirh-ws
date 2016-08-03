@@ -10,20 +10,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.Spadmn;
-import nc.noumea.mairie.model.bean.sirh.Affectation;
-import nc.noumea.mairie.model.repository.ISpadmnRepository;
-import nc.noumea.mairie.model.repository.ISpcarrRepository;
-import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
-import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
-import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
-
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.repository.ISpadmnRepository;
+import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
+import nc.noumea.mairie.web.dto.InfosAlimAutoCongesAnnuelsDto;
+import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
 @Service
 public class AbsenceService implements IAbsenceService {
@@ -33,9 +32,6 @@ public class AbsenceService implements IAbsenceService {
 
 	@Autowired
 	private ISpadmnRepository spadmnRepository;
-
-	@Autowired
-	private ISpcarrRepository spcarrRepository;
 
 	@Autowired
 	private IAffectationRepository affectationRepository;
