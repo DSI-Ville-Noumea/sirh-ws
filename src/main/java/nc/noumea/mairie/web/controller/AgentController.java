@@ -7,6 +7,22 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import flexjson.JSONDeserializer;
+import flexjson.JSONSerializer;
 import nc.noumea.mairie.model.bean.Sibanq;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.Contact;
@@ -14,7 +30,6 @@ import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.model.bean.sirh.ParentEnfant;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.service.ISibanqService;
-import nc.noumea.mairie.service.ISiguicService;
 import nc.noumea.mairie.service.ISivietService;
 import nc.noumea.mairie.service.ISpadmnService;
 import nc.noumea.mairie.service.ads.IAdsService;
@@ -34,23 +49,6 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.web.dto.ProfilAgentDto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import flexjson.JSONDeserializer;
-import flexjson.JSONSerializer;
-
 @Controller
 @RequestMapping("/agents")
 public class AgentController {
@@ -62,9 +60,6 @@ public class AgentController {
 
 	@Autowired
 	private ISivietService sivietSrv;
-
-	@Autowired
-	private ISiguicService siguicSrv;
 
 	@Autowired
 	private ISibanqService sibanqSrv;
