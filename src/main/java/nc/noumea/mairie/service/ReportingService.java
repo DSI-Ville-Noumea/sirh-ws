@@ -136,7 +136,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
 
-		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "DOCX");
+		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "ODT");
 
 		return readResponseAsByteArray(response, map);
 	}
