@@ -3,9 +3,10 @@ package nc.noumea.mairie.service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import com.itextpdf.text.DocumentException;
+
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
-import com.lowagie.text.DocumentException;
 
 public interface IReportingService {
 
