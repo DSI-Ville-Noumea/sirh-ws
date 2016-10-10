@@ -3,24 +3,24 @@ package nc.noumea.mairie.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 
 public abstract class AbstractReporting extends PdfPageEventHelper {
 
-	protected Font fontNormal8 = FontFactory.getFont("Arial", 8, Font.NORMAL);
-	protected Font fontNormal9 = FontFactory.getFont("Arial", 9, Font.NORMAL);
-	protected Font fontBold8 = FontFactory.getFont("Arial", 8, Font.BOLD);
-	protected Font fontBold9 = FontFactory.getFont("Arial", 9, Font.BOLD);
+	protected Font	fontNormal8	= FontFactory.getFont("Arial", 8, Font.NORMAL);
+	protected Font	fontNormal9	= FontFactory.getFont("Arial", 9, Font.NORMAL);
+	protected Font	fontBold8	= FontFactory.getFont("Arial", 8, Font.BOLD);
+	protected Font	fontBold9	= FontFactory.getFont("Arial", 9, Font.BOLD);
 
 	protected void writeSpacing(Document document, int nbLines) throws DocumentException {
 		Paragraph newLine = new Paragraph(Chunk.NEWLINE);
@@ -63,7 +63,8 @@ public abstract class AbstractReporting extends PdfPageEventHelper {
 		return writeCell(padding, null, value, underline, false, null, Element.ALIGN_MIDDLE);
 	}
 
-	protected PdfPCell writeCell(Integer padding, Integer horizontalAlign, CellVo value, boolean underline, boolean fixedHeight, Float fixedHeightValue, Integer verticalAlign) {
+	protected PdfPCell writeCell(Integer padding, Integer horizontalAlign, CellVo value, boolean underline, boolean fixedHeight,
+			Float fixedHeightValue, Integer verticalAlign) {
 
 		PdfPCell pdfWordCell = new PdfPCell();
 		pdfWordCell.setPadding(padding);
@@ -126,7 +127,8 @@ public abstract class AbstractReporting extends PdfPageEventHelper {
 
 		// 1er ligne : entete
 		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
-		listValuesLigne1.add(new CellVo(new String("Examiné en commission administrative paritaire le :"), true, 1, null, Element.ALIGN_LEFT, false, fontNormal8));
+		listValuesLigne1.add(
+				new CellVo(new String("Examiné en commission administrative paritaire le :"), true, 1, null, Element.ALIGN_LEFT, false, fontNormal8));
 		listValuesLigne1.add(new CellVo(new String("Le président :"), true, 1, null, Element.ALIGN_LEFT, false, fontNormal8));
 
 		writeLine(table, 3, listValuesLigne1, false);
