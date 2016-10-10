@@ -1,6 +1,5 @@
 package nc.noumea.mairie.service;
 
-import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,30 +12,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
-import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
-import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
-import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Image;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
+import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
+import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
+import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
+import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 @Service
 public class ReportingService extends AbstractReporting implements IReportingService {
@@ -327,7 +327,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesLigne1.add(new CellVo("", true, 3, null, Element.ALIGN_LEFT, true, fontBold8));
 		listValuesLigne1.add(new CellVo("Date prévisionelle\nd'avancement\nmoyen", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne1.add(new CellVo("Historique\n(à remplir par\nl'employeur)", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Propositions de l'employeur", true, 4, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne1.add(new CellVo("Propositions de l'employeur", true, 4, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne1.add(new CellVo("Avis de la CAP et observations", true, 3, null, Element.ALIGN_CENTER, true, fontBold8));
 		writeLine(table, 3, listValuesLigne1, false);
 
@@ -338,10 +338,10 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesLigne2.add(new CellVo("Grade", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Date du dernier\navancement à la\ndurée minimale", true, 1, null, Element.ALIGN_CENTER, false, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmin", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmoy", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmax", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Classement", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Durée\nmin", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Durée\nmoy", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Durée\nmax", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Classement", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Favorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Défavorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
@@ -363,7 +363,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
 		listValuesLigne1.add(new CellVo("", true, 3, null, Element.ALIGN_LEFT, true, fontBold8));
 		listValuesLigne1.add(new CellVo("Date prévisionelle\nd'avancement\nmoyen", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Propositions de l'employeur", true, 2, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne1.add(new CellVo("Propositions de l'employeur", true, 2, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne1.add(new CellVo("Avis de la CAP et observations", true, 3, null, Element.ALIGN_CENTER, true, fontBold8));
 		writeLine(table, 3, listValuesLigne1, false);
 
@@ -373,8 +373,8 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		listValuesLigne2.add(new CellVo("Prénom", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Grade", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Favorable", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Défavorable", true, 1, new Color(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Favorable", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("Défavorable", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Favorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("Défavorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
 		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
@@ -479,7 +479,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		table.setWidthPercentage(100f);
 
 		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
-		listValuesLigne1.add(new CellVo(titre, true, 3, new Color(255, 255, 174), Element.ALIGN_CENTER, false, fontBold8));
+		listValuesLigne1.add(new CellVo(titre, true, 3, new BaseColor(255, 255, 174), Element.ALIGN_CENTER, false, fontBold8));
 		writeLine(table, 5, Element.ALIGN_CENTER, listValuesLigne1, false);
 
 		document.add(table);
