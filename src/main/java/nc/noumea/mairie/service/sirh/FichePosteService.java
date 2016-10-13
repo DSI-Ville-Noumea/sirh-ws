@@ -72,35 +72,35 @@ import org.springframework.transaction.annotation.Transactional;
 public class FichePosteService implements IFichePosteService {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	transient EntityManager sirhEntityManager;
+	transient EntityManager								sirhEntityManager;
 
 	@Autowired
-	private IFichePosteRepository fichePosteDao;
+	private IFichePosteRepository						fichePosteDao;
 
 	@Autowired
-	private IUtilisateurService utilisateurSrv;
+	private IUtilisateurService							utilisateurSrv;
 
 	@Autowired
-	private ISirhPtgWSConsumer sirhPtgWSConsumer;
+	private ISirhPtgWSConsumer							sirhPtgWSConsumer;
 
 	@Autowired
-	private IAgentService agentSrv;
+	private IAgentService								agentSrv;
 
 	@Autowired
-	private IAffectationService affSrv;
+	private IAffectationService							affSrv;
 
 	@Autowired
-	private IMairieRepository mairieRepository;
+	private IMairieRepository							mairieRepository;
 
 	@Autowired
-	private IADSWSConsumer adsWSConsumer;
+	private IADSWSConsumer								adsWSConsumer;
 
 	@Autowired
-	private IAdsService adsService;
+	private IAdsService									adsService;
 
-	private Logger logger = LoggerFactory.getLogger(FichePosteService.class);
-	protected Hashtable<Integer, FichePosteTreeNode> hFpTree;
-	protected TreeMap<Integer, FichePosteTreeNode> hFpTreeWithFPAffecteesEtNonAffectees;
+	private Logger										logger	= LoggerFactory.getLogger(FichePosteService.class);
+	protected Hashtable<Integer, FichePosteTreeNode>	hFpTree;
+	protected TreeMap<Integer, FichePosteTreeNode>		hFpTreeWithFPAffecteesEtNonAffectees;
 
 	@Override
 	public FichePoste getFichePostePrimaireAgentAffectationEnCours(Integer idAgent, Date dateJour, boolean withCompetenceAndActivities) {
@@ -109,8 +109,8 @@ public class FichePosteService implements IFichePosteService {
 		if (withCompetenceAndActivities) {
 			requete += "LEFT JOIN FETCH fp.competencesFDP LEFT JOIN FETCH fp.activites";
 		}
-		requete += ", Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-				+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
+		requete += ", Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
+				+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and " + "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)";
 		FichePoste res = null;
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(requete, FichePoste.class);
 		query.setParameter("idAgent", idAgent);
@@ -137,9 +137,11 @@ public class FichePosteService implements IFichePosteService {
 	@Override
 	public FichePoste getFichePosteSecondaireAgentAffectationEnCours(Integer idAgent, Date dateJour) {
 		FichePoste res = null;
-		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
-				+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
-				+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", FichePoste.class);
+		TypedQuery<FichePoste> query = sirhEntityManager
+				.createQuery("select fp from FichePoste fp JOIN FETCH fp.competencesFDP JOIN FETCH fp.activites, Affectation aff "
+						+ "where aff.fichePosteSecondaire.idFichePoste = fp.idFichePoste and "
+						+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+						+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", FichePoste.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<FichePoste> lfp = query.getResultList();
@@ -154,8 +156,9 @@ public class FichePosteService implements IFichePosteService {
 	public String getTitrePosteAgent(Integer idAgent, Date dateJour) {
 
 		String res = null;
-		TypedQuery<String> query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff " + "where aff.fichePoste.idFichePoste = fp.idFichePoste and "
-				+ "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and " + "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", String.class);
+		TypedQuery<String> query = sirhEntityManager.createQuery("select fp.titrePoste.libTitrePoste from FichePoste fp, Affectation aff "
+				+ "where aff.fichePoste.idFichePoste = fp.idFichePoste and " + "aff.agent.idAgent = :idAgent and aff.dateDebutAff<=:dateJour and "
+				+ "(aff.dateFinAff is null or aff.dateFinAff>=:dateJour)", String.class);
 		query.setParameter("idAgent", idAgent);
 		query.setParameter("dateJour", dateJour);
 		List<String> lfp = query.getResultList();
@@ -193,7 +196,9 @@ public class FichePosteService implements IFichePosteService {
 		List<Integer> fpIds = q.getResultList();
 
 		if (fpIds.size() != 1) {
-			logger.warn("Une erreur s'est produite lors de la recherche d'une affectation pour l'agent {}. Le nombre de résultat est {} affectations au lieu de 1.", idAgent, fpIds.size());
+			logger.warn(
+					"Une erreur s'est produite lors de la recherche d'une affectation pour l'agent {}. Le nombre de résultat est {} affectations au lieu de 1.",
+					idAgent, fpIds.size());
 			return 0;
 		}
 
@@ -300,7 +305,8 @@ public class FichePosteService implements IFichePosteService {
 			return agents;
 
 		if (fichePosteTreeNode.getFichePosteParent().getIdAgent() != null) {
-			agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
+			if (!agents.contains(fichePosteTreeNode.getFichePosteParent().getIdAgent()))
+				agents.add(fichePosteTreeNode.getFichePosteParent().getIdAgent());
 		}
 
 		listShdAgents(fichePosteTreeNode.getFichePosteParent(), agents, maxDepth - 1);
@@ -314,9 +320,8 @@ public class FichePosteService implements IFichePosteService {
 
 		// on recherche la liste des fiches de poste appartement a un service
 		List<FichePoste> listFichesPoste = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
-				Arrays.asList(idEntite),
-				Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
-						EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+				Arrays.asList(idEntite), Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut(),
+						EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut()));
 
 		if (null == listFichesPoste || listFichesPoste.isEmpty())
 			return null;
@@ -335,8 +340,8 @@ public class FichePosteService implements IFichePosteService {
 		List<FichePosteTreeNodeDto> result = new ArrayList<FichePosteTreeNodeDto>();
 
 		for (Integer idFichePosteParent : listTreeParent) {
-			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent), listEntiteDtoForOptimize,
-					withFichesPosteNonReglementaires, listFichesPosteByFichePosteParent);
+			FichePosteTreeNodeDto treeNode = constructFichePosteTreeNodeDto(getFichePosteTreeAffecteesEtNonAffectees().get(idFichePosteParent),
+					listEntiteDtoForOptimize, withFichesPosteNonReglementaires, listFichesPosteByFichePosteParent);
 
 			if (null != treeNode)
 				result.add(treeNode);
@@ -350,7 +355,8 @@ public class FichePosteService implements IFichePosteService {
 		Hashtable<Integer, FichePosteTreeNode> hTree = new Hashtable<Integer, FichePosteTreeNode>();
 
 		for (FichePoste node : listFichesPoste) {
-			hTree.put(node.getIdFichePoste(), new FichePosteTreeNode(node.getIdFichePoste(), null == node.getSuperieurHierarchique() ? null : node.getSuperieurHierarchique().getIdFichePoste(), null));
+			hTree.put(node.getIdFichePoste(), new FichePosteTreeNode(node.getIdFichePoste(),
+					null == node.getSuperieurHierarchique() ? null : node.getSuperieurHierarchique().getIdFichePoste(), null));
 		}
 
 		for (FichePoste node : listFichesPoste) {
@@ -414,21 +420,24 @@ public class FichePosteService implements IFichePosteService {
 		return result;
 	}
 
-	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto, boolean withFichesPosteNonReglemente,
-			List<FichePoste> listFichesPosteByFichePosteParent) {
+	private FichePosteTreeNodeDto constructFichePosteTreeNodeDto(FichePosteTreeNode root, List<EntiteDto> listEntiteDto,
+			boolean withFichesPosteNonReglemente, List<FichePoste> listFichesPosteByFichePosteParent) {
 
 		FichePosteTreeNodeDto dto = null;
 
 		if (null != root) {
 			FichePoste fichePoste = getFichePosteInListFichesPoste(listFichesPosteByFichePosteParent, root.getIdFichePoste());
 
-			if (null != fichePoste && (withFichesPosteNonReglemente || null == fichePoste.getReglementaire() || !fichePoste.getReglementaire().getCdThor().equals(0))) {
+			if (null != fichePoste && (withFichesPosteNonReglemente || null == fichePoste.getReglementaire()
+					|| !fichePoste.getReglementaire().getCdThor().equals(0))) {
 				EntiteDto entite = adsService.getEntiteByIdEntiteOptimise(fichePoste.getIdServiceADS(), listEntiteDto);
-				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste, entite == null ? "" : entite.getSigle(), entite == null ? "" : entite.getLabel());
+				dto = new FichePosteTreeNodeDto(root.getIdFichePoste(), null, root.getIdAgent(), fichePoste, entite == null ? "" : entite.getSigle(),
+						entite == null ? "" : entite.getLabel());
 
 				if (null != root.getFichePostesEnfant()) {
 					for (FichePosteTreeNode enfant : root.getFichePostesEnfant()) {
-						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente, listFichesPosteByFichePosteParent);
+						FichePosteTreeNodeDto dtoEnfant = constructFichePosteTreeNodeDto(enfant, listEntiteDto, withFichesPosteNonReglemente,
+								listFichesPosteByFichePosteParent);
 						if (null != dtoEnfant)
 							dto.getFichePostesEnfant().add(dtoEnfant);
 					}
@@ -497,7 +506,8 @@ public class FichePosteService implements IFichePosteService {
 
 		TreeMap<Integer, FichePosteTreeNode> hTreeTemp = fichePosteDao.getAllFichePoste(new Date());
 
-		if (null != hFpTreeWithFPAffecteesEtNonAffectees && hTreeTemp.size() == hFpTreeWithFPAffecteesEtNonAffectees.size() && hTreeTemp.lastKey() == hFpTreeWithFPAffecteesEtNonAffectees.lastKey())
+		if (null != hFpTreeWithFPAffecteesEtNonAffectees && hTreeTemp.size() == hFpTreeWithFPAffecteesEtNonAffectees.size()
+				&& hTreeTemp.lastKey() == hFpTreeWithFPAffecteesEtNonAffectees.lastKey())
 			return hFpTreeWithFPAffecteesEtNonAffectees;
 
 		synchronized (this) {
@@ -606,7 +616,8 @@ public class FichePosteService implements IFichePosteService {
 	public FichePoste getFichePosteById(Integer idFichePoste) {
 
 		FichePoste res = null;
-		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp where fp.idFichePoste=:idFichePoste", FichePoste.class);
+		TypedQuery<FichePoste> query = sirhEntityManager.createQuery("select fp from FichePoste fp where fp.idFichePoste=:idFichePoste",
+				FichePoste.class);
 		query.setParameter("idFichePoste", idFichePoste);
 
 		List<FichePoste> lfp = query.getResultList();
@@ -655,7 +666,8 @@ public class FichePosteService implements IFichePosteService {
 	}
 
 	@Override
-	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP, boolean withEntiteChildren) {
+	public List<FichePosteDto> getListFichePosteByIdServiceADSAndStatutFDP(Integer idEntite, List<Integer> listStatutFDP,
+			boolean withEntiteChildren) {
 		List<FichePosteDto> result = new ArrayList<FichePosteDto>();
 		List<FichePoste> listeFDP = new ArrayList<FichePoste>();
 
@@ -674,8 +686,8 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		for (FichePoste fp : listeFDP) {
-			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()), adsService.getLibelleEntityInEntiteDtoTreeByIdEntite(
-					entiteRoot, fp.getIdServiceADS()));
+			FichePosteDto dto = new FichePosteDto(fp, adsService.getSigleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()),
+					adsService.getLibelleEntityInEntiteDtoTreeByIdEntite(entiteRoot, fp.getIdServiceADS()));
 			result.add(dto);
 		}
 		return result;
@@ -722,9 +734,11 @@ public class FichePosteService implements IFichePosteService {
 		if (listeFDP.size() == 0) {
 			result.getInfos().add("Aucune FDP ne va être supprimée sur l'entité " + sigleEntite + ".");
 		} else if (listeFDP.size() == 1) {
-			result.getInfos().add("1 FDP va être supprimée sur l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+			result.getInfos().add(
+					"1 FDP va être supprimée sur l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP vont être supprimées sur l'entité " + sigleEntite + ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
+			result.getInfos().add(listeFDP.size() + " FDP vont être supprimées sur l'entité " + sigleEntite
+					+ ". Merci d'aller regarder le resultat de cette suppression dans SIRH.");
 		}
 		return result;
 	}
@@ -763,7 +777,8 @@ public class FichePosteService implements IFichePosteService {
 		if (null != result.getListeInfoFDP()) {
 			for (GroupeInfoFichePosteDto resFDP : result.getListeInfoFDP()) {
 
-				List<InfoFichePosteDto> listInfoFichePosteDto = fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(listeIdServiceAds, resFDP.getTitreFDP(), date);
+				List<InfoFichePosteDto> listInfoFichePosteDto = fichePosteDao.getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(listeIdServiceAds,
+						resFDP.getTitreFDP(), date);
 
 				if (null != listInfoFichePosteDto)
 					resFDP.setListInfoFichePosteDto(listInfoFichePosteDto);
@@ -792,9 +807,11 @@ public class FichePosteService implements IFichePosteService {
 		if (listeFDP.size() == 0) {
 			result.getInfos().add("Aucune FDP ne va être dupliquée sur l'entité " + entite.getSigle() + ".");
 		} else if (listeFDP.size() == 1) {
-			result.getInfos().add("1 FDP va être dupliquée sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette duplication dans SIRH.");
+			result.getInfos().add("1 FDP va être dupliquée sur l'entité " + entite.getSigle()
+					+ ". Merci d'aller regarder le resultat de cette duplication dans SIRH.");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP vont être dupliquées sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette duplication dans SIRH.");
+			result.getInfos().add(listeFDP.size() + " FDP vont être dupliquées sur l'entité " + entite.getSigle()
+					+ ". Merci d'aller regarder le resultat de cette duplication dans SIRH.");
 		}
 		return result;
 	}
@@ -858,7 +875,8 @@ public class FichePosteService implements IFichePosteService {
 		fichePosteDao.flush();
 
 		// aussi de SPPOST
-		Sppost posteAS400 = fichePosteDao.chercherSppost(new Integer(histo.getNumFp().substring(0, 4)), new Integer(fichePoste.getNumFP().substring(5, histo.getNumFp().length())));
+		Sppost posteAS400 = fichePosteDao.chercherSppost(new Integer(histo.getNumFp().substring(0, 4)),
+				new Integer(fichePoste.getNumFP().substring(5, histo.getNumFp().length())));
 		if (posteAS400 != null) {
 			fichePosteDao.removeEntity(posteAS400);
 		}
@@ -885,8 +903,8 @@ public class FichePosteService implements IFichePosteService {
 		// on verifie que la FDP est bien "validée"
 		if (!(fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.VALIDEE.getId().toString())
 				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.EN_CREATION.getId().toString())
-				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.TRANSITOIRE.getId().toString()) || fichePoste.getStatutFP().getIdStatutFp().toString()
-				.equals(EnumStatutFichePoste.GELEE.getId().toString()))) {
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.TRANSITOIRE.getId().toString())
+				|| fichePoste.getStatutFP().getIdStatutFp().toString().equals(EnumStatutFichePoste.GELEE.getId().toString()))) {
 			result.getErrors().add("La FDP " + fichePoste.getNumFP() + " n'est pas en statut 'validée','en création','transitoire' ou 'gelée'.");
 			return result;
 		}
@@ -926,7 +944,8 @@ public class FichePosteService implements IFichePosteService {
 		return result;
 	}
 
-	private FichePoste dupliquerFDP(ReturnMessageDto result, FichePoste fichePoste, EntiteDto entite, String login) throws CloneNotSupportedException {
+	private FichePoste dupliquerFDP(ReturnMessageDto result, FichePoste fichePoste, EntiteDto entite, String login)
+			throws CloneNotSupportedException {
 
 		FichePoste fichePDupliquee = cloneFDP(fichePoste);
 		fichePDupliquee.setIdFichePoste(null);
@@ -1024,7 +1043,8 @@ public class FichePosteService implements IFichePosteService {
 
 		}
 
-		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
+		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao
+				.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
 		for (CompetenceFP lien : competencesFPExistant) {
 			CompetenceFPPK compFpPk = new CompetenceFPPK();
 			compFpPk.setIdCompetence(lien.getCompetenceFPPK().getIdCompetence());
@@ -1037,7 +1057,8 @@ public class FichePosteService implements IFichePosteService {
 			fichePDupliquee.getCompetencesFDP().add(compFp);
 		}
 
-		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
+		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao
+				.listerAvantageNatureFPAvecFP(fichePoste.getIdFichePoste());
 		for (AvantageNatureFP lien : avantagesFPExistant) {
 			AvantageNature avNat = fichePosteDao.chercherAvantageNature(lien.getAvantageNaturePK().getIdAvantage());
 			if (avNat != null)
@@ -1051,7 +1072,8 @@ public class FichePosteService implements IFichePosteService {
 				fichePDupliquee.getDelegations().add(del);
 		}
 
-		ArrayList<PrimePointageFP> primesPointagesFPExistant = (ArrayList<PrimePointageFP>) fichePosteDao.listerPrimePointageFP(fichePoste.getIdFichePoste());
+		ArrayList<PrimePointageFP> primesPointagesFPExistant = (ArrayList<PrimePointageFP>) fichePosteDao
+				.listerPrimePointageFP(fichePoste.getIdFichePoste());
 		for (PrimePointageFP lien : primesPointagesFPExistant) {
 			PrimePointageFPPK fk = new PrimePointageFPPK();
 			fk.setNumRubrique(lien.getPrimePointageFPPK().getNumRubrique());
@@ -1201,9 +1223,11 @@ public class FichePosteService implements IFichePosteService {
 		if (listeFDP.size() == 0) {
 			result.getInfos().add("Aucune FDP ne va être activée sur l'entité " + entite.getSigle() + ".");
 		} else if (listeFDP.size() == 1) {
-			result.getInfos().add("1 FDP va être activée sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
+			result.getInfos().add("1 FDP va être activée sur l'entité " + entite.getSigle()
+					+ ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP vont être activées sur l'entité " + entite.getSigle() + ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
+			result.getInfos().add(listeFDP.size() + " FDP vont être activées sur l'entité " + entite.getSigle()
+					+ ". Merci d'aller regarder le resultat de cette activation dans SIRH.");
 		}
 		return result;
 	}
@@ -1237,8 +1261,7 @@ public class FichePosteService implements IFichePosteService {
 		}
 		// #31427
 		// on verifie que l entite a bien un CODE SERVI (AS400)
-		if(null == entite.getCodeServi()
-				 || "".equals(entite.getCodeServi().trim())) {
+		if (null == entite.getCodeServi() || "".equals(entite.getCodeServi().trim())) {
 			result.getErrors().add("L'entite id " + fichePoste.getIdServiceADS() + " n'a pas de CODE SERVI (AS400).");
 			return result;
 		}
@@ -1346,11 +1369,13 @@ public class FichePosteService implements IFichePosteService {
 		// il faut verifier le hierachique et le remplacé ne sont pas la FDP
 		// elle
 		// meme
-		if (fichePoste.getSuperieurHierarchique() != null && fichePoste.getSuperieurHierarchique().getIdFichePoste().toString().equals(fichePoste.getIdFichePoste().toString())) {
+		if (fichePoste.getSuperieurHierarchique() != null
+				&& fichePoste.getSuperieurHierarchique().getIdFichePoste().toString().equals(fichePoste.getIdFichePoste().toString())) {
 			result.getErrors().add("Une FDP ne peut être supérieur hiérarchique d'elle-même.");
 			return result;
 		}
-		if (fichePoste.getRemplace() != null && fichePoste.getRemplace().getIdFichePoste().toString().equals(fichePoste.getIdFichePoste().toString())) {
+		if (fichePoste.getRemplace() != null
+				&& fichePoste.getRemplace().getIdFichePoste().toString().equals(fichePoste.getIdFichePoste().toString())) {
 			result.getErrors().add("Une FDP ne peut être en remplacement d'elle-même.");
 			return result;
 		}
@@ -1386,11 +1411,14 @@ public class FichePosteService implements IFichePosteService {
 		}
 		// si nature credit = PERMANENT ou REMPLACEMENT ou TEMPORAIRE ou
 		// SURNUMERAIRE alors budgete >0 et <=100
-		if (natureCredit.getLibNatureCredit().toUpperCase().equals("PERMANENT") || natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT")
-				|| natureCredit.getLibNatureCredit().toUpperCase().equals("TEMPORAIRE") || natureCredit.getLibNatureCredit().toUpperCase().equals("SURNUMERAIRE")) {
+		if (natureCredit.getLibNatureCredit().toUpperCase().equals("PERMANENT")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("TEMPORAIRE")
+				|| natureCredit.getLibNatureCredit().toUpperCase().equals("SURNUMERAIRE")) {
 			if (budgete.getLibHor().trim().toLowerCase().equals("non")) {
 				// "ERR1112",
-				// "Si la nature des crédits est @, alors budgété ne doit pas être @."
+				// "Si la nature des crédits est @, alors budgété ne doit pas
+				// être @."
 				result.getErrors().add("Si la nature des crédits est 'PERMANENT', alors budgété doit être 'Non'.");
 				return result;
 			}
@@ -1408,7 +1436,8 @@ public class FichePosteService implements IFichePosteService {
 		if (fichePoste.getRemplace() != null) {
 			if (!natureCredit.getLibNatureCredit().toUpperCase().equals("REMPLACEMENT")) {
 				// "ERR1114",
-				// "Fiche de poste remplacee mais budget different de remplacement."
+				// "Fiche de poste remplacee mais budget different de
+				// remplacement."
 				result.getErrors().add("Fiche de poste remplacee mais budget different de remplacement.");
 				return result;
 			}
@@ -1418,7 +1447,8 @@ public class FichePosteService implements IFichePosteService {
 		// et inversement
 		if (natureCredit.getLibNatureCredit().toUpperCase().equals("PERMANENT") && reglementaire.getLibHor().trim().toLowerCase().equals("non")) {
 			// "ERR1115",
-			// "Le poste n'est pas reglementaire, le budget ne peut pas être permanent."
+			// "Le poste n'est pas reglementaire, le budget ne peut pas être
+			// permanent."
 			result.getErrors().add("Le poste n'est pas reglementaire, le budget ne peut pas être permanent.");
 			return result;
 
@@ -1444,7 +1474,8 @@ public class FichePosteService implements IFichePosteService {
 			fichePoste.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		}
 		// bug #31427
-		// on met a jour le code SERVI utile a la paie lors de l affectation d un agent a une fiche de poste
+		// on met a jour le code SERVI utile a la paie lors de l affectation d
+		// un agent a une fiche de poste
 		fichePoste.setIdServi(entite.getCodeServi());
 		// on met à jour le statut en "validée"
 		StatutFichePoste statutFP = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.VALIDEE.getId());
@@ -1486,10 +1517,9 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP validées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(
-				Arrays.asList(idEntiteSource),
-				Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(), EnumStatutFichePoste.TRANSITOIRE.getStatut(),
-						EnumStatutFichePoste.EN_CREATION.getStatut()));
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntiteSource),
+				Arrays.asList(EnumStatutFichePoste.VALIDEE.getStatut(), EnumStatutFichePoste.GELEE.getStatut(),
+						EnumStatutFichePoste.TRANSITOIRE.getStatut(), EnumStatutFichePoste.EN_CREATION.getStatut()));
 
 		if (null == listeFDP || listeFDP.isEmpty()) {
 			result.getInfos().add("Aucune FDP ne sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
@@ -1504,13 +1534,15 @@ public class FichePosteService implements IFichePosteService {
 			fp.setIdServi(servAS400 == null || servAS400.getCodeServi() == null ? null : servAS400.getCodeServi());
 
 			// #18977 : on met à jour sppost et spmtsr
-			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+			Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)),
+					new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
 			sppost.setPoserv(fp.getIdServi() == null ? "" : fp.getIdServi());
 
 			List<Affectation> listeAffFP = affSrv.getListAffectationActiveByIdFichePoste(fp.getIdFichePoste());
 
 			for (Affectation aff : listeAffFP) {
-				Spmtsr spmtsr = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(aff.getAgent().getNomatr(), new Integer(sdf.format(aff.getDateDebutAff())));
+				Spmtsr spmtsr = mairieRepository.chercherSpmtsrAvecAgentEtDateDebut(aff.getAgent().getNomatr(),
+						new Integer(sdf.format(aff.getDateDebutAff())));
 				spmtsr.getId().setServi(fp.getIdServi());
 				// remettre a jour des donnees erronees eventuellement
 				sppost.setPomatr(aff.getAgent().getNomatr());
@@ -1524,19 +1556,21 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		
+
 		if (listeFDP.size() == 1) {
-			result.getInfos().add(listeFDP.size() + " FDP est déplacée de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+			result.getInfos()
+					.add(listeFDP.size() + " FDP est déplacée de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		} else {
-			result.getInfos().add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
+			result.getInfos()
+					.add(listeFDP.size() + " FDP sont déplacées de l'entité " + source.getSigle() + " vers l'entité " + cible.getSigle() + ".");
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Rendre inactives toutes les fiches de poste 
-	 * a condition qu elles soient toutes non affectées (dans le futur egalement)
+	 * Rendre inactives toutes les fiches de poste a condition qu elles soient
+	 * toutes non affectées (dans le futur egalement)
 	 */
 	@Override
 	@Transactional(value = "sirhTransactionManager")
@@ -1559,40 +1593,39 @@ public class FichePosteService implements IFichePosteService {
 		// on cherche toutes les FDP affectées
 		result = checkFichesPosteAffecteesOnEntiteAndTheirsChildren(entite, result);
 
-		if (null != result.getErrors() 
-				&& !result.getErrors().isEmpty()) {
+		if (null != result.getErrors() && !result.getErrors().isEmpty()) {
 			return result;
 		}
-		
-		// on check que toutes les fiches de poste sont inactives sur les entités enfant
+
+		// on check que toutes les fiches de poste sont inactives sur les
+		// entités enfant
 		checkFichesPosteValideGeleeTransitoireInEntiteChildren(entite, result);
 
-		if (null != result.getErrors() 
-				&& !result.getErrors().isEmpty()) {
+		if (null != result.getErrors() && !result.getErrors().isEmpty()) {
 			return result;
 		}
-		
+
 		// on cherche toutes les FDP NON affectées
 		List<Integer> listeIdFDPNonAffectées = fichePosteDao.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(idEntite);
-		
-		if (null == listeIdFDPNonAffectées 
-				|| listeIdFDPNonAffectées.isEmpty()) {
+
+		if (null == listeIdFDPNonAffectées || listeIdFDPNonAffectées.isEmpty()) {
 			result.getInfos().add("Aucune FDP non affectées sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
 
 		for (Integer idfp : listeIdFDPNonAffectées) {
 			FichePoste fp = fichePosteDao.chercherFichePoste(idfp);
-			
-			if(!EnumStatutFichePoste.INACTIVE.getId().equals(fp.getStatutFP().getIdStatutFp())) {
+
+			if (!EnumStatutFichePoste.INACTIVE.getId().equals(fp.getStatutFP().getIdStatutFp())) {
 				StatutFichePoste statutInactif = fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId());
 				fp.setStatutFP(statutInactif);
-	
+
 				// #18977 : on met à jour sppost
-				Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)), new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+				Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)),
+						new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
 				sppost.setCodact("I");
 				fichePosteDao.persisEntity(sppost);
-	
+
 				HistoFichePoste histo = new HistoFichePoste(fp);
 				histo.setDateHisto(new Date());
 				histo.setUserHisto(user.getsAMAccountName());
@@ -1600,70 +1633,69 @@ public class FichePosteService implements IFichePosteService {
 				fichePosteDao.persisEntity(histo);
 			}
 		}
-		
+
 		if (listeIdFDPNonAffectées.size() == 1) {
 			result.getInfos().add(listeIdFDPNonAffectées.size() + " FDP non affectée sur l'entité " + entite.getSigle() + " est passée en inactive.");
 		} else {
-			result.getInfos().add(listeIdFDPNonAffectées.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " sont passées en inactives.");
+			result.getInfos()
+					.add(listeIdFDPNonAffectées.size() + " FDP non affectées sur l'entité " + entite.getSigle() + " sont passées en inactives.");
 		}
-		
+
 		return result;
 	}
-	
+
 	private ReturnMessageDto checkFichesPosteAffecteesOnEntiteAndTheirsChildren(EntiteDto entite, ReturnMessageDto result) {
-		
+
 		// on cherche toutes les FDP affectées
 		List<Integer> listeIdFDPAffectees = fichePosteDao.getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(entite.getIdEntite());
 
-		if (null != listeIdFDPAffectees 
-				&& !listeIdFDPAffectees.isEmpty()) {
+		if (null != listeIdFDPAffectees && !listeIdFDPAffectees.isEmpty()) {
 			result.getErrors().add("Il reste des FDP affectées sur l'entité " + entite.getSigle() + ".");
 			return result;
 		}
-		
-		if(null != entite.getEnfants()
-				&& !entite.getEnfants().isEmpty()) {
-			for(EntiteDto enfant : entite.getEnfants()) {
+
+		if (null != entite.getEnfants() && !entite.getEnfants().isEmpty()) {
+			for (EntiteDto enfant : entite.getEnfants()) {
 				result = checkFichesPosteAffecteesOnEntiteAndTheirsChildren(enfant, result);
-				
-				if(!result.getErrors().isEmpty()) {
+
+				if (!result.getErrors().isEmpty()) {
 					return result;
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	private ReturnMessageDto checkFichesPosteValideGeleeTransitoireInEntiteChildren(EntiteDto entite, ReturnMessageDto result) {
-		
-		if(null != entite.getEnfants()
-				&& !entite.getEnfants().isEmpty()) {
-			for(EntiteDto enfant : entite.getEnfants()) {
-				
-				List<FichePoste> listFP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(enfant.getIdEntite()), 
-						Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId()));
-				
-				if(null != listFP
-					&& !listFP.isEmpty()) {
-					result.getErrors().add("Il y a des fiches de poste en statut En création, Validée, Gelée ou Transitoire sur l'entité enfant " + enfant.getSigle());
+
+		if (null != entite.getEnfants() && !entite.getEnfants().isEmpty()) {
+			for (EntiteDto enfant : entite.getEnfants()) {
+
+				List<FichePoste> listFP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(enfant.getIdEntite()),
+						Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(),
+								EnumStatutFichePoste.VALIDEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId()));
+
+				if (null != listFP && !listFP.isEmpty()) {
+					result.getErrors().add("Il y a des fiches de poste en statut En création, Validée, Gelée ou Transitoire sur l'entité enfant "
+							+ enfant.getSigle());
 					return result;
 				}
-				
+
 				result = checkFichesPosteValideGeleeTransitoireInEntiteChildren(enfant, result);
-				
-				if(!result.getErrors().isEmpty()) {
+
+				if (!result.getErrors().isEmpty()) {
 					return result;
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * Rendre transitoire toutes les fiches de poste En Creation, Gelee ET Valide
-	 * affectees ou non
+	 * Rendre transitoire toutes les fiches de poste En Creation, Gelee ET
+	 * Valide affectees ou non
 	 */
 	@Override
 	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent) {
@@ -1683,7 +1715,7 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		// on cherche toutes les FDP affectées
-		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite), 
+		List<FichePoste> listeFDP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(Arrays.asList(idEntite),
 				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.VALIDEE.getId()));
 
 		if (null == listeFDP || listeFDP.isEmpty()) {
@@ -1701,13 +1733,13 @@ public class FichePosteService implements IFichePosteService {
 			histo.setTypeHisto(EnumTypeHisto.MODIFICATION.getValue());
 			fichePosteDao.persisEntity(histo);
 		}
-		
+
 		if (listeFDP.size() == 1) {
 			result.getInfos().add(listeFDP.size() + " FDP affectée sur l'entité " + entite.getSigle() + " est passée en transitoire.");
 		} else {
 			result.getInfos().add(listeFDP.size() + " FDP affectées sur l'entité " + entite.getSigle() + " sont passées en transitoire.");
 		}
-		
+
 		return result;
 	}
 }
