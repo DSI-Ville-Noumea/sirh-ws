@@ -5,8 +5,10 @@ import java.net.MalformedURLException;
 
 import com.itextpdf.text.DocumentException;
 
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.bean.sirh.VisiteMedicale;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
-
 
 public interface IReportingService {
 
@@ -21,4 +23,6 @@ public interface IReportingService {
 	byte[] getContratSIRHReportAsByteArray(Integer idAgent, Integer idContrat) throws Exception;
 
 	byte[] getTableauAvancementPDF(CommissionAvancementDto dto) throws DocumentException, MalformedURLException, IOException;
+
+	byte[] getCertificatAptitudePDF(VisiteMedicale vm, EntiteDto direction, EntiteDto service, TitrePoste titreFichePoste) throws DocumentException;
 }

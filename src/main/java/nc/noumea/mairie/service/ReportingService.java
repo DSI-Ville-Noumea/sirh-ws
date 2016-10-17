@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,12 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.Medecin;
+import nc.noumea.mairie.model.bean.sirh.Recommandation;
+import nc.noumea.mairie.model.bean.sirh.TitrePoste;
+import nc.noumea.mairie.model.bean.sirh.VisiteMedicale;
+import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
@@ -532,5 +539,127 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 		// genere bas de page
 		genereBasPage(document, dto.getChangementClasses());
+	}
+
+	@Override
+	public byte[] getCertificatAptitudePDF(VisiteMedicale vm, EntiteDto direction, EntiteDto service, TitrePoste titreFichePoste)
+			throws DocumentException {
+		Document document = new Document(PageSize.A4);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PdfWriter.getInstance(document, baos);
+
+		// on genere les metadata
+		addMetaData(document, "Certificat d'aptitude", "SIRH");
+
+		// on ouvre le document
+		document.open();
+
+		if (null != vm) {
+
+			// on concat les donnnées
+			String poste = (direction == null ? "" : direction.getSigle().trim() + " / ") + (service == null ? "" : service.getSigle().trim() + " / ")
+					+ (titreFichePoste == null ? "" : titreFichePoste.getLibTitrePoste().trim());
+
+			// medecin
+			Medecin medecin = vm.getMedecin() == null ? null : vm.getMedecin();
+			String nomMedecin = "";
+			if (medecin != null) {
+				nomMedecin = medecin.getPrenomMedecin() + " " + medecin.getNomMedecin();
+			}
+			// recommandation
+			Recommandation recom = vm.getRecommandation() == null ? null : vm.getRecommandation();
+			String recommandation = "";
+			if (recom != null) {
+				recommandation = recom.getDescription();
+			}
+			// date prochaine visite
+			String dateARevoir = "";
+			if (vm.getDureeValidite() != null) {
+				dateARevoir = vm.getDureeValidite() + " mois";
+			}
+
+			// on commence le document
+			// on ajoute le titre, le logo sur le document
+			genereEnteteDocument(document, "images/logo_DRH.png", true, getTitreCertificatAptitude(vm.getAgent()));
+
+			genereTableauCertificatAptitude(document, vm.getDateDerniereVisite(), nomMedecin.toUpperCase(), poste.toUpperCase(), recommandation,
+					vm.getCommentaire(), dateARevoir);
+
+			genereSignatureCertificatAptitude(document);
+
+		}
+
+		// on ferme le document
+		document.close();
+
+		return baos.toByteArray();
+	}
+
+	private void genereTableauCertificatAptitude(Document document, Date dateVisite, String nomMedecin, String poste, String avis, String restriction,
+			String aRevoir) throws DocumentException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+		PdfPTable table = writeTableau(document, new float[] { 8, 20 });
+		table.setSpacingBefore(10);
+		table.setSpacingAfter(10);
+
+		// 1ere ligne : medecin
+		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
+		listValuesLigne1.add(new CellVo("Medecin : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne1.add(new CellVo(nomMedecin, true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne1);
+
+		// 2er ligne : date visite
+		List<CellVo> listValuesLigne2 = new ArrayList<CellVo>();
+		listValuesLigne2.add(new CellVo("Date de la visite : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne2.add(new CellVo(sdf.format(dateVisite), true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne2);
+
+		// 3eme ligne : poste
+		List<CellVo> listValuesLigne3 = new ArrayList<CellVo>();
+		listValuesLigne3.add(new CellVo("Poste : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne3.add(new CellVo(poste, true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne3);
+
+		// 4eme ligne : avis
+		List<CellVo> listValuesLigne4 = new ArrayList<CellVo>();
+		listValuesLigne4.add(new CellVo("Avis médical : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne4.add(new CellVo(avis, true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne4);
+
+		// 5eme ligne : restrictions
+		List<CellVo> listValuesLigne5 = new ArrayList<CellVo>();
+		listValuesLigne5.add(new CellVo("Recommandations éventuelles : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne5.add(new CellVo(restriction, true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne5);
+
+		// 6eme ligne : restrictions
+		List<CellVo> listValuesLigne6 = new ArrayList<CellVo>();
+		listValuesLigne6.add(new CellVo("A revoir dans : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold8));
+		listValuesLigne6.add(new CellVo(aRevoir, true, 1, null, Element.ALIGN_LEFT, true, fontNormal8));
+		writeLine(table, 7, listValuesLigne6);
+
+		document.add(table);
+	}
+
+	protected void genereSignatureCertificatAptitude(Document document) throws DocumentException {
+		PdfPTable table = null;
+		table = new PdfPTable(1);
+		table.setWidthPercentage(80f);
+		table.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+		// 1er ligne : entete
+		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
+		String dateJour = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		listValuesLigne1.add(new CellVo(new String("nouméa le " + dateJour).toUpperCase(), true, 1, null, Element.ALIGN_RIGHT, false, fontNormal8));
+		writeLine(table, 3, listValuesLigne1);
+
+		writeSpacing(document, 1);
+		document.add(table);
+	}
+
+	private String getTitreCertificatAptitude(Agent agent) {
+		String nomPrenom = agent.getDisplayNom() + " " + agent.getDisplayPrenom();
+		return "CERTIFICAT D'APTITUDE DE " + agent.getTitre().toUpperCase() + " " + nomPrenom.toUpperCase();
 	}
 }
