@@ -45,6 +45,13 @@ public abstract class AbstractReporting extends PdfPageEventHelper {
 		return table;
 	}
 
+	protected void writeLine(PdfPTable table, Integer padding, List<CellVo> values) {
+
+		for (CellVo value : values) {
+			table.addCell(writeCell(padding, null, value, false, false, null, Element.ALIGN_MIDDLE));
+		}
+	}
+
 	protected void writeLine(PdfPTable table, Integer padding, List<CellVo> values, boolean underline) {
 
 		for (CellVo value : values) {
