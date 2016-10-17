@@ -583,7 +583,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			genereEnteteDocument(document, "images/logo_DRH.png", true, getTitreCertificatAptitude(vm.getAgent()));
 
 			genereTableauCertificatAptitude(document, vm.getDateDerniereVisite(), nomMedecin.toUpperCase(), poste.toUpperCase(), recommandation,
-					vm.getCommentaire(), dateARevoir);
+					vm.getCommentaire()==null ? "" : vm.getCommentaire(), dateARevoir);
 
 			genereSignatureCertificatAptitude(document);
 
