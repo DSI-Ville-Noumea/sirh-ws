@@ -437,10 +437,11 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 
 	@Override
-	public FichePoste chercherDerniereFichePosteByYear(Integer annee) {
+	public FichePoste chercherDernierNumFichePosteByYear(Integer annee) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select fp from FichePoste fp where fp.annee = :annee order by fp.idFichePoste desc ");
+		sb.append("order by cast(substr(fp.numFP,1,4) as Integer) desc,cast(substr(fp.numFP,6) as Integer) desc");
 
 		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
 		query.setParameter("annee", annee);
@@ -452,7 +453,7 @@ public class FichePosteRepository implements IFichePosteRepository {
 				return resTemp.get(0);
 			}
 		} catch (Exception e) {
-			logger.debug("Exception chercherDerniereFichePosteByYear with parameter annee = {} and Exception = {}", annee, e.getMessage());
+			logger.debug("Exception chercherDernierNumFichePosteByYear with parameter annee = {} and Exception = {}", annee, e.getMessage());
 		}
 		return res;
 	}

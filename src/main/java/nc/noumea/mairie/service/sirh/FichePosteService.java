@@ -1194,7 +1194,7 @@ public class FichePosteService implements IFichePosteService {
 		// RG_PE_FP_C01
 		FichePoste derniereFP = null;
 		try {
-			derniereFP = fichePosteDao.chercherDerniereFichePosteByYear(annee);
+			derniereFP = fichePosteDao.chercherDernierNumFichePosteByYear(annee);
 		} catch (Exception e) {
 
 		}
