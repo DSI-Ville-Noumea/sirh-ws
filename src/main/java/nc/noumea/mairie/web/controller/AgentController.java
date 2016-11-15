@@ -301,6 +301,13 @@ public class AgentController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
+	/**
+	 * Est utilisé par kioque-RH et Alfresco : webscript SynchroniseAgentWebScript
+	 * 
+	 * @param idAgent Long ID de l agent
+	 * @return ResponseEntity avec boolean
+	 * @throws ParseException
+	 */
 	@RequestMapping(value = "/estHabiliteKiosqueRH", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
