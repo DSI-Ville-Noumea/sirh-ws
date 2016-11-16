@@ -109,7 +109,7 @@ public class AnnuaireService implements IAnnuaireService {
 		EntiteDto infoSiserv = adsWSConsumer.getInfoSiservByIdEntite(affAgent.getFichePoste().getIdServiceADS());
 		EntiteDto entite = adsWSConsumer.getEntiteByIdEntite(affAgent.getFichePoste().getIdServiceADS());
 		EntiteDto direction = adsWSConsumer.getAffichageDirection(affAgent.getFichePoste().getIdServiceADS());
-		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
+		AgentAnnuaireDto dto = new AgentAnnuaireDto(ag, spAdm, lc, titrePoste, idSuperieur, infoSiserv==null ? null :  infoSiserv.getCodeServi(), entite.getCodeServi(), entite, direction, affAgent.getFichePoste(), positDesc);
 
 		return dto;
 	}
