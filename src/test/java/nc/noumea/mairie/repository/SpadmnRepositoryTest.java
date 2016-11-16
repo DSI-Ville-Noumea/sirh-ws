@@ -501,7 +501,7 @@ public class SpadmnRepositoryTest {
 		spadmnId.setDatdeb(20140101);
 		Spadmn spAdmn = new Spadmn();
 		spAdmn.setId(spadmnId);
-		spAdmn.setDatfin(20161115);
+		spAdmn.setDatfin(20201115);
 		spAdmn.setPositionAdministrative(positionAdministrative1);
 		sirhPersistenceUnit.persist(spAdmn);
 
