@@ -578,12 +578,32 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 				dateARevoir = vm.getDureeValidite() + " mois";
 			}
 
+			// #34317 : EN ATTENTE DE LA REPONSE DE MARS
+			// TODO
+			// on commence le document
+			// List<String> listTitre = new ArrayList<>();
+			// listTitre.add(getTitreCertificatAptitude(vm.getAgent()));
+			// listTitre.add(vm.getMotifVM()==null ? "" :
+			// vm.getMotifVM().getLibMotifVisiteMedicale());
+			//
+			// // on ajoute le titre, le logo sur le document
+			// genereEnteteDocument(document, "images/logo_DRH.png", true, "");
+			//
+			// //34317 : on ajoute le type de visite dans le titre
+			// for (String title : listTitre) {
+			// Paragraph paragraph = null;
+			// paragraph = new Paragraph(title, fontBold8);
+			// paragraph.setAlignment(Element.ALIGN_CENTER);
+			// document.add(paragraph);
+			// }
+
 			// on commence le document
 			// on ajoute le titre, le logo sur le document
 			genereEnteteDocument(document, "images/logo_DRH.png", true, getTitreCertificatAptitude(vm.getAgent()));
 
 			genereTableauCertificatAptitude(document, vm.getDateDerniereVisite(), nomMedecin.toUpperCase(), poste.toUpperCase(), recommandation,
-					vm.getCommentaire()==null ? "" : vm.getCommentaire(), dateARevoir);
+					vm.getCommentaire() == null ? "" : vm.getCommentaire(), dateARevoir,
+					vm.getMotifVM() == null ? "" : vm.getMotifVM().getLibMotifVisiteMedicale());
 
 			genereSignatureCertificatAptitude(document);
 
@@ -596,12 +616,23 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	}
 
 	private void genereTableauCertificatAptitude(Document document, Date dateVisite, String nomMedecin, String poste, String avis, String restriction,
-			String aRevoir) throws DocumentException {
+			String aRevoir, String motif) throws DocumentException {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		PdfPTable table = writeTableau(document, new float[] { 8, 20 });
 		table.setSpacingBefore(10);
 		table.setSpacingAfter(10);
+
+
+		// #34317 : EN ATTENTE DE LA REPONSE DE MARS
+		// TODO
+		// 0 ligne : motif
+		// List<CellVo> listValuesLigne0 = new ArrayList<CellVo>();
+		// listValuesLigne0.add(new CellVo("Motif : ", true, 1, null,
+		// Element.ALIGN_LEFT, true, fontBold8));
+		// listValuesLigne0.add(new CellVo(motif, true, 1, null,
+		// Element.ALIGN_LEFT, true, fontNormal8));
+		// writeLine(table, 7, listValuesLigne0);
 
 		// 1ere ligne : medecin
 		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
