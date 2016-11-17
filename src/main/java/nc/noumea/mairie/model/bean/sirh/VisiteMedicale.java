@@ -2,6 +2,7 @@ package nc.noumea.mairie.model.bean.sirh;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,6 +47,10 @@ public class VisiteMedicale {
 
 	@Column(name = "COMMENTAIRE")
 	private String			commentaire;
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "ID_MOTIF_VM")
+	private MotifVM			motifVM;
 
 	public Integer getIdVisiteMedicale() {
 		return idVisiteMedicale;
@@ -101,5 +106,13 @@ public class VisiteMedicale {
 
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
+	}
+
+	public MotifVM getMotifVM() {
+		return motifVM;
+	}
+
+	public void setMotifVM(MotifVM motifVM) {
+		this.motifVM = motifVM;
 	}
 }
