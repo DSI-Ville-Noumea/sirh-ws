@@ -1192,15 +1192,15 @@ public class FichePosteService implements IFichePosteService {
 
 	private String createFichePosteNumber(Integer annee) {
 		// RG_PE_FP_C01
-		FichePoste derniereFP = null;
+		String dernierNumFP = null;
 		try {
-			derniereFP = fichePosteDao.chercherDernierNumFichePosteByYear(annee);
+			dernierNumFP = fichePosteDao.chercherDernierNumFichePosteByYear(annee);
 		} catch (Exception e) {
 
 		}
 
-		if (derniereFP != null && derniereFP.getIdFichePoste() != null) {
-			return (annee + "/" + String.valueOf(Integer.parseInt(derniereFP.getNumFP().substring(5)) + 1));
+		if (dernierNumFP != null) {
+			return (annee + "/" + String.valueOf(Integer.parseInt(dernierNumFP.substring(5)) + 1));
 		} else {
 			return (annee + "/" + String.valueOf(1));
 		}
