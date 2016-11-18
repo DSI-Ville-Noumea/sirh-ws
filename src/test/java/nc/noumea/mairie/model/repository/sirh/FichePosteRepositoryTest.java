@@ -12,6 +12,14 @@ import java.util.TreeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.joda.time.DateTime;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
@@ -48,23 +56,15 @@ import nc.noumea.mairie.tools.FichePosteTreeNode;
 import nc.noumea.mairie.web.dto.GroupeInfoFichePosteDto;
 import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
-import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/META-INF/spring/applicationContext-test.xml" })
 public class FichePosteRepositoryTest {
 
 	@Autowired
-	IFichePosteRepository repository;
+	IFichePosteRepository	repository;
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhPersistenceUnit;
+	private EntityManager	sirhPersistenceUnit;
 
 	@Test
 	@Transactional("sirhTransactionManager")
@@ -726,7 +726,8 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1),
+				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
 
 		assertEquals(result.size(), 1);
 		sirhPersistenceUnit.flush();
@@ -746,7 +747,8 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(2), Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(2),
+				Arrays.asList(EnumStatutFichePoste.EN_CREATION.getStatut()));
 
 		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
@@ -766,7 +768,8 @@ public class FichePosteRepositoryTest {
 		fichePoste.setStatutFP(statut);
 		sirhPersistenceUnit.persist(fichePoste);
 
-		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1), Arrays.asList(EnumStatutFichePoste.TRANSITOIRE.getStatut()));
+		List<FichePoste> result = repository.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(Arrays.asList(1),
+				Arrays.asList(EnumStatutFichePoste.TRANSITOIRE.getStatut()));
 
 		assertEquals(result.size(), 0);
 		sirhPersistenceUnit.flush();
@@ -1036,7 +1039,7 @@ public class FichePosteRepositoryTest {
 		fichePoste1.setNfa("nfa");
 		fichePoste1.setIdServiceADS(2);
 		sirhPersistenceUnit.persist(fichePoste1);
-		
+
 		//// present : sans date de fin
 		Affectation aff3 = new Affectation();
 		aff3.setIdAffectation(2);
@@ -1113,7 +1116,7 @@ public class FichePosteRepositoryTest {
 		StatutFichePoste statutFPValide = new StatutFichePoste();
 		statutFPValide.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getId());
 		sirhPersistenceUnit.persist(statutFPValide);
-		
+
 		// FP inactive
 		FichePoste fichePoste = new FichePoste();
 		fichePoste.setAnnee(2010);
@@ -1180,6 +1183,54 @@ public class FichePosteRepositoryTest {
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		assertEquals(fichePoste2.getIdFichePoste(), result.get(0));
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void chercherDernierNumFichePosteByYear_returnResult() {
+		StatutFichePoste statutFPValide = new StatutFichePoste();
+		statutFPValide.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getId());
+		sirhPersistenceUnit.persist(statutFPValide);
+
+		// FP inactive
+		FichePoste fichePoste = new FichePoste();
+		fichePoste.setAnnee(2016);
+		fichePoste.setMissions("missions");
+		fichePoste.setNumFP("2016/125");
+		fichePoste.setOpi("opi");
+		fichePoste.setNfa("nfa");
+		fichePoste.setIdServiceADS(2);
+		fichePoste.setStatutFP(statutFPValide);
+		sirhPersistenceUnit.persist(fichePoste);
+
+		FichePoste fichePoste2 = new FichePoste();
+		fichePoste2.setAnnee(2016);
+		fichePoste2.setMissions("missions");
+		fichePoste2.setNumFP("2016/1001");
+		fichePoste2.setOpi("opi");
+		fichePoste2.setNfa("nfa");
+		fichePoste2.setIdServiceADS(2);
+		fichePoste2.setStatutFP(statutFPValide);
+		sirhPersistenceUnit.persist(fichePoste2);
+
+		FichePoste fichePoste3 = new FichePoste();
+		fichePoste3.setAnnee(2016);
+		fichePoste3.setMissions("missions");
+		fichePoste3.setNumFP("2016/985");
+		fichePoste3.setOpi("opi");
+		fichePoste3.setNfa("nfa");
+		fichePoste3.setIdServiceADS(2);
+		fichePoste3.setStatutFP(statutFPValide);
+		sirhPersistenceUnit.persist(fichePoste3);
+
+		// non affecte
+
+		String result = repository.chercherDernierNumFichePosteByYear(2016);
+
+		assertNotNull(result);
+		assertEquals("2016/1001", result);
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
 	}

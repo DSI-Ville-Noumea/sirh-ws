@@ -66,7 +66,7 @@ public interface IFichePosteRepository {
 
 	Sppost chercherSppost(Integer poanne, Integer ponuor);
 
-	FichePoste chercherDernierNumFichePosteByYear(Integer annee);
+	String chercherDernierNumFichePosteByYear(Integer annee);
 
 	FeFp chercherFEFPAvecFP(Integer idFichePoste, Integer isPrimaire);
 

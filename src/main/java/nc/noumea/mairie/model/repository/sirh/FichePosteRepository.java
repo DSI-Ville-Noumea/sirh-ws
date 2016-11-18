@@ -437,18 +437,22 @@ public class FichePosteRepository implements IFichePosteRepository {
 	}
 
 	@Override
-	public FichePoste chercherDernierNumFichePosteByYear(Integer annee) {
+	public String chercherDernierNumFichePosteByYear(Integer annee) {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("select fp from FichePoste fp where fp.annee = :annee order by fp.idFichePoste desc ");
-		sb.append("order by cast(substr(fp.numFP,1,4) as Integer) desc,cast(substr(fp.numFP,6) as Integer) desc");
+		sb.append("select fp.NUM_FP from Fiche_Poste fp where fp.ANNEE_CREATION = :annee ");
+		sb.append("order by cast(substr(fp.NUM_FP,1,4) as Integer) desc,cast(substr(fp.NUM_FP,6) as Integer) desc");
 
-		TypedQuery<FichePoste> query = sirhEntityManager.createQuery(sb.toString(), FichePoste.class);
+		// #34482 : on passe en native query sinon ca plante
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
 		query.setParameter("annee", annee);
 
-		FichePoste res = null;
+		String res = null;
 		try {
-			List<FichePoste> resTemp = query.getResultList();
+			@SuppressWarnings("unchecked")
+			List<String> resTemp = query.getResultList();
+			// comme on a ordonnée en ordre decroissant on ne renvoi que le
+			// 1er enregistrement
 			if (resTemp.size() > 0) {
 				return resTemp.get(0);
 			}
