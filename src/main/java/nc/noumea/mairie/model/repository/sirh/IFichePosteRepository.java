@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.TreeMap;
 
+import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
@@ -97,5 +98,7 @@ public interface IFichePosteRepository {
 	List<Integer> getListFichePosteAffecteeInPresentAndFutureByIdServiceADS(Integer idEntite);
 
 	List<Integer> getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(Integer idEntite);
+
+	void modifierSpmtsrWithId(Spmtsr spmtsr);
 
 }

@@ -1546,7 +1546,8 @@ public class FichePosteService implements IFichePosteService {
 				spmtsr.getId().setServi(fp.getIdServi());
 				// remettre a jour des donnees erronees eventuellement
 				sppost.setPomatr(aff.getAgent().getNomatr());
-				fichePosteDao.persisEntity(spmtsr);
+				//on fait un update manuel car sur l'ID cela ne fonctionne pas
+				fichePosteDao.modifierSpmtsrWithId(spmtsr);
 			}
 			fichePosteDao.persisEntity(sppost);
 
