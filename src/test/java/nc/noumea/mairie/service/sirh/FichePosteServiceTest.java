@@ -3244,7 +3244,7 @@ public class FichePosteServiceTest {
 		assertEquals("3 FDP sont déplacées de l'entité SOURCE vers l'entité CIBLE.", result.getInfos().get(0));
 		assertTrue(result.getErrors().isEmpty());
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(HistoFichePoste.class));
-		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(Spmtsr.class));
+		Mockito.verify(fichePosteDao, Mockito.times(3)).modifierSpmtsrWithId(Mockito.isA(Spmtsr.class));
 		Mockito.verify(fichePosteDao, Mockito.times(3)).persisEntity(Mockito.isA(Sppost.class));
 	}
 
