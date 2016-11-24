@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
 import nc.noumea.mairie.model.bean.sirh.Activite;
@@ -706,4 +707,19 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 		return query.getResultList();
 	}
+
+	@Override
+	public void modifierSpmtsrWithId(Spmtsr spmtsr) {
+
+		String jpql = "update spmtsr set SERVI= :servi  where nomatr = :nomatr and datdeb = :datdeb ";
+		Query q = sirhEntityManager.createNativeQuery(jpql);
+		q.setParameter("nomatr", spmtsr.getId().getNomatr());
+		q.setParameter("servi", spmtsr.getId().getServi());
+		q.setParameter("datdeb", spmtsr.getId().getDatdeb());
+
+		@SuppressWarnings("unused")
+		int res = q.executeUpdate();
+
+	}
+
 }
