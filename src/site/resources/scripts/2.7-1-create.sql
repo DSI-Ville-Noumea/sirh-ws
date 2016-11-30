@@ -9,7 +9,7 @@ NUMERO_TELEPHONE INTEGER not null,
 constraint SIRH2.PK_P_REFERENT_RH
 primary key (SERVI)
 );
-+ ajouter cette table dans les autorisations de ***REMOVED***
++ ajouter cette table dans les autorisations de opensirh
 
 ----------------------------------------------------------------
 -- PROD
@@ -22,4 +22,4 @@ NUMERO_TELEPHONE INTEGER not null,
 constraint SIRH.PK_P_REFERENT_RH
 primary key (SERVI)
 );
-+ ajouter cette table dans les autorisations de ***REMOVED***
++ ajouter cette table dans les autorisations de opensirh
