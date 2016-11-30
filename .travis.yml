@@ -6,7 +6,7 @@ cache:
   - $HOME/.m2
 before_install:
 - export TZ=Pacific/Noumea
-install: mvn -DcreateChecksum=true clean install --settings target/travis/settings.xml
+install: mvn -DcreateChecksum=true clean install
 env:
   global:
   - secure: kS4FZrxWIHNvAL9EcMjSE97A7Tt+sbeoVTgX+xcqdy8QOc10DUW+TzCEmxj1GZcpQWR6R0JHn1tpyzQ4/wiqUuKrkSESqm7TE2Ch88xrE40txvVlzvNEXf6QRPC4nwJdFlciheYP6aWesrnrnHbwhHMNC9DyfC0jMLh0aM+/LvjCmZkhTzYjmiMW/ZupFCrPrtLJ0cqyAXFbanwnjaU7VJM9jTGEJBb/Na8gvdrUzNnu9uPP3v/59zx/WS04eak2bl1/xkLdZD4GJZmMdbGXJv0Ec86Nmzg/hh60j6DKEtxFL+CRwsHXPXfMumVDUCOG+WaT4c65uF2e62gw9ryUab6scnPcNXukDD7lmvVVjrGKa/UGagrJ4QPvQ0JIQO1euzo+VilHtIV1Lvxqaktze0LYWVcdBHPd6D44eXFXJMbHbHkvoyjFnaIAM36+WiUKdQjWklT4+MDlOpEXf7L+V4jBMaFtpZh9h9Q9dAwIKoxVUvW7PML1fzD/nSrxLpjCjzzevwce0ObjKeTrhyuNHnXMkye5a3PB0TrvBzLfXFsXxhCX5zoYw8EHR8q7pySyMlQKNEe+u+HKhYlY6GUoJkB9H1wfrz81eepBZegW3fOtuUcEjvGnnwk9E9noq34XTr69K8LdIZUAfsL2b1o5n9/1Apcf7a457uFsNKpfGMU=
