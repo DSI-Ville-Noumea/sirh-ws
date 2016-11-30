@@ -411,10 +411,6 @@
 				<configuration>
 					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-					<excludes>
-						<exclude>nc/noumea/mairie/contratspart/viewmodel/*</exclude>
-						<exclude>nc/noumea/mairie/contratspart/viewmodel/parametrage/*</exclude>
-					</excludes>
 				</configuration>
 				<executions>
 					<execution>
