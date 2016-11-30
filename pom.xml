@@ -411,6 +411,7 @@
 				<configuration>
 					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                    <format>xml</format>
 				</configuration>
 				<executions>
 					<execution>
