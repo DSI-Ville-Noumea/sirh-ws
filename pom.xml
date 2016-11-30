@@ -70,9 +70,9 @@
 		<url>https://redmine.ville-noumea.nc/projects/sirh-ws</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</connection>
-		<developerConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</developerConnection>
-		<url>https://svn.ville-noumea.nc/sed/sirh-ws/trunk</url>
+		<connection>scm:git:git://github.com/DSI-Ville-Noumea/sirh-ws.git</connection>
+		<developerConnection>scm:git:git://github.com/DSI-Ville-Noumea/sirh-ws.git</developerConnection>
+		<url>https://github.com/DSI-Ville-Noumea/sirh-ws.git</url>
 	</scm>
 	<properties>
 		<aspectj.version>1.8.4</aspectj.version>
