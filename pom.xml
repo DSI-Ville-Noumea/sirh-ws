@@ -411,7 +411,6 @@
 				<configuration>
 					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-                    <format>xml</format>
 				</configuration>
 				<executions>
 					<execution>
@@ -524,7 +523,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<argLine>-XX:-UseSplitVerifier</argLine>
+                    <argLine>${argLine}</argLine>
 					<printSummary>false</printSummary>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 					<skipTests>false</skipTests>
