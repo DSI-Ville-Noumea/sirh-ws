@@ -638,9 +638,9 @@
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<webAccessUrl>https://svn.ville-noumea.nc/sed/sirh-ws/trunk</webAccessUrl>
-					<anonymousConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</anonymousConnection>
-					<developerConnection>scm:svn:https://svn.ville-noumea.nc/sed/sirh-ws/trunk</developerConnection>
+					<webAccessUrl>https://github.com/DSI-Ville-Noumea/sirh-ws.git</webAccessUrl>
+					<anonymousConnection>scm:git:git://github.com/DSI-Ville-Noumea/sirh-ws.git</anonymousConnection>
+					<developerConnection>scm:git:git://github.com/DSI-Ville-Noumea/sirh-ws.git</developerConnection>
 				</configuration>
 				<reportSets>
 					<reportSet>
