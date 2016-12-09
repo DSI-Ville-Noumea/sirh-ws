@@ -3,3 +3,4 @@
 .project
 .settings/
 README.md
+src/main/webapp/META-INF/context.xml
