@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
+import nc.noumea.mairie.ws.dto.EaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,14 @@ public class SirhEaeWSConsumer extends BaseWsConsumer implements ISirhEaeWSConsu
 
 	@Autowired
 	@Qualifier("eaeWsBaseUrl")
-	private String eaeWsBaseUrl;
+	private String				eaeWsBaseUrl;
 
-	private static final String sirhEaeCampagneOuverte = "eaes/getEaeCampagneOuverte";
-	private static final String sirhAvisSHDEae = "eaes/getAvisSHD";
-	private static final String sirhFindEaeByAgentAndYear = "eaes/findEaeByAgentAndYear";
-	private static final String sirhCompterlistIdEaeByCampagneAndAgent = "eaes/compterlistIdEaeByCampagneAndAgent";
-	private static final String sirhGetEaesGedIdsForAgents = "eaes/getEaesGedIdsForAgents";
+	private static final String	sirhEaeCampagneOuverte					= "eaes/getEaeCampagneOuverte";
+	private static final String	sirhAvisSHDEae							= "eaes/getAvisSHD";
+	private static final String	sirhFindEaeByAgentAndYear				= "eaes/findEaeByAgentAndYear";
+	private static final String	sirhCompterlistIdEaeByCampagneAndAgent	= "eaes/compterlistIdEaeByCampagneAndAgent";
+	private static final String	sirhGetEaesGedIdsForAgents				= "eaes/getEaesGedIdsForAgents";
+	private static final String	sirhDetailsEaeUrl						= "sirhEaes/detailsEae";
 
 	@Override
 	public CampagneEaeDto getEaeCampagneOuverte() {
@@ -68,8 +70,7 @@ public class SirhEaeWSConsumer extends BaseWsConsumer implements ISirhEaeWSConsu
 	}
 
 	@Override
-	public ReturnMessageDto compterlistIdEaeByCampagneAndAgent(Integer idCampagneEae, List<Integer> listAgentsId,
-			Integer idAgent) {
+	public ReturnMessageDto compterlistIdEaeByCampagneAndAgent(Integer idCampagneEae, List<Integer> listAgentsId, Integer idAgent) {
 
 		String url = String.format(eaeWsBaseUrl + sirhCompterlistIdEaeByCampagneAndAgent);
 
@@ -95,5 +96,18 @@ public class SirhEaeWSConsumer extends BaseWsConsumer implements ISirhEaeWSConsu
 		ClientResponse res = createAndFireRequest(parameters, url, true, agentsIds.toString());
 
 		return readResponse(ReturnMessageDto.class, res, url);
+	}
+
+	@Override
+	public EaeDto getDetailsEae(Integer idAgentSirh, Integer idEae) {
+
+		String url = String.format(eaeWsBaseUrl + sirhDetailsEaeUrl);
+
+		HashMap<String, String> params = new HashMap<>();
+		params.put("idAgentSirh", idAgentSirh.toString());
+		params.put("idEae", idEae.toString());
+
+		ClientResponse res = createAndFireGetRequest(params, url);
+		return readResponse(EaeDto.class, res, url);
 	}
 }

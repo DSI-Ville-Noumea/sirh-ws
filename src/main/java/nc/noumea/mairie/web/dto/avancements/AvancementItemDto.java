@@ -20,6 +20,7 @@ public class AvancementItemDto {
 	private boolean dureeMin;
 	private boolean dureeMoy;
 	private boolean dureeMax;
+	private boolean eaeRealise;
 
 	public AvancementItemDto() {
 
@@ -160,5 +161,13 @@ public class AvancementItemDto {
 
 	public void setDateAncienAvancementMinimale(Date dateAncienAvancementMinimale) {
 		this.dateAncienAvancementMinimale = dateAncienAvancementMinimale;
+	}
+
+	public boolean isEaeRealise() {
+		return eaeRealise;
+	}
+
+	public void setEaeRealise(boolean eaeRealise) {
+		this.eaeRealise = eaeRealise;
 	}
 }
