@@ -16,7 +16,7 @@ import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 public interface IAvancementsService {
 
 	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE,
-			boolean capVDN);
+			boolean capVDN,Integer idAgentConnecte);
 
 	public ReturnMessageDto getAvancementsEaesForCapAndCadreEmploi(int idCap, int idCadreEmploi);
 
@@ -31,7 +31,7 @@ public interface IAvancementsService {
 	public List<Spgeng> getCorpsForCadreEmploi(int idCadreEmploi);
 
 	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng,
-			List<AvancementFonctionnaire> avancements, boolean avisEAE);
+			List<AvancementFonctionnaire> avancements, boolean avisEAE,Integer idAgentConnecte);
 
 	public Cap getCap(int idCap);
 

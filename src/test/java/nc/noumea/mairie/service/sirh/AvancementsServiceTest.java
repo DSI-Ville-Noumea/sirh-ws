@@ -119,7 +119,7 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "avancementRepository", sirhRepo);
 
 		// When
-		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false);
+		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false,null);
 
 		// Then
 		assertEquals(2, dto.getAvancementsDifferencies().getAvancementsItems().size());
@@ -148,7 +148,7 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "avancementRepository", sirhEMMock);
 
 		// When
-		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false);
+		CommissionAvancementCorpsDto dto = service.createCommissionCorps(cap, corps, list, false,null);
 
 		// Then
 		assertEquals(0, dto.getAvancementsDifferencies().getAvancementsItems().size());
@@ -271,7 +271,7 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "sirhEntityManager", sirhEMMock);
 
 		// When
-		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
+		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false,null);
 
 		// Then
 		assertEquals(0, result.getCommissionsParCorps().size());
@@ -323,7 +323,7 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "avancementRepository", sirhRepo);
 
 		// When
-		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false);
+		CommissionAvancementDto result = service.getCommissionsForCapAndCadreEmploi(1, 0, false, false,null);
 
 		// Then
 		assertEquals(1, result.getCommissionsParCorps().size());
@@ -461,7 +461,7 @@ public class AvancementsServiceTest {
 		ReflectionTestUtils.setField(service, "avancementRepository", sirhEMMock);
 
 		// When
-		CommissionAvancementCorpsDto result = service.createCommissionCorps(cap, sp1, listeAvctFonct, true);
+		CommissionAvancementCorpsDto result = service.createCommissionCorps(cap, sp1, listeAvctFonct, true,null);
 
 		// Then
 		assertEquals(cap.getRefCap(), result.getChangementClasses().getCap());

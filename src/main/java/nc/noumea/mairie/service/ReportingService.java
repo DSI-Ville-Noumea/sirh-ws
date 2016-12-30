@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -216,7 +218,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 			}
 		} else {
-			genereEnteteDocument(document, "images/logo_gouv.jpg", true, "Aucune correspondance");
+			genereEnteteDocumentChgtClasse(document, "images/logo_gouv.jpg", true, "Aucune correspondance");
 		}
 
 		// on ferme le document
@@ -230,23 +232,45 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		// les données en entête du document
 		String titre = "Direction des ressources humaines de la fonction publique de Nouvelle-Calédonie";
 		titre += "\nAVANCEMENT DIFFERENCIE - ANNEE " + dto.getAvancementsDifferencies().getAnnee();
-		genereEnteteDocument(document, "images/logo_gouv.jpg", true, titre);
-
-		// le titre
-		genereTitreJaune(document, dto.getAvancementsDifferencies());
+		// #35759 : on change le titre
+		titre += "\nCadre d'emploi des " + dto.getAvancementsDifferencies().getCadreEmploiLibelle();
+		genereEnteteDocumentTabAD(document, "images/logo_gouv.jpg", true, titre);
 
 		// les infos CAP
-		genereInfoCAP(document, dto.getAvancementsDifferencies(), true);
+		genereInfoCAPDiff(document, dto.getAvancementsDifferencies(), true);
 
 		// genere entete tableau
 		genereTableauDiff(document, dto.getAvancementsDifferencies());
 
+		// genere texte sous tableau
+		genereTexteSousTableauDiff(document);
+
 		// genere bas de page
-		genereBasPage(document, dto.getAvancementsDifferencies());
+		genereBasPageTabAD(document, dto.getAvancementsDifferencies());
 
 	}
 
-	private void genereBasPage(Document document, AvancementsDto dto) throws DocumentException {
+	private void genereTexteSousTableauDiff(Document document) throws DocumentException {
+
+		PdfPTable table = new PdfPTable(new float[] { 1 });
+		table.setWidthPercentage(100f);
+
+		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
+		listValuesLigne1.add(
+				new CellVo("NB : le tableau doit être renseigné de la manière suivante :", true, 0, null, Element.ALIGN_LEFT, false, fontItalic5));
+		listValuesLigne1.add(new CellVo("- en début de tableau les propositions AD minimal dans l'ordre alphabétique", true, 0, null,
+				Element.ALIGN_LEFT, false, fontItalic5));
+		listValuesLigne1
+				.add(new CellVo("- puis les durées moyennes dans l'ordre alphabétique", true, 0, null, Element.ALIGN_LEFT, false, fontItalic5));
+		listValuesLigne1
+				.add(new CellVo("- enfin les durées maximales dans l'ordre alphabétique.", true, 0, null, Element.ALIGN_LEFT, false, fontItalic5));
+		writeLine(table, 3, Element.ALIGN_LEFT, listValuesLigne1, false);
+
+		document.add(table);
+
+	}
+
+	private void genereBasPageTabChgtClasse(Document document, AvancementsDto dto) throws DocumentException {
 		// Lignes sous le tableau
 		genereSignature(document);
 
@@ -325,38 +349,203 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		document.add(table);
 	}
 
+	private void genereBasPageTabAD(Document document, AvancementsDto dto) throws DocumentException {
+
+		writeSpacing(document, 1);
+
+		// table globale
+		PdfPTable table = writeTableau(document, new float[] { 13, 10, 10 });
+		table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+		table.setKeepTogether(true);
+
+		// les petites lignes au dessus des tableaux
+		List<CellVo> listValuesPetitesLignesHaut = new ArrayList<CellVo>();
+		listValuesPetitesLignesHaut.add(new CellVo("Les employeurs", false, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesPetitesLignesHaut.add(new CellVo("Les représentants du personnel", false, 2, null, Element.ALIGN_LEFT, false, fontBold5));
+		writeLine(table, 3, listValuesPetitesLignesHaut, false);
+		List<CellVo> listValuesPetitesLignes = new ArrayList<CellVo>();
+		listValuesPetitesLignes.add(new CellVo("", false, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		listValuesPetitesLignes.add(new CellVo("Titulaires :", false, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		listValuesPetitesLignes.add(new CellVo("Suppléants :", false, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 3, listValuesPetitesLignes, false);
+
+		// table employeurs
+		PdfPTable tableEmployeur = writeTableau(document, new float[] { 5, 5, 7 });
+		List<CellVo> employeur1 = new ArrayList<CellVo>();
+		employeur1.add(new CellVo("Province des Iles Loyauté", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur1.add(new CellVo("Province des Iles Loyauté", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur1.add(new CellVo(""));
+		writeLine(tableEmployeur, 10, employeur1, false);
+		List<CellVo> employeur2 = new ArrayList<CellVo>();
+		employeur2.add(new CellVo("Province Nord", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur2.add(new CellVo("Province Nord", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur2.add(new CellVo(""));
+		writeLine(tableEmployeur, 10, employeur2, false);
+		List<CellVo> employeur3 = new ArrayList<CellVo>();
+		employeur3.add(new CellVo("Province Sud", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur3.add(new CellVo("Province Sud", false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		employeur3.add(new CellVo(""));
+		writeLine(tableEmployeur, 10, employeur3, false);
+
+		PdfPCell cellEmployeur = new PdfPCell();
+		cellEmployeur.addElement(tableEmployeur);
+		cellEmployeur.setFixedHeight(tableEmployeur.getTotalHeight());
+		cellEmployeur.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellEmployeur);
+
+		// table titulaires
+		PdfPTable tableTitulaire = writeTableau(document, new float[] { 10, 7 });
+		for (String titu : dto.getRepresentantsTitulaires()) {
+			List<CellVo> listValuesTitulaire = new ArrayList<CellVo>();
+			listValuesTitulaire.add(new CellVo(titu, false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+			listValuesTitulaire.add(new CellVo(""));
+			writeLine(tableTitulaire, 10, listValuesTitulaire, false);
+		}
+		PdfPCell cellTitulaire = new PdfPCell();
+		cellTitulaire.addElement(tableTitulaire);
+		cellTitulaire.setFixedHeight(tableTitulaire.getTotalHeight());
+		cellTitulaire.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellTitulaire);
+
+		// table suppleants
+		PdfPTable tableSuppleant = writeTableau(document, new float[] { 10, 7 });
+		for (String supp : dto.getRepresentantsSuppleants()) {
+			List<CellVo> listValuesSupp = new ArrayList<CellVo>();
+			listValuesSupp.add(new CellVo(supp, false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+			listValuesSupp.add(new CellVo(""));
+			writeLine(tableSuppleant, 10, listValuesSupp, false);
+
+		}
+		PdfPCell cellSuppleant = new PdfPCell();
+		cellSuppleant.addElement(tableSuppleant);
+		cellSuppleant.setFixedHeight(tableSuppleant.getTotalHeight());
+		cellSuppleant.setBorder(Rectangle.NO_BORDER);
+		table.addCell(cellSuppleant);
+
+		// president
+		PdfPTable tablePresident = writeTableau(document, new float[] { 17 });
+		tablePresident.addCell(writeCell(3, null, new CellVo("Le président ", true, 1, null, Element.ALIGN_LEFT, false, fontBold5), false, true, 80f,
+				Element.ALIGN_TOP));
+		PdfPCell cellPresident = new PdfPCell();
+		cellPresident.addElement(tablePresident);
+		cellPresident.setBorder(Rectangle.NO_BORDER);
+
+		// Cachet et Visa
+		PdfPTable tableCachetVisa = writeTableau(document, new float[] { 17 });
+		tableCachetVisa.setWidthPercentage(40f);
+		tableCachetVisa.setHorizontalAlignment(Element.ALIGN_LEFT);
+		tableCachetVisa.addCell(writeCell(3, null, new CellVo("CACHET + VISA EMPLOYEUR : ", true, 1, null, Element.ALIGN_LEFT, true, fontBold5), true,
+				true, 80f, Element.ALIGN_TOP));
+		PdfPCell cellCachetVisa = new PdfPCell();
+		cellCachetVisa.addElement(tableCachetVisa);
+		cellCachetVisa.setBorder(Rectangle.NO_BORDER);
+
+		// table bas de page
+		PdfPTable tableBasPage = writeTableau(document, new float[] { 13, 13, 13 });
+		tableBasPage.setSpacingBefore(5);
+		tableBasPage.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+		tableBasPage.setKeepTogether(true);
+		tableBasPage.addCell(tableCachetVisa);
+		tableBasPage.addCell("");
+		tableBasPage.addCell(tablePresident);
+
+		writeLine(table, 0, Arrays.asList(new CellVo("", false, 3, null, Element.ALIGN_LEFT, false, fontNormal5)), false);
+		document.add(table);
+		document.add(tableBasPage);
+
+	}
+
 	private void genereTableauDiff(Document document, AvancementsDto dto) throws DocumentException {
 
-		PdfPTable table = writeTableau(document, new float[] { 6, 5, 5, 4, 4, 2, 2, 2, 3, 3, 3, 5 });
+		PdfPTable table = writeTableau(document, new float[] { 2, 5, 5, 5, 3, 3, 3, 2, 3, 3, 4, 2, 2, 2, 2, 2, 2 });
 
 		// 1er ligne : entete
 		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
-		listValuesLigne1.add(new CellVo("", true, 3, null, Element.ALIGN_LEFT, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Date prévisionelle\nd'avancement\nmoyen", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Historique\n(à remplir par\nl'employeur)", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Propositions de l'employeur", true, 4, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne1.add(new CellVo("Avis de la CAP et observations", true, 3, null, Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne1.add(new CellVo("", true, 5, null, Element.ALIGN_LEFT, false, fontNormal5));
+		listValuesLigne1.add(new CellVo("Historique\n(à remplir par\nl'employeur)", true, 1, null, Element.ALIGN_CENTER, true, fontBold5));
+		listValuesLigne1.add(new CellVo("EAE réalisé\n(OUI/NON à remplir par l'employeur)", true, 1, null, Element.ALIGN_CENTER, true, fontBold5));
+		listValuesLigne1.add(new CellVo(
+				"Propositions de l'employeur (cocher la durée proposée et faire un classement par ordre de mérite des agents proposés à la durée minimale)",
+				true, 5, null, Element.ALIGN_CENTER, true, fontBold5));
+		listValuesLigne1.add(new CellVo("Propositions de la CAP", true, 4, null, Element.ALIGN_CENTER, true, fontBold5));
+		listValuesLigne1.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
 		writeLine(table, 3, listValuesLigne1, false);
 
 		// 2e ligne : entete
 		List<CellVo> listValuesLigne2 = new ArrayList<CellVo>();
-		listValuesLigne2.add(new CellVo("Nom", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Prénom", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Grade", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Date du dernier\navancement à la\ndurée minimale", true, 1, null, Element.ALIGN_CENTER, false, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmin", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmoy", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Durée\nmax", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Classement", true, 1, new BaseColor(176, 216, 255), Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Favorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("Défavorable", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
-		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontBold8));
+		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Nom", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Prénom", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Grade", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Date prévisionelle\nd'avancement\nmoyen", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Date du dernier\navancement à la\ndurée minimale", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("", true, 2, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("Durée moyenne", true, 2, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("", true, 4, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne2.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
 		writeLine(table, 3, listValuesLigne2, false);
 
-		// on boucle sur les agents
+		// 3e ligne : entete
+		List<CellVo> listValuesLigne3 = new ArrayList<CellVo>();
+		listValuesLigne3.add(new CellVo("Nb", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée\nminimale", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Classement\n(si HQ)", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Proposition employeur", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée moyenne par\ndéfaut(si absence\nd'EAE", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée\nmaximale", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée\nminimale", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée\nmoyenne", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Durée\nmaximale", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Avis réputé\nrendu", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		listValuesLigne3.add(new CellVo("Report de\nquota", true, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+		writeLine(table, 3, listValuesLigne3, false);
+
+		// on tri la liste des agents par durée puis par ordre alpha
+
+		Comparator<AvancementItemDto> comp = new Comparator<AvancementItemDto>() {
+			@Override
+			public int compare(AvancementItemDto o1, AvancementItemDto o2) {
+				return o1.getNom().compareTo(o2.getNom());
+			}
+
+		};
+
+		List<AvancementItemDto> listMini = new ArrayList<AvancementItemDto>();
+		List<AvancementItemDto> listMoyen = new ArrayList<AvancementItemDto>();
+		List<AvancementItemDto> listMaxi = new ArrayList<AvancementItemDto>();
 		for (AvancementItemDto agentDto : dto.getAvancementsItems()) {
-			writeLineDiffByAgent(table, agentDto);
+			if (agentDto.isDureeMax()) {
+				listMaxi.add(agentDto);
+			} else if (agentDto.isDureeMin()) {
+				listMini.add(agentDto);
+			} else {
+				listMoyen.add(agentDto);
+			}
+		}
+
+		// on tri par ordre alpha chaque liste
+		Collections.sort(listMini, comp);
+		Collections.sort(listMoyen, comp);
+		Collections.sort(listMaxi, comp);
+		// on crée une liste de tout
+		List<AvancementItemDto> res = new ArrayList<AvancementItemDto>();
+		res.addAll(listMini);
+		res.addAll(listMoyen);
+		res.addAll(listMaxi);
+
+		// on boucle sur les agents
+		Integer nbLigne = 1;
+		for (AvancementItemDto agentDto : res) {
+			writeLineDiffByAgent(table, agentDto, nbLigne);
+			nbLigne++;
 		}
 
 		document.add(table);
@@ -420,32 +609,52 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		writeLine(table, 3, listValuesByAgent, false);
 	}
 
-	private void writeLineDiffByAgent(PdfPTable table, AvancementItemDto agentDto) {
+	private void writeLineDiffByAgent(PdfPTable table, AvancementItemDto agentDto, Integer nb) {
 
 		List<CellVo> listValuesByAgent = new ArrayList<CellVo>();
+		// on ecrit le numero de la ligne
+		listValuesByAgent.add(new CellVo(nb.toString(), false, 1, null, Element.ALIGN_RIGHT, true, fontNormal5));
 
 		// on ecrit les donnees de l agent
-		listValuesByAgent.add(new CellVo(agentDto.getNom(), 1, Element.ALIGN_LEFT));
-		listValuesByAgent.add(new CellVo(agentDto.getPrenom(), 1, Element.ALIGN_LEFT));
-		listValuesByAgent.add(new CellVo(agentDto.getGrade(), 1, Element.ALIGN_LEFT));
+		listValuesByAgent.add(new CellVo(agentDto.getNom(), false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesByAgent.add(new CellVo(agentDto.getPrenom(), false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
+		listValuesByAgent.add(new CellVo(agentDto.getGrade(), false, 1, null, Element.ALIGN_LEFT, true, fontNormal5));
 
 		// on ecrit les date previsionnelles
-		listValuesByAgent
-				.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), 1, Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo(new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDatePrevisionnelleAvancement()), false, 1, null,
+				Element.ALIGN_CENTER, true, fontNormal5));
 
 		// on ecrit les date avancement min
-		listValuesByAgent.add(new CellVo(agentDto.getDateAncienAvancementMinimale() == null ? ""
-				: new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDateAncienAvancementMinimale()), 1, Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo(
+				agentDto.getDateAncienAvancementMinimale() == null ? ""
+						: new SimpleDateFormat("dd/MM/yyyy").format(agentDto.getDateAncienAvancementMinimale()),
+				false, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
+
+		// EAE réalisé
+		listValuesByAgent.add(new CellVo(agentDto.isEaeRealise() ? "OUI" : "NON", false, 1, null, Element.ALIGN_CENTER, true, fontNormal5));
 
 		// on ecrit les durées
 		listValuesByAgent.add(new CellVo(agentDto.isDureeMin() ? "X" : "", 1, Element.ALIGN_CENTER));
-		listValuesByAgent.add(new CellVo(agentDto.isDureeMoy() ? "X" : "", 1, Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo(agentDto.getClassement(), 1, Element.ALIGN_CENTER));
+		if (agentDto.isEaeRealise()) {
+			boolean cocheDureeMoy = false;
+			if (agentDto.isDureeMoy()) {
+				cocheDureeMoy = true;
+			} else if (!agentDto.isDureeMin() && !agentDto.isDureeMax()) {
+				cocheDureeMoy = true;
+			}
+
+			listValuesByAgent.add(new CellVo(cocheDureeMoy ? "X" : "", 1, Element.ALIGN_CENTER));
+			listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
+		} else {
+			listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
+			listValuesByAgent.add(new CellVo("X", 1, Element.ALIGN_CENTER));
+		}
 		listValuesByAgent.add(new CellVo(agentDto.isDureeMax() ? "X" : "", 1, Element.ALIGN_CENTER));
 
-		// classement
-		listValuesByAgent.add(new CellVo(agentDto.getClassement(), 1, Element.ALIGN_CENTER));
-
 		// avis CAP
+		listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
+		listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
 		listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
 		listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
 		listValuesByAgent.add(new CellVo("", 1, Element.ALIGN_CENTER));
@@ -453,7 +662,58 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		writeLine(table, 3, listValuesByAgent, false);
 	}
 
-	private void genereInfoCAP(Document document, AvancementsDto dto, boolean withQuota) throws DocumentException {
+	private void genereInfoCAPDiff(Document document, AvancementsDto dto, boolean withQuota) throws DocumentException {
+		PdfPTable table = writeTableau(document, new float[] { 50, 10 });
+		table.setSpacingAfter(5);
+		table.setSpacingBefore(5);
+		// on calcul le nombre de min et max
+		int nbMini = 0;
+		int nbMaxi = 0;
+		for (AvancementItemDto agentDto : dto.getAvancementsItems()) {
+			if (agentDto.isDureeMin()) {
+				nbMini++;
+			}
+			if (agentDto.isDureeMax()) {
+				nbMaxi++;
+			}
+		}
+
+		// 1er ligne
+		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
+		listValuesLigne1.add(new CellVo("Employeur : " + dto.getEmployeur(), true, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesLigne1.add(new CellVo("CAP N° " + dto.getCap() + " du ", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne1, false);
+		// 2eme ligne
+		List<CellVo> listValuesLigne2 = new ArrayList<CellVo>();
+		listValuesLigne2.add(new CellVo("Nombre d'agents : " + dto.getNbAgents(), true, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesLigne2.add(new CellVo("Filière : " + dto.getFiliere(), true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne2, false);
+		// 3eme ligne
+		List<CellVo> listValuesLigne3 = new ArrayList<CellVo>();
+		listValuesLigne3.add(new CellVo(withQuota ? "Quota d'avancement à la durée minimale (ratio = 30%) : " : "", true, 1, null, Element.ALIGN_LEFT,
+				false, fontBold5));
+		listValuesLigne3.add(new CellVo("Catégorie : " + dto.getCategorie(), true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne3, false);
+		// 4eme ligne
+		List<CellVo> listValuesLigne4 = new ArrayList<CellVo>();
+		listValuesLigne4.add(new CellVo("Nb d'agents proposés à la durée minimale : " + nbMini, true, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesLigne4.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne4, false);
+		// 5eme ligne
+		List<CellVo> listValuesLigne5 = new ArrayList<CellVo>();
+		listValuesLigne5.add(new CellVo("Nb d'agents proposés hors quota : ", true, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesLigne5.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne5, false);
+		// 6eme ligne
+		List<CellVo> listValuesLigne6 = new ArrayList<CellVo>();
+		listValuesLigne6.add(new CellVo("Nb d'agents proposés à la durée maximale : " + nbMaxi, true, 1, null, Element.ALIGN_LEFT, false, fontBold5));
+		listValuesLigne6.add(new CellVo("", true, 1, null, Element.ALIGN_LEFT, false, fontNormal5));
+		writeLine(table, 2, listValuesLigne6, false);
+
+		document.add(table);
+	}
+
+	private void genereInfoCAPChgtClasse(Document document, AvancementsDto dto, boolean withQuota) throws DocumentException {
 		PdfPTable table = writeTableau(document, new float[] { 15, 10 });
 		table.setSpacingAfter(5);
 		table.setSpacingBefore(5);
@@ -492,7 +752,37 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		document.add(table);
 	}
 
-	private void genereEnteteDocument(Document document, String urlImage, boolean isBold, String title) throws DocumentException {
+	private void genereEnteteDocumentTabAD(Document document, String urlImage, boolean isBold, String title) throws DocumentException {
+		PdfPCell cellLogo = null;
+		if (null != urlImage) {
+			Image logo = null;
+			try {
+				logo = Image.getInstance(this.getClass().getClassLoader().getResource(urlImage));
+				logo.scaleToFit(60, 60);
+			} catch (Exception e) {
+			}
+			cellLogo = new PdfPCell();
+			cellLogo.addElement(logo);
+			cellLogo.setBorder(Rectangle.NO_BORDER);
+		}
+
+		PdfPTable table = null;
+		if (null != urlImage) {
+			table = new PdfPTable(new float[] { 1, 7 });
+			table.addCell(cellLogo);
+		} else {
+			table = new PdfPTable(new float[] { 1 });
+		}
+		table.setWidthPercentage(100f);
+
+		List<CellVo> listValuesLigne1 = new ArrayList<CellVo>();
+		listValuesLigne1.add(new CellVo(title, true, 0, null, Element.ALIGN_CENTER, false, fontBold5));
+		writeLine(table, 3, Element.ALIGN_LEFT, listValuesLigne1, false);
+
+		document.add(table);
+	}
+
+	private void genereEnteteDocumentChgtClasse(Document document, String urlImage, boolean isBold, String title) throws DocumentException {
 		PdfPCell cellLogo = null;
 		if (null != urlImage) {
 			Image logo = null;
@@ -526,19 +816,19 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		// les données en entête du document
 		String titre = "GOUVERNEMENT DE LA NOUVELLE-CALEDONIE";
 		titre += "\nDRHFPNC - SERVICE DE LA GESTION STATUTAIRE ET DES ORGANISMES PARITAIRES - SECTION EMPLOYEURS";
-		genereEnteteDocument(document, "images/logo_gouv.jpg", true, titre);
+		genereEnteteDocumentChgtClasse(document, "images/logo_gouv.jpg", true, titre);
 
 		// le titre
 		genereTitreJaune(document, dto.getChangementClasses());
 
 		// les infos CAP
-		genereInfoCAP(document, dto.getChangementClasses(), false);
+		genereInfoCAPChgtClasse(document, dto.getChangementClasses(), false);
 
 		// genere entete tableau
 		genereTableauChgtClasse(document, dto.getChangementClasses());
 
 		// genere bas de page
-		genereBasPage(document, dto.getChangementClasses());
+		genereBasPageTabChgtClasse(document, dto.getChangementClasses());
 	}
 
 	@Override
@@ -584,7 +874,7 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 			listTitre.add(vm.getMotifVM() == null ? "" : vm.getMotifVM().getLibMotifVisiteMedicale());
 
 			// on ajoute le titre, le logo sur le document
-			genereEnteteDocument(document, "images/logo_DRH.png", true, "");
+			genereEnteteDocumentChgtClasse(document, "images/logo_DRH.png", true, "");
 
 			// 34317 : on ajoute le type de visite dans le titre
 			for (String title : listTitre) {

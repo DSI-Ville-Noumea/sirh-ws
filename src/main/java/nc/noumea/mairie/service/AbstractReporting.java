@@ -17,8 +17,11 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 
 public abstract class AbstractReporting extends PdfPageEventHelper {
 
+	protected Font	fontItalic5	= FontFactory.getFont("Arial", 5, Font.ITALIC);
+	protected Font	fontNormal5	= FontFactory.getFont("Arial", 5, Font.NORMAL);
 	protected Font	fontNormal8	= FontFactory.getFont("Arial", 8, Font.NORMAL);
 	protected Font	fontNormal9	= FontFactory.getFont("Arial", 9, Font.NORMAL);
+	protected Font	fontBold5	= FontFactory.getFont("Arial", 5, Font.BOLD);
 	protected Font	fontBold8	= FontFactory.getFont("Arial", 8, Font.BOLD);
 	protected Font	fontBold9	= FontFactory.getFont("Arial", 9, Font.BOLD);
 

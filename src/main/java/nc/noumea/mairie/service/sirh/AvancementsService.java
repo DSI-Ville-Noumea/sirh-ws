@@ -10,6 +10,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.Spclas;
 import nc.noumea.mairie.model.bean.Speche;
@@ -31,39 +37,34 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.ISirhEaeWSConsumer;
 import nc.noumea.mairie.ws.dto.CampagneEaeDto;
+import nc.noumea.mairie.ws.dto.EaeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AvancementsService implements IAvancementsService {
 
-	private static List<Integer> StatutsTerritoriaux = Arrays.asList(18, 20);
-	private static List<Integer> StatutsCommunaux = Arrays.asList(1, 2);
+	private static List<Integer>	StatutsTerritoriaux	= Arrays.asList(18, 20);
+	private static List<Integer>	StatutsCommunaux	= Arrays.asList(1, 2);
 
-	private Logger logger = LoggerFactory.getLogger(AvancementsService.class);
+	private Logger					logger				= LoggerFactory.getLogger(AvancementsService.class);
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhEntityManager;
+	private EntityManager			sirhEntityManager;
 
 	@Autowired
-	private IFichePosteService fichePosteService;
+	private IFichePosteService		fichePosteService;
 
 	@Autowired
-	private IAvancementRepository avancementRepository;
+	private IAvancementRepository	avancementRepository;
 
 	@Autowired
-	private ISirhEaeWSConsumer sirhEaeWSConsumer;
+	private ISirhEaeWSConsumer		sirhEaeWSConsumer;
 
 	@Autowired
-	private IADSWSConsumer adsWSConsumer;
+	private IADSWSConsumer			adsWSConsumer;
 
 	@Override
-	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE, boolean capVDN) {
+	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE, boolean capVDN,Integer idAgentConnecte) {
 
 		CommissionAvancementDto result = new CommissionAvancementDto();
 		Cap cap = getCap(idCap);
@@ -76,12 +77,13 @@ public class AvancementsService implements IAvancementsService {
 			return result;
 
 		for (Spgeng corp : corps) {
-			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap), capVDN);
+			List<AvancementFonctionnaire> avcts = getAvancementsForCommission(getAnnee(), cap.getIdCap(), corp.getCdgeng(), getStatutFromCap(cap),
+					capVDN);
 
 			if (avcts.size() == 0)
 				continue;
 
-			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, avisEAE);
+			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, avisEAE,idAgentConnecte);
 			result.getCommissionsParCorps().add(comCorps);
 		}
 
@@ -113,7 +115,8 @@ public class AvancementsService implements IAvancementsService {
 	}
 
 	@Override
-	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories, boolean capVDN) {
+	public List<AvancementFonctionnaire> getAvancementsForCommission(int annee, int idCap, String corps, List<Integer> codesCategories,
+			boolean capVDN) {
 
 		List<AvancementFonctionnaire> result = null;
 
@@ -188,7 +191,8 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements, boolean avisEae) {
+	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements, boolean avisEae,
+			Integer idAgentConnecte) {
 
 		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(spgeng);
 		result.setAvancementsDifferencies(new AvancementsDto(cap, spgeng, getAnnee()));
@@ -201,7 +205,8 @@ public class AvancementsService implements IAvancementsService {
 
 				ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(), campagneEnCours.getAnnee());
 				try {
-					String avisSHD = sirhEaeWSConsumer.getAvisSHDEae(Integer.valueOf(eaeAgent.getInfos().get(0))).getInfos().get(0);
+					Integer idEae = Integer.valueOf(eaeAgent.getInfos().get(0));
+					String avisSHD = sirhEaeWSConsumer.getAvisSHDEae(idEae).getInfos().get(0);
 					switch (avisSHD) {
 						case "Durée minimale":
 							valeurAvisEAE = 1;
@@ -225,8 +230,25 @@ public class AvancementsService implements IAvancementsService {
 			}
 
 			// redmine #19991 : on cherche le derniere avancement minimale
-			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae, valeurAvisEAE, avancementRepository.getDateAvancementsMinimaleAncienne(avct.getAgent().getIdAgent()));
-
+			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae, valeurAvisEAE,
+					avancementRepository.getDateAvancementsMinimaleAncienne(avct.getAgent().getIdAgent()));
+			// on regarde si l'EAE est finalisé pour le considérer comme réalisé
+			if (idAgentConnecte != null) {
+				try {
+					CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
+					ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(), campagneEnCours.getAnnee());
+					Integer idEae = Integer.valueOf(eaeAgent.getInfos().get(0));
+					EaeDto eaeCourant = sirhEaeWSConsumer.getDetailsEae(idAgentConnecte, idEae);
+					if (eaeCourant.getEtat().equals("F") || eaeCourant.getEtat().equals("CO")) {
+						aItem.setEaeRealise(true);
+					} else {
+						aItem.setEaeRealise(false);
+					}
+				} catch (Exception e) {
+					aItem.setEaeRealise(false);
+				}
+				aItem.setEaeRealise(false);
+			}
 			switch (avct.getIdModifAvancement()) {
 
 				case 7:
@@ -289,8 +311,10 @@ public class AvancementsService implements IAvancementsService {
 			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent().getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
 
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null : avct.getGradeNouveau().getClasse();
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null : avct.getGradeNouveau().getEchelon();
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
+					: avct.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+					: avct.getGradeNouveau().getEchelon();
 			EntiteDto direction = null;
 			EntiteDto service = null;
 			if (fp != null && fp.getIdServiceADS() != null) {
@@ -360,8 +384,10 @@ public class AvancementsService implements IAvancementsService {
 
 			Integer fpId = fichePosteService.getIdFichePostePrimaireAgentAffectationEnCours(avct.getAgent().getIdAgent(), new DateTime().toDate());
 			FichePoste fp = fichePosteService.getFichePosteById(fpId);
-			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null : avct.getGradeNouveau().getClasse();
-			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null : avct.getGradeNouveau().getEchelon();
+			Spclas classeGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getClasse() == null ? null
+					: avct.getGradeNouveau().getClasse();
+			Speche echelonGrade = avct.getGradeNouveau() == null || avct.getGradeNouveau().getEchelon() == null ? null
+					: avct.getGradeNouveau().getEchelon();
 
 			EntiteDto direction = null;
 			EntiteDto service = null;
@@ -416,7 +442,8 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava() && !"".equals(avct.getGrade().getCdTava().trim())) {
+		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
+				&& !"".equals(avct.getGrade().getCdTava().trim())) {
 			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
@@ -434,7 +461,8 @@ public class AvancementsService implements IAvancementsService {
 			return null;
 
 		AvancementEaeDto dto = new AvancementEaeDto(avct);
-		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava() && !"".equals(avct.getGrade().getCdTava().trim())) {
+		if (null != dto.getGrade() && null != avct.getGrade() && null != avct.getGrade().getCdTava()
+				&& !"".equals(avct.getGrade().getCdTava().trim())) {
 			MotifAvct motifAvct = avancementRepository.getMotifAvct(new Integer(avct.getGrade().getCdTava().trim()));
 			if (null != motifAvct) {
 				dto.getGrade().setCodeMotifAvancement(motifAvct.getCodeAvct());
