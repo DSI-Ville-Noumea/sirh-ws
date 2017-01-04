@@ -1119,7 +1119,7 @@ public class FichePosteServiceTest {
 		assertEquals(0, result.getErrors().size());
 		assertEquals(2, result.getInfos().size());
 		assertEquals("Attention, la FDP 2017/1 n'a pas de supérieur hiérarchique.", result.getInfos().get(0));
-		assertEquals("La FDP 2015/3 est dupliquée en 2016/1.", result.getInfos().get(1));
+		assertEquals("La FDP 2015/3 est dupliquée en 2017/1.", result.getInfos().get(1));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 	}
