@@ -15,6 +15,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
@@ -60,13 +67,6 @@ import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FichePosteService implements IFichePosteService {
@@ -503,8 +503,9 @@ public class FichePosteService implements IFichePosteService {
 	 * @return Hashtable L'arbre des fiches de postes
 	 */
 	protected TreeMap<Integer, FichePosteTreeNode> getFichePosteTreeAffecteesEtNonAffectees() {
-
-		TreeMap<Integer, FichePosteTreeNode> hTreeTemp = fichePosteDao.getAllFichePoste(new Date());
+		List<Integer> listeStatut = Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.VALIDEE.getId(),
+				EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId());
+		TreeMap<Integer, FichePosteTreeNode> hTreeTemp = fichePosteDao.getAllFichePoste(new Date(),listeStatut);
 
 		if (null != hFpTreeWithFPAffecteesEtNonAffectees && hTreeTemp.size() == hFpTreeWithFPAffecteesEtNonAffectees.size()
 				&& hTreeTemp.lastKey() == hFpTreeWithFPAffecteesEtNonAffectees.lastKey())
@@ -531,7 +532,9 @@ public class FichePosteService implements IFichePosteService {
 
 		logger.debug("Debut construitArbre Fiche Poste Affectees Et Non Affectees");
 
-		TreeMap<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePoste(new Date());
+		List<Integer> listeStatut = Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.VALIDEE.getId(),
+				EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId());
+		TreeMap<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePoste(new Date(), listeStatut);
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
 
@@ -576,7 +579,8 @@ public class FichePosteService implements IFichePosteService {
 
 		logger.debug("Debut construitArbre Fiche Poste");
 
-		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePosteAndAffectedAgents(new Date());
+		List<Integer> listeStatut = Arrays.asList(EnumStatutFichePoste.VALIDEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId());
+		Hashtable<Integer, FichePosteTreeNode> hTree = fichePosteDao.getAllFichePosteAndAffectedAgents(new Date(), listeStatut);
 
 		int nbNodes = 0, nbNotOrphanNodes = 0;
 
@@ -1546,7 +1550,7 @@ public class FichePosteService implements IFichePosteService {
 				spmtsr.getId().setServi(fp.getIdServi());
 				// remettre a jour des donnees erronees eventuellement
 				sppost.setPomatr(aff.getAgent().getNomatr());
-				//on fait un update manuel car sur l'ID cela ne fonctionne pas
+				// on fait un update manuel car sur l'ID cela ne fonctionne pas
 				fichePosteDao.modifierSpmtsrWithId(spmtsr);
 			}
 			fichePosteDao.persisEntity(sppost);

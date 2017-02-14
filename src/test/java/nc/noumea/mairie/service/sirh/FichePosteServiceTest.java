@@ -19,6 +19,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import nc.noumea.mairie.model.bean.Silieu;
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spgradn;
@@ -65,12 +71,6 @@ import nc.noumea.mairie.ws.ISirhPtgWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.RefPrimeDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class FichePosteServiceTest {
 
@@ -2745,7 +2745,7 @@ public class FichePosteServiceTest {
 		getAllFichePosteAndAffectedAgents(hTree);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getAllFichePosteAndAffectedAgents(Mockito.any(Date.class))).thenReturn(hTree);
+		Mockito.when(fichePosteDao.getAllFichePosteAndAffectedAgents(Mockito.any(Date.class),Mockito.anyListOf(Integer.class))).thenReturn(hTree);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -2832,7 +2832,7 @@ public class FichePosteServiceTest {
 		getAllFichePoste(hTree);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class))).thenReturn(hTree);
+		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class),Mockito.anyListOf(Integer.class))).thenReturn(hTree);
 
 		FichePosteService ficheService = new FichePosteService();
 		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
@@ -2904,7 +2904,7 @@ public class FichePosteServiceTest {
 		getAllFichePoste(hFpTreeWithFPAffecteesEtNonAffectees);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class))).thenReturn(hFpTreeWithFPAffecteesEtNonAffectees);
+		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class),Mockito.anyListOf(Integer.class))).thenReturn(hFpTreeWithFPAffecteesEtNonAffectees);
 
 		Mockito.when(
 				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
@@ -2960,7 +2960,7 @@ public class FichePosteServiceTest {
 		getAllFichePoste(hTree);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class))).thenReturn(hTree);
+		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class),Mockito.anyListOf(Integer.class))).thenReturn(hTree);
 
 		Mockito.when(
 				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(
@@ -3022,7 +3022,7 @@ public class FichePosteServiceTest {
 		getAllFichePoste(hTree);
 
 		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
-		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class))).thenReturn(hTree);
+		Mockito.when(fichePosteDao.getAllFichePoste(Mockito.any(Date.class),Mockito.anyListOf(Integer.class))).thenReturn(hTree);
 
 		Mockito.when(
 				fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDPWithJointurePourOptimisation(

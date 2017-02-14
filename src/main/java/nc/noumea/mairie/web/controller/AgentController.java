@@ -333,6 +333,17 @@ public class AgentController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 
+	/**
+	 * Retourne la liste des agents subordonnés de l agent en parametre
+	 * 
+	 * Ce WS est appelé par :
+	 *  - SIRH-EAE-WS > utilisé par plusieurs services
+	 * 
+	 * @param idAgent L ID de l agent
+	 * @param maxDepth Le nombre de niveau de recherche dans l arbre des fiches de poste
+	 * @return List<Integer> La liste des agents subordonnés
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/sousAgents", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
@@ -355,6 +366,18 @@ public class AgentController {
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
 
+	/**
+	 * Retourne la liste des Supérieurs Hierarchique d un agent
+	 * 
+	 * Ce WS est appelé par :
+	 *  - SIRH-EAE-WS > EaeController.getFinalizationInformation
+	 *  - Alfresco > SynchroniseDroitsSHDWebScript
+	 * 
+	 * @param idAgent L ID de l agent
+	 * @param maxDepth Le nombre de niveau à remonter dans l arbre des fiches de poste
+	 * @return La liste des SHD selon maxDepth
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/agentsShd", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
@@ -377,6 +400,19 @@ public class AgentController {
 		return new ResponseEntity<String>(new JSONSerializer().serialize(agentIds), HttpStatus.OK);
 	}
 
+	/**
+	 * Retourne une liste List<AgentDto> Une liste d agents subordonnées selon les parametres en entrée
+	 * 
+	 * Ce WS est appelé depuis :
+	 *  - SIRH > OeSMConvocation > Recherche
+	 *  - Kiosque-RH > Gestion des droits ABS > Gestion des viseurs
+	 *  
+	 * @param idAgent L ID de l agent
+	 * @param nom Affine la recherche sur le nom des agents subordonnés
+	 * @param maxDepth Le niveau de recherche dans l arbre des fiches de poste
+	 * @return List<AgentDto> Une liste d agents subordonnées de l agent en parametre
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/agentsSubordonnes", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)

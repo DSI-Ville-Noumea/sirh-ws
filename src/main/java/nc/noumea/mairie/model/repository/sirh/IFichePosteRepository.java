@@ -31,7 +31,7 @@ import nc.noumea.mairie.web.dto.InfoFichePosteDto;
 
 public interface IFichePosteRepository {
 
-	Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today);
+	Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today,List<Integer> listStatutFDP);
 
 	List<FichePoste> getListFichePosteByIdServiceADSAndStatutFDP(List<Integer> idEntite, List<Integer> listStatutFDP);
 
@@ -87,7 +87,7 @@ public interface IFichePosteRepository {
 
 	StatutFichePoste chercherStatutFPByIdStatut(Integer idStatut);
 
-	TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today);
+	TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today,List<Integer> listStatutFDP);
 
 	List<InfoFichePosteDto> getListInfoFichePosteDtoByIdServiceADSAndTitrePoste(List<Integer> idEntiteEnfant, String titrePoste, Date today);
 
