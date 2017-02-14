@@ -4,14 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.sun.jersey.api.client.ClientResponse;
+
+import nc.noumea.mairie.web.dto.RefTypeAbsenceDto;
+import nc.noumea.mairie.web.dto.RefTypeSaisiCongeAnnuelDto;
 
 @Service
 public class SirhAbsWSConsumer extends BaseWsConsumer implements ISirhAbsWSConsumer {
@@ -24,6 +25,7 @@ public class SirhAbsWSConsumer extends BaseWsConsumer implements ISirhAbsWSConsu
 	private static final String sirhAbsUserOperateur = "droits/isUserOperateur";
 	private static final String sirhAbsUserViseur = "droits/isUserViseur";
 	private static final String getListeTypeAbsenceUrl = "typeAbsence/getListeTypeAbsence";
+	private static final String	getTypeAbsenceUrl		= "typeAbsence/getTypeAbsence";
 
 	@Override
 	public boolean isUserApprobateur(Integer idAgent) {
@@ -83,5 +85,17 @@ public class SirhAbsWSConsumer extends BaseWsConsumer implements ISirhAbsWSConsu
 		
 		ClientResponse response = createAndFireGetRequest(parameters, url);
 		return readResponseAsList(RefTypeSaisiCongeAnnuelDto.class, response, url);
+	}
+
+	@Override
+	public RefTypeAbsenceDto getTypAbsenceCongeAnnuelById(Integer idBaseHoraireConge) {
+
+		String url = String.format(absWsBaseUrl + getTypeAbsenceUrl);
+
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("idBaseHoraireAbsence", idBaseHoraireConge.toString());
+
+		ClientResponse response = createAndFireGetRequest(parameters, url);
+		return readResponse(RefTypeAbsenceDto.class, response, url);
 	}
 }
