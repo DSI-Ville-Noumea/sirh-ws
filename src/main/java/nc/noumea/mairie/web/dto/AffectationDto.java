@@ -27,14 +27,14 @@ public class AffectationDto implements Serializable {
 		this.listPrimesAff = new ArrayList<RefPrimeDto>();
 	}
 	
-	public AffectationDto(Affectation aff) {
+	public AffectationDto(Affectation aff, RefTypeSaisiCongeAnnuelDto baseConge) {
 		this();
 		this.idAffectation = aff.getIdAffectation();
 		this.idAgent = aff.getAgent().getIdAgent();
 		this.dateDebut = aff.getDateDebutAff();
 		this.dateFin = aff.getDateFinAff();
-		this.baseConge = new RefTypeSaisiCongeAnnuelDto(aff.getIdBaseHoraireAbsence());
-		
+		this.baseConge = baseConge;
+
 		if(null != aff.getPrimePointageAff()) {
 			for(PrimePointageAff prime : aff.getPrimePointageAff()) {
 				RefPrimeDto primeDto = new RefPrimeDto();
