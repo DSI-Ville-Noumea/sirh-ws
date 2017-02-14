@@ -55,6 +55,18 @@ public class EaeController {
 		return newIdAgent;
 	}
 
+	/**
+	 * Permet de savoir si un agent a des droits sur la gestion de EAE :
+	 *  - si campagne en cours
+	 *  - si presence d EAE sur les agents subordonnés
+	 *  
+	 * Ce WS est appelé par :
+	 *  - le Kiosque-RH pour l affichage du module EAE
+	 *  
+	 * @param idAgent L ID de l agent
+	 * @return HttpStatus.OK ou HttpStatus.UNAUTHORIZED
+	 * @throws ParseException
+	 */
 	@RequestMapping(value = "/estHabiliteEAE", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)

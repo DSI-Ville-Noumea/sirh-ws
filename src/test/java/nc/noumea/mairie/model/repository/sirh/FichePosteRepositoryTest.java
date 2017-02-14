@@ -888,7 +888,9 @@ public class FichePosteRepositoryTest {
 		fichePosteVALIDEE.getAgent().add(affVALIDEE);
 		sirhPersistenceUnit.persist(fichePosteVALIDEE);
 
-		TreeMap<Integer, FichePosteTreeNode> result = repository.getAllFichePoste(new Date());
+		List<Integer> listeStatut = Arrays.asList(EnumStatutFichePoste.EN_CREATION.getId(), EnumStatutFichePoste.VALIDEE.getId(),
+				EnumStatutFichePoste.GELEE.getId(), EnumStatutFichePoste.TRANSITOIRE.getId());
+		TreeMap<Integer, FichePosteTreeNode> result = repository.getAllFichePoste(new Date(),listeStatut);
 
 		// la FDP inactive n est pas retournee
 		assertEquals(result.size(), 4);

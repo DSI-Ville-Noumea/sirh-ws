@@ -66,6 +66,13 @@ public class FichePosteController {
 	@Autowired
 	private IFichePosteRepository fichePosteDao;
 
+	/**
+	 * Re-construit l arbre des fiches de poste
+	 * Ce WS est appelé depuis :
+	 *  - SIRH à la création/modification d une fiche de poste
+	 * @return 200
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/rebuildFichePosteTree")
 	@Transactional(readOnly = true)
@@ -81,6 +88,15 @@ public class FichePosteController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
+	//TODO a verifier si utilisé et nettoyer code
+	/**
+	 * Ce WS n a plus l air de servir a un projet
+	 *
+	 * @param idAgent L ID de l agent
+	 * @param maxDepth le nombre de niveau dans l arbre
+	 * @return Les fiches de poste dependants d un agent 
+	 * @throws ParseException
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getSubFichePostes", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)

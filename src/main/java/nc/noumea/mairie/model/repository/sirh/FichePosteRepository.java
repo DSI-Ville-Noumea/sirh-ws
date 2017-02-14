@@ -49,13 +49,16 @@ public class FichePosteRepository implements IFichePosteRepository {
 	private EntityManager sirhEntityManager;
 
 	@SuppressWarnings("unchecked")
-	public Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today) {
+	public Hashtable<Integer, FichePosteTreeNode> getAllFichePosteAndAffectedAgents(Date today,List<Integer> listStatutFDP) {
 
 		Hashtable<Integer, FichePosteTreeNode> result = new Hashtable<Integer, FichePosteTreeNode>();
 
-		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT from FICHE_POSTE fp left join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE where fp.ID_STATUT_FP = 2 order by ID_FICHE_POSTE asc, ID_AGENT asc";
+		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT "
+				+ "from FICHE_POSTE fp left join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE "
+				+ "where fp.ID_STATUT_FP in (:listStatut) order by ID_FICHE_POSTE asc, ID_AGENT asc";
 		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
 		q.setParameter("today", today);
+		q.setParameter("listStatut", listStatutFDP);
 		List<Object[]> l = q.getResultList();
 
 		for (Object[] r : l) {
@@ -73,16 +76,17 @@ public class FichePosteRepository implements IFichePosteRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today) {
+	public TreeMap<Integer, FichePosteTreeNode> getAllFichePoste(Date today,List<Integer> listStatutFDP) {
 
 		TreeMap<Integer, FichePosteTreeNode> result = new TreeMap<Integer, FichePosteTreeNode>();
 
 		String sqlQuery = "select distinct fp.ID_FICHE_POSTE, fp.ID_RESPONSABLE, "
 				+ "case when aff.DATE_DEBUT_AFF <= :today AND (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) then aff.ID_AGENT else null end as ID_AGENT "
 				+ "from FICHE_POSTE fp left outer join AFFECTATION aff on fp.ID_FICHE_POSTE = aff.ID_FICHE_POSTE and (aff.DATE_FIN_AFF is null OR aff.DATE_FIN_AFF >= :today) "
-				+ "where fp.ID_STATUT_FP in (1 , 2 , 6, 5) order by ID_FICHE_POSTE asc, ID_AGENT asc";
+				+ "where fp.ID_STATUT_FP in (:listStatut) order by ID_FICHE_POSTE asc, ID_AGENT asc";
 		Query q = sirhEntityManager.createNativeQuery(sqlQuery);
 		q.setParameter("today", today);
+		q.setParameter("listStatut", listStatutFDP);
 		List<Object[]> l = q.getResultList();
 
 		for (Object[] r : l) {
