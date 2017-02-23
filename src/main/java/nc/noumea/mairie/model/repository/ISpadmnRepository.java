@@ -19,4 +19,13 @@ public interface ISpadmnRepository {
 	List<Integer> listAgentActiviteAnnuaire();
 
 	PositDesc chercherPositDescByPosit(String position);
+
+	/**
+	 * Retourne la liste des nomatr agents en activité sur une periode donnée
+	 * Utile à PTG pour la génération du fichier prestataire des titres repas Il
+	 * faut une PA et une affectation active sur la periode
+	 * 
+	 * @return List<Integer> La liste des nomatr en activité sur la période
+	 */
+	List<Integer> listNomatrEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode);
 }

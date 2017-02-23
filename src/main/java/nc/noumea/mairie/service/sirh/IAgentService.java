@@ -130,5 +130,13 @@ public interface IAgentService {
 	 * @return List<AgentWithServiceDto> La liste des agents ayant droit à l indemnite
 	 */
 	List<AgentWithServiceDto> getListeAgentWithIndemniteForfaitTravailDPM(List<Integer> listIdsAgent);
+	
+	/**
+	 * Retourne la liste des agents en activité sur une periode donnée
+	 * Utile à PTG pour la génération du fichier prestataire des titres repas
+	 * 
+	 * @return List<AgentWithServiceDto> La liste des agents en activité sur la période
+	 */
+	public List<AgentWithServiceDto> listAgentsEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode);
 
 }
