@@ -52,41 +52,41 @@ import nc.noumea.mairie.web.dto.ProfilAgentDto;
 @Controller
 @RequestMapping("/agents")
 public class AgentController {
-	
-	private Logger logger = LoggerFactory.getLogger(AgentController.class);
+
+	private Logger							logger	= LoggerFactory.getLogger(AgentController.class);
 
 	@Autowired
-	private IAgentService agentSrv;
+	private IAgentService					agentSrv;
 
 	@Autowired
-	private ISivietService sivietSrv;
+	private ISivietService					sivietSrv;
 
 	@Autowired
-	private ISibanqService sibanqSrv;
+	private ISibanqService					sibanqSrv;
 
 	@Autowired
-	private IContactService contactSrv;
+	private IContactService					contactSrv;
 
 	@Autowired
-	private IFichePosteService fpSrv;
+	private IFichePosteService				fpSrv;
 
 	@Autowired
-	private ISpadmnService spadmnSrv;
+	private ISpadmnService					spadmnSrv;
 
 	@Autowired
-	private IAgentMatriculeConverterService agentMatriculeConverterService;
+	private IAgentMatriculeConverterService	agentMatriculeConverterService;
 
 	@Autowired
-	private IAffectationRepository affRepo;
+	private IAffectationRepository			affRepo;
 
 	@Autowired
-	private IAdsService adsService;
+	private IAdsService						adsService;
 
 	@Autowired
-	private HelperService helperService;
-	
+	private HelperService					helperService;
+
 	@Autowired
-	private IContratService contratService;
+	private IContratService					contratService;
 
 	private String remanieIdAgent(Long idAgent) {
 		String newIdAgent;
@@ -171,7 +171,8 @@ public class AgentController {
 	@RequestMapping(value = "/getSuperieurHierarchique", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSuperieurHierarchiqueAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getSuperieurHierarchiqueAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent)
+			throws ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -191,7 +192,8 @@ public class AgentController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dateTemp = sdf.format(new Date());
 		Date dateJour = sdf.parse(dateTemp);
-		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent(), dateJour, false);
+		FichePoste fichePosteSuperieurHierarchique = fpSrv.getFichePostePrimaireAgentAffectationEnCours(agentSuperieurHierarchique.getIdAgent(),
+				dateJour, false);
 
 		if (fichePosteSuperieurHierarchique == null) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -209,8 +211,8 @@ public class AgentController {
 	@RequestMapping(value = "/getEquipe", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEquipeAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent, @RequestParam(value = "idService", required = false) Integer idService)
-			throws ParseException, java.text.ParseException {
+	public ResponseEntity<String> getEquipeAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent,
+			@RequestParam(value = "idService", required = false) Integer idService) throws ParseException, java.text.ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
@@ -226,7 +228,7 @@ public class AgentController {
 		List<Integer> listService = new ArrayList<Integer>();
 		if (null != idService) {
 			listService.add(idService);
-		} else if(null != ag.getIdServiceADS()) {
+		} else if (null != ag.getIdServiceADS()) {
 			listService.add(ag.getIdServiceADS());
 		}
 
@@ -302,9 +304,11 @@ public class AgentController {
 	}
 
 	/**
-	 * Est utilisé par kioque-RH et Alfresco : webscript SynchroniseAgentWebScript
+	 * Est utilisé par kioque-RH et Alfresco : webscript
+	 * SynchroniseAgentWebScript
 	 * 
-	 * @param idAgent Long ID de l agent
+	 * @param idAgent
+	 *            Long ID de l agent
 	 * @return ResponseEntity avec boolean
 	 * @throws ParseException
 	 */
@@ -336,21 +340,24 @@ public class AgentController {
 	/**
 	 * Retourne la liste des agents subordonnés de l agent en parametre
 	 * 
-	 * Ce WS est appelé par :
-	 *  - SIRH-EAE-WS > utilisé par plusieurs services
+	 * Ce WS est appelé par : - SIRH-EAE-WS > utilisé par plusieurs services
 	 * 
-	 * @param idAgent L ID de l agent
-	 * @param maxDepth Le nombre de niveau de recherche dans l arbre des fiches de poste
+	 * @param idAgent
+	 *            L ID de l agent
+	 * @param maxDepth
+	 *            Le nombre de niveau de recherche dans l arbre des fiches de
+	 *            poste
 	 * @return List<Integer> La liste des agents subordonnés
 	 * @throws ParseException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/sousAgents", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getSubAgents(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		logger.debug("entered GET [agents/sousAgents] => getSubAgents with parameter idAgent = {}", idAgent);
-		
+
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -369,22 +376,26 @@ public class AgentController {
 	/**
 	 * Retourne la liste des Supérieurs Hierarchique d un agent
 	 * 
-	 * Ce WS est appelé par :
-	 *  - SIRH-EAE-WS > EaeController.getFinalizationInformation
-	 *  - Alfresco > SynchroniseDroitsSHDWebScript
+	 * Ce WS est appelé par : - SIRH-EAE-WS >
+	 * EaeController.getFinalizationInformation - Alfresco >
+	 * SynchroniseDroitsSHDWebScript
 	 * 
-	 * @param idAgent L ID de l agent
-	 * @param maxDepth Le nombre de niveau à remonter dans l arbre des fiches de poste
+	 * @param idAgent
+	 *            L ID de l agent
+	 * @param maxDepth
+	 *            Le nombre de niveau à remonter dans l arbre des fiches de
+	 *            poste
 	 * @return La liste des SHD selon maxDepth
 	 * @throws ParseException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/agentsShd", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent, @RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
+	public ResponseEntity<String> getShdAgents(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		logger.debug("entered GET [agents/agentsShd] => getShdAgents with parameter idAgent = {}", idAgent);
-		
+
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -401,26 +412,31 @@ public class AgentController {
 	}
 
 	/**
-	 * Retourne une liste List<AgentDto> Une liste d agents subordonnées selon les parametres en entrée
+	 * Retourne une liste List<AgentDto> Une liste d agents subordonnées selon
+	 * les parametres en entrée
 	 * 
-	 * Ce WS est appelé depuis :
-	 *  - SIRH > OeSMConvocation > Recherche
-	 *  - Kiosque-RH > Gestion des droits ABS > Gestion des viseurs
-	 *  
-	 * @param idAgent L ID de l agent
-	 * @param nom Affine la recherche sur le nom des agents subordonnés
-	 * @param maxDepth Le niveau de recherche dans l arbre des fiches de poste
-	 * @return List<AgentDto> Une liste d agents subordonnées de l agent en parametre
+	 * Ce WS est appelé depuis : - SIRH > OeSMConvocation > Recherche -
+	 * Kiosque-RH > Gestion des droits ABS > Gestion des viseurs
+	 * 
+	 * @param idAgent
+	 *            L ID de l agent
+	 * @param nom
+	 *            Affine la recherche sur le nom des agents subordonnés
+	 * @param maxDepth
+	 *            Le niveau de recherche dans l arbre des fiches de poste
+	 * @return List<AgentDto> Une liste d agents subordonnées de l agent en
+	 *         parametre
 	 * @throws ParseException
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/agentsSubordonnes", produces = "application/json; charset=utf-8")
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentsSubordonnes(@RequestParam("idAgent") int idAgent, @RequestParam(value = "nom", required = false, defaultValue = "") String nom,
+	public ResponseEntity<String> getAgentsSubordonnes(@RequestParam("idAgent") int idAgent,
+			@RequestParam(value = "nom", required = false, defaultValue = "") String nom,
 			@RequestParam(value = "maxDepth", required = false, defaultValue = "3") int maxDepth) throws ParseException {
 
 		logger.debug("entered GET [agents/agentsSubordonnes] => getAgentsSubordonnes with parameter idAgent = {}", idAgent);
-		
+
 		int newIdAgent = agentMatriculeConverterService.tryConvertFromADIdAgentToIdAgent(idAgent);
 
 		Agent ag = agentSrv.getAgent(newIdAgent);
@@ -465,32 +481,29 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getArbreServicesWithListAgentsByService(
 			@RequestParam(value = "idServiceADS", required = false) Integer idServiceADS,
-			@RequestParam(value = "idAgent", required = false) Integer idAgent,
-			@RequestBody(required = false) String agentsAInclureJson) throws ParseException {
+			@RequestParam(value = "idAgent", required = false) Integer idAgent, @RequestBody(required = false) String agentsAInclureJson)
+			throws ParseException {
 
 		logger.debug("DEBUT getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
 		List<Integer> listIdsAgentRemanie = new ArrayList<Integer>();
-		if(null != agentsAInclureJson
-				&& !"".equals(agentsAInclureJson)) {
-			List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>()
-					.use(null, ArrayList.class).use("values", Integer.class)
+		if (null != agentsAInclureJson && !"".equals(agentsAInclureJson)) {
+			List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class)
 					.deserialize(agentsAInclureJson);
-	
+
 			// on remanie l'idAgent
 			for (Integer idAgentAInclure : listIdsAgent) {
 				listIdsAgentRemanie.add(helperService.remanieIdAgent(idAgentAInclure));
 			}
 		}
-		
+
 		EntiteWithAgentWithServiceDto result = agentSrv.getArbreServicesWithListAgentsByServiceWithoutAgentConnecteAndListAgentHorsService(
 				idServiceADS, idAgent, listIdsAgentRemanie, new Date());
 
 		logger.debug("FIN getArbreServicesWithListAgentsByService [agents/arbreServicesWithListAgentsByServiceWithoutAgentConnecte]");
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").include("*.entiteEnfantWithAgents.*")
-				.include("*.listAgentWithServiceDto.*")
-				.transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
+				.include("*.listAgentWithServiceDto.*").transform(new MSDateTransformer(), Date.class).serialize(result), HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -536,7 +549,8 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListAgents(@RequestBody String agentsApprouvesJson) throws ParseException {
 
-		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsApprouvesJson);
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class)
+				.deserialize(agentsApprouvesJson);
 
 		if (null == listIdsAgent || listIdsAgent.isEmpty()) {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -571,7 +585,8 @@ public class AgentController {
 		if (direction == null)
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
-		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant").exclude("*.serviceParent").transform(new MSDateTransformer(), Date.class);
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("*.servicesEnfant").exclude("*.serviceParent")
+				.transform(new MSDateTransformer(), Date.class);
 
 		return new ResponseEntity<String>(serializer.serialize(direction), HttpStatus.OK);
 	}
@@ -598,12 +613,15 @@ public class AgentController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * WS qui retourne TRUE ou FALSE selon que l agent est en periode d essai ou non
+	 * WS qui retourne TRUE ou FALSE selon que l agent est en periode d essai ou
+	 * non
 	 * 
-	 * @param idAgent Long ID de l agent
-	 * @param dateJour Date date de la recherche
+	 * @param idAgent
+	 *            Long ID de l agent
+	 * @param dateJour
+	 *            Date date de la recherche
 	 * @return TRUE ou FALSE
 	 */
 	@RequestMapping(value = "/isPeriodeEssai", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
@@ -611,36 +629,57 @@ public class AgentController {
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> isPeriodeEssai(@RequestParam(value = "idAgent", required = true) Long idAgent,
 			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateJour) {
-		
+
 		logger.debug(String.format("DEBUT isPeriodeEssai [agents/isPeriodeEssai] with idAgent = {} and dateJour = {}", idAgent, dateJour));
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
-		
-		if(contratService.isPeriodeEssai(new Integer(newIdAgent), dateJour)) {
+
+		if (contratService.isPeriodeEssai(new Integer(newIdAgent), dateJour)) {
 			return new ResponseEntity<String>(HttpStatus.OK);
-		}else{
+		} else {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 		}
 	}
-	
+
 	/**
-	 * Retourne la liste des agents ayant la prime pointage Indemnité forfaitaire travail DPM
-	 * sur leur affectation active. Filtre également avec les agents passés en parametre.
-	 * #30544
+	 * Retourne la liste des agents ayant la prime pointage Indemnité
+	 * forfaitaire travail DPM sur leur affectation active. Filtre également
+	 * avec les agents passés en parametre. #30544
 	 * 
-	 * @param agentsJson Liste des agents pour filtre
-	 * @return List<AgentWithServiceDto> La liste des agents avec la prime Indemnité forfaitaire travail DPM 
+	 * @param agentsJson
+	 *            Liste des agents pour filtre
+	 * @return List<AgentWithServiceDto> La liste des agents avec la prime
+	 *         Indemnité forfaitaire travail DPM
 	 */
 	@RequestMapping(value = "/listeAgentWithIndemniteForfaitTravailDPM", headers = "Accept=application/json", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	@Transactional(readOnly = true)
 	public ResponseEntity<String> getListeAgentWithIndemniteForfaitTravailDPM(@RequestBody String agentsJson) {
-		
-		logger.debug("DEBUT getListeAgentWithIndemniteForfaitTravailDPM [agents/listeAgentWithIndemniteForfaitTravailDPM] with parameter json = {}", agentsJson);
 
-		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class).deserialize(agentsJson);
+		logger.debug("DEBUT getListeAgentWithIndemniteForfaitTravailDPM [agents/listeAgentWithIndemniteForfaitTravailDPM] with parameter json = {}",
+				agentsJson);
+
+		List<Integer> listIdsAgent = new JSONDeserializer<List<Integer>>().use(null, ArrayList.class).use("values", Integer.class)
+				.deserialize(agentsJson);
 
 		List<AgentWithServiceDto> listeAgentActivite = agentSrv.getListeAgentWithIndemniteForfaitTravailDPM(listIdsAgent);
+
+		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/listeAgentsMairieSurPeriode", produces = "application/json; charset=utf-8")
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getListeAgentsMairieSurPeriode(
+			@RequestParam(value = "dateDebutPeriode", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateDebutPeriode,
+			@RequestParam(value = "dateFinPeriode", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateFinPeriode)
+			throws ParseException {
+
+		logger.debug("DEBUT getListeAgentsMairieSurPeriode [agents/listeAgentsMairieSurPeriode]");
+
+		List<AgentWithServiceDto> listeAgentActivite = agentSrv.listAgentsEnActiviteSurPeriode(dateDebutPeriode, dateFinPeriode);
+
+		logger.debug("FIN getListeAgentsMairieSurPeriode [agents/listeAgentsMairieSurPeriode]");
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(listeAgentActivite), HttpStatus.OK);
 	}

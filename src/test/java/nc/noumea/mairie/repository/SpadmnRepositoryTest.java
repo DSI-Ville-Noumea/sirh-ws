@@ -12,12 +12,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import nc.noumea.mairie.model.bean.Spadmn;
-import nc.noumea.mairie.model.bean.Spposa;
-import nc.noumea.mairie.model.bean.SpposaAnnuaire;
-import nc.noumea.mairie.model.pk.SpadmnId;
-import nc.noumea.mairie.model.repository.ISpadmnRepository;
-
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,17 +21,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.model.bean.Spposa;
+import nc.noumea.mairie.model.bean.SpposaAnnuaire;
+import nc.noumea.mairie.model.pk.SpadmnId;
+import nc.noumea.mairie.model.repository.ISpadmnRepository;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/META-INF/spring/applicationContext-test.xml" })
 public class SpadmnRepositoryTest {
 
 	@Autowired
-	ISpadmnRepository repository;
+	ISpadmnRepository			repository;
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
-	private EntityManager sirhPersistenceUnit;
+	private EntityManager		sirhPersistenceUnit;
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+	private SimpleDateFormat	sdf	= new SimpleDateFormat("yyyyMMdd");
 
 	@Test
 	@Transactional("sirhTransactionManager")
@@ -490,8 +491,7 @@ public class SpadmnRepositoryTest {
 		SpposaAnnuaire paAnnu1 = new SpposaAnnuaire();
 		paAnnu1.setCdpAdm("01");
 		sirhPersistenceUnit.persist(paAnnu1);
-		
-		
+
 		Spposa positionAdministrative1 = new Spposa();
 		positionAdministrative1.setCdpAdm("01");
 		sirhPersistenceUnit.persist(positionAdministrative1);
@@ -545,9 +545,201 @@ public class SpadmnRepositoryTest {
 
 		assertNotNull(result);
 		assertEquals(result.size(), 3);
-		assertEquals(result.get(0),spadmnId.getNomatr() );
-		assertEquals(result.get(1),spadmnId2.getNomatr() );
-		assertEquals(result.get(2),spadmnId3.getNomatr() );
+		assertEquals(result.get(0), spadmnId.getNomatr());
+		assertEquals(result.get(1), spadmnId2.getNomatr());
+		assertEquals(result.get(2), spadmnId3.getNomatr());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listNomatrEnActiviteSurPeriode_2results() {
+		Date dateDebut = new DateTime(2017, 01, 01, 0, 0, 0).toDate();
+		Date dateFin = new DateTime(2017, 01, 31, 0, 0, 0).toDate();
+
+		Spposa positionAdministrative1 = new Spposa();
+		positionAdministrative1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(positionAdministrative1);
+
+		SpadmnId spadmnIdDoublon = new SpadmnId();
+		spadmnIdDoublon.setNomatr(5136);
+		spadmnIdDoublon.setDatdeb(20100101);
+		Spadmn spAdmnDoublon = new Spadmn();
+		spAdmnDoublon.setId(spadmnIdDoublon);
+		spAdmnDoublon.setDatfin(20140101);
+		spAdmnDoublon.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmnDoublon);
+
+		SpadmnId spadmnId = new SpadmnId();
+		spadmnId.setNomatr(5136);
+		spadmnId.setDatdeb(20140101);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(spadmnId);
+		spAdmn.setDatfin(20201115);
+		spAdmn.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmn);
+
+		Spposa positionAdministrative2 = new Spposa();
+		positionAdministrative2.setCdpAdm("47");
+		sirhPersistenceUnit.persist(positionAdministrative2);
+
+		SpadmnId spadmnId2 = new SpadmnId();
+		spadmnId2.setNomatr(5137);
+		spadmnId2.setDatdeb(20140116);
+		Spadmn spAdmn2 = new Spadmn();
+		spAdmn2.setId(spadmnId2);
+		spAdmn2.setPositionAdministrative(positionAdministrative2);
+		spAdmn2.setDatfin(0);
+		sirhPersistenceUnit.persist(spAdmn2);
+
+		Spposa positionAdministrative3 = new Spposa();
+		positionAdministrative3.setCdpAdm("02");
+		sirhPersistenceUnit.persist(positionAdministrative3);
+
+		SpadmnId spadmnId3 = new SpadmnId();
+		spadmnId3.setNomatr(5138);
+		spadmnId3.setDatdeb(20140201);
+		Spadmn spAdmn3 = new Spadmn();
+		spAdmn3.setId(spadmnId3);
+		spAdmn3.setPositionAdministrative(positionAdministrative3);
+		spAdmn3.setDatfin(20201212);
+		sirhPersistenceUnit.persist(spAdmn3);
+
+		Spposa positionAdministrative4 = new Spposa();
+		positionAdministrative4.setCdpAdm("49");
+		sirhPersistenceUnit.persist(positionAdministrative4);
+
+		SpadmnId spadmnId4 = new SpadmnId();
+		spadmnId4.setNomatr(5139);
+		spadmnId4.setDatdeb(20140215);
+		Spadmn spAdmn4 = new Spadmn();
+		spAdmn4.setId(spadmnId4);
+		spAdmn4.setPositionAdministrative(positionAdministrative4);
+		spAdmn2.setDatfin(0);
+		sirhPersistenceUnit.persist(spAdmn4);
+
+		List<Integer> result = repository.listNomatrEnActiviteSurPeriode(dateDebut, dateFin);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 2);
+		assertEquals(result.get(0), spadmnId.getNomatr());
+		assertEquals(result.get(1), spadmnId3.getNomatr());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listNomatrEnActiviteSurPeriode_Noresults() {
+		Date dateDebut = new DateTime(2017, 01, 01, 0, 0, 0).toDate();
+		Date dateFin = new DateTime(2017, 01, 31, 0, 0, 0).toDate();
+
+		Spposa positionAdministrative1 = new Spposa();
+		positionAdministrative1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(positionAdministrative1);
+
+		SpadmnId spadmnIdDoublon = new SpadmnId();
+		spadmnIdDoublon.setNomatr(5136);
+		spadmnIdDoublon.setDatdeb(20100101);
+		Spadmn spAdmnDoublon = new Spadmn();
+		spAdmnDoublon.setId(spadmnIdDoublon);
+		spAdmnDoublon.setDatfin(20140101);
+		spAdmnDoublon.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmnDoublon);
+
+		List<Integer> result = repository.listNomatrEnActiviteSurPeriode(dateDebut, dateFin);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 0);
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listNomatrEnActiviteSurPeriode_1results() {
+		Date dateDebut = new DateTime(2017, 01, 01, 0, 0, 0).toDate();
+		Date dateFin = new DateTime(2017, 01, 31, 0, 0, 0).toDate();
+
+		Spposa positionAdministrative1 = new Spposa();
+		positionAdministrative1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(positionAdministrative1);
+
+		SpadmnId spadmnIdOld = new SpadmnId();
+		spadmnIdOld.setNomatr(1212);
+		spadmnIdOld.setDatdeb(20100101);
+		Spadmn spAdmnOld = new Spadmn();
+		spAdmnOld.setId(spadmnIdOld);
+		spAdmnOld.setDatfin(20140101);
+		spAdmnOld.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmnOld);
+
+		SpadmnId spadmnId = new SpadmnId();
+		spadmnId.setNomatr(1212);
+		spadmnId.setDatdeb(20140101);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(spadmnId);
+		spAdmn.setPositionAdministrative(positionAdministrative1);
+		spAdmn.setDatfin(0);
+		sirhPersistenceUnit.persist(spAdmn);
+
+		List<Integer> result = repository.listNomatrEnActiviteSurPeriode(dateDebut, dateFin);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 1);
+		assertEquals(result.get(0), spadmnIdOld.getNomatr());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void listNomatrEnActiviteSurPeriode_With2results() {
+		Date dateDebut = new DateTime(2017, 01, 01, 0, 0, 0).toDate();
+		Date dateFin = new DateTime(2017, 01, 31, 0, 0, 0).toDate();
+
+		Spposa positionAdministrative1 = new Spposa();
+		positionAdministrative1.setCdpAdm("01");
+		sirhPersistenceUnit.persist(positionAdministrative1);
+
+		SpadmnId spadmnIdAg2 = new SpadmnId();
+		spadmnIdAg2.setNomatr(1414);
+		spadmnIdAg2.setDatdeb(20170112);
+		Spadmn spAdmnAg2 = new Spadmn();
+		spAdmnAg2.setId(spadmnIdAg2);
+		spAdmnAg2.setDatfin(20180101);
+		spAdmnAg2.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmnAg2);
+
+		SpadmnId spadmnIdOld = new SpadmnId();
+		spadmnIdOld.setNomatr(1212);
+		spadmnIdOld.setDatdeb(20100101);
+		Spadmn spAdmnOld = new Spadmn();
+		spAdmnOld.setId(spadmnIdOld);
+		spAdmnOld.setDatfin(20140101);
+		spAdmnOld.setPositionAdministrative(positionAdministrative1);
+		sirhPersistenceUnit.persist(spAdmnOld);
+
+		SpadmnId spadmnId = new SpadmnId();
+		spadmnId.setNomatr(1212);
+		spadmnId.setDatdeb(20140101);
+		Spadmn spAdmn = new Spadmn();
+		spAdmn.setId(spadmnId);
+		spAdmn.setPositionAdministrative(positionAdministrative1);
+		spAdmn.setDatfin(0);
+		sirhPersistenceUnit.persist(spAdmn);
+
+		List<Integer> result = repository.listNomatrEnActiviteSurPeriode(dateDebut, dateFin);
+
+		assertNotNull(result);
+		assertEquals(result.size(), 2);
+		assertEquals(result.get(0), spadmnIdOld.getNomatr());
+		assertEquals(result.get(1), spadmnIdAg2.getNomatr());
 
 		sirhPersistenceUnit.flush();
 		sirhPersistenceUnit.clear();
