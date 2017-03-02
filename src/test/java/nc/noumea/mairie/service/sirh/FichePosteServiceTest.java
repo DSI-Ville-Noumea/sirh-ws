@@ -53,6 +53,7 @@ import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
 import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
 import nc.noumea.mairie.model.bean.sirh.TitrePoste;
 import nc.noumea.mairie.model.pk.SpmtsrId;
+import nc.noumea.mairie.model.pk.SppostId;
 import nc.noumea.mairie.model.pk.sirh.ActiviteFPPK;
 import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
@@ -3249,7 +3250,7 @@ public class FichePosteServiceTest {
 	}
 
 	@Test
-	public void inactiveFichePosteFromEntity_3FichesPoste() {
+	public void inactiveFichePosteFromEntity_BadSppost() {
 		EntiteDto entite = new EntiteDto();
 		entite.setSigle("SOURCE");
 
@@ -3269,6 +3270,69 @@ public class FichePosteServiceTest {
 		fp.setStatutFP(statutValide);
 
 		Sppost sppost = new Sppost();
+
+		listFichesPoste.addAll(Arrays.asList(1,2,3));
+
+		IFichePosteRepository fichePosteDao = Mockito.mock(IFichePosteRepository.class);
+		Mockito.when(fichePosteDao.getListFichePosteNonAffecteeEtPasInactiveByIdServiceADS(1)).thenReturn(listFichesPoste);
+		Mockito.when(fichePosteDao.chercherFichePoste(Mockito.anyInt())).thenReturn(fp);
+		Mockito.when(fichePosteDao.chercherSppost(Mockito.anyInt(), Mockito.anyInt())).thenReturn(sppost);
+		Mockito.when(fichePosteDao.chercherStatutFPByIdStatut(EnumStatutFichePoste.INACTIVE.getId())).thenReturn(statutInactif);
+
+		LightUserDto user = new LightUserDto();
+		user.setsAMAccountName("rebjo84");
+		IUtilisateurService utilisateurSrv = Mockito.mock(IUtilisateurService.class);
+		Mockito.when(utilisateurSrv.getLoginByIdAgent(idAgent)).thenReturn(user);
+
+		Mockito.doAnswer(new Answer<Object>() {
+			@Override
+			public Object answer(InvocationOnMock invocation) {
+				HistoFichePoste histo = (HistoFichePoste) invocation.getArguments()[0];
+				assertEquals(histo.getUserHisto(), "rebjo84");
+				assertEquals(histo.getTypeHisto(), EnumTypeHisto.MODIFICATION.getValue());
+				return null;
+			}
+		}).when(fichePosteDao).persisEntity(Mockito.isA(HistoFichePoste.class));
+
+		IADSWSConsumer adsWSConsumer = Mockito.mock(IADSWSConsumer.class);
+		Mockito.when(adsWSConsumer.getEntiteWithChildrenByIdEntite(1)).thenReturn(entite);
+
+		FichePosteService ficheService = new FichePosteService();
+		ReflectionTestUtils.setField(ficheService, "adsWSConsumer", adsWSConsumer);
+		ReflectionTestUtils.setField(ficheService, "utilisateurSrv", utilisateurSrv);
+		ReflectionTestUtils.setField(ficheService, "fichePosteDao", fichePosteDao);
+
+		ReturnMessageDto result = ficheService.inactiveFichePosteFromEntity(1, idAgent);
+		assertEquals("La FDP 2015/1 n'est pas à jour dans SIRH. Merci de faire la necessaire avant de recommencer l'opération.", result.getErrors().get(0));
+		assertTrue(result.getInfos().isEmpty());
+		Mockito.verify(fichePosteDao, Mockito.times(0)).persisEntity(Mockito.isA(HistoFichePoste.class));
+		Mockito.verify(fichePosteDao, Mockito.times(0)).persisEntity(Mockito.isA(Sppost.class));
+	}
+
+	@Test
+	public void inactiveFichePosteFromEntity_3FichesPoste() {
+		EntiteDto entite = new EntiteDto();
+		entite.setSigle("SOURCE");
+
+		Integer idAgent = 9005138;
+
+		StatutFichePoste statutInactif = new StatutFichePoste();
+		statutInactif.setIdStatutFp(EnumStatutFichePoste.INACTIVE.getId());
+		statutInactif.setLibStatut("Inactive");
+		
+		StatutFichePoste statutValide = new StatutFichePoste();
+		statutInactif.setIdStatutFp(EnumStatutFichePoste.VALIDEE.getId());
+		statutInactif.setLibStatut("Valide");
+
+		List<Integer> listFichesPoste = new ArrayList<Integer>();
+		FichePoste fp = new FichePoste();
+		fp.setNumFP("2015/1");
+		fp.setStatutFP(statutValide);
+
+		SppostId id = new SppostId();
+		id.setPoanne(2015);
+		Sppost sppost = new Sppost();
+		sppost.setId(id);
 
 		listFichesPoste.addAll(Arrays.asList(1,2,3));
 
