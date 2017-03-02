@@ -1628,6 +1628,12 @@ public class FichePosteService implements IFichePosteService {
 				// #18977 : on met à jour sppost
 				Sppost sppost = fichePosteDao.chercherSppost(new Integer(fp.getNumFP().substring(0, 4)),
 						new Integer(fp.getNumFP().substring(5, fp.getNumFP().length())));
+				// #37406 : des fois les FDP ne sont pas à jour dans SIRH.
+				if (sppost == null || sppost.getId() == null || sppost.getId().getPoanne() == null) {
+					result.getErrors().add("La FDP " + fp.getNumFP().substring(0, 4) + "/" + fp.getNumFP().substring(5, fp.getNumFP().length())
+							+ " n'est pas à jour dans SIRH. Merci de faire la necessaire avant de recommencer l'opération.");
+					return result;
+				}
 				sppost.setCodact("I");
 				fichePosteDao.persisEntity(sppost);
 
