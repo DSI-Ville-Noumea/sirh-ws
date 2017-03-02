@@ -10,7 +10,7 @@ import nc.noumea.mairie.model.bean.sirh.Agent;
 public class ProfilAgentDto {
 
 	/*
-	 * POUR LE PROJETS KIOSQUE J2EE
+	 * POUR LE PROJETS KIOSQUE J2EE et PTG
 	 */
 
 	private AgentGeneriqueDto agent;

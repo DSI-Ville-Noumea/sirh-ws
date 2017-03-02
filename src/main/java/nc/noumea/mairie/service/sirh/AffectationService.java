@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.repository.sirh.IAffectationRepository;
 import nc.noumea.mairie.web.dto.AffectationDto;
+import nc.noumea.mairie.web.dto.RefTypeAbsenceDto;
+import nc.noumea.mairie.ws.ISirhAbsWSConsumer;
 
 @Service
 public class AffectationService implements IAffectationService {
@@ -23,6 +25,9 @@ public class AffectationService implements IAffectationService {
 
 	@Autowired
 	private IAffectationRepository affRepo;
+
+	@Autowired
+	private ISirhAbsWSConsumer		sirhAbsWSConsumer;
 
 	@Override
 	public Affectation getAffectationById(Integer idAffectation) {
@@ -76,7 +81,8 @@ public class AffectationService implements IAffectationService {
 		
 		if(null != listAffectation) {
 			for(Affectation aff : listAffectation) {
-				AffectationDto dto = new AffectationDto(aff);
+				RefTypeAbsenceDto dtoBaseHoraireAbs = sirhAbsWSConsumer.getTypAbsenceCongeAnnuelById(aff.getIdBaseHoraireAbsence());
+				AffectationDto dto = new AffectationDto(aff, dtoBaseHoraireAbs.getTypeSaisiCongeAnnuelDto());
 				result.add(dto);
 			}
 		}

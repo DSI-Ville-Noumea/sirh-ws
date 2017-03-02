@@ -17,6 +17,7 @@ import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.repository.ISpadmnRepository;
 import nc.noumea.mairie.model.repository.sirh.IAgentRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
 import nc.noumea.mairie.web.dto.AgentDto;
@@ -29,7 +30,6 @@ import nc.noumea.mairie.ws.IADSWSConsumer;
 @Service
 public class AgentService implements IAgentService {
 
-	// TODO
 	public final static Integer	NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_SAMEDI_DPM	= 7718;
 	public final static Integer	NO_RUBR_INDEMNITE_FORFAIT_TRAVAIL_DJF_DPM		= 7719;
 
@@ -44,6 +44,9 @@ public class AgentService implements IAgentService {
 
 	@Autowired
 	private IAgentRepository	agentRepository;
+
+	@Autowired
+	private ISpadmnRepository	spadmnRepository;
 
 	@Override
 	public Agent getAgent(Integer id) {
@@ -567,6 +570,24 @@ public class AgentService implements IAgentService {
 			}
 		}
 
+		return result;
+	}
+
+	@Override
+	public List<AgentWithServiceDto> listAgentsEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode) {
+		List<AgentWithServiceDto> result = new ArrayList<>();
+		// on cherche les agents avec une PA et une affectation active sur la
+		// periode
+		List<Integer> listAgentActif = spadmnRepository.listNomatrEnActiviteSurPeriode(dateDebutPeriode, dateFinPeriode);
+
+		// on transforme les nomatr en idAgent
+		List<Integer> listIdAgent = new ArrayList<>();
+		for (Integer nomatr : listAgentActif) {
+			listIdAgent.add(nomatr + 9000000);
+		}
+
+		// on recupere les affectation pour avoir le service
+		result = listAgentsOfServices(null, dateDebutPeriode, listIdAgent);
 		return result;
 	}
 }
