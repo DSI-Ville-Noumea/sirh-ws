@@ -7,7 +7,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import nc.noumea.mairie.model.bean.sirh.Agent;
+import nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie;
 import nc.noumea.mairie.model.bean.sirh.Droits;
 import nc.noumea.mairie.model.bean.sirh.DroitsElementEnum;
 import nc.noumea.mairie.model.bean.sirh.DroitsGroupeEnum;
@@ -19,11 +25,6 @@ import nc.noumea.mairie.web.dto.AccessRightOrganigrammeDto;
 import nc.noumea.mairie.ws.IRadiWSConsumer;
 import nc.noumea.mairie.ws.dto.LightUserDto;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UtilisateurService implements IUtilisateurService {
@@ -191,5 +192,23 @@ public class UtilisateurService implements IUtilisateurService {
 		}
 
 		return user;
+	}
+
+	@Override
+	public List<LightUserDto> getListEmailDestinataire() {
+		List<LightUserDto> result = new ArrayList<>();
+		List<DestinataireMailMaladie> listeDestinataire = sirhRepository.getListDestinataireMailMaladie();
+		for (DestinataireMailMaladie dest : listeDestinataire) {
+			for (Utilisateur util : dest.getGroupe().getUtilisateurs()) {
+				if(util != null && util.getLogin() != null){
+				// Get the assignee email address for To
+				LightUserDto user = radiWSConsumer.getAgentCompteADByLogin(util.getLogin());
+				if (user != null && user.getMail() != null) {
+					result.add(user);
+				}
+				}
+			}
+		}
+		return result;
 	}
 }

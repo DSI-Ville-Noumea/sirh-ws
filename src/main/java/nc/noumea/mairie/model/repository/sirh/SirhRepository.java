@@ -7,13 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.springframework.stereotype.Repository;
+
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.bean.sirh.JourFerie;
 import nc.noumea.mairie.model.bean.sirh.Utilisateur;
-
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class SirhRepository implements ISirhRepository {
@@ -99,6 +100,20 @@ public class SirhRepository implements ISirhRepository {
 
 		TypedQuery<Utilisateur> q = sirhEntityManager.createNamedQuery("getAllUtilisateurs", Utilisateur.class);
 		
+		return q.getResultList();
+	}
+
+
+	@Override
+	public List<DestinataireMailMaladie> getListDestinataireMailMaladie() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select distinct(dest) from DestinataireMailMaladie dest ");
+		sb.append("join fetch dest.groupe gr ");
+		sb.append("join fetch gr.utilisateurs ");
+		sb.append("order by dest.idDestinataireMailMaladie ");
+
+		TypedQuery<DestinataireMailMaladie> q = sirhEntityManager.createQuery(sb.toString(), DestinataireMailMaladie.class);
+
 		return q.getResultList();
 	}
 }

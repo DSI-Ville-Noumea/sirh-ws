@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.FormationAgent;
 import nc.noumea.mairie.model.bean.sirh.JourFerie;
@@ -22,4 +23,6 @@ public interface ISirhRepository {
 	List<JourFerie> getListeJoursFeries(Date dateDebut, Date dateFin);
 
 	List<Utilisateur> getListeUtilisateur();
+
+	List<DestinataireMailMaladie> getListDestinataireMailMaladie();
 }
