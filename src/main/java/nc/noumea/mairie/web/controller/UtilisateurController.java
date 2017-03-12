@@ -116,4 +116,18 @@ public class UtilisateurController {
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getEmailDestinataire", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<String> getEmailDestinataire() {
+
+		logger.debug("entered GET [utilisateur/getEmailDestinataire] => getEmailDestinataire");
+
+		List<LightUserDto> res = utilisateurSrv.getListEmailDestinataire();
+
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(res);
+
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
 }

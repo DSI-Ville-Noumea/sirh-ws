@@ -1,6 +1,7 @@
 package nc.noumea.mairie.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Date;
@@ -9,14 +10,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import nc.noumea.mairie.model.bean.sirh.AutreAdministration;
-import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
-import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
-import nc.noumea.mairie.model.bean.sirh.FormationAgent;
-import nc.noumea.mairie.model.bean.sirh.JourFerie;
-import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
-import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
-
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import nc.noumea.mairie.model.bean.sirh.AutreAdministration;
+import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie;
+import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
+import nc.noumea.mairie.model.bean.sirh.DroitsGroupe;
+import nc.noumea.mairie.model.bean.sirh.FormationAgent;
+import nc.noumea.mairie.model.bean.sirh.JourFerie;
+import nc.noumea.mairie.model.bean.sirh.Utilisateur;
+import nc.noumea.mairie.model.pk.sirh.AutreAdministrationAgentPK;
+import nc.noumea.mairie.model.repository.sirh.ISirhRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/META-INF/spring/applicationContext-test.xml" })
@@ -421,5 +425,160 @@ public class SirhRepositoryTest {
 		List<JourFerie> result = repository.getListeJoursFeries(new DateTime(2014, 11, 1, 0, 0, 0).toDate(), new DateTime(2014, 11, 30, 0, 0, 0).toDate());
 		
 		assertEquals(result.size(), 0);
+	}
+
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListDestinataireMailMaladie_returnNoResult() {
+
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+
+		assertNotNull(result);
+		assertEquals(0, result.size());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListDestinataireMailMaladie_returnResult() {
+		Utilisateur uti1 = new Utilisateur();
+		uti1.setIdUtilisateur(1);
+		uti1.setLogin("nono");
+		sirhPersistenceUnit.persist(uti1);
+		
+		DroitsGroupe drG1 = new DroitsGroupe();
+		drG1.setIdGroupe(1);
+		drG1.setLibGroupe("GROUPE 1");
+		drG1.getUtilisateurs().add(uti1);
+		sirhPersistenceUnit.persist(drG1);
+		
+		DestinataireMailMaladie dest1 = new DestinataireMailMaladie();
+		dest1.setIdDestinataireMailMaladie(1);
+		dest1.setGroupe(drG1);
+		sirhPersistenceUnit.persist(dest1);
+
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(drG1.getLibGroupe(), result.get(0).getGroupe().getLibGroupe());
+		assertEquals(1, result.get(0).getGroupe().getUtilisateurs().size());
+		
+		for(Utilisateur u : result.get(0).getGroupe().getUtilisateurs()){
+			assertEquals(u.getLogin(), uti1.getLogin());
+		}
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListDestinataireMailMaladie_UtilisateurMultipleGroupe_returnResult() {
+		Utilisateur uti1 = new Utilisateur();
+		uti1.setIdUtilisateur(1);
+		uti1.setLogin("nono");
+		sirhPersistenceUnit.persist(uti1);
+		
+		DroitsGroupe drG2 = new DroitsGroupe();
+		drG2.setIdGroupe(2);
+		drG2.setLibGroupe("GROUPE 2");
+		drG2.getUtilisateurs().add(uti1);
+		sirhPersistenceUnit.persist(drG2);
+		
+		DroitsGroupe drG1 = new DroitsGroupe();
+		drG1.setIdGroupe(1);
+		drG1.setLibGroupe("GROUPE 1");
+		drG1.getUtilisateurs().add(uti1);
+		sirhPersistenceUnit.persist(drG1);
+		
+		DestinataireMailMaladie dest2 = new DestinataireMailMaladie();
+		dest2.setIdDestinataireMailMaladie(2);
+		dest2.setGroupe(drG2);
+		sirhPersistenceUnit.persist(dest2);
+		
+		DestinataireMailMaladie dest1 = new DestinataireMailMaladie();
+		dest1.setIdDestinataireMailMaladie(1);
+		dest1.setGroupe(drG1);
+		sirhPersistenceUnit.persist(dest1);
+
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(1, result.get(0).getGroupe().getUtilisateurs().size());
+		assertEquals(drG1.getLibGroupe(), result.get(0).getGroupe().getLibGroupe());
+		assertEquals(1, result.get(1).getGroupe().getUtilisateurs().size());
+		assertEquals(drG2.getLibGroupe(), result.get(1).getGroupe().getLibGroupe());
+
+		for(Utilisateur u : result.get(0).getGroupe().getUtilisateurs()){
+			assertEquals(u.getLogin(), uti1.getLogin());
+		}
+		for(Utilisateur u : result.get(1).getGroupe().getUtilisateurs()){
+			assertEquals(u.getLogin(), uti1.getLogin());
+		}
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getListDestinataireMailMaladie_UtilisateurMultipleGroupe_MultipleUtilisateur_returnResult() {		
+		
+		Utilisateur utiNono = new Utilisateur();
+		utiNono.setIdUtilisateur(1);
+		utiNono.setLogin("nono");
+		sirhPersistenceUnit.persist(utiNono);
+		
+		Utilisateur utiAutre = new Utilisateur();
+		utiAutre.setIdUtilisateur(2);
+		utiAutre.setLogin("autre");
+		sirhPersistenceUnit.persist(utiAutre);
+		
+		DroitsGroupe drG2 = new DroitsGroupe();
+		drG2.setIdGroupe(2);
+		drG2.setLibGroupe("GROUPE 2");
+		drG2.getUtilisateurs().add(utiNono);
+		drG2.getUtilisateurs().add(utiAutre);
+		sirhPersistenceUnit.persist(drG2);
+		
+		DroitsGroupe drG1 = new DroitsGroupe();
+		drG1.setIdGroupe(1);
+		drG1.setLibGroupe("GROUPE 1");
+		drG1.getUtilisateurs().add(utiNono);
+		sirhPersistenceUnit.persist(drG1);
+		
+		DestinataireMailMaladie dest2 = new DestinataireMailMaladie();
+		dest2.setIdDestinataireMailMaladie(2);
+		dest2.setGroupe(drG2);
+		sirhPersistenceUnit.persist(dest2);
+		
+		DestinataireMailMaladie dest1 = new DestinataireMailMaladie();
+		dest1.setIdDestinataireMailMaladie(1);
+		dest1.setGroupe(drG1);
+		sirhPersistenceUnit.persist(dest1);
+
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		//1ere groupe = drG1
+		assertEquals(1, result.get(0).getGroupe().getUtilisateurs().size());
+		assertEquals(drG1.getLibGroupe(), result.get(0).getGroupe().getLibGroupe());
+		
+		for(Utilisateur u : result.get(0).getGroupe().getUtilisateurs()){
+			assertEquals(u.getLogin(), utiNono.getLogin());
+		}
+
+		//1ere groupe = drG2 avec 2 utilisateurs
+		assertEquals(2, result.get(1).getGroupe().getUtilisateurs().size());
+		assertEquals(drG2.getLibGroupe(), result.get(1).getGroupe().getLibGroupe());
+
+		sirhPersistenceUnit.flush();
+		sirhPersistenceUnit.clear();
 	}
 }
