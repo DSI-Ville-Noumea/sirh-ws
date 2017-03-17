@@ -235,6 +235,7 @@ public class AvancementsService implements IAvancementsService {
 			// on regarde si l'EAE est finalisé pour le considérer comme réalisé
 			if (idAgentConnecte != null) {
 				try {
+					aItem.setEaeRealise(false);
 					CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
 					ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(), campagneEnCours.getAnnee());
 					Integer idEae = Integer.valueOf(eaeAgent.getInfos().get(0));
@@ -247,7 +248,6 @@ public class AvancementsService implements IAvancementsService {
 				} catch (Exception e) {
 					aItem.setEaeRealise(false);
 				}
-				aItem.setEaeRealise(false);
 			}
 			switch (avct.getIdModifAvancement()) {
 
