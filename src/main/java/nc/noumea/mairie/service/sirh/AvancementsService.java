@@ -64,7 +64,7 @@ public class AvancementsService implements IAvancementsService {
 	private IADSWSConsumer			adsWSConsumer;
 
 	@Override
-	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean avisEAE, boolean capVDN,Integer idAgentConnecte) {
+	public CommissionAvancementDto getCommissionsForCapAndCadreEmploi(int idCap, int idCadreEmploi, boolean isAvisShd, boolean capVDN,Integer idAgentConnecte) {
 
 		CommissionAvancementDto result = new CommissionAvancementDto();
 		Cap cap = getCap(idCap);
@@ -83,7 +83,7 @@ public class AvancementsService implements IAvancementsService {
 			if (avcts.size() == 0)
 				continue;
 
-			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, avisEAE,idAgentConnecte);
+			CommissionAvancementCorpsDto comCorps = createCommissionCorps(cap, corp, avcts, isAvisShd,idAgentConnecte);
 			result.getCommissionsParCorps().add(comCorps);
 		}
 
@@ -191,7 +191,7 @@ public class AvancementsService implements IAvancementsService {
 		return result;
 	}
 
-	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements, boolean avisEae,
+	public CommissionAvancementCorpsDto createCommissionCorps(Cap cap, Spgeng spgeng, List<AvancementFonctionnaire> avancements, boolean isAvisShd,
 			Integer idAgentConnecte) {
 
 		CommissionAvancementCorpsDto result = new CommissionAvancementCorpsDto(spgeng);
@@ -200,7 +200,8 @@ public class AvancementsService implements IAvancementsService {
 
 		for (AvancementFonctionnaire avct : avancements) {
 			Integer valeurAvisEAE = null;
-			if (avisEae) {
+			// Si on veut l'avis SHD, on prend la valeur de l'avis de l'EAE
+			if (isAvisShd) {
 				CampagneEaeDto campagneEnCours = sirhEaeWSConsumer.getEaeCampagneOuverte();
 
 				ReturnMessageDto eaeAgent = sirhEaeWSConsumer.findEaeByAgentAndYear(avct.getAgent().getIdAgent(), campagneEnCours.getAnnee());
@@ -230,7 +231,7 @@ public class AvancementsService implements IAvancementsService {
 			}
 
 			// redmine #19991 : on cherche le derniere avancement minimale
-			AvancementItemDto aItem = new AvancementItemDto(avct, avisEae, valeurAvisEAE,
+			AvancementItemDto aItem = new AvancementItemDto(avct, isAvisShd, valeurAvisEAE,
 					avancementRepository.getDateAvancementsMinimaleAncienne(avct.getAgent().getIdAgent()));
 			// on regarde si l'EAE est finalisé pour le considérer comme réalisé
 			if (idAgentConnecte != null) {

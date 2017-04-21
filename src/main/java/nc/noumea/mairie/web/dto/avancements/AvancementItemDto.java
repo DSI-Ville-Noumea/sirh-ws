@@ -26,7 +26,7 @@ public class AvancementItemDto {
 
 	}
 
-	public AvancementItemDto(AvancementFonctionnaire avct, boolean avisEAE, Integer valeurAvisEAE, Date dateAncienAvancementMinimale) {
+	public AvancementItemDto(AvancementFonctionnaire avct, boolean isAvisShd, Integer valeurAvisEAE, Date dateAncienAvancementMinimale) {
 
 		if (avct.getAgent() != null) {
 			this.nom = avct.getAgent().getDisplayNom();
@@ -40,7 +40,9 @@ public class AvancementItemDto {
 
 		this.datePrevisionnelleAvancement = avct.getDateAvctMoy();
 		this.classement = avct.getOrdreMerite();
-		if (!avisEAE) {
+		
+		// Si on ne veut pas l'avis SHD, on prend l'avis VDN
+		if (!isAvisShd) {
 			if (avct.getAvisCap() != null) {
 				switch (avct.getAvisCap().getIdAvisCap()) {
 					case 1:

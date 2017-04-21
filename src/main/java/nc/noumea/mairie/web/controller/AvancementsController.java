@@ -42,18 +42,18 @@ public class AvancementsController {
 	@ResponseBody
 	@RequestMapping(value = "/downloadTableauAvancementsPDF", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> downloadTableauAvancementsPDF(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("avisEAE") boolean avisEAE,@RequestParam(value = "idAgent", required = false) Integer idAgentConnecte)
+	public ResponseEntity<byte[]> downloadTableauAvancementsPDF(@RequestParam("idCap") int idCap, @RequestParam("idCadreEmploi") int idCadreEmploi, @RequestParam("isAvisShd") boolean isAvisShd,@RequestParam(value = "idAgent", required = false) Integer idAgentConnecte)
 			throws ParseException {
 
-		logger.debug("entered GET [avancements/downloadTableauAvancementsPDF] => downloadTableauAvancementsPDF with parameter idCap = {} and idCadreEmploi = {} and avisEAE = {}", idCap,
-				idCadreEmploi, avisEAE);
+		logger.debug("entered GET [avancements/downloadTableauAvancementsPDF] => downloadTableauAvancementsPDF with parameter idCap = {} and idCadreEmploi = {} and isAvisShd = {}", idCap,
+				idCadreEmploi, isAvisShd);
 
 		if (avancementsService.getCap(idCap) == null)
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 
 		Cap cap = avancementsService.getCap(idCap);
 
-		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi, avisEAE, cap.isCapVDN(),idAgentConnecte);
+		CommissionAvancementDto dto = avancementsService.getCommissionsForCapAndCadreEmploi(idCap, idCadreEmploi, isAvisShd, cap.isCapVDN(),idAgentConnecte);
 
 		byte[] responseData = null;
 
