@@ -228,6 +228,17 @@ public class Agent {
 	@Transient
 	private String position;
 
+	@Column(name = "ID_TITRE_REPAS")
+	private Integer idTitreRepas;
+
+	public Integer getIdTitreRepas() {
+		return idTitreRepas;
+	}
+
+	public void setIdTitreRepas(Integer idTitreRepas) {
+		this.idTitreRepas = idTitreRepas;
+	}
+
 	public String getDisplayPrenom() {
 		return getPrenomUsage();
 	}
