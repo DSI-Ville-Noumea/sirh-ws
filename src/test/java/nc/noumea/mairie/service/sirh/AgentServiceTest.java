@@ -803,5 +803,55 @@ public class AgentServiceTest {
 		
 		assertEquals(2, agtService.getListeAgentWithIndemniteForfaitTravailDPM(null).size());
 	}
+	
+
+
+	@Test
+	public void getAgentByIdTitreRepas_returnAgent() {
+		// Given
+
+		Agent ag1 = new Agent();
+		ag1.setIdAgent(9005138);
+		ag1.setNomUsage("NOM USAGE");
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Agent> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(ag1);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Agent result = agtService.getAgentByIdTitreRepas(2323);
+
+		// Then
+		assertEquals(ag1.getIdAgent(), result.getIdAgent());
+	}
+	
+
+
+	@Test
+	public void getAgentByIdTitreRepas_noResult() {
+		// Given
+
+		@SuppressWarnings("unchecked")
+		TypedQuery<Agent> mockQuery = Mockito.mock(TypedQuery.class);
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(null);
+
+		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
+		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
+
+		AgentService agtService = new AgentService();
+		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
+
+		// When
+		Agent result = agtService.getAgentByIdTitreRepas(2323);
+
+		// Then
+		assertNull(result);
+	}
 
 }
