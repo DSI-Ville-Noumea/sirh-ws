@@ -685,18 +685,21 @@ public class AgentController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "getAgentByTitreRepas", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "listAgentAvecIdTitreRepas", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getAgentByTitreRepas(@RequestParam(value = "idTitreRepas", required = true) String idTitreRepas) {
-		AgentGeneriqueDto dto = new AgentGeneriqueDto(null);
+	public ResponseEntity<String> listAgentAvecIdTitreRepas() {
 
-		Agent agent = agentSrv.getAgentByIdTitreRepas(Integer.valueOf(idTitreRepas));
+		logger.debug("DEBUT listAgentAvecIdTitreRepas [agents/listAgentAvecIdTitreRepas]");
 
-		if (agent != null) {
-			dto = new AgentGeneriqueDto(agent);
+		List<Agent> listAgent = agentSrv.listAgentWithIdTitreRepas();
+		List<AgentGeneriqueDto> result = new ArrayList<>();
+
+		for (Agent agent : listAgent) {
+			AgentGeneriqueDto dto = new AgentGeneriqueDto(agent);
+			result.add(dto);
 		}
 
-		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(dto);
+		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}

@@ -141,9 +141,8 @@ public interface IAgentService {
 
 	/**
 	 * Utile à SIRH-PTG-WS pour chercher un idAgent à partir de l'id TR
-	 * @param idTitreRepas
 	 * @return
 	 */
-	public Agent getAgentByIdTitreRepas(Integer idTitreRepas);
+	public List<Agent> listAgentWithIdTitreRepas();
 
 }

@@ -592,18 +592,10 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public Agent getAgentByIdTitreRepas(Integer idTitreRepas) {
-		Agent res = null;
+	public List<Agent> listAgentWithIdTitreRepas() {
 
-		TypedQuery<Agent> query = sirhEntityManager
-				.createQuery("select ag from Agent ag where ag.idTitreRepas = :idTitreRepas", Agent.class);
+		TypedQuery<Agent> query = sirhEntityManager.createQuery("select ag from Agent ag where ag.idTitreRepas is not null", Agent.class);
 
-		query.setParameter("idTitreRepas", idTitreRepas);
-		try {
-			res = query.getSingleResult();
-		} catch (Exception e) {
-			// agent nom trouvé avec cet idTitreRepas
-		}
-		return res;
+		return query.getResultList();
 	}
 }
