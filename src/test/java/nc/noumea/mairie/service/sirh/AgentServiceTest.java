@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -806,7 +807,7 @@ public class AgentServiceTest {
 
 
 	@Test
-	public void listAgentWithIdTitreRepas_returnAgent() {
+	public void getAgentByIdTitreRepas_returnAgent() {
 		// Given
 
 		Agent ag1 = new Agent();
@@ -815,7 +816,7 @@ public class AgentServiceTest {
 
 		@SuppressWarnings("unchecked")
 		TypedQuery<Agent> mockQuery = Mockito.mock(TypedQuery.class);
-		Mockito.when(mockQuery.getResultList()).thenReturn(Arrays.asList(ag1));
+		Mockito.when(mockQuery.getSingleResult()).thenReturn(ag1);
 
 		EntityManager sirhEMMock = Mockito.mock(EntityManager.class);
 		Mockito.when(sirhEMMock.createQuery(Mockito.anyString(), Mockito.eq(Agent.class))).thenReturn(mockQuery);
@@ -824,18 +825,16 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<Agent> result = agtService.listAgentWithIdTitreRepas();
+		Agent result = agtService.getAgentByIdTitreRepas(2323);
 
 		// Then
-		assertNotNull(result);
-		assertEquals(1,result.size());
-		assertEquals(ag1.getIdAgent(), result.get(0).getIdAgent());
+		assertEquals(ag1.getIdAgent(), result.getIdAgent());
 	}
 	
 
 
 	@Test
-	public void listAgentWithIdTitreRepas_noResult() {
+	public void getAgentByIdTitreRepas_noResult() {
 		// Given
 
 		@SuppressWarnings("unchecked")
@@ -849,11 +848,10 @@ public class AgentServiceTest {
 		ReflectionTestUtils.setField(agtService, "sirhEntityManager", sirhEMMock);
 
 		// When
-		List<Agent> result = agtService.listAgentWithIdTitreRepas();
+		Agent result = agtService.getAgentByIdTitreRepas(2323);
 
 		// Then
-		assertNotNull(result);
-		assertEquals(0,result.size());
+		assertNull(result);
 	}
 
 }

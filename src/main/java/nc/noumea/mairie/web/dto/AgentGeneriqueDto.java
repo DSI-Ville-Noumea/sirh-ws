@@ -19,16 +19,6 @@ public class AgentGeneriqueDto {
 	private String prenomUsage;
 	// #20097 utile au calcul des droits des maladies
 	private Date dateDerniereEmbauche;
-	// #40074 optimisation our Tickets restaurant
-	private Integer	idTicketRestaurant;
-
-	public Integer getIdTicketRestaurant() {
-		return idTicketRestaurant;
-	}
-
-	public void setIdTicketRestaurant(Integer idTicketRestaurant) {
-		this.idTicketRestaurant = idTicketRestaurant;
-	}
 
 	public AgentGeneriqueDto(Agent ag) {
 		super();
@@ -41,7 +31,6 @@ public class AgentGeneriqueDto {
 			this.prenom = ag.getPrenom();
 			this.prenomUsage = ag.getPrenomUsage();
 			this.dateDerniereEmbauche = ag.getDateDerniereEmbauche();
-			this.idTicketRestaurant = ag.getIdTitreRepas();
 		}
 	}
 
