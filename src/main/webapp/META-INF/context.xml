@@ -35,35 +35,35 @@
 		override="false" />
 
 	<Environment name="REPORTING_BASE_URL" type="java.lang.String"
-		description="BIRT report viewer base URL for SIRH reporting" value="http://***REMOVED***:8085/birt/"
+		description="BIRT report viewer base URL for SIRH reporting" value="http://svi-tomcat0:8210/birt/"
 		override="false" />
 
 	<!-- -->
 	<!-- WS PTG -->
 	<!-- -->
 	<Environment name="SIRH_PTG_WS_URL" type="java.lang.String"
-		description="SIRH PTG WS url pour les droits" value="http://***REMOVED***:8085/sirh-ptg-ws/"
+		description="SIRH PTG WS url pour les droits" value="http://svi-tomcat0:8210/sirh-ptg-ws/"
 		override="false" />
 
 	<!-- -->
 	<!-- WS ABS -->
 	<!-- -->
 	<Environment name="SIRH_ABS_WS_URL" type="java.lang.String"
-		description="SIRH ABS WS url pour les droits" value="http://***REMOVED***:8085/sirh-abs-ws/"
+		description="SIRH ABS WS url pour les droits" value="http://svi-tomcat0:8210/sirh-abs-ws/"
 		override="false" />
 
 	<!-- -->
 	<!-- WS RADI pour interroger AD -->
 	<!-- -->
 	<Environment name="RADI_WS_URL" type="java.lang.String"
-		description="RADI WS url" value="http://***REMOVED***:8085/radi/"
+		description="RADI WS url" value="http://svi-tomcat0:8210/radi/"
 		override="false" />
 
 	<!-- -->
 	<!-- WS DE ADS -->
 	<!-- -->
 	<Environment name="ADS_WS_URL" type="java.lang.String"
-		description="ADS WS endpoint url" value="http://***REMOVED***:8077/"
+		description="ADS WS endpoint url" value="http://svi-tomcat0:8220/"
 		override="false" />
 
 	<!-- -->
@@ -71,7 +71,7 @@
 	<!-- -->
 	<Environment name="SIRH_EAE_WS_URL" type="java.lang.String"
 		description="SIRH EAE WS url pour la gestion des EAEs/Avancements"
-		value="http://***REMOVED***:8085/sirh-eae-ws/" override="false" />
+		value="http://svi-tomcat0:8210/sirh-eae-ws/" override="false" />
 
 
 	<!-- -->
@@ -82,9 +82,9 @@
 	<Environment description="Nom de la DTAARA_CALC" name="DTAARA_NAME"
 		override="false" value="CALCUL" type="java.lang.String" />
 	<Environment description="parametre pour accès à la DTAARA_CALC"
-		name="HOST_SGBD_PAYE" override="false" value="***REMOVED***" type="java.lang.String" />
+		name="HOST_SGBD_PAYE" override="false" value="robinnw" type="java.lang.String" />
 	<Environment description="Login pour accès à la DTAARA_CALC"
-		name="HOST_SGBD_LOGIN" override="false" value="***REMOVED***" type="java.lang.String" />
+		name="HOST_SGBD_LOGIN" override="false" value="opensirh" type="java.lang.String" />
 	<Environment description="Pws pour accès à la DTAARA_CALC"
 		name="HOST_SGBD_PWD" override="false" value="***REMOVED***" type="java.lang.String" />
 
