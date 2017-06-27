@@ -140,10 +140,9 @@ public interface IAgentService {
 	public List<AgentWithServiceDto> listAgentsEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode);
 
 	/**
-	 * Utile à SIRH-PTG-WS pour chercher un idAgent à partir de l'id TR
-	 * @param idTitreRepas
+	 * Utile à SIRH-PTG-WS pour recuperer la liste de tous les agents avec un idtitre repas
 	 * @return
 	 */
-	public Agent getAgentByIdTitreRepas(Integer idTitreRepas);
+	public List<Agent> listAgentAvecIdTitreRepas();
 
 }
