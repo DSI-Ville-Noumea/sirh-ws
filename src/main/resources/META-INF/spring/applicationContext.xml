@@ -42,8 +42,8 @@
         <context:exclude-filter type="regex" expression="nc.noumea.mairie.apidocs.SwaggerConfig" />	
 	</context:component-scan>
 
-	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1"
-		resource-ref="true" />
+	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1" resource-ref="true" />
+	<jee:jndi-lookup id="mdfVdnDb400DataSource" jndi-name="jdbc/PTG_WS_DS_MDF_VDN" resource-ref="true" />
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
@@ -57,6 +57,10 @@
 		id="sirhEntityManagerFactory">
 		<property name="persistenceUnitName" value="sirhPersistenceUnit" />
 		<property name="dataSource" ref="sirhDataSource" />
+	</bean>
+	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="mdfVdnEntityManagerFactory">
+		<property name="persistenceUnitName" value="mdfVdnPersistenceUnit" />
+		<property name="dataSource" ref="mdfVdnDb400DataSource" />
 	</bean>
 	
 	<jee:jndi-lookup id="reportServerPath" jndi-name="REPORTING_SERVER_SIRH_REPORT_PATH" expected-type="java.lang.String"/>
