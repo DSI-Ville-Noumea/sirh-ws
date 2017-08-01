@@ -129,9 +129,9 @@
 	
 	<persistence-unit name="mdfVdnPersistenceUnit" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>nc.noumea.mairie.mdf.domain.FdsMutEnt</class>
-        <class>nc.noumea.mairie.mdf.domain.FdsMutTot</class>
-        <class>nc.noumea.mairie.mdf.domain.FdsMutDet</class>
+        <class>nc.noumea.mairie.mdf.domain.vdn.FdsMutEnt</class>
+        <class>nc.noumea.mairie.mdf.domain.vdn.FdsMutTot</class>
+        <class>nc.noumea.mairie.mdf.domain.vdn.FdsMutDet</class>
       	<exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect"/>

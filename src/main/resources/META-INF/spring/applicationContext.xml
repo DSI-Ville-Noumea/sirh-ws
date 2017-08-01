@@ -43,7 +43,7 @@
 	</context:component-scan>
 
 	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1" resource-ref="true" />
-	<jee:jndi-lookup id="mdfVdnDb400DataSource" jndi-name="jdbc/PTG_WS_DS_MDF_VDN" resource-ref="true" />
+	<jee:jndi-lookup id="mdfVdnDb400DataSource" jndi-name="jdbc/SIRH_WS_DS_MDF_VDN" resource-ref="true" />
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">

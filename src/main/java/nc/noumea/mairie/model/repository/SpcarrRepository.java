@@ -183,4 +183,35 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 		return query.getResultList();
 	}
+
+	@Override
+	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select count(*) from Spcarr carr ");
+		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
+		sb.append(" inner join SPPOSA posa on pa.CDPADM = posa.CDPADM ");
+		// TODO : Ajouter les positions administratives actives !
+		// En attente du retour de la DRH
+		//sb.append(" and posa.DROITC not in ()");
+		sb.append(" WHERE ( (pa.datdeb <= :datdeb ");
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datdeb )) ");
+		sb.append(" or (pa.datdeb <= :datfin ");
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datfin ) )) ");	
+		sb.append(" and ( (carr.datdeb <= :datdeb ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datdeb )) ");
+		sb.append(" or (carr.datdeb <= :datfin ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datfin ) )) ");
+		sb.append(" and carr.nomatr < 9000 ");
+
+
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		query.setParameter("datdeb", Integer.valueOf(sdfMairie.format(dateDebut)));
+		query.setParameter("datfin", Integer.valueOf(sdfMairie.format(dateFin)));
+
+		return (Integer) query.getSingleResult();
+	}
 }
