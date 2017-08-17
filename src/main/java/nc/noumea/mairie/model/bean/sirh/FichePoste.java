@@ -1,8 +1,6 @@
 package nc.noumea.mairie.model.bean.sirh;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,6 +15,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.WhereJoinTable;
+import org.springframework.core.annotation.Order;
 
 @Entity
 @Table(name = "FICHE_POSTE")
@@ -104,6 +103,16 @@ public class FichePoste {
 	@JoinTable(name = "FE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
 	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
+
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "FM_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_METIER"))
+	@WhereJoinTable(clause = "FM_PRIMAIRE = 1")
+	private Set<FicheMetier> ficheMetierPrimaire = new HashSet<>();
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "FM_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_METIER"))
+	@WhereJoinTable(clause = "FM_PRIMAIRE = 0")
+	private Set<FicheMetier> ficheMetierSecondaire = new HashSet<>();
+
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste superieurHierarchique;
@@ -141,7 +150,25 @@ public class FichePoste {
 	private String informationsComplementaires;
 	@Column(name = "SPECIALISATION", columnDefinition = "clob")
 	private String specialisation;
-	private Integer idNiveauManagement;
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "ID_NIVEAU_MANAGEMENT")
+	private NiveauManagement niveauManagement;
+
+	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("ordre")
+	private List<ActiviteMetierSavoirFp> activiteMetier = new ArrayList<>();
+
+	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("ordre")
+	private List<SavoirFaireFp> savoirFaire = new ArrayList<>();
+
+	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("ordre")
+	private List<ActiviteGeneraleFp> activitesGenerales = new ArrayList<>();
+
+	@OneToMany(mappedBy = "idFichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("ordre")
+	private List<ConditionExerciceFp> conditionsExercice = new ArrayList<>();
 
 	public String getOpi() {
 		if (this.opi == null)
@@ -313,6 +340,22 @@ public class FichePoste {
 		this.ficheEmploiSecondaire = ficheEmploiSecondaire;
 	}
 
+	public Set<FicheMetier> getFicheMetierPrimaire() {
+		return ficheMetierPrimaire;
+	}
+
+	public void setFicheMetierPrimaire(Set<FicheMetier> ficheMetierPrimaire) {
+		this.ficheMetierPrimaire = ficheMetierPrimaire;
+	}
+
+	public Set<FicheMetier> getFicheMetierSecondaire() {
+		return ficheMetierSecondaire;
+	}
+
+	public void setFicheMetierSecondaire(Set<FicheMetier> ficheMetierSecondaire) {
+		this.ficheMetierSecondaire = ficheMetierSecondaire;
+	}
+
 	public FichePoste getSuperieurHierarchique() {
 		return superieurHierarchique;
 	}
@@ -453,38 +496,44 @@ public class FichePoste {
 		this.specialisation = specialisation;
 	}
 
-	@Basic
-	@Column(name = "ID_NIVEAU_MANAGEMENT", nullable = true)
-	public Integer getIdNiveauManagement() {
-		return idNiveauManagement;
+	public NiveauManagement getNiveauManagement() {
+		return niveauManagement;
 	}
 
-	public void setIdNiveauManagement(Integer idNiveauManagement) {
-		this.idNiveauManagement = idNiveauManagement;
+	public void setNiveauManagement(NiveauManagement niveauManagement) {
+		this.niveauManagement = niveauManagement;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		FichePoste that = (FichePoste) o;
-
-		if (informationsComplementaires != null ? !informationsComplementaires.equals(that.informationsComplementaires) : that.informationsComplementaires != null)
-			return false;
-		if (specialisation != null ? !specialisation.equals(that.specialisation) : that.specialisation != null)
-			return false;
-		if (idNiveauManagement != null ? !idNiveauManagement.equals(that.idNiveauManagement) : that.idNiveauManagement != null)
-			return false;
-
-		return true;
+	public List<SavoirFaireFp> getSavoirFaire() {
+		return savoirFaire;
 	}
 
-	@Override
-	public int hashCode() {
-		int result = informationsComplementaires != null ? informationsComplementaires.hashCode() : 0;
-		result = 31 * result + (specialisation != null ? specialisation.hashCode() : 0);
-		result = 31 * result + (idNiveauManagement != null ? idNiveauManagement.hashCode() : 0);
-		return result;
+	public void setSavoirFaire(List<SavoirFaireFp> savoirFaire) {
+		this.savoirFaire = savoirFaire;
 	}
+
+	public List<ActiviteGeneraleFp> getActivitesGenerales() {
+		return activitesGenerales;
+	}
+
+	public void setActivitesGenerales(List<ActiviteGeneraleFp> activitesGenerales) {
+		this.activitesGenerales = activitesGenerales;
+	}
+
+	public List<ConditionExerciceFp> getConditionsExercice() {
+		return conditionsExercice;
+	}
+
+	public void setConditionsExercice(List<ConditionExerciceFp> conditionsExercice) {
+		this.conditionsExercice = conditionsExercice;
+	}
+
+	public List<ActiviteMetierSavoirFp> getActiviteMetier() {
+		return activiteMetier;
+	}
+
+	public void setActiviteMetier(List<ActiviteMetierSavoirFp> activiteMetier) {
+		this.activiteMetier = activiteMetier;
+	}
+
 }

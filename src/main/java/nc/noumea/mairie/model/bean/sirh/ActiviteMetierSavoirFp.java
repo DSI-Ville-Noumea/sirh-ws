@@ -13,6 +13,7 @@ public class ActiviteMetierSavoirFp {
     private Integer idSavoirFaire;
     private Integer ordre;
     private ActiviteMetier activiteMetierByIdActiviteMetier;
+    private SavoirFaire savoirFaireByIdSavoirFaire;
 
     @Id
     @Column(name = "ID_FICHE_POSTE", nullable = false)
@@ -87,5 +88,15 @@ public class ActiviteMetierSavoirFp {
 
     public void setActiviteMetierByIdActiviteMetier(ActiviteMetier activiteMetierByIdActiviteMetier) {
         this.activiteMetierByIdActiviteMetier = activiteMetierByIdActiviteMetier;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "ID_SAVOIR_FAIRE", referencedColumnName = "ID_SAVOIR_FAIRE", nullable = false, insertable = false, updatable = false)
+    public SavoirFaire getSavoirFaireByIdSavoirFaire() {
+        return savoirFaireByIdSavoirFaire;
+    }
+
+    public void setSavoirFaireByIdSavoirFaire(SavoirFaire savoirFaire) {
+        this.savoirFaireByIdSavoirFaire = savoirFaire;
     }
 }
