@@ -4,23 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import nc.noumea.mairie.model.bean.Silieu;
@@ -60,6 +44,104 @@ public class FichePoste {
 
 	@Column(name = "OPI")
 	private String opi;
+	@NotNull
+	@Column(name = "NFA")
+	private String nfa;
+	@NotNull
+	@Column(name = "ANNEE_CREATION", columnDefinition = "numeric")
+	private Integer annee;
+	@NotNull
+	@Column(name = "NUM_FP")
+	private String numFP;
+	@NotNull
+	@Column(name = "MISSIONS", columnDefinition = "clob")
+	private String missions;
+	@Column(name = "OBSERVATION", columnDefinition = "clob")
+	private String observation;
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
+	private StatutFichePoste statutFP;
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
+	private Spbhor budgete;
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
+	private Spbhor reglementaire;
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
+	private Spgradn gradePoste;
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("activiteFPPK.idActivite asc")
+	private Set<ActiviteFP> activites = new HashSet<ActiviteFP>();
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("competenceFPPK.idCompetence asc")
+	private Set<CompetenceFP> competencesFDP = new HashSet<CompetenceFP>();
+	@OneToOne(optional = true, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_NIVEAU_ETUDE"))
+	private NiveauEtude niveauEtude;
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_AVANTAGE"))
+	@OrderBy("numRubrique asc")
+	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "DELEGATION_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_DELEGATION"))
+	@OrderBy("libDelegation asc")
+	private Set<Delegation> delegations = new HashSet<Delegation>();
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_REGIME"))
+	@OrderBy("numRubrique asc")
+	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OrderBy("primePointageFPPK.numRubrique asc")
+	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "FE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_EMPLOI"))
+	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
+	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(name = "FE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_EMPLOI"))
+	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
+	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
+	private FichePoste superieurHierarchique;
+	@OneToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_REMPLACEMENT", referencedColumnName = "ID_FICHE_POSTE")
+	private FichePoste remplace;
+	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
+	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
+	private Set<Affectation> agent = new HashSet<Affectation>();
+	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
+	@OneToOne(cascade = CascadeType.MERGE, optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
+	private NatureCredit natureCredit;
+	@Column(name = "ID_SERVICE_ADS")
+	private Integer idServiceADS;
+	@Column(name = "ID_SERVI", columnDefinition = "char")
+	private String idServi;
+	@Column(name = "ID_BASE_HORAIRE_POINTAGE")
+	private Integer idBaseHorairePointage;
+	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
+	private Integer idBaseHoraireAbsence;
+	@Column(name = "NUM_DELIBERATION")
+	private String numDeliberation;
+	@Column(name = "DATE_FIN_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateFinValiditeFp;
+	@Column(name = "DATE_DEBUT_VALIDITE_FP")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebutValiditeFp;
+	@Column(name = "DATE_DEB_APPLI_SERV")
+	@Temporal(TemporalType.DATE)
+	private Date dateDebAppliServ;
+	@Column(name = "INFORMATIONS_COMPLEMENTAIRES", columnDefinition = "clob")
+	private String informationsComplementaires;
+	@Column(name = "SPECIALISATION", columnDefinition = "clob")
+	private String specialisation;
+	private Integer idNiveauManagement;
 
 	public String getOpi() {
 		if (this.opi == null)
@@ -67,129 +149,9 @@ public class FichePoste {
 		return this.opi;
 	}
 
-	@NotNull
-	@Column(name = "NFA")
-	private String nfa;
-
-	@NotNull
-	@Column(name = "ANNEE_CREATION", columnDefinition = "numeric")
-	private Integer annee;
-
-	@NotNull
-	@Column(name = "NUM_FP")
-	private String numFP;
-
-	@NotNull
-	@Column(name = "MISSIONS", columnDefinition = "clob")
-	private String missions;
-
-	@Column(name = "OBSERVATION", columnDefinition = "clob")
-	private String observation;
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_STATUT_FP", referencedColumnName = "ID_STATUT_FP")
-	private StatutFichePoste statutFP;
-
-	@NotNull
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_CDTHOR_BUD", referencedColumnName = "CDTHOR")
-	private Spbhor budgete;
-
-	@NotNull
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_CDTHOR_REG", referencedColumnName = "CDTHOR")
-	private Spbhor reglementaire;
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "CODE_GRADE", referencedColumnName = "CDGRAD")
-	private Spgradn gradePoste;
-
-	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@OrderBy("activiteFPPK.idActivite asc")
-	private Set<ActiviteFP> activites = new HashSet<ActiviteFP>();
-
-	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@OrderBy("competenceFPPK.idCompetence asc")
-	private Set<CompetenceFP> competencesFDP = new HashSet<CompetenceFP>();
-
-	@OneToOne(optional = true, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "NIVEAU_ETUDE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_NIVEAU_ETUDE"))
-	private NiveauEtude niveauEtude;
-
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "AVANTAGE_NATURE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_AVANTAGE"))
-	@OrderBy("numRubrique asc")
-	private Set<AvantageNature> avantagesNature = new HashSet<AvantageNature>();
-
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "DELEGATION_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_DELEGATION"))
-	@OrderBy("libDelegation asc")
-	private Set<Delegation> delegations = new HashSet<Delegation>();
-
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "REG_INDEMN_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_REGIME"))
-	@OrderBy("numRubrique asc")
-	private Set<RegimeIndemnitaire> regimesIndemnitaires = new HashSet<RegimeIndemnitaire>();
-
-	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@OrderBy("primePointageFPPK.numRubrique asc")
-	private Set<PrimePointageFP> primePointageFP = new HashSet<PrimePointageFP>();
-
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
-	@WhereJoinTable(clause = "FE_PRIMAIRE = 1")
-	private Set<FicheEmploi> ficheEmploiPrimaire = new HashSet<FicheEmploi>();
-
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-	@JoinTable(name = "FE_FP", joinColumns = { @javax.persistence.JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @javax.persistence.JoinColumn(name = "ID_FICHE_EMPLOI"))
-	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
-	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
-	private FichePoste superieurHierarchique;
-
-	@OneToOne(optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_REMPLACEMENT", referencedColumnName = "ID_FICHE_POSTE")
-	private FichePoste remplace;
-
-	@OneToMany(mappedBy = "fichePoste", fetch = FetchType.LAZY)
-	@Where(clause = "DATE_DEBUT_AFF <= CURRENT_DATE and (DATE_FIN_AFF is null or DATE_FIN_AFF >= CURRENT_DATE)")
-	private Set<Affectation> agent = new HashSet<Affectation>();
-
-	@OneToMany(mappedBy = "fichePoste", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	private Set<FeFp> ficheEmploi = new HashSet<FeFp>();
-
-	@OneToOne(cascade = CascadeType.MERGE, optional = true, fetch = FetchType.LAZY)
-	@JoinColumn(name = "ID_NATURE_CREDIT", referencedColumnName = "ID_NATURE_CREDIT")
-	private NatureCredit natureCredit;
-
-	@Column(name = "ID_SERVICE_ADS")
-	private Integer idServiceADS;
-
-	@Column(name = "ID_SERVI", columnDefinition = "char")
-	private String idServi;
-
-	@Column(name = "ID_BASE_HORAIRE_POINTAGE")
-	private Integer idBaseHorairePointage;
-
-	@Column(name = "ID_BASE_HORAIRE_ABSENCE")
-	private Integer idBaseHoraireAbsence;
-
-	@Column(name = "NUM_DELIBERATION")
-	private String numDeliberation;
-
-	@Column(name = "DATE_FIN_VALIDITE_FP")
-	@Temporal(TemporalType.DATE)
-	private Date dateFinValiditeFp;
-
-	@Column(name = "DATE_DEBUT_VALIDITE_FP")
-	@Temporal(TemporalType.DATE)
-	private Date dateDebutValiditeFp;
-
-	@Column(name = "DATE_DEB_APPLI_SERV")
-	@Temporal(TemporalType.DATE)
-	private Date dateDebAppliServ;
+	public void setOpi(String opi) {
+		this.opi = opi;
+	}
 
 	public TitrePoste getTitrePoste() {
 		return titrePoste;
@@ -383,10 +345,6 @@ public class FichePoste {
 		this.natureCredit = natureCredit;
 	}
 
-	public void setOpi(String opi) {
-		this.opi = opi;
-	}
-
 	public Integer getIdFichePoste() {
 		return idFichePoste;
 	}
@@ -475,4 +433,58 @@ public class FichePoste {
 		this.observation = observation;
 	}
 
+	@Basic
+	@Column(name = "INFORMATIONS_COMPLEMENTAIRES", nullable = true)
+	public String getInformationsComplementaires() {
+		return informationsComplementaires;
+	}
+
+	public void setInformationsComplementaires(String informationsComplementaires) {
+		this.informationsComplementaires = informationsComplementaires;
+	}
+
+	@Basic
+	@Column(name = "SPECIALISATION", nullable = true, length = 255)
+	public String getSpecialisation() {
+		return specialisation;
+	}
+
+	public void setSpecialisation(String specialisation) {
+		this.specialisation = specialisation;
+	}
+
+	@Basic
+	@Column(name = "ID_NIVEAU_MANAGEMENT", nullable = true)
+	public Integer getIdNiveauManagement() {
+		return idNiveauManagement;
+	}
+
+	public void setIdNiveauManagement(Integer idNiveauManagement) {
+		this.idNiveauManagement = idNiveauManagement;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		FichePoste that = (FichePoste) o;
+
+		if (informationsComplementaires != null ? !informationsComplementaires.equals(that.informationsComplementaires) : that.informationsComplementaires != null)
+			return false;
+		if (specialisation != null ? !specialisation.equals(that.specialisation) : that.specialisation != null)
+			return false;
+		if (idNiveauManagement != null ? !idNiveauManagement.equals(that.idNiveauManagement) : that.idNiveauManagement != null)
+			return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = informationsComplementaires != null ? informationsComplementaires.hashCode() : 0;
+		result = 31 * result + (specialisation != null ? specialisation.hashCode() : 0);
+		result = 31 * result + (idNiveauManagement != null ? idNiveauManagement.hashCode() : 0);
+		return result;
+	}
 }
