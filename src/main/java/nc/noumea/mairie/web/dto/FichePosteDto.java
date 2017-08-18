@@ -173,23 +173,25 @@ public class FichePosteDto {
 		//Version 2
 		//TODOSIRH: check que ca fonctionne avec fiche migrée sans les anciennes références
 		this.version = (fichePoste.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
-		this.informationsComplementaires = fichePoste.getInformationsComplementaires();
-		this.specialisation = fichePoste.getSpecialisation();
-		this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
-		this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
-		for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
-			savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
-		}
-		for (ActiviteGeneraleFp ag : fichePoste.getActivitesGenerales()) {
-			activiteGenerale.add(ag.getActiviteGeneraleByIdActiviteGenerale().getNomActiviteGenerale());
-		}
-		for (ConditionExerciceFp ce : fichePoste.getConditionsExercice()) {
-			conditionExercice.add(ce.getConditionExerciceByIdConditionExercice().getNomConditionExercice());
-		}
-		for (ActiviteMetierSavoirFp amsf : fichePoste.getActiviteMetier()) {
-			String nomActiviteMetier = amsf.getActiviteMetierByIdActiviteMetier().getNomActiviteMetier();
-			String nomSavoirFaire = amsf.getSavoirFaireByIdSavoirFaire() != null ? amsf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire() : null;
-			activiteMetier.add(new ActiviteMetierSavoirFaire(nomActiviteMetier, nomSavoirFaire));
+		if (version == 2) {
+			this.informationsComplementaires = fichePoste.getInformationsComplementaires();
+			this.specialisation = fichePoste.getSpecialisation();
+			this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
+			this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
+				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
+			}
+			for (ActiviteGeneraleFp ag : fichePoste.getActivitesGenerales()) {
+				activiteGenerale.add(ag.getActiviteGeneraleByIdActiviteGenerale().getNomActiviteGenerale());
+			}
+			for (ConditionExerciceFp ce : fichePoste.getConditionsExercice()) {
+				conditionExercice.add(ce.getConditionExerciceByIdConditionExercice().getNomConditionExercice());
+			}
+			for (ActiviteMetierSavoirFp amsf : fichePoste.getActiviteMetier()) {
+				String nomActiviteMetier = amsf.getActiviteMetierByIdActiviteMetier().getNomActiviteMetier();
+				String nomSavoirFaire = amsf.getSavoirFaireByIdSavoirFaire() != null ? amsf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire() : null;
+				activiteMetier.add(new ActiviteMetierSavoirFaire(nomActiviteMetier, nomSavoirFaire));
+			}
 		}
 	}
 
