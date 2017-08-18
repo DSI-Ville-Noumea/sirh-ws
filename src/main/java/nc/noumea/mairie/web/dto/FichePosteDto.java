@@ -176,8 +176,10 @@ public class FichePosteDto {
 		if (version == 2) {
 			this.informationsComplementaires = fichePoste.getInformationsComplementaires();
 			this.specialisation = fichePoste.getSpecialisation();
-			this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
-			this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+			if (fichePoste.getNiveauManagement() != null) {
+				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
+				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+			}
 			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
 				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
 			}
