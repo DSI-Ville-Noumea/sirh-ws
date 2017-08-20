@@ -26,7 +26,7 @@
 		driverClassName="com.ibm.as400.access.AS400JDBCDriver"
 		url="***REMOVED***" />
 
-	<Resource name="jdbc/PTG_WS_DS_MDF_VDN" auth="Container" type="javax.sql.DataSource"
+	<Resource name="jdbc/SIRH_WS_DS_MDF_VDN" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
 		testWhileIdle="true" testOnBorrow="true" testOnReturn="false"
 		validationQuery="select 1 from sysdummy1" validationInterval="30000"
