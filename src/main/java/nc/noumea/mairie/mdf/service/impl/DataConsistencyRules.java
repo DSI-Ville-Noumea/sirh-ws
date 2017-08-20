@@ -55,7 +55,6 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		for (FdsMutDet det : details) {
 			if (!det.getCodeCollectivite().equals(codeCol))
 				throw new IllegalArgumentException("Plusieurs code de collectivité différents se trouvent dans les details.");
-			// TODO : Demander à Christine quels sont les cas à tester (dates, nombres, montants, numéro cafat obligatoire, ...)
 		}
 	}
 	
@@ -93,29 +92,11 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 				effectifDistinc.add(det.getId().getNumeroPers());
 		}
 
-//		.       Rubrique « Effectif pour lesquels une rémunération est déclarée pour le mois m 
-//
-//		Il s'agit là de l'effectif total couvert par la MDF à la fin du mois de paye dans le cadre du contrat/code collectivité objet de la déclaration. 
-//		Ne doivent pas figurer les personnes qui ne sont pas contractuellement affiliées à la MDF, ni les personnels relevant 
-//		d'un autre contrat, ni les personnels à temps partiel (- de 84h) que l'employeur n'a pas décidé d'affilier. Doivent être incluses 
-//		les personnes affiliées même lorsqu'elles ne perçoivent pas de rémunération  
-//		(congé maternité, congé maladie non indemnisé, grève) tant qu'ils n'ont pas été radiés par l'employeur 
-//		(ne sont pas concernés les congés sans solde longue durée pour lequel l'employeur aura interrompu 
-//		la couverture par un bulletin de radiation = ils figurent par contre dans la première rubrique (effectif total)). 
-//		Lorsqu'un personnel affilié ne perçoit pas de rémunération, 
-//		soit le salaire déclaré est à 0, soit il est au SMG. Dans tous les cas la MDF appelle une cotisation assise sur le SMG.
-
+		// Pour des explications concernant les effectifs, se réferrer à cette redmine : https://redmine.ville-noumea.nc/issues/39378#note-9
+		//     Rubrique « Effectif pour lesquels une rémunération est déclarée pour le mois m 
 		effectif.setEffectifRemunere(effectifDistinc.size());
 		
-//		.       Rubrique « Effectif de l'employeur au 1er jour du mois + entrants au cours du mois m » 
-//
-//		Il s'agit là de l'effectif total de l'employeur à la fin du mois de paye, que les personnels figurent ou pas sur la déclaration 
-//		(certains contrats collectifs - ce n'est pas le cas de celui de la Ville de Nouméa - ne concernent pas toutes les catégories de personnels employés. 
-//		De surcroit, les personnels de certains employeurs sont l'objet de deux déclarations distinctes (la Caisse des Ecoles)  
-//		Enfin, la loi du pays n°2017-8 n'oblige pas l'employeur à affilier les personnels dont la durée effective de travail est inférieure à  84h par mois. 
-//		La première rubrique indique donc les effectifs totaux de l'employeur et la seconde les personnels objet d'une déclaration sur ce contrat /code collectivité.)
-		
-		
+		//     Rubrique « Effectif de l'employeur au 1er jour du mois + entrants au cours du mois m » 
 		Date finMoisPrecedent = new DateTime().withDayOfMonth(1).minusDays(1).toDate();
 		Date debutMoisPrecedent = new DateTime(finMoisPrecedent).withDayOfMonth(1).toDate();
 		Integer effectifTotal = spcarrRepository.getListeAgentsActifsPourGenerationBordereauMDF(debutMoisPrecedent, finMoisPrecedent);
