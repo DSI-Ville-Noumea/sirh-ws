@@ -14,9 +14,6 @@ public class FdsMutEnt {
 	@Column(name = "TYPEN1", columnDefinition = "numeric")
 	private Integer typeEnregistrement;
 
-	@Column(name = "VERSION", columnDefinition = "numeric")
-	private Integer version;
-
 	@Column(name = "TELCTCT", columnDefinition = "numeric")
 	private Integer telContactTech;
 
@@ -25,6 +22,9 @@ public class FdsMutEnt {
 
 	@Column(name = "PERCOU", columnDefinition = "numeric")
 	private Integer periodeCourante;
+
+	@Column(name = "VERSION", columnDefinition = "char")
+	private String version;
 	
 	@Column(name = "COLLEC1", columnDefinition = "char")
 	private String codeCollectivité;
@@ -65,11 +65,11 @@ public class FdsMutEnt {
 		this.typeEnregistrement = typeEnregistrement;
 	}
 
-	public Integer getVersion() {
+	public String getVersion() {
 		return version;
 	}
 
-	public void setVersion(Integer version) {
+	public void setVersion(String version) {
 		this.version = version;
 	}
 

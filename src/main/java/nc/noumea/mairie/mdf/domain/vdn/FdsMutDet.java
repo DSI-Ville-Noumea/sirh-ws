@@ -17,9 +17,6 @@ public class FdsMutDet {
 	@Column(name = "TYPEN2", columnDefinition = "numeric")
 	private Integer typeEnregistrement;
 
-	@Column(name = "MATCAF", columnDefinition = "numeric")
-	private Integer matriculeCafat;
-
 	@Column(name = "RANGEM", columnDefinition = "numeric")
 	private Integer rangGemellaire;
 
@@ -29,14 +26,8 @@ public class FdsMutDet {
 	@Column(name = "NBJOURS", columnDefinition = "numeric")
 	private Integer nombreJours;
 
-	@Column(name = "TAUXPP", columnDefinition = "numeric")
-	private Double tauxPP;
-
 	@Column(name = "MONTPP", columnDefinition = "numeric")
 	private Integer montantPP;
-
-	@Column(name = "TAUXPS", columnDefinition = "numeric")
-	private Double tauxPS;
 
 	@Column(name = "MONTPS", columnDefinition = "numeric")
 	private Integer montantPS;
@@ -47,11 +38,20 @@ public class FdsMutDet {
 	@Column(name = "ANCNBJR", columnDefinition = "numeric")
 	private Integer ancienNombreJours;
 
-	@Column(name = "ANCTAUPP", columnDefinition = "numeric")
-	private Double ancienTauxPP;
+	@Column(name = "TAUXPP", columnDefinition = "char")
+	private String tauxPP;
 
-	@Column(name = "ANCTAUPS", columnDefinition = "numeric")
-	private Double ancienTauxPS;
+	@Column(name = "TAUXPS", columnDefinition = "char")
+	private String tauxPS;
+
+	@Column(name = "MATCAFA", columnDefinition = "char")
+	private String matriculeCafat;
+
+	@Column(name = "ANCTAUPS", columnDefinition = "char")
+	private String ancienTauxPS;
+
+	@Column(name = "ANCTAUPP", columnDefinition = "char")
+	private String ancienTauxPP;
 	
 	@Column(name = "COLLEC2", columnDefinition = "char")
 	private String codeCollectivite;
@@ -97,11 +97,11 @@ public class FdsMutDet {
 		this.typeEnregistrement = typeEnregistrement;
 	}
 
-	public Integer getMatriculeCafat() {
+	public String getMatriculeCafat() {
 		return matriculeCafat;
 	}
 
-	public void setMatriculeCafat(Integer matriculeCafat) {
+	public void setMatriculeCafat(String matriculeCafat) {
 		this.matriculeCafat = matriculeCafat;
 	}
 
@@ -129,11 +129,11 @@ public class FdsMutDet {
 		this.nombreJours = nombreJours;
 	}
 
-	public Double getTauxPP() {
+	public String getTauxPP() {
 		return tauxPP;
 	}
 
-	public void setTauxPP(Double tauxPP) {
+	public void setTauxPP(String tauxPP) {
 		this.tauxPP = tauxPP;
 	}
 
@@ -145,11 +145,11 @@ public class FdsMutDet {
 		this.montantPP = montantPP;
 	}
 
-	public Double getTauxPS() {
+	public String getTauxPS() {
 		return tauxPS;
 	}
 
-	public void setTauxPS(Double tauxPS) {
+	public void setTauxPS(String tauxPS) {
 		this.tauxPS = tauxPS;
 	}
 
@@ -177,19 +177,19 @@ public class FdsMutDet {
 		this.ancienNombreJours = ancienNombreJours;
 	}
 
-	public Double getAncienTauxPP() {
+	public String getAncienTauxPP() {
 		return ancienTauxPP;
 	}
 
-	public void setAncienTauxPP(Double ancienTauxPP) {
+	public void setAncienTauxPP(String ancienTauxPP) {
 		this.ancienTauxPP = ancienTauxPP;
 	}
 
-	public Double getAncienTauxPS() {
+	public String getAncienTauxPS() {
 		return ancienTauxPS;
 	}
 
-	public void setAncienTauxPS(Double ancienTauxPS) {
+	public void setAncienTauxPS(String ancienTauxPS) {
 		this.ancienTauxPS = ancienTauxPS;
 	}
 
