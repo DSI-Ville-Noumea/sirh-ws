@@ -14,6 +14,15 @@ public class SavoirFaireFp {
     private FichePoste fichePosteByIdFichePoste;
     private SavoirFaire savoirFaireByIdSavoirFaire;
 
+    public SavoirFaireFp() {
+    }
+
+    public SavoirFaireFp(int idFichePoste, int idSavoirFaire, Integer ordre) {
+        this.idFichePoste = idFichePoste;
+        this.idSavoirFaire = idSavoirFaire;
+        this.ordre = ordre;
+    }
+
     @Id
     @Column(name = "ID_FICHE_POSTE", nullable = false)
     public int getIdFichePoste() {

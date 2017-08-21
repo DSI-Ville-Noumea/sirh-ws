@@ -103,7 +103,6 @@ public class FichePoste {
 	@JoinTable(name = "FE_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_EMPLOI"))
 	@WhereJoinTable(clause = "FE_PRIMAIRE = 0")
 	private Set<FicheEmploi> ficheEmploiSecondaire = new HashSet<FicheEmploi>();
-
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "FM_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_METIER"))
 	@WhereJoinTable(clause = "FM_PRIMAIRE = 1")
@@ -112,7 +111,6 @@ public class FichePoste {
 	@JoinTable(name = "FM_FP", joinColumns = { @JoinColumn(name = "ID_FICHE_POSTE") }, inverseJoinColumns = @JoinColumn(name = "ID_FICHE_METIER"))
 	@WhereJoinTable(clause = "FM_PRIMAIRE = 0")
 	private Set<FicheMetier> ficheMetierSecondaire = new HashSet<>();
-
 	@OneToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_RESPONSABLE", referencedColumnName = "ID_FICHE_POSTE")
 	private FichePoste superieurHierarchique;
@@ -535,5 +533,4 @@ public class FichePoste {
 	public void setActiviteMetier(List<ActiviteMetierSavoirFp> activiteMetier) {
 		this.activiteMetier = activiteMetier;
 	}
-
 }

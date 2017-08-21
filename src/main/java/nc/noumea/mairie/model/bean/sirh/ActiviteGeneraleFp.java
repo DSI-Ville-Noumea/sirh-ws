@@ -13,6 +13,15 @@ public class ActiviteGeneraleFp {
     private Integer ordre;
     private ActiviteGenerale activiteGeneraleByIdActiviteGenerale;
 
+    public ActiviteGeneraleFp() {
+    }
+
+    public ActiviteGeneraleFp(int idFichePoste, int idActiviteGenerale, Integer ordre) {
+        this.idFichePoste = idFichePoste;
+        this.idActiviteGenerale = idActiviteGenerale;
+        this.ordre = ordre;
+    }
+
     @Id
     @Column(name = "ID_FICHE_POSTE", nullable = false)
     public int getIdFichePoste() {

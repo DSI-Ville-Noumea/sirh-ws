@@ -13,6 +13,15 @@ public class ConditionExerciceFp {
     private Integer ordre;
     private ConditionExercice conditionExerciceByIdConditionExercice;
 
+    public ConditionExerciceFp() {
+    }
+
+    public ConditionExerciceFp(int idFichePoste, int idConditionExercice, Integer ordre) {
+        this.idFichePoste = idFichePoste;
+        this.idConditionExercice = idConditionExercice;
+        this.ordre = ordre;
+    }
+
     @Id
     @Column(name = "ID_FICHE_POSTE", nullable = false)
     public int getIdFichePoste() {

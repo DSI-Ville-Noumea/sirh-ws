@@ -15,6 +15,16 @@ public class ActiviteMetierSavoirFp {
     private ActiviteMetier activiteMetierByIdActiviteMetier;
     private SavoirFaire savoirFaireByIdSavoirFaire;
 
+    public ActiviteMetierSavoirFp() {
+    }
+
+    public ActiviteMetierSavoirFp(int idFichePoste, int idActiviteMetier, Integer idSavoirFaire, Integer ordre) {
+        this.idFichePoste = idFichePoste;
+        this.idActiviteMetier = idActiviteMetier;
+        this.idSavoirFaire = idSavoirFaire;
+        this.ordre = ordre;
+    }
+
     @Id
     @Column(name = "ID_FICHE_POSTE", nullable = false)
     public int getIdFichePoste() {
