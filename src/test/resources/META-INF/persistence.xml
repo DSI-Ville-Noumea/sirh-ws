@@ -102,6 +102,25 @@
 		<class>nc.noumea.mairie.model.bean.sirh.VisiteMedicale</class>
 		<class>nc.noumea.mairie.model.bean.sirh.Recommandation</class>
 		<class>nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteGenerale</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteGeneraleFm</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteGeneraleFp</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteMetier</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteMetierFm</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ActiviteMetierSavoirFp</class>
+		<class>nc.noumea.mairie.model.bean.sirh.AutreAppellationMetier</class>
+		<class>nc.noumea.mairie.model.bean.sirh.CompetenceManagement</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ConditionExercice</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ConditionExerciceFm</class>
+		<class>nc.noumea.mairie.model.bean.sirh.ConditionExerciceFp</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FicheMetier</class>
+		<class>nc.noumea.mairie.model.bean.sirh.FmFp</class>
+		<class>nc.noumea.mairie.model.bean.sirh.NiveauManagement</class>
+		<class>nc.noumea.mairie.model.bean.sirh.PDomaineFm</class>
+		<class>nc.noumea.mairie.model.bean.sirh.PFamilleMetier</class>
+		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaire</class>
+		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaireFm</class>
+		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaireFp</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
