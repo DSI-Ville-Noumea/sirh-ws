@@ -147,9 +147,9 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 		ClientResponse response;
 		if (version == 2) {
-			response = createAndFireRequest(map, "fichePosteSIRHv2.rptdesign", "ODT");
+			response = createAndFireRequest(map, "fichePosteSIRHv2.rptdesign", "PDF");
 		} else {
-			response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "ODT");
+			response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "PDF");
 		}
 
 		return readResponseAsByteArray(response, map);
