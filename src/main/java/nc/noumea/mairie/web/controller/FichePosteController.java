@@ -132,7 +132,8 @@ public class FichePosteController {
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste);
+			int version = (fp.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
+			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste, version);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);

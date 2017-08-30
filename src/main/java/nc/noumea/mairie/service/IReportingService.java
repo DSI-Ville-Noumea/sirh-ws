@@ -12,7 +12,7 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 public interface IReportingService {
 
-	byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception;
+	byte[] getFichePosteReportAsByteArray(int idFichePoste,int version) throws Exception;
 
 	byte[] getArretesReportAsByteArray(String csvIdAgents, boolean isChangementClasse, int year, boolean isDetache) throws Exception;
 

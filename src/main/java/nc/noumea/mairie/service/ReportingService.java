@@ -64,12 +64,17 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	private static final String	PARAM_LOCALE	= "__locale";
 
 	@Override
-	public byte[] getFichePosteReportAsByteArray(int idFichePoste) throws Exception {
+	public byte[] getFichePosteReportAsByteArray(int idFichePoste, int version) throws Exception {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
 
-		ClientResponse response = createAndFireRequest(map, "fichePoste.rptdesign", "PDF");
+		ClientResponse response;
+		if (version == 2) {
+			response = createAndFireRequest(map, "fichePostev2.rptdesign", "PDF");
+		} else {
+			response = createAndFireRequest(map, "fichePoste.rptdesign", "PDF");
+		}
 
 		return readResponseAsByteArray(response, map);
 	}
