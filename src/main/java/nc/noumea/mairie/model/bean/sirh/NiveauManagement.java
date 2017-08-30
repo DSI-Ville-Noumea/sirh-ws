@@ -1,6 +1,7 @@
 package nc.noumea.mairie.model.bean.sirh;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "NIVEAU_MANAGEMENT")
@@ -39,26 +40,15 @@ public class NiveauManagement {
         this.ordre = ordre;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    private Collection<CompetenceManagement> competences;
 
-        NiveauManagement that = (NiveauManagement) o;
-
-        if (idNiveauManagement != that.idNiveauManagement) return false;
-        if (libNiveauManagement != null ? !libNiveauManagement.equals(that.libNiveauManagement) : that.libNiveauManagement != null)
-            return false;
-        if (ordre != null ? !ordre.equals(that.ordre) : that.ordre != null) return false;
-
-        return true;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "niveauManagement")
+    @OrderBy("ordre")
+    public Collection<CompetenceManagement> getCompetences() {
+        return competences;
     }
 
-    @Override
-    public int hashCode() {
-        int result = idNiveauManagement;
-        result = 31 * result + (libNiveauManagement != null ? libNiveauManagement.hashCode() : 0);
-        result = 31 * result + (ordre != null ? ordre.hashCode() : 0);
-        return result;
+    public void setCompetences(Collection<CompetenceManagement> competences) {
+        this.competences = competences;
     }
 }

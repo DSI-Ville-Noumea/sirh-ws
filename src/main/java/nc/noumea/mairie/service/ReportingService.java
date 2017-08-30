@@ -140,12 +140,17 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	}
 
 	@Override
-	public byte[] getFichePosteSIRHReportAsByteArray(int idFichePoste) throws Exception {
+	public byte[] getFichePosteSIRHReportAsByteArray(int idFichePoste, int version) throws Exception {
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("idFichePoste", String.valueOf(idFichePoste));
 
-		ClientResponse response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "ODT");
+		ClientResponse response;
+		if (version == 2) {
+			response = createAndFireRequest(map, "fichePosteSIRHv2.rptdesign", "ODT");
+		} else {
+			response = createAndFireRequest(map, "fichePosteSIRH.rptdesign", "ODT");
+		}
 
 		return readResponseAsByteArray(response, map);
 	}

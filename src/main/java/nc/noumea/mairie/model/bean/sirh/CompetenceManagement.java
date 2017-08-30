@@ -61,4 +61,16 @@ public class CompetenceManagement {
         result = 31 * result + (ordre != null ? ordre.hashCode() : 0);
         return result;
     }
+
+    private NiveauManagement niveauManagement;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ID_NIVEAU_MANAGEMENT", referencedColumnName = "ID_NIVEAU_MANAGEMENT")
+    public NiveauManagement getNiveauManagement() {
+        return niveauManagement;
+    }
+
+    public void setNiveauManagement(NiveauManagement niveauManagement) {
+        this.niveauManagement = niveauManagement;
+    }
 }

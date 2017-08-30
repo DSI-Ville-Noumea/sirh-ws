@@ -1,13 +1,13 @@
 package nc.noumea.mairie.web.dto;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import nc.noumea.mairie.model.bean.sirh.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
-import nc.noumea.mairie.model.bean.sirh.*;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @XmlRootElement
 public class FichePosteDto {
@@ -77,6 +77,7 @@ public class FichePosteDto {
 	private List<String> savoirFaireMetier = new ArrayList<>();
 	private List<String> activiteGenerale = new ArrayList<>();
 	private List<String> conditionExercice = new ArrayList<>();
+	private List<String> competenceManagement = new ArrayList<>();
 
 
 	public FichePosteDto() {
@@ -171,7 +172,6 @@ public class FichePosteDto {
 		}
 
 		//Version 2
-		//TODOSIRH: check que ca fonctionne avec fiche migrée sans les anciennes références
 		this.version = (fichePoste.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
 		if (version == 2) {
 			this.informationsComplementaires = fichePoste.getInformationsComplementaires();
@@ -179,6 +179,14 @@ public class FichePosteDto {
 			if (fichePoste.getNiveauManagement() != null) {
 				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
 				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+				for (CompetenceManagement cm : fichePoste.getNiveauManagement().getCompetences()) {
+
+				}
+				this.competenceManagement = fichePoste.getNiveauManagement().getCompetences()
+						.stream()
+						.map(cm -> cm.getLibCompetenceManagement())
+						.collect(Collectors.toList());
+
 			}
 			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
 				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
@@ -803,6 +811,14 @@ public class FichePosteDto {
 
 	public void setNiveauManagement(String niveauManagement) {
 		this.niveauManagement = niveauManagement;
+	}
+
+	public List<String> getCompetenceManagement() {
+		return competenceManagement;
+	}
+
+	public void setCompetenceManagement(List<String> competenceManagement) {
+		this.competenceManagement = competenceManagement;
 	}
 
 	private static class ActiviteMetierSavoirFaire {
