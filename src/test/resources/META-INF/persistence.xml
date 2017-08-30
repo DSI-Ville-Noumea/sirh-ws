@@ -130,4 +130,21 @@
             <property name="hibernate.connection.charSet" value="UTF-8"/>
         </properties>
     </persistence-unit>
+	
+	<persistence-unit name="mdfCdePersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutEntAdm</class>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutTotAdm</class>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutDetAdm</class>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutEntPers</class>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutTotPers</class>
+        <class>nc.noumea.mairie.mdf.domain.FdsMutDetPers</class>
+      	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.ejb.naming_strategy" value="org.hibernate.cfg.ImprovedNamingStrategy"/>
+            <property name="hibernate.connection.charSet" value="UTF-8"/>
+        </properties>
+    </persistence-unit>
 </persistence>

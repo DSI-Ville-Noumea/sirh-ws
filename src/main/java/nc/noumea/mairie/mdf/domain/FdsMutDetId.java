@@ -1,4 +1,4 @@
-package nc.noumea.mairie.mdf.domain.vdn;
+package nc.noumea.mairie.mdf.domain;
 
 import java.io.Serializable;
 
@@ -10,14 +10,14 @@ public class FdsMutDetId implements Serializable {
 	
 	static final long serialVersionUID = 1L;
 	
-	@Column(name = "NOPERS", columnDefinition = "numeric")
-	private Integer numeroPers;
-	
 	@Column(name = "TYPMOUV", columnDefinition = "char")
 	private String typeMouvement;
 	
 	@Column(name = "MOISPAIE", columnDefinition = "char")
 	private String moisPaye;
+
+	@Column(name = "MATCAFA", columnDefinition = "char")
+	private String matriculeCafat;
 
 	@Override
 	public int hashCode() {
@@ -29,12 +29,12 @@ public class FdsMutDetId implements Serializable {
 		return super.equals(obj);
 	}
 
-	public Integer getNumeroPers() {
-		return numeroPers;
+	public String getMatriculeCafat() {
+		return matriculeCafat;
 	}
 
-	public void setNumeroPers(Integer numeroPers) {
-		this.numeroPers = numeroPers;
+	public void setMatriculeCafat(String matriculeCafat) {
+		this.matriculeCafat = matriculeCafat;
 	}
 
 	public String getTypeMouvement() {

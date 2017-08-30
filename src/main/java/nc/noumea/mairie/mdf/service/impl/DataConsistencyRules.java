@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 
-import nc.noumea.mairie.mdf.domain.vdn.FdsMutDet;
-import nc.noumea.mairie.mdf.domain.vdn.FdsMutEnt;
-import nc.noumea.mairie.mdf.domain.vdn.FdsMutTot;
 import nc.noumea.mairie.mdf.dto.AlimenteBordereauBean;
 import nc.noumea.mairie.mdf.dto.CotisationBean;
+import nc.noumea.mairie.mdf.dto.DetailDto;
 import nc.noumea.mairie.mdf.dto.EffectifBean;
+import nc.noumea.mairie.mdf.dto.EnTeteDto;
 import nc.noumea.mairie.mdf.dto.RemunerationBean;
+import nc.noumea.mairie.mdf.dto.TotalDto;
 import nc.noumea.mairie.mdf.service.IDataConsistencyRules;
 import nc.noumea.mairie.model.repository.ISpcarrRepository;
 
@@ -35,37 +35,41 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 	private ISpcarrRepository spcarrRepository;
 
 	@Override
-	public void verifyInputDatas(FdsMutEnt entete, List<FdsMutDet> details, FdsMutTot total) {
+	public void verifyInputDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total) {
+		
+		if (enTete == null || total == null || details == null || details.isEmpty())
+			throw new IllegalArgumentException("Impossible de générer le bordereau : certaines données n'ont pas été récupérées.");
 		
 		// En tête
-		Date moisPrecedent =  new DateTime().minusMonths(1).toDate();
-		if (!entete.getPeriodeCourante().toString().equals(sdf.format(moisPrecedent)))
-			throw new IllegalArgumentException("Le mois du fichier d'en-tête ne correspond pas au mois précédent.");
+		/*Date moisPrecedent =  new DateTime().minusMonths(1).toDate();
+		if (!enTete.getPeriodeCourante().toString().equals(sdf.format(moisPrecedent)))
+			throw new IllegalArgumentException("Le mois du fichier d'en-tête ne correspond pas au mois précédent.");*/
 		
 		// Total
 		if (!total.getNombreLignesDetail().equals(details.size()))
 			throw new IllegalArgumentException("Le nombre d'enregistrement ne correspond pas à la valeur renseignée dans le total.");
-		if (!total.getCodeCollectivité().equals(entete.getCodeCollectivité()))
+		if (!total.getCodeCollectivité().equals(enTete.getCodeCollectivité()))
 			throw new IllegalArgumentException("Le code collectivité diffère entre l'en-tête et le total.");
-		if (!total.getDateFichier().equals(entete.getDateFichier()))
+		if (!total.getDateFichier().equals(enTete.getDateFichier()))
 			throw new IllegalArgumentException("La date du fichier diffère entre l'en-tête et le total.");
 		
 		// Données
 		String codeCol = details.get(0).getCodeCollectivite();
-		for (FdsMutDet det : details) {
+		for (DetailDto det : details) {
 			if (!det.getCodeCollectivite().equals(codeCol))
 				throw new IllegalArgumentException("Plusieurs code de collectivité différents se trouvent dans les details.");
 		}
 	}
 	
-	public AlimenteBordereauBean alimenteDatas(FdsMutEnt enTete, List<FdsMutDet> details, FdsMutTot total) {
+	@Override
+	public AlimenteBordereauBean alimenteDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total, String entite) {
 		
 		AlimenteBordereauBean bean = new AlimenteBordereauBean();
 		
 		bean.setCodeCollectivité(enTete.getCodeCollectivité());
 		bean.setMoisPaye(enTete.getDateFichier());
 		
-		EffectifBean effectif = mapEffectifs(details);
+		EffectifBean effectif = mapEffectifs(details, entite);
 		bean.setEffectif(effectif);
 		
 		RemunerationBean remuneration = mapRemuneration(details);
@@ -82,14 +86,13 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		return bean;
 	}
 
-	private EffectifBean mapEffectifs(List<FdsMutDet> details) {
+	private EffectifBean mapEffectifs(List<DetailDto> details, String entite) {
 		EffectifBean effectif = new EffectifBean();
-		List<Integer> effectifDistinc = Lists.newArrayList();
+		List<String> effectifDistinc = Lists.newArrayList();
 		
-		for (FdsMutDet det : details) {
-			if (!effectifDistinc.contains(det.getId().getNumeroPers()))
-				// TODO : Attention : différence entre matcaf : 1220 res. et nopers : 1194 res.
-				effectifDistinc.add(det.getId().getNumeroPers());
+		for (DetailDto det : details) {
+			if (!effectifDistinc.contains(det.getMatriculeCafat()))
+				effectifDistinc.add(det.getMatriculeCafat());
 		}
 
 		// Pour des explications concernant les effectifs, se réferrer à cette redmine : https://redmine.ville-noumea.nc/issues/39378#note-9
@@ -99,22 +102,22 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		//     Rubrique « Effectif de l'employeur au 1er jour du mois + entrants au cours du mois m » 
 		Date finMoisPrecedent = new DateTime().withDayOfMonth(1).minusDays(1).toDate();
 		Date debutMoisPrecedent = new DateTime(finMoisPrecedent).withDayOfMonth(1).toDate();
-		Integer effectifTotal = spcarrRepository.getListeAgentsActifsPourGenerationBordereauMDF(debutMoisPrecedent, finMoisPrecedent);
+		Integer effectifTotal = spcarrRepository.getListeAgentsActifsPourGenerationBordereauMDF(debutMoisPrecedent, finMoisPrecedent, entite);
 		effectif.setEffectif(effectifTotal);
 		
 		return effectif;
 	}
 
-	private RemunerationBean mapRemuneration(List<FdsMutDet> details) {
+	private RemunerationBean mapRemuneration(List<DetailDto> details) {
 		RemunerationBean remuneration = new RemunerationBean();
 		
 		Integer montantTotal = 0;
 		Integer montantRemuneration = 0;
 		Integer montantRegularisation = 0;
 		
-		for (FdsMutDet det : details) {
+		for (DetailDto det : details) {
 			montantTotal += det.getMontantBrut();
-			if (det.getId().getTypeMouvement().equals(REMUNERATION))
+			if (det.getTypeMouvement().equals(REMUNERATION))
 				montantRemuneration += det.getMontantBrut();
 			else
 				montantRegularisation += det.getMontantBrut();
@@ -127,18 +130,18 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		return remuneration;
 	}
 	
-	private CotisationBean mapCotisations(List<FdsMutDet> details, boolean isPatronal) {
+	private CotisationBean mapCotisations(List<DetailDto> details, boolean isPatronal) {
 		CotisationBean cotisation = new CotisationBean();
 		
 		Integer montantTotal = 0;
 		Integer montantRemuneration = 0;
 		Integer montantRegularisation = 0;
 		
-		for (FdsMutDet det : details) {
+		for (DetailDto det : details) {
 			// Pour les parts patronales
 			if (isPatronal) {
 				montantTotal += det.getMontantPP();
-				if (det.getId().getTypeMouvement().equals(REMUNERATION))
+				if (det.getTypeMouvement().equals(REMUNERATION))
 					montantRemuneration += det.getMontantPP();
 				else
 					montantRegularisation += det.getMontantPP();
@@ -146,7 +149,7 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 			// Pour les parts salariales
 			else {
 				montantTotal += det.getMontantPS();
-				if (det.getId().getTypeMouvement().equals(REMUNERATION))
+				if (det.getTypeMouvement().equals(REMUNERATION))
 					montantRemuneration += det.getMontantPS();
 				else
 					montantRegularisation += det.getMontantPS();

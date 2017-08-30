@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.mdf.domain.InactivePAEnum;
+import nc.noumea.mairie.mdf.service.impl.BordereauRecapService;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn;
 
@@ -22,6 +23,9 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
+
+	@PersistenceContext(unitName = "mdfCdePersistenceUnit")
+	private EntityManager cdeEntityManager;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -188,7 +192,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 	}
 
 	@Override
-	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin) {
+	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin, String entite) {
 
 		StringBuilder sb = new StringBuilder();
 		
@@ -212,7 +216,11 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" and (carr.datfin=0 or carr.datfin >= :datfin ) )) ");
 		sb.append(" and carr.nomatr < 9000 ");
 
-		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+		Query query = null;
+		if (entite.equals(BordereauRecapService.VDN))
+			query = sirhEntityManager.createNativeQuery(sb.toString());
+		else
+			query = cdeEntityManager.createNativeQuery(sb.toString());
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		query.setParameter("datdeb", Integer.valueOf(sdfMairie.format(dateDebut)));

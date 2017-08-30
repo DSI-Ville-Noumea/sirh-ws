@@ -1,4 +1,4 @@
-package nc.noumea.mairie.mdf.domain.vdn;
+package nc.noumea.mairie.mdf.domain.cde.adm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -6,11 +6,12 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
 
 import nc.noumea.mairie.mdf.domain.Detail;
+import nc.noumea.mairie.mdf.domain.FdsMutDetId;
 
 @Entity
-@Table(name = "FDSMUTDET")
-@PersistenceUnit(unitName = "mdfVdnPersistenceUnit")
-public class FdsMutDet extends Detail {
+@Table(name = "FDSMUTDET1")
+@PersistenceUnit(unitName = "mdfCdePersistenceUnit")
+public class FdsMutDetAdm extends Detail {
 	
 	@Column(name = "NOPERS", columnDefinition = "numeric")
 	private Integer numeroPers;

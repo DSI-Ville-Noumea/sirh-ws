@@ -44,6 +44,7 @@
 
 	<jee:jndi-lookup id="sirhDataSource" jndi-name="jdbc/KIOSQUE_DS1" resource-ref="true" />
 	<jee:jndi-lookup id="mdfVdnDb400DataSource" jndi-name="jdbc/SIRH_WS_DS_MDF_VDN" resource-ref="true" />
+	<jee:jndi-lookup id="mdfCdeDb400DataSource" jndi-name="jdbc/SIRH_WS_DS_MDF_CDE" resource-ref="true" />
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
 		id="sirhTransactionManager">
@@ -61,6 +62,10 @@
 	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="mdfVdnEntityManagerFactory">
 		<property name="persistenceUnitName" value="mdfVdnPersistenceUnit" />
 		<property name="dataSource" ref="mdfVdnDb400DataSource" />
+	</bean>
+	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="mdfCdeEntityManagerFactory">
+		<property name="persistenceUnitName" value="mdfCdePersistenceUnit" />
+		<property name="dataSource" ref="mdfCdeDb400DataSource" />
 	</bean>
 	
 	<jee:jndi-lookup id="reportServerPath" jndi-name="REPORTING_SERVER_SIRH_REPORT_PATH" expected-type="java.lang.String"/>

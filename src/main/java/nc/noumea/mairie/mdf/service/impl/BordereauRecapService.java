@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -20,10 +22,20 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import nc.noumea.mairie.mdf.domain.Detail;
+import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutDetAdm;
+import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutEntAdm;
+import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutTotAdm;
+import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutDetPers;
+import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutEntPers;
+import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutTotPers;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutDet;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutEnt;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutTot;
 import nc.noumea.mairie.mdf.dto.AlimenteBordereauBean;
+import nc.noumea.mairie.mdf.dto.DetailDto;
+import nc.noumea.mairie.mdf.dto.EnTeteDto;
+import nc.noumea.mairie.mdf.dto.TotalDto;
 import nc.noumea.mairie.mdf.repository.IPersonnelRepository;
 import nc.noumea.mairie.mdf.service.AbstractReporting;
 import nc.noumea.mairie.mdf.service.IBordereauRecapService;
@@ -40,16 +52,21 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 	
 	@Autowired
 	private IDataConsistencyRules dataRules;
+	
+	private ModelMapper modelMapper = new ModelMapper();
 
 	private Logger logger = LoggerFactory.getLogger(BordereauRecapService.class);
 	
 	static final NumberFormat numberFormat = NumberFormat.getInstance(new Locale("fr"));
+	public static final String VDN = "VDN";
+	public static final String PERS = "PERS";
+	public static final String ADM = "ADM";
 
 	@Override
 	@Transactional(readOnly = true)
-	public byte[] getRecapMDFAsByteArray() throws Exception {
+	public byte[] getRecapMDFAsByteArray(String entite) throws Exception {
 		
-		initDatas();
+		initDatas(entite);
 
 		Document document = new Document(PageSize.A4.rotate());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -215,18 +232,52 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		document.add(table);
 	}
 	
-	private void initDatas() {
+	private void initDatas(String entite) {
 		logger.debug("Entrée dans l'initialisation des données du bordereau récapitulatif.");
+
+		EnTeteDto enTeteDto = null;
+		List<DetailDto> detailsDto = Lists.newArrayList();
+		TotalDto TotalDto = null;
 		
-		FdsMutEnt enTete = personnelRepo.getEntete();
-		FdsMutTot total = personnelRepo.getTotal();
-		List<FdsMutDet> details = personnelRepo.getAllDetails();
+		// Pour la ville de nouméa
+		if (entite.equals(VDN)) {
+			FdsMutEnt enTete = personnelRepo.getEnteteVdn();
+			FdsMutTot total = personnelRepo.getTotalVdn();
+			List<FdsMutDet> details = personnelRepo.getAllDetailsVdn();
+
+			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
+			TotalDto = modelMapper.map(total, TotalDto.class);
+			detailsDto = convertDetailToDto(details);
+			
+		// Pour l'administration de la caisse des écoles
+		} else if (entite.equals(ADM)) {
+			FdsMutEntAdm enTete = personnelRepo.getEnteteAdm();
+			FdsMutTotAdm total = personnelRepo.getTotalAdm();
+			List<FdsMutDetAdm> details = personnelRepo.getAllDetailsAdm();
+
+			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
+			TotalDto = modelMapper.map(total, TotalDto.class);
+			detailsDto = convertDetailToDto(details);
+			
+		// Pour le personnel de la caisse des écoles
+		} else if (entite.equals(PERS)) {
+			FdsMutEntPers enTete = personnelRepo.getEntetePers();
+			FdsMutTotPers total = personnelRepo.getTotalPers();
+			List<FdsMutDetPers> details = personnelRepo.getAllDetailsPers();
+
+			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
+			TotalDto = modelMapper.map(total, TotalDto.class);
+			detailsDto = convertDetailToDto(details);
+		} else {
+			logger.error("L'entité passée en paramètre ne correspond à aucune entité existante.");
+			throw new IllegalArgumentException("L'entité passée en paramètre ne correspond à aucune entité existante.");
+		}
 		
 		// On vérifie les données en entrée
-		dataRules.verifyInputDatas(enTete, details, total);
+		dataRules.verifyInputDatas(enTeteDto, detailsDto, TotalDto);
 		logger.debug("Les données récupérées sont bien présentes.");
 		
-		AlimenteBordereauBean datas = dataRules.alimenteDatas(enTete, details, total);
+		AlimenteBordereauBean datas = dataRules.alimenteDatas(enTeteDto, detailsDto, TotalDto, entite);
 
 		// On vérifie les données en sortie
 		dataRules.verifyConsistency(datas);
@@ -241,5 +292,19 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 
 	public void setDonnees(AlimenteBordereauBean donnees) {
 		this.donnees = donnees;
+	}
+	
+	private List<DetailDto> convertDetailToDto(List<? extends Detail> details) {
+		List<DetailDto> dto = Lists.newArrayList();
+		
+		for (Object det : details) {
+			DetailDto obj = modelMapper.map(det, DetailDto.class);
+			obj.setTypeMouvement(((Detail)det).getId().getTypeMouvement());
+			obj.setMoisPaye(((Detail)det).getId().getMoisPaye());
+			obj.setMatriculeCafat(((Detail)det).getId().getMatriculeCafat());
+			dto.add(obj);
+		}
+		
+		return dto;
 	}
 }
