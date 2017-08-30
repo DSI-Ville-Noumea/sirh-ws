@@ -240,8 +240,8 @@ public class FichePosteController {
 		}
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/doc");
-		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.doc\"", fp.getIdFichePoste()));
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.pdf\"", fp.getIdFichePoste()));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}
