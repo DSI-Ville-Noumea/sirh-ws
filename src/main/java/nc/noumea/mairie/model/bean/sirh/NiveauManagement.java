@@ -9,6 +9,7 @@ public class NiveauManagement {
     private int idNiveauManagement;
     private String libNiveauManagement;
     private Integer ordre;
+    private String definitionManagement;
 
     @Id
     @Column(name = "ID_NIVEAU_MANAGEMENT", nullable = false)
@@ -34,6 +35,16 @@ public class NiveauManagement {
     @Column(name = "ORDRE", nullable = true)
     public Integer getOrdre() {
         return ordre;
+    }
+
+    @Basic
+    @Column(name = "DEF_NIVEAU_MANAGEMENT", nullable = true)
+    public String getDefinitionManagement() {
+        return definitionManagement;
+    }
+
+    public void setDefinitionManagement(String definitionManagement) {
+        this.definitionManagement = definitionManagement;
     }
 
     public void setOrdre(Integer ordre) {

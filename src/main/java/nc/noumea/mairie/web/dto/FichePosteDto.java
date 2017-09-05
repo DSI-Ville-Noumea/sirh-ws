@@ -71,6 +71,7 @@ public class FichePosteDto {
 	private String specialisation;
 	private String informationsComplementaires;
 	private Integer idNiveauManagement;
+	private String definitionManagement;
 	private String niveauManagement;
 
 	private List<ActiviteMetierSavoirFaire> activiteMetier = new ArrayList<>();
@@ -179,6 +180,7 @@ public class FichePosteDto {
 			if (fichePoste.getNiveauManagement() != null) {
 				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
 				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+				this.definitionManagement = fichePoste.getNiveauManagement().getDefinitionManagement();
 				for (CompetenceManagement cm : fichePoste.getNiveauManagement().getCompetences()) {
 
 				}
@@ -811,6 +813,14 @@ public class FichePosteDto {
 
 	public void setNiveauManagement(String niveauManagement) {
 		this.niveauManagement = niveauManagement;
+	}
+
+	public String getDefinitionManagement() {
+		return definitionManagement;
+	}
+
+	public void setDefinitionManagement(String definitionManagement) {
+		this.definitionManagement = definitionManagement;
 	}
 
 	public List<String> getCompetenceManagement() {
