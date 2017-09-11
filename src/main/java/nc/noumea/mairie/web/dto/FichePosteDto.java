@@ -3,6 +3,9 @@ package nc.noumea.mairie.web.dto;
 import nc.noumea.mairie.model.bean.sirh.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.collect.Lists;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -181,13 +184,11 @@ public class FichePosteDto {
 				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
 				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
 				this.definitionManagement = fichePoste.getNiveauManagement().getDefinitionManagement();
+				List<String> listeCompetences = Lists.newArrayList();
 				for (CompetenceManagement cm : fichePoste.getNiveauManagement().getCompetences()) {
-
+					listeCompetences.add(cm.getLibCompetenceManagement());
 				}
-				this.competenceManagement = fichePoste.getNiveauManagement().getCompetences()
-						.stream()
-						.map(cm -> cm.getLibCompetenceManagement())
-						.collect(Collectors.toList());
+				this.competenceManagement = listeCompetences;
 
 			}
 			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
