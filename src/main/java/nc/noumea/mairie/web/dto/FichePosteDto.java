@@ -181,9 +181,6 @@ public class FichePosteDto {
 				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
 				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
 				this.definitionManagement = fichePoste.getNiveauManagement().getDefinitionManagement();
-				for (CompetenceManagement cm : fichePoste.getNiveauManagement().getCompetences()) {
-
-				}
 				this.competenceManagement = fichePoste.getNiveauManagement().getCompetences()
 						.stream()
 						.map(cm -> cm.getLibCompetenceManagement())
