@@ -1,5 +1,6 @@
 package nc.noumea.mairie.mdf.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import nc.noumea.mairie.mdf.dto.AlimenteBordereauBean;
@@ -9,7 +10,7 @@ import nc.noumea.mairie.mdf.dto.TotalDto;
 
 public interface IDataConsistencyRules {
 	
-	AlimenteBordereauBean alimenteDatas(EnTeteDto entete, List<DetailDto> details, TotalDto total, String entite);
+	AlimenteBordereauBean alimenteDatas(EnTeteDto entete, List<DetailDto> details, TotalDto total, String entite) throws ParseException;
 	
 	void verifyConsistency(AlimenteBordereauBean bean);
 	

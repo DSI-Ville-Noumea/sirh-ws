@@ -97,7 +97,7 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 	
 		// on ferme le document
 		document.close();
-		logger.debug("Le bordereau récapitulatif a été généré correctement.");
+		logger.debug("Le bordereau récapitulatif " + entite + " a été généré correctement.");
 	
 		return baos.toByteArray();
 	}
@@ -115,7 +115,7 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		PdfPTable table =  writeTableau(document, new float[] { 2, 3 });
         
 		List<CellVo> listValuesReliquat = new ArrayList<CellVo>();
-		listValuesReliquat.add(new CellVo("Dénomination employeur", false, 1, null, Element.ALIGN_LEFT, true, fontBold10));
+		listValuesReliquat.add(new CellVo(donnees.getDenominationEmployeur(), false, 1, null, Element.ALIGN_LEFT, true, fontBold10));
 		listValuesReliquat.add(new CellVo(donnees.getCodeCollectivité(), false, 1, null, Element.ALIGN_RIGHT, true, fontNormal10));
 		writeLine(table, 3, listValuesReliquat, false);
 		document.add(table);
@@ -127,8 +127,8 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		PdfPTable table2 =  writeTableau(document, new float[] { 2, 3 });
         
 		List<CellVo> listValuesReliquat2 = new ArrayList<CellVo>();
-		listValuesReliquat2.add(new CellVo("MOIS DE PAYE", false, 1, null, Element.ALIGN_LEFT, true, fontBold10));
-		listValuesReliquat2.add(new CellVo(donnees.getMoisPaye(), false, 1, null, Element.ALIGN_RIGHT, true, fontNormal10));
+		listValuesReliquat2.add(new CellVo(donnees.getMoisPaye(), false, 1, null, Element.ALIGN_LEFT, true, fontBold10));
+		listValuesReliquat2.add(new CellVo(donnees.getDateEmission(), false, 1, null, Element.ALIGN_RIGHT, true, fontNormal10));
 		writeLine(table2, 3, listValuesReliquat2, false);
 		document.add(table2);
 	}
@@ -232,8 +232,8 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		document.add(table);
 	}
 	
-	private void initDatas(String entite) {
-		logger.debug("Entrée dans l'initialisation des données du bordereau récapitulatif.");
+	private void initDatas(String entite) throws ParseException {
+		logger.debug("Entrée dans l'initialisation des données du bordereau récapitulatif " + entite);
 
 		EnTeteDto enTeteDto = null;
 		List<DetailDto> detailsDto = Lists.newArrayList();
@@ -281,7 +281,7 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 
 		// On vérifie les données en sortie
 		dataRules.verifyConsistency(datas);
-		logger.debug("Les données du bordereau sont complètes.");
+		logger.debug("Les données du bordereau " + entite + " sont complètes.");
 		
 		setDonnees(datas);
 	}

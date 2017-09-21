@@ -1,8 +1,10 @@
 package nc.noumea.mairie.mdf.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -28,8 +30,14 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 	protected Logger logger = LoggerFactory.getLogger(DataConsistencyRules.class);
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYYMM");
+	private SimpleDateFormat sdfDateEnvoi = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat sdfDateTraitement = new SimpleDateFormat("MMMM YYYY", new Locale("fr"));
 	
 	final static String REMUNERATION = "SAL";
+	
+	private static final String VDN = "VDN";
+	private static final String PERS = "PERS";
+	private static final String ADM = "ADM";
 
 	@Autowired
 	private ISpcarrRepository spcarrRepository;
@@ -62,12 +70,16 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 	}
 	
 	@Override
-	public AlimenteBordereauBean alimenteDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total, String entite) {
+	public AlimenteBordereauBean alimenteDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total, String entite) throws ParseException {
 		
 		AlimenteBordereauBean bean = new AlimenteBordereauBean();
 		
+		Date moisTraitement = sdfDateEnvoi.parse(enTete.getDateFichier());
+		
 		bean.setCodeCollectivité(enTete.getCodeCollectivité());
-		bean.setMoisPaye(enTete.getDateFichier());
+		bean.setMoisPaye(sdfDateTraitement.format(moisTraitement));
+		bean.setDenominationEmployeur(mapDenominationEmployeur(entite));
+		bean.setDateEmission(sdfDateEnvoi.format(new Date()));
 		
 		EffectifBean effectif = mapEffectifs(details, entite);
 		bean.setEffectif(effectif);
@@ -81,7 +93,7 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		CotisationBean cotisationSal = mapCotisations(details, false);
 		bean.setCotisationSalariale(cotisationSal);
 		
-		logger.debug("Les données du bordereau ont bien été générées.");
+		logger.debug("Les données du bordereau " + entite + "ont bien été générées.");
 		
 		return bean;
 	}
@@ -106,6 +118,20 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		effectif.setEffectif(effectifTotal);
 		
 		return effectif;
+	}
+
+	private String mapDenominationEmployeur(String entite) {
+		String denom = null;
+		if (entite == null)
+			return denom;
+		if (entite.equals(VDN))
+			denom  = "MAIRIE DE NOUMEA";
+		else if (entite.equals(ADM))
+			denom  = "CAISSE DES ECOLES NOUMEA - ADMINISTRATIF";
+		else if (entite.equals(PERS))
+			denom  = "CAISSE DES ECOLES NOUMEA - PERSONNEL";
+		
+		return denom;
 	}
 
 	private RemunerationBean mapRemuneration(List<DetailDto> details) {

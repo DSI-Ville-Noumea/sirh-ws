@@ -6,6 +6,10 @@ public class AlimenteBordereauBean {
 
 	private String moisPaye;
 
+	private String denominationEmployeur;
+
+	private String dateEmission;
+
 	private EffectifBean effectif;
 
 	private RemunerationBean remuneration;
@@ -60,5 +64,21 @@ public class AlimenteBordereauBean {
 
 	public void setCotisationSalariale(CotisationBean cotisationSalariale) {
 		this.cotisationSalariale = cotisationSalariale;
+	}
+
+	public String getDenominationEmployeur() {
+		return denominationEmployeur;
+	}
+
+	public void setDenominationEmployeur(String denominationEmployeur) {
+		this.denominationEmployeur = denominationEmployeur;
+	}
+
+	public String getDateEmission() {
+		return dateEmission;
+	}
+
+	public void setDateEmission(String dateEmission) {
+		this.dateEmission = dateEmission;
 	}
 }
