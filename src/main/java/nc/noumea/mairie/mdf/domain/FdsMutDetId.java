@@ -19,6 +19,15 @@ public class FdsMutDetId implements Serializable {
 	@Column(name = "MATCAFA", columnDefinition = "char")
 	private String matriculeCafat;
 
+	@Column(name = "MONTPP", columnDefinition = "numeric")
+	private Integer montantPP;
+
+	@Column(name = "MONTPS", columnDefinition = "numeric")
+	private Integer montantPS;
+
+	@Column(name = "MONTBRUT", columnDefinition = "numeric")
+	private Integer montantBrut;
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();
@@ -51,5 +60,29 @@ public class FdsMutDetId implements Serializable {
 
 	public void setMoisPaye(String moisPaye) {
 		this.moisPaye = moisPaye;
+	}
+
+	public Integer getMontantBrut() {
+		return montantBrut;
+	}
+
+	public void setMontantBrut(Integer montantBrut) {
+		this.montantBrut = montantBrut;
+	}
+
+	public Integer getMontantPS() {
+		return montantPS;
+	}
+
+	public void setMontantPS(Integer montantPS) {
+		this.montantPS = montantPS;
+	}
+
+	public Integer getMontantPP() {
+		return montantPP;
+	}
+
+	public void setMontantPP(Integer montantPP) {
+		this.montantPP = montantPP;
 	}
 }

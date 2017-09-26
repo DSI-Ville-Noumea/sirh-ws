@@ -21,17 +21,8 @@ public class FdsMutDet extends Detail {
 	@Column(name = "RANGEM", columnDefinition = "numeric")
 	private Integer rangGemellaire;
 
-	@Column(name = "MONTBRUT", columnDefinition = "numeric")
-	private Integer montantBrut;
-
 	@Column(name = "NBJOURS", columnDefinition = "numeric")
 	private Integer nombreJours;
-
-	@Column(name = "MONTPP", columnDefinition = "numeric")
-	private Integer montantPP;
-
-	@Column(name = "MONTPS", columnDefinition = "numeric")
-	private Integer montantPS;
 
 	@Column(name = "ANCMONT", columnDefinition = "numeric")
 	private Integer ancienMontant;
@@ -111,14 +102,6 @@ public class FdsMutDet extends Detail {
 		this.rangGemellaire = rangGemellaire;
 	}
 
-	public Integer getMontantBrut() {
-		return montantBrut;
-	}
-
-	public void setMontantBrut(Integer montantBrut) {
-		this.montantBrut = montantBrut;
-	}
-
 	public Integer getNombreJours() {
 		return nombreJours;
 	}
@@ -135,28 +118,12 @@ public class FdsMutDet extends Detail {
 		this.tauxPP = tauxPP;
 	}
 
-	public Integer getMontantPP() {
-		return montantPP;
-	}
-
-	public void setMontantPP(Integer montantPP) {
-		this.montantPP = montantPP;
-	}
-
 	public String getTauxPS() {
 		return tauxPS;
 	}
 
 	public void setTauxPS(String tauxPS) {
 		this.tauxPS = tauxPS;
-	}
-
-	public Integer getMontantPS() {
-		return montantPS;
-	}
-
-	public void setMontantPS(Integer montantPS) {
-		this.montantPS = montantPS;
 	}
 
 	public Integer getAncienMontant() {

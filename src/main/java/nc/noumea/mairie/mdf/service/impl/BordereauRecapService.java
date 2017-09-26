@@ -302,6 +302,9 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 			obj.setTypeMouvement(((Detail)det).getId().getTypeMouvement());
 			obj.setMoisPaye(((Detail)det).getId().getMoisPaye());
 			obj.setMatriculeCafat(((Detail)det).getId().getMatriculeCafat());
+			obj.setMontantBrut(((Detail)det).getId().getMontantBrut());
+			obj.setMontantPP(((Detail)det).getId().getMontantPP());
+			obj.setMontantPS(((Detail)det).getId().getMontantPS());
 			dto.add(obj);
 		}
 		

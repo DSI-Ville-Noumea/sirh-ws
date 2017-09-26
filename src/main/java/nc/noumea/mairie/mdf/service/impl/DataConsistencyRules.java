@@ -1,5 +1,6 @@
 package nc.noumea.mairie.mdf.service.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 	protected Logger logger = LoggerFactory.getLogger(DataConsistencyRules.class);
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYYMM");
+	private SimpleDateFormat sdfPerCou = new SimpleDateFormat("yyyyMM");
 	private SimpleDateFormat sdfDateEnvoi = new SimpleDateFormat("dd/MM/yyyy");
 	private SimpleDateFormat sdfDateTraitement = new SimpleDateFormat("MMMM YYYY", new Locale("fr"));
 	
@@ -49,9 +51,9 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 			throw new IllegalArgumentException("Impossible de générer le bordereau : certaines données n'ont pas été récupérées.");
 		
 		// En tête
-		/*Date moisPrecedent =  new DateTime().minusMonths(1).toDate();
+		Date moisPrecedent =  new DateTime().minusMonths(1).toDate();
 		if (!enTete.getPeriodeCourante().toString().equals(sdf.format(moisPrecedent)))
-			throw new IllegalArgumentException("Le mois du fichier d'en-tête ne correspond pas au mois précédent.");*/
+			throw new IllegalArgumentException("Le mois du fichier d'en-tête ne correspond pas au mois précédent.");
 		
 		// Total
 		if (!total.getNombreLignesDetail().equals(details.size()))
@@ -74,7 +76,7 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		
 		AlimenteBordereauBean bean = new AlimenteBordereauBean();
 		
-		Date moisTraitement = sdfDateEnvoi.parse(enTete.getDateFichier());
+		Date moisTraitement = sdfPerCou.parse(enTete.getPeriodeCourante().toString());
 		
 		bean.setCodeCollectivité(enTete.getCodeCollectivité());
 		bean.setMoisPaye(sdfDateTraitement.format(moisTraitement));
