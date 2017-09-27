@@ -132,7 +132,8 @@ public class FichePosteController {
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste);
+			int version = (fp.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
+			responseData = reportingService.getFichePosteReportAsByteArray(idFichePoste, version);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -232,15 +233,16 @@ public class FichePosteController {
 		byte[] responseData = null;
 
 		try {
-			responseData = reportingService.getFichePosteSIRHReportAsByteArray(idFichePoste);
+			int version = (fp.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
+			responseData = reportingService.getFichePosteSIRHReportAsByteArray(idFichePoste, version);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/doc");
-		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.doc\"", fp.getIdFichePoste()));
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"FP_%s.pdf\"", fp.getIdFichePoste()));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
 	}

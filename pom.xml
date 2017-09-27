@@ -5,7 +5,7 @@
 	<groupId>nc.noumea.mairie</groupId>
 	<artifactId>SIRHWS</artifactId>
 	<packaging>war</packaging>
-	<version>4.33</version>
+	<version>5.00</version>
 	<name>sirh-ws</name>
 	<organization>
 		<name>Mairie de Nouméa</name>
@@ -76,7 +76,7 @@
 	</scm>
 	<properties>
 		<aspectj.version>1.8.4</aspectj.version>
-		<java.version>7</java.version>
+		<java.version>8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.21</slf4j.version>
 		<spring.version>4.1.7.RELEASE</spring.version>

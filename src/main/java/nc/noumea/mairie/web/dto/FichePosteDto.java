@@ -1,21 +1,13 @@
 package nc.noumea.mairie.web.dto;
 
+import nc.noumea.mairie.model.bean.sirh.*;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-import nc.noumea.mairie.model.bean.sirh.Activite;
-import nc.noumea.mairie.model.bean.sirh.Affectation;
-import nc.noumea.mairie.model.bean.sirh.AvantageNature;
-import nc.noumea.mairie.model.bean.sirh.Competence;
-import nc.noumea.mairie.model.bean.sirh.Delegation;
-import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
-import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
-import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
+import java.util.stream.Collectors;
 
 @XmlRootElement
 public class FichePosteDto {
@@ -73,6 +65,21 @@ public class FichePosteDto {
 	private TitrePosteDto titrePoste;
 
 	private Integer idAgent;
+
+	//Version 2
+	private Integer version;
+	private String specialisation;
+	private String informationsComplementaires;
+	private Integer idNiveauManagement;
+	private String definitionManagement;
+	private String niveauManagement;
+
+	private List<ActiviteMetierSavoirFaire> activiteMetier = new ArrayList<>();
+	private List<String> savoirFaireMetier = new ArrayList<>();
+	private List<String> activiteGenerale = new ArrayList<>();
+	private List<String> conditionExercice = new ArrayList<>();
+	private List<String> competenceManagement = new ArrayList<>();
+
 
 	public FichePosteDto() {
 		activites = new ArrayList<String>();
@@ -163,6 +170,37 @@ public class FichePosteDto {
 		for (FicheEmploi emploiSec : fichePoste.getFicheEmploiSecondaire()) {
 			emploiSecondaire = emploiSec.getNomEmploi();
 			break;
+		}
+
+		//Version 2
+		this.version = (fichePoste.getFicheMetierPrimaire().isEmpty()) ? 1 : 2;
+		if (version == 2) {
+			this.informationsComplementaires = fichePoste.getInformationsComplementaires();
+			this.specialisation = fichePoste.getSpecialisation();
+			if (fichePoste.getNiveauManagement() != null) {
+				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
+				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
+				this.definitionManagement = fichePoste.getNiveauManagement().getDefinitionManagement();
+				this.competenceManagement = fichePoste.getNiveauManagement().getCompetences()
+						.stream()
+						.map(cm -> cm.getLibCompetenceManagement())
+						.collect(Collectors.toList());
+
+			}
+			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
+				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
+			}
+			for (ActiviteGeneraleFp ag : fichePoste.getActivitesGenerales()) {
+				activiteGenerale.add(ag.getActiviteGeneraleByIdActiviteGenerale().getNomActiviteGenerale());
+			}
+			for (ConditionExerciceFp ce : fichePoste.getConditionsExercice()) {
+				conditionExercice.add(ce.getConditionExerciceByIdConditionExercice().getNomConditionExercice());
+			}
+			for (ActiviteMetierSavoirFp amsf : fichePoste.getActiviteMetier()) {
+				String nomActiviteMetier = amsf.getActiviteMetierByIdActiviteMetier().getNomActiviteMetier();
+				String nomSavoirFaire = amsf.getSavoirFaireByIdSavoirFaire() != null ? amsf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire() : null;
+				activiteMetier.add(new ActiviteMetierSavoirFaire(nomActiviteMetier, nomSavoirFaire));
+			}
 		}
 	}
 
@@ -700,5 +738,119 @@ public class FichePosteDto {
 
 	public void setTauxETP(Double tauxETP) {
 		this.tauxETP = tauxETP;
+	}
+
+	public String getSpecialisation() {
+		return specialisation;
+	}
+
+	public void setSpecialisation(String specialisation) {
+		this.specialisation = specialisation;
+	}
+
+	public String getInformationsComplementaires() {
+		return informationsComplementaires;
+	}
+
+	public void setInformationsComplementaires(String informationsComplementaires) {
+		this.informationsComplementaires = informationsComplementaires;
+	}
+
+	public Integer getIdNiveauManagement() {
+		return idNiveauManagement;
+	}
+
+	public void setIdNiveauManagement(Integer idNiveauManagement) {
+		this.idNiveauManagement = idNiveauManagement;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public List<String> getSavoirFaireMetier() {
+		return savoirFaireMetier;
+	}
+
+	public void setSavoirFaireMetier(List<String> savoirFaireMetier) {
+		this.savoirFaireMetier = savoirFaireMetier;
+	}
+
+	public List<String> getActiviteGenerale() {
+		return activiteGenerale;
+	}
+
+	public void setActiviteGenerale(List<String> activiteGenerale) {
+		this.activiteGenerale = activiteGenerale;
+	}
+
+	public List<String> getConditionExercice() {
+		return conditionExercice;
+	}
+
+	public void setConditionExercice(List<String> conditionExercice) {
+		this.conditionExercice = conditionExercice;
+	}
+
+	public List<ActiviteMetierSavoirFaire> getActiviteMetier() {
+		return activiteMetier;
+	}
+
+	public void setActiviteMetier(List<ActiviteMetierSavoirFaire> activiteMetier) {
+		this.activiteMetier = activiteMetier;
+	}
+
+	public String getNiveauManagement() {
+		return niveauManagement;
+	}
+
+	public void setNiveauManagement(String niveauManagement) {
+		this.niveauManagement = niveauManagement;
+	}
+
+	public String getDefinitionManagement() {
+		return definitionManagement;
+	}
+
+	public void setDefinitionManagement(String definitionManagement) {
+		this.definitionManagement = definitionManagement;
+	}
+
+	public List<String> getCompetenceManagement() {
+		return competenceManagement;
+	}
+
+	public void setCompetenceManagement(List<String> competenceManagement) {
+		this.competenceManagement = competenceManagement;
+	}
+
+	private static class ActiviteMetierSavoirFaire {
+		private String activiteMetier;
+		private String savoirFaire;
+
+		public ActiviteMetierSavoirFaire(String activiteMetier, String savoirFaire) {
+			this.activiteMetier = activiteMetier;
+			this.savoirFaire = savoirFaire;
+		}
+
+		public String getActiviteMetier() {
+			return activiteMetier;
+		}
+
+		public void setActiviteMetier(String activiteMetier) {
+			this.activiteMetier = activiteMetier;
+		}
+
+		public String getSavoirFaire() {
+			return savoirFaire;
+		}
+
+		public void setSavoirFaire(String savoirFaire) {
+			this.savoirFaire = savoirFaire;
+		}
 	}
 }
