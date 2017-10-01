@@ -22,7 +22,6 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import nc.noumea.mairie.mdf.domain.Detail;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutDetAdm;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutEntAdm;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutTotAdm;
@@ -294,17 +293,11 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		this.donnees = donnees;
 	}
 	
-	private List<DetailDto> convertDetailToDto(List<? extends Detail> details) {
+	private List<DetailDto> convertDetailToDto(List<?> details) {
 		List<DetailDto> dto = Lists.newArrayList();
 		
 		for (Object det : details) {
 			DetailDto obj = modelMapper.map(det, DetailDto.class);
-			obj.setTypeMouvement(((Detail)det).getId().getTypeMouvement());
-			obj.setMoisPaye(((Detail)det).getId().getMoisPaye());
-			obj.setMatriculeCafat(((Detail)det).getId().getMatriculeCafat());
-			obj.setMontantBrut(((Detail)det).getId().getMontantBrut());
-			obj.setMontantPP(((Detail)det).getId().getMontantPP());
-			obj.setMontantPS(((Detail)det).getId().getMontantPS());
 			dto.add(obj);
 		}
 		

@@ -2,15 +2,36 @@ package nc.noumea.mairie.mdf.domain.vdn;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Table;
-
-import nc.noumea.mairie.mdf.domain.Detail;
 
 @Entity
 @Table(name = "FDSMUTDET")
 @PersistenceUnit(unitName = "mdfVdnPersistenceUnit")
-public class FdsMutDet extends Detail {
+public class FdsMutDet {
+
+	@Id
+	@Column(name = "CLE", columnDefinition = "numeric")
+	private Integer id;
+	
+	@Column(name = "TYPMOUV", columnDefinition = "char")
+	private String typeMouvement;
+	
+	@Column(name = "MOISPAIE", columnDefinition = "char")
+	private String moisPaye;
+
+	@Column(name = "MATCAFA", columnDefinition = "char")
+	private String matriculeCafat;
+
+	@Column(name = "MONTPP", columnDefinition = "numeric")
+	private Integer montantPP;
+
+	@Column(name = "MONTPS", columnDefinition = "numeric")
+	private Integer montantPS;
+
+	@Column(name = "MONTBRUT", columnDefinition = "numeric")
+	private Integer montantBrut;
 	
 	@Column(name = "NOPERS", columnDefinition = "numeric")
 	private Integer numeroPers;
@@ -252,5 +273,61 @@ public class FdsMutDet extends Detail {
 
 	public void setCodeCollege(String codeCollege) {
 		this.codeCollege = codeCollege;
+	}
+
+	public String getMatriculeCafat() {
+		return matriculeCafat;
+	}
+
+	public void setMatriculeCafat(String matriculeCafat) {
+		this.matriculeCafat = matriculeCafat;
+	}
+
+	public String getTypeMouvement() {
+		return typeMouvement;
+	}
+
+	public void setTypeMouvement(String typeMouvement) {
+		this.typeMouvement = typeMouvement;
+	}
+
+	public String getMoisPaye() {
+		return moisPaye;
+	}
+
+	public void setMoisPaye(String moisPaye) {
+		this.moisPaye = moisPaye;
+	}
+
+	public Integer getMontantBrut() {
+		return montantBrut;
+	}
+
+	public void setMontantBrut(Integer montantBrut) {
+		this.montantBrut = montantBrut;
+	}
+
+	public Integer getMontantPS() {
+		return montantPS;
+	}
+
+	public void setMontantPS(Integer montantPS) {
+		this.montantPS = montantPS;
+	}
+
+	public Integer getMontantPP() {
+		return montantPP;
+	}
+
+	public void setMontantPP(Integer montantPP) {
+		this.montantPP = montantPP;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

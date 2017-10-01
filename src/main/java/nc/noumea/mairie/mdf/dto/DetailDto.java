@@ -1,7 +1,8 @@
 package nc.noumea.mairie.mdf.dto;
 
 public class DetailDto {
-	
+
+	private String id;
 	private String typeMouvement;
 	private String moisPaye;
 	private String matriculeCafat;
@@ -198,6 +199,12 @@ public class DetailDto {
 	}
 	public void setCodeCollege(String codeCollege) {
 		this.codeCollege = codeCollege;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	
