@@ -177,7 +177,7 @@ public class CalculEaeController {
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class")
 				.transform(new MSDateTransformer(), Date.class).deepSerialize(result), HttpStatus.OK);
 	}
-
+	
 	@ResponseBody
 	@RequestMapping(value = "/calculDateAvancement", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
@@ -193,5 +193,20 @@ public class CalculEaeController {
 				.deepSerialize(dto);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getDernierAvancement", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<Integer> getDernierAvancement(@RequestParam("idAgent") int idAgent, @RequestParam("anneeAvancement") int anneeAvancement) {
+
+		logger.debug("entered GET [calculEae/getDernierAvancement] => with parameter idAgent = {}, annee = {} ",
+				idAgent, anneeAvancement);
+
+		Integer avct = calculEaeService.getDernierAvancement(idAgent, anneeAvancement);
+		
+		HttpStatus status = avct == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+		return new ResponseEntity<Integer>(avct, status);
 	}
 }

@@ -15,6 +15,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.model.bean.sirh.*;
+import nc.noumea.mairie.model.pk.sirh.*;
+import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,31 +29,6 @@ import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
-import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
-import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
-import nc.noumea.mairie.model.bean.sirh.Affectation;
-import nc.noumea.mairie.model.bean.sirh.AvantageNature;
-import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
-import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
-import nc.noumea.mairie.model.bean.sirh.Delegation;
-import nc.noumea.mairie.model.bean.sirh.DelegationFP;
-import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
-import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
-import nc.noumea.mairie.model.bean.sirh.FeFp;
-import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
-import nc.noumea.mairie.model.bean.sirh.FichePoste;
-import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
-import nc.noumea.mairie.model.bean.sirh.NatureCredit;
-import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
-import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
-import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
-import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
-import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
-import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
-import nc.noumea.mairie.model.pk.sirh.ActiviteFPPK;
-import nc.noumea.mairie.model.pk.sirh.CompetenceFPPK;
-import nc.noumea.mairie.model.pk.sirh.FeFpPK;
-import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
@@ -987,41 +965,73 @@ public class FichePosteService implements IFichePosteService {
 		fichePDupliquee.setIdServiceADS(entite.getIdEntite());
 		fichePDupliquee.setNfa(entite.getNfa() == null ? "0" : entite.getNfa());
 		fichePDupliquee.setNumDeliberation(entite.getRefDeliberationActif());
+		fichePDupliquee.setNiveauManagement(fichePoste.getNiveauManagement());
 
-		// on crée les liens
-		FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
-		if (lienPrimaire != null) {
-			FicheEmploi fePrimaire = fichePosteDao.chercherFicheEmploi(lienPrimaire.getId().getIdFicheEmploi());
-			if (fePrimaire != null) {
-				FeFpPK feFpPk = new FeFpPK();
-				feFpPk.setIdFicheEmploi(fePrimaire.getIdFicheEmploi());
-				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+		if (fichePoste.getFicheMetierPrimaire().isEmpty()) {
+			// on crée les liens
+			FeFp lienPrimaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 1);
+			if (lienPrimaire != null) {
+				FicheEmploi fePrimaire = fichePosteDao.chercherFicheEmploi(lienPrimaire.getId().getIdFicheEmploi());
+				if (fePrimaire != null) {
+					FeFpPK feFpPk = new FeFpPK();
+					feFpPk.setIdFicheEmploi(fePrimaire.getIdFicheEmploi());
+					feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
 
-				FeFp feFp = new FeFp();
-				feFp.setId(feFpPk);
-				feFp.setFePrimaire(1);
-				feFp.setFichePoste(fichePDupliquee);
-				feFp.setFicheEmploi(fePrimaire);
+					FeFp feFp = new FeFp();
+					feFp.setId(feFpPk);
+					feFp.setFePrimaire(1);
+					feFp.setFichePoste(fichePDupliquee);
+					feFp.setFicheEmploi(fePrimaire);
 
-				fichePDupliquee.getFicheEmploi().add(feFp);
+					fichePDupliquee.getFicheEmploi().add(feFp);
+				}
 			}
-		}
 
-		FeFp lienSecondaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 0);
-		if (lienSecondaire != null) {
-			FicheEmploi feSecondaire = fichePosteDao.chercherFicheEmploi(lienSecondaire.getId().getIdFicheEmploi());
-			if (feSecondaire != null) {
-				FeFpPK feFpPk = new FeFpPK();
-				feFpPk.setIdFicheEmploi(feSecondaire.getIdFicheEmploi());
-				feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+			FeFp lienSecondaire = fichePosteDao.chercherFEFPAvecFP(fichePoste.getIdFichePoste(), 0);
+			if (lienSecondaire != null) {
+				FicheEmploi feSecondaire = fichePosteDao.chercherFicheEmploi(lienSecondaire.getId().getIdFicheEmploi());
+				if (feSecondaire != null) {
+					FeFpPK feFpPk = new FeFpPK();
+					feFpPk.setIdFicheEmploi(feSecondaire.getIdFicheEmploi());
+					feFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
 
-				FeFp feFp = new FeFp();
-				feFp.setId(feFpPk);
-				feFp.setFePrimaire(0);
-				feFp.setFichePoste(fichePDupliquee);
-				feFp.setFicheEmploi(feSecondaire);
+					FeFp feFp = new FeFp();
+					feFp.setId(feFpPk);
+					feFp.setFePrimaire(0);
+					feFp.setFichePoste(fichePDupliquee);
+					feFp.setFicheEmploi(feSecondaire);
 
-				fichePDupliquee.getFicheEmploi().add(feFp);
+					fichePDupliquee.getFicheEmploi().add(feFp);
+				}
+			}
+
+			ArrayList<ActiviteFP> activiteFPExistant = (ArrayList<ActiviteFP>) fichePosteDao.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
+			for (ActiviteFP lien : activiteFPExistant) {
+				ActiviteFPPK actiFpPk = new ActiviteFPPK();
+				actiFpPk.setIdActivite(lien.getActiviteFPPK().getIdActivite());
+				actiFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+
+				ActiviteFP actiFp = new ActiviteFP();
+				actiFp.setActiviteFPPK(actiFpPk);
+				actiFp.setActivitePrincipale(1);
+				actiFp.setFichePoste(fichePDupliquee);
+
+				fichePDupliquee.getActivites().add(actiFp);
+
+			}
+
+			ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao
+					.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
+			for (CompetenceFP lien : competencesFPExistant) {
+				CompetenceFPPK compFpPk = new CompetenceFPPK();
+				compFpPk.setIdCompetence(lien.getCompetenceFPPK().getIdCompetence());
+				compFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+
+				CompetenceFP compFp = new CompetenceFP();
+				compFp.setCompetenceFPPK(compFpPk);
+				compFp.setFichePoste(fichePDupliquee);
+
+				fichePDupliquee.getCompetencesFDP().add(compFp);
 			}
 		}
 
@@ -1030,35 +1040,6 @@ public class FichePosteService implements IFichePosteService {
 			NiveauEtude niveau = fichePosteDao.chercherNiveauEtude(niveauFPExistant.get(0).getNiveauEtudeFPPK().getIdNiveauEtude());
 			if (niveau != null)
 				fichePDupliquee.setNiveauEtude(niveau);
-		}
-
-		ArrayList<ActiviteFP> activiteFPExistant = (ArrayList<ActiviteFP>) fichePosteDao.listerActiviteFPAvecFP(fichePoste.getIdFichePoste());
-		for (ActiviteFP lien : activiteFPExistant) {
-			ActiviteFPPK actiFpPk = new ActiviteFPPK();
-			actiFpPk.setIdActivite(lien.getActiviteFPPK().getIdActivite());
-			actiFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
-
-			ActiviteFP actiFp = new ActiviteFP();
-			actiFp.setActiviteFPPK(actiFpPk);
-			actiFp.setActivitePrincipale(1);
-			actiFp.setFichePoste(fichePDupliquee);
-
-			fichePDupliquee.getActivites().add(actiFp);
-
-		}
-
-		ArrayList<CompetenceFP> competencesFPExistant = (ArrayList<CompetenceFP>) fichePosteDao
-				.listerCompetenceFPAvecFP(fichePoste.getIdFichePoste());
-		for (CompetenceFP lien : competencesFPExistant) {
-			CompetenceFPPK compFpPk = new CompetenceFPPK();
-			compFpPk.setIdCompetence(lien.getCompetenceFPPK().getIdCompetence());
-			compFpPk.setIdFichePoste(fichePDupliquee.getIdFichePoste());
-
-			CompetenceFP compFp = new CompetenceFP();
-			compFp.setCompetenceFPPK(compFpPk);
-			compFp.setFichePoste(fichePDupliquee);
-
-			fichePDupliquee.getCompetencesFDP().add(compFp);
 		}
 
 		ArrayList<AvantageNatureFP> avantagesFPExistant = (ArrayList<AvantageNatureFP>) fichePosteDao
@@ -1100,6 +1081,53 @@ public class FichePosteService implements IFichePosteService {
 			fichePosteDao.persisEntity(fichePDupliquee);
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
+		}
+
+		if (!fichePoste.getFicheMetierPrimaire().isEmpty()) {
+			//Duplication des fiches métier
+			FicheMetier fmPrimaire = fichePoste.getFicheMetierPrimaire().iterator().next();
+			FmFp fmFp = new FmFp();
+			fmFp.setIdFicheMetier(fmPrimaire.getIdFicheMetier());
+			fmFp.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+			fmFp.setFmPrimaire((short)1);
+			fichePosteDao.persisEntity(fmFp);
+			if (!fichePoste.getFicheMetierSecondaire().isEmpty()) {
+				FicheMetier fmSecondaire = fichePoste.getFicheMetierSecondaire().iterator().next();
+				fmFp = new FmFp();
+				fmFp.setIdFicheMetier(fmSecondaire.getIdFicheMetier());
+				fmFp.setIdFichePoste(fichePDupliquee.getIdFichePoste());
+				fmFp.setFmPrimaire((short)0);
+				fichePosteDao.persisEntity(fmFp);
+			}
+
+			//Duplication activité métier
+			for (ActiviteMetierSavoirFp amsf : fichePoste.getActiviteMetier()) {
+				ActiviteMetierSavoirFp newAmsf = new ActiviteMetierSavoirFp(fichePDupliquee.getIdFichePoste(),
+						amsf.getIdActiviteMetier(), amsf.getIdSavoirFaire(), amsf.getOrdre());
+				fichePosteDao.persisEntity(newAmsf);
+			}
+
+			//Duplication des savoir faire
+			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
+				SavoirFaireFp newSf = new SavoirFaireFp(fichePDupliquee.getIdFichePoste(),
+						sf.getIdSavoirFaire(), sf.getOrdre());
+				fichePosteDao.persisEntity(newSf);
+			}
+
+			//Duplication des activités générales
+			for (ActiviteGeneraleFp ag : fichePoste.getActivitesGenerales()) {
+				ActiviteGeneraleFp newAg = new ActiviteGeneraleFp(fichePDupliquee.getIdFichePoste(),
+						ag.getIdActiviteGenerale(), ag.getOrdre());
+				fichePosteDao.persisEntity(newAg);
+			}
+
+			//Duplication des conditions d'exercice
+			for (ConditionExerciceFp ce : fichePoste.getConditionsExercice()) {
+				ConditionExerciceFp newCe = new ConditionExerciceFp(fichePDupliquee.getIdFichePoste(),
+						ce.getIdConditionExercice(), ce.getOrdre());
+				fichePosteDao.persisEntity(newCe);
+			}
+
 		}
 
 		// aussi dans SPPOST
@@ -1165,6 +1193,14 @@ public class FichePosteService implements IFichePosteService {
 		ficheClone.setRemplace(null);
 		ficheClone.setObservation("");
 
+		ficheClone.setFicheMetierPrimaire(new HashSet<FicheMetier>());
+		ficheClone.setFicheMetierSecondaire(new HashSet<FicheMetier>());
+		ficheClone.setNiveauManagement(null);
+		ficheClone.setActiviteMetier(new ArrayList<ActiviteMetierSavoirFp>());
+		ficheClone.setActivitesGenerales(new ArrayList<ActiviteGeneraleFp>());
+		ficheClone.setSavoirFaire(new ArrayList<SavoirFaireFp>());
+		ficheClone.setConditionsExercice(new ArrayList<ConditionExerciceFp>());
+
 		// on ne remplit pas les infos liées au service
 		ficheClone.setDateDebAppliServ(null);
 		ficheClone.setIdServi(null);
@@ -1190,6 +1226,9 @@ public class FichePosteService implements IFichePosteService {
 		ficheClone.setOpi(fichePoste.getOpi());
 		ficheClone.setReglementaire(fichePoste.getReglementaire());
 		ficheClone.setTitrePoste(fichePoste.getTitrePoste());
+
+		ficheClone.setInformationsComplementaires(fichePoste.getInformationsComplementaires());
+		ficheClone.setSpecialisation(fichePoste.getSpecialisation());
 
 		return ficheClone;
 	}

@@ -17,6 +17,7 @@ import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
 import nc.noumea.mairie.model.bean.sirh.Competence;
 import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
@@ -44,6 +45,8 @@ import nc.noumea.mairie.web.dto.TitrePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +82,8 @@ public class CalculEaeService implements ICalculEaeService {
 
 	@Autowired
 	private IFichePosteRepository fichePosteDao;
+	
+	private Logger logger = LoggerFactory.getLogger(CalculEaeService.class);
 
 	@Override
 	public CalculEaeInfosDto getAffectationActiveByAgent(Integer idAgent, Integer anneeFormation) throws NumberFormatException, ParseException {
@@ -651,6 +656,23 @@ public class CalculEaeService implements ICalculEaeService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public Integer getDernierAvancement(Integer idAgent, Integer anneeAvct) {
+		AvancementFonctionnaire dernierAvct = sirhRepository.getDernierAvancement(idAgent, anneeAvct);
+		
+		if (dernierAvct == null) {
+			logger.warn("Aucun avancement trouvé pour l'agent matricule {} concernant l'année {}.", idAgent, anneeAvct);
+			return null;
+		}
+		
+		if (dernierAvct.getAvisCapEmployeur() == null) {
+			logger.warn("L'avis de l'employeur n'a pas été renseigné pour l'avancement id {}.", dernierAvct.getIdAvct());
+			return null;
+		}
+		
+		return dernierAvct.getAvisCapEmployeur().getIdAvisCap();
 	}
 
 	@Override
