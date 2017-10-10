@@ -1,7 +1,9 @@
 package nc.noumea.mairie.model.repository;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import nc.noumea.mairie.mdf.domain.InactivePAEnum;
+import nc.noumea.mairie.mdf.service.impl.BordereauRecapService;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn;
 
@@ -19,6 +23,9 @@ public class SpcarrRepository implements ISpcarrRepository {
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
+
+	@PersistenceContext(unitName = "mdfCdePersistenceUnit")
+	private EntityManager cdeEntityManager;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -182,5 +189,44 @@ public class SpcarrRepository implements ISpcarrRepository {
 		query.setParameter("datfin", Integer.valueOf(sdfMairie.format(datfin)));
 
 		return query.getResultList();
+	}
+
+	@Override
+	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin, String entite) {
+
+		StringBuilder sb = new StringBuilder();
+		
+		List<String> listPAInactives = new ArrayList<String>();
+		EnumSet<InactivePAEnum> types = EnumSet.allOf(InactivePAEnum.class);
+		for (InactivePAEnum PA : types) {
+			listPAInactives.add(PA.getCode());
+		}
+		
+		sb.append("select count(*) from Spcarr carr ");
+		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
+		sb.append(" inner join SPPOSA posa on pa.CDPADM = posa.CDPADM ");
+		sb.append(" and pa.CDPADM not in (:listPAInactives)");
+		sb.append(" WHERE ( (pa.datdeb <= :datdeb ");
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datdeb )) ");
+		sb.append(" or (pa.datdeb <= :datfin ");
+		sb.append(" and (pa.datfin=0 or pa.datfin > :datfin ) )) ");	
+		sb.append(" and ( (carr.datdeb <= :datdeb ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datdeb )) ");
+		sb.append(" or (carr.datdeb <= :datfin ");
+		sb.append(" and (carr.datfin=0 or carr.datfin >= :datfin ) )) ");
+		sb.append(" and carr.nomatr < 9000 ");
+
+		Query query = null;
+		if (entite.equals(BordereauRecapService.VDN))
+			query = sirhEntityManager.createNativeQuery(sb.toString());
+		else
+			query = cdeEntityManager.createNativeQuery(sb.toString());
+
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		query.setParameter("datdeb", Integer.valueOf(sdfMairie.format(dateDebut)));
+		query.setParameter("datfin", Integer.valueOf(sdfMairie.format(dateFin)));
+		query.setParameter("listPAInactives", listPAInactives);
+
+		return (Integer) query.getSingleResult();
 	}
 }

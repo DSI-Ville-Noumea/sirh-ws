@@ -23,4 +23,6 @@ public interface ISpcarrRepository {
 	SpcarrWithoutSpgradn getCarriereFonctionnaireAncienneGrad(Integer noMatr);
 
 	List<Integer> getListeAgentsPourAlimAutoCongesAnnuels(Date datdeb, Date datfin);
+	
+	Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin, String entite);
 }

@@ -12,6 +12,7 @@ public class CellVo {
 	private BaseColor backgroundColor;
 	private Integer horizontalAlign;
 	private boolean isBorder;
+	private Float fixedHeight;
 
 	private Font font;
 
@@ -190,6 +191,18 @@ public class CellVo {
 		this.isBorder = isBorder;
 		this.font = font;
 	}
+	
+	public CellVo(String text, boolean isBold, Integer colspan, BaseColor backgroundColor, Integer horizontalAlign, boolean isBorder, Font font, Float fixedHeight) {
+		super();
+		this.text = text;
+		this.isBold = isBold;
+		this.colspan = colspan;
+		this.backgroundColor = backgroundColor;
+		this.horizontalAlign = horizontalAlign;
+		this.isBorder = isBorder;
+		this.font = font;
+		this.fixedHeight = fixedHeight;
+	}
 
 	public String getText() {
 		return text;
@@ -245,6 +258,14 @@ public class CellVo {
 
 	public void setFont(Font font) {
 		this.font = font;
+	}
+
+	public Float getFixedHeight() {
+		return fixedHeight;
+	}
+
+	public void setFixedHeight(Float fixedHeight) {
+		this.fixedHeight = fixedHeight;
 	}
 
 }
