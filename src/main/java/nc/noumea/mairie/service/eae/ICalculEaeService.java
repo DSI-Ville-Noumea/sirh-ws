@@ -29,5 +29,7 @@ public interface ICalculEaeService {
 	List<DiplomeDto> getListDiplomeDto(Integer idAgent);
 
 	DateAvctDto getCalculDateAvancement(Integer idAgent);
+	
+	Integer getDernierAvancement(Integer idAgent, Integer anneeAvct);
 
 }

@@ -18,8 +18,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AutreAdministration;
 import nc.noumea.mairie.model.bean.sirh.AutreAdministrationAgent;
+import nc.noumea.mairie.model.bean.sirh.AvancementFonctionnaire;
+import nc.noumea.mairie.model.bean.sirh.AvisCap;
 import nc.noumea.mairie.model.bean.sirh.DestinataireMailMaladie;
 import nc.noumea.mairie.model.bean.sirh.DiplomeAgent;
 import nc.noumea.mairie.model.bean.sirh.DroitsGroupe;
@@ -229,6 +232,54 @@ public class SirhRepositoryTest {
 		List<AutreAdministrationAgent> result = repository.getListeAutreAdministrationAgent(9005138);
 
 		assertEquals(2, result.size());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDernierAvancement_return_no_result() {
+		
+		Agent agent = new Agent();
+		agent.setIdAgent(9005148);
+		sirhPersistenceUnit.persist(agent);
+		
+		AvisCap avis = new AvisCap();
+		avis.setIdAvisCap(1);
+		sirhPersistenceUnit.persist(avis);
+		
+		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setIdAvct(987987);
+		avct.setAgent(agent);
+		avct.setAnneeAvancement(2016);
+		avct.setAvisCapEmployeur(avis);
+		sirhPersistenceUnit.persist(avct);
+
+		AvancementFonctionnaire result = repository.getDernierAvancement(9005148, 2017);
+
+		assertEquals(null, result);
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void getDernierAvancement_return_result() {
+		
+		Agent agent = new Agent();
+		agent.setIdAgent(9005148);
+		sirhPersistenceUnit.persist(agent);
+		
+		AvisCap avis = new AvisCap();
+		avis.setIdAvisCap(2);
+		sirhPersistenceUnit.persist(avis);
+		
+		AvancementFonctionnaire avct = new AvancementFonctionnaire();
+		avct.setIdAvct(987987);
+		avct.setAgent(agent);
+		avct.setAnneeAvancement(2016);
+		avct.setAvisCapEmployeur(avis);
+		sirhPersistenceUnit.persist(avct);
+
+		AvancementFonctionnaire result = repository.getDernierAvancement(9005148, 2016);
+
+		assertEquals((Integer)2, result.getAvisCapEmployeur().getIdAvisCap());
 	}
 
 	@Test

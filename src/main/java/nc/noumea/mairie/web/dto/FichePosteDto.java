@@ -3,6 +3,9 @@ package nc.noumea.mairie.web.dto;
 import nc.noumea.mairie.model.bean.sirh.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.common.collect.Lists;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +188,6 @@ public class FichePosteDto {
 						.stream()
 						.map(cm -> cm.getLibCompetenceManagement())
 						.collect(Collectors.toList());
-
 			}
 			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
 				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());
