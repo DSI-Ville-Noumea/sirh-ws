@@ -202,10 +202,10 @@ public class SpcarrRepository implements ISpcarrRepository {
 			listPAInactives.add(PA.getCode());
 		}
 		
-		sb.append("select count(*) from Spcarr carr ");
+		// Il peut y avoir plusieurs PA dans ces conditions pour un agent
+		sb.append("select count(distinct(carr.nomatr)) from Spcarr carr ");
 		sb.append(" inner join SPADMN pa on carr.nomatr = pa.nomatr ");
 		sb.append(" inner join SPPOSA posa on pa.CDPADM = posa.CDPADM ");
-		sb.append(" and pa.CDPADM not in (:listPAInactives)");
 		sb.append(" WHERE ( (pa.datdeb <= :datdeb ");
 		sb.append(" and (pa.datfin=0 or pa.datfin > :datdeb )) ");
 		sb.append(" or (pa.datdeb <= :datfin ");
@@ -215,6 +215,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" or (carr.datdeb <= :datfin ");
 		sb.append(" and (carr.datfin=0 or carr.datfin >= :datfin ) )) ");
 		sb.append(" and carr.nomatr < 9000 ");
+		sb.append(" and pa.CDPADM not in (:listPAInactives)");
 
 		Query query = null;
 		if (entite.equals(BordereauRecapService.VDN))
