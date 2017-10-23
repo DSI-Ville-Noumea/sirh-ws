@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,10 +17,15 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
+import nc.noumea.mairie.model.bean.Sicomm;
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
@@ -31,6 +38,8 @@ import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/META-INF/spring/applicationContext-test.xml" })
 public class AgentServiceTest {
 
 	@Autowired
@@ -866,6 +875,24 @@ public class AgentServiceTest {
 		// Then
 		assertNotNull(result);
 		assertEquals(0, result.size());
+	}
+
+	@Test
+	@Transactional("sirhTransactionManager")
+	public void test() throws ParseException {
+		Sicomm ville = new Sicomm();
+		ville.setLibVil("test");
+		ville.setCodeCommune(new BigDecimal(98814));
+		sirhPersistenceUnit.persist(ville);
+		
+		Agent agent = new Agent();
+		agent.setIdAgent(9007878);
+		agent.setCodeCommuneNaissFr(ville);
+		sirhPersistenceUnit.persist(agent);
+		
+		Agent test = repository.getAgent(9007878);
+		
+		assertEquals(test.getCodeCommuneNaissFr().getLibVil(), "test");
 	}
 
 }
