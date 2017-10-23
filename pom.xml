@@ -493,7 +493,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- Doesn't work with 3.7.0 -->
+				<!-- Doesn't work with 3.7.0, due to lazy collections (silently !) -->
 				<version>2.5.1</version>
 				<configuration>
 					<source>${java.version}</source>
@@ -570,8 +570,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<!-- Doesn't work with 3.1.0 -->
-				<version>2.3</version>
+				<version>3.1.0</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
