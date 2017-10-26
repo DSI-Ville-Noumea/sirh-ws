@@ -17,7 +17,7 @@ public interface ISirhRepository {
 
 	List<AutreAdministrationAgent> getListeAutreAdministrationAgent(Integer idAgent);
 	
-	AvancementFonctionnaire getDernierAvancement(Integer idAgent, Integer anneeAvct);
+	AvancementFonctionnaire getDernierAvancement(Integer idAgent);
 
 	List<DiplomeAgent> getListDiplomeByAgent(Integer idAgent);
 

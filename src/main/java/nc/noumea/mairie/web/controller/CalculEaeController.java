@@ -198,12 +198,11 @@ public class CalculEaeController {
 	@ResponseBody
 	@RequestMapping(value = "/getDernierAvancement", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<Integer> getDernierAvancement(@RequestParam("idAgent") int idAgent, @RequestParam("anneeAvancement") int anneeAvancement) {
+	public ResponseEntity<Integer> getDernierAvancement(@RequestParam("idAgent") int idAgent) {
 
-		logger.debug("entered GET [calculEae/getDernierAvancement] => with parameter idAgent = {}, annee = {} ",
-				idAgent, anneeAvancement);
+		logger.debug("entered GET [calculEae/getDernierAvancement] => for agent id = {}", idAgent);
 
-		Integer avct = calculEaeService.getDernierAvancement(idAgent, anneeAvancement);
+		Integer avct = calculEaeService.getDernierAvancement(idAgent);
 		
 		HttpStatus status = avct == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 

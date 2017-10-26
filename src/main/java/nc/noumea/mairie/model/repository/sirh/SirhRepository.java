@@ -61,14 +61,13 @@ public class SirhRepository implements ISirhRepository {
 	}
 
 	@Override
-	public AvancementFonctionnaire getDernierAvancement(Integer idAgent, Integer anneeAvct) {
+	public AvancementFonctionnaire getDernierAvancement(Integer idAgent) {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("select a from AvancementFonctionnaire a where a.agent.idAgent = :idAgent AND a.anneeAvancement = :anneeAvct");
+		sb.append("select a from AvancementFonctionnaire a where a.agent.idAgent = :idAgent order by a.anneeAvancement desc");
 
 		TypedQuery<AvancementFonctionnaire> q = sirhEntityManager.createQuery(sb.toString(), AvancementFonctionnaire.class);
 		q.setParameter("idAgent", idAgent);
-		q.setParameter("anneeAvct", anneeAvct);
 
 		return q.getResultList().size() != 0 ? q.getResultList().get(0) : null;
 	}
