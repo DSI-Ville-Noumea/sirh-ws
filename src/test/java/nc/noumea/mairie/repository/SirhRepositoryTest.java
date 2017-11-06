@@ -267,6 +267,13 @@ public class SirhRepositoryTest {
 		avct2.setAnneeAvancement(2017);
 		avct2.setAvisCapEmployeur(avis);
 		sirhPersistenceUnit.persist(avct2);
+		
+		AvancementFonctionnaire avct3 = new AvancementFonctionnaire();
+		avct3.setIdAvct(987989);
+		avct3.setAgent(agent);
+		avct3.setAnneeAvancement(2020);
+		avct3.setAvisCapEmployeur(avis);
+		sirhPersistenceUnit.persist(avct3);
 
 		AvancementFonctionnaire result = repository.getDernierAvancement(9005148);
 
