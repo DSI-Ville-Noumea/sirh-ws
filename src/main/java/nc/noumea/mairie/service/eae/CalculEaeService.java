@@ -659,11 +659,11 @@ public class CalculEaeService implements ICalculEaeService {
 	}
 
 	@Override
-	public Integer getDernierAvancement(Integer idAgent, Integer anneeAvct) {
-		AvancementFonctionnaire dernierAvct = sirhRepository.getDernierAvancement(idAgent, anneeAvct);
+	public Integer getDernierAvancement(Integer idAgent) {
+		AvancementFonctionnaire dernierAvct = sirhRepository.getDernierAvancement(idAgent);
 		
 		if (dernierAvct == null) {
-			logger.warn("Aucun avancement trouvé pour l'agent matricule {} concernant l'année {}.", idAgent, anneeAvct);
+			logger.warn("Aucun avancement trouvé pour l'agent matricule {}.", idAgent);
 			return null;
 		}
 		

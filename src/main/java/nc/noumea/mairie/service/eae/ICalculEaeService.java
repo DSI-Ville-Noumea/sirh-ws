@@ -30,6 +30,6 @@ public interface ICalculEaeService {
 
 	DateAvctDto getCalculDateAvancement(Integer idAgent);
 	
-	Integer getDernierAvancement(Integer idAgent, Integer anneeAvct);
+	Integer getDernierAvancement(Integer idAgent);
 
 }

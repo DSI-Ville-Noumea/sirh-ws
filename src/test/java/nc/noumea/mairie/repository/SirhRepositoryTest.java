@@ -237,23 +237,7 @@ public class SirhRepositoryTest {
 	@Test
 	@Transactional("sirhTransactionManager")
 	public void getDernierAvancement_return_no_result() {
-		
-		Agent agent = new Agent();
-		agent.setIdAgent(9005148);
-		sirhPersistenceUnit.persist(agent);
-		
-		AvisCap avis = new AvisCap();
-		avis.setIdAvisCap(1);
-		sirhPersistenceUnit.persist(avis);
-		
-		AvancementFonctionnaire avct = new AvancementFonctionnaire();
-		avct.setIdAvct(987987);
-		avct.setAgent(agent);
-		avct.setAnneeAvancement(2016);
-		avct.setAvisCapEmployeur(avis);
-		sirhPersistenceUnit.persist(avct);
-
-		AvancementFonctionnaire result = repository.getDernierAvancement(9005148, 2017);
+		AvancementFonctionnaire result = repository.getDernierAvancement(9005148);
 
 		assertEquals(null, result);
 	}
@@ -276,10 +260,25 @@ public class SirhRepositoryTest {
 		avct.setAnneeAvancement(2016);
 		avct.setAvisCapEmployeur(avis);
 		sirhPersistenceUnit.persist(avct);
+		
+		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
+		avct2.setIdAvct(987988);
+		avct2.setAgent(agent);
+		avct2.setAnneeAvancement(2017);
+		avct2.setAvisCapEmployeur(avis);
+		sirhPersistenceUnit.persist(avct2);
+		
+		AvancementFonctionnaire avct3 = new AvancementFonctionnaire();
+		avct3.setIdAvct(987989);
+		avct3.setAgent(agent);
+		avct3.setAnneeAvancement(2020);
+		avct3.setAvisCapEmployeur(avis);
+		sirhPersistenceUnit.persist(avct3);
 
-		AvancementFonctionnaire result = repository.getDernierAvancement(9005148, 2016);
+		AvancementFonctionnaire result = repository.getDernierAvancement(9005148);
 
 		assertEquals((Integer)2, result.getAvisCapEmployeur().getIdAvisCap());
+		assertEquals(2017, result.getAnneeAvancement());
 	}
 
 	@Test

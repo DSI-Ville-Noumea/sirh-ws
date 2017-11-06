@@ -184,10 +184,11 @@ public class FichePosteDto {
 				this.idNiveauManagement = fichePoste.getNiveauManagement().getIdNiveauManagement();
 				this.niveauManagement = fichePoste.getNiveauManagement().getLibNiveauManagement();
 				this.definitionManagement = fichePoste.getNiveauManagement().getDefinitionManagement();
-				this.competenceManagement = fichePoste.getNiveauManagement().getCompetences()
-						.stream()
-						.map(cm -> cm.getLibCompetenceManagement())
-						.collect(Collectors.toList());
+				List<String> listeCompetences = Lists.newArrayList();
+ 				for (CompetenceManagement cm : fichePoste.getNiveauManagement().getCompetences()) {
+ 					listeCompetences.add(cm.getLibCompetenceManagement());
+ 				}
+ 				this.competenceManagement = listeCompetences;
 			}
 			for (SavoirFaireFp sf : fichePoste.getSavoirFaire()) {
 				savoirFaireMetier.add(sf.getSavoirFaireByIdSavoirFaire().getNomSavoirFaire());

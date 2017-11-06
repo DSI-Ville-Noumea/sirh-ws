@@ -13,6 +13,8 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.log.Logger;
+
 import nc.noumea.mairie.model.bean.sirh.Affectation;
 import nc.noumea.mairie.model.bean.sirh.Agent;
 import nc.noumea.mairie.model.bean.sirh.AgentRecherche;
@@ -119,6 +121,7 @@ public class AgentService implements IAgentService {
 
 		List<AgentWithServiceDto> result = new ArrayList<AgentWithServiceDto>();
 
+		// #41455 : Si l'agent n'a pas d'affectation active à la date du jour, alors il ne remontera pas dans cette liste.
 		List<Affectation> listAffectations = agentRepository.getListAgentsByServicesAndListAgentsAndDate(idServiceADS, date, idAgents);
 
 		if (null == listAffectations || listAffectations.isEmpty()) {
