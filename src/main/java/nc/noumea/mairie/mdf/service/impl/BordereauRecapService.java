@@ -3,7 +3,9 @@ package nc.noumea.mairie.mdf.service.impl;
 import java.io.ByteArrayOutputStream;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +24,7 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import nc.noumea.mairie.mdf.domain.StatusJob;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutDetAdm;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutEntAdm;
 import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutTotAdm;
@@ -36,6 +39,7 @@ import nc.noumea.mairie.mdf.dto.DetailDto;
 import nc.noumea.mairie.mdf.dto.EnTeteDto;
 import nc.noumea.mairie.mdf.dto.TotalDto;
 import nc.noumea.mairie.mdf.repository.IPersonnelRepository;
+import nc.noumea.mairie.mdf.repository.IStatusJobRepository;
 import nc.noumea.mairie.mdf.service.AbstractReporting;
 import nc.noumea.mairie.mdf.service.IBordereauRecapService;
 import nc.noumea.mairie.mdf.service.IDataConsistencyRules;
@@ -50,9 +54,13 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 	private IPersonnelRepository personnelRepo;
 	
 	@Autowired
+	private IStatusJobRepository statusJobRepo;
+	
+	@Autowired
 	private IDataConsistencyRules dataRules;
 	
 	private ModelMapper modelMapper = new ModelMapper();
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
 
 	private Logger logger = LoggerFactory.getLogger(BordereauRecapService.class);
 	
@@ -64,6 +72,10 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 	@Override
 	@Transactional(readOnly = true)
 	public byte[] getRecapMDFAsByteArray(String entite) throws Exception {
+		
+		// #43390 : Il faut vérifier que les données ont bien été générées via la tâche ant.
+		canStartGeneration(entite);
+		logger.debug("La tâche ant de déclaration des salaires pour " + entite + " s'est déroulée correctement.");
 		
 		initDatas(entite);
 
@@ -302,5 +314,23 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		}
 		
 		return dto;
+	}
+	
+	protected void canStartGeneration(String entite) throws Exception {
+		String formatedDate = sdf.format(new Date());
+		
+		List<StatusJob> list = statusJobRepo.getAllStatusByDateAndEntite(formatedDate, entite);
+		
+		if (list.isEmpty()) {
+			logger.error("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas lancée !");
+			throw new Exception("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas lancée !");
+		}
+		
+		for (StatusJob s : list) {
+			if (s.getSeverite().equals("ERROR")) {
+				logger.error("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
+				throw new Exception("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
+			}
+		}
 	}
 }
