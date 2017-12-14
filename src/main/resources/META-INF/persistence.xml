@@ -128,6 +128,7 @@
 		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaire</class>
 		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaireFm</class>
 		<class>nc.noumea.mairie.model.bean.sirh.SavoirFaireFp</class>
+		<class>nc.noumea.mairie.mdf.domain.StatusJob</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DB2400Dialect" />
