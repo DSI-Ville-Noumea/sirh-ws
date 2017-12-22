@@ -21,7 +21,7 @@
 		validationQuery="select 1 from sysdummy1" validationInterval="30000"
 		timeBetweenEvictionRunsMillis="30000" maxActive="20" maxIdle="10"
 		maxWait="30000" initialSize="10" removeAbandonedTimeout="500"
-		removeAbandoned="true" logAbandoned="true" minEvictableIdleTimeMillis="30000"
+		removeAbandoned="true" logAbandoned="false" minEvictableIdleTimeMillis="30000"
 		jmxEnabled="true" username="***REMOVED***" password="***REMOVED***"
 		driverClassName="com.ibm.as400.access.AS400JDBCDriver"
 		url="***REMOVED***" />
@@ -32,7 +32,7 @@
 		validationQuery="select 1 from sysdummy1" validationInterval="30000"
 		timeBetweenEvictionRunsMillis="30000" maxActive="20" maxIdle="10"
 		maxWait="30000" initialSize="10" removeAbandonedTimeout="500"
-		removeAbandoned="true" logAbandoned="true" minEvictableIdleTimeMillis="30000"
+		removeAbandoned="true" logAbandoned="false" minEvictableIdleTimeMillis="30000"
 		jmxEnabled="true" username="***REMOVED***" password="***REMOVED***"
 		driverClassName="com.ibm.as400.access.AS400JDBCDriver"
 		url="***REMOVED***" />
@@ -43,7 +43,7 @@
 		validationQuery="select 1 from sysdummy1" validationInterval="30000"
 		timeBetweenEvictionRunsMillis="30000" maxActive="20" maxIdle="10"
 		maxWait="30000" initialSize="10" removeAbandonedTimeout="500"
-		removeAbandoned="true" logAbandoned="true" minEvictableIdleTimeMillis="30000"
+		removeAbandoned="true" logAbandoned="false" minEvictableIdleTimeMillis="30000"
 		jmxEnabled="true" username="***REMOVED***" password="***REMOVED***"
 		driverClassName="com.ibm.as400.access.AS400JDBCDriver"
 		url="***REMOVED***" />
