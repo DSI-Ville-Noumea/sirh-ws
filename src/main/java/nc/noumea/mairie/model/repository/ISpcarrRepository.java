@@ -24,5 +24,5 @@ public interface ISpcarrRepository {
 
 	List<Integer> getListeAgentsPourAlimAutoCongesAnnuels(Date datdeb, Date datfin);
 	
-	Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin, String entite);
+	Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin);
 }

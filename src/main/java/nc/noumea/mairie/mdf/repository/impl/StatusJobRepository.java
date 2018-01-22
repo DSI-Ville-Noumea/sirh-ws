@@ -18,11 +18,10 @@ public class StatusJobRepository implements IStatusJobRepository {
 	private EntityManager entityManager;
 
 	@Override
-	public List<StatusJob> getAllStatusByDateAndEntite(String date, String entite) {
+	public List<StatusJob> getAllStatusByDateForVDN(String date) {
 		
-		TypedQuery<StatusJob> q = entityManager.createQuery("select s from StatusJob s where s.entite = :entite and s.moisTraitement = :date", StatusJob.class);
+		TypedQuery<StatusJob> q = entityManager.createQuery("select s from StatusJob s where s.entite = 'VDN' and s.moisTraitement = :date", StatusJob.class);
 
-		q.setParameter("entite", entite);
 		q.setParameter("date", date);
 
 		return q.getResultList();

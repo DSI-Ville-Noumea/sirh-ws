@@ -10,7 +10,7 @@ import nc.noumea.mairie.mdf.dto.TotalDto;
 
 public interface IDataConsistencyRules {
 	
-	AlimenteBordereauBean alimenteDatas(EnTeteDto entete, List<DetailDto> details, TotalDto total, String entite) throws ParseException;
+	AlimenteBordereauBean alimenteDatas(EnTeteDto entete, List<DetailDto> details, TotalDto total) throws ParseException;
 	
 	void verifyConsistency(AlimenteBordereauBean bean);
 	

@@ -6,5 +6,5 @@ import nc.noumea.mairie.mdf.domain.StatusJob;
 
 public interface IStatusJobRepository {
 	
-	List<StatusJob> getAllStatusByDateAndEntite(String date, String entite);
+	List<StatusJob> getAllStatusByDateForVDN(String date);
 }
