@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -90,6 +91,8 @@ public class FichePosteServiceTest {
 	private FichePoste fp5 = null;
 	private FichePoste fp6 = null;
 	private FichePoste fp7 = null;
+	
+	private final Integer CURRENT_YEAR = new DateTime().getYear();
 
 	@Test
 	public void getFichePostePrimaireAgentAffectationEnCours_returnFichePoste() {
@@ -1119,8 +1122,8 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(2, result.getInfos().size());
-		assertEquals("Attention, la FDP 2017/1 n'a pas de supérieur hiérarchique.", result.getInfos().get(0));
-		assertEquals("La FDP 2015/3 est dupliquée en 2017/1.", result.getInfos().get(1));
+		assertEquals("Attention, la FDP " + CURRENT_YEAR + "/1 n'a pas de supérieur hiérarchique.", result.getInfos().get(0));
+		assertEquals("La FDP 2015/3 est dupliquée en " + CURRENT_YEAR + "/1.", result.getInfos().get(1));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 	}
@@ -1195,7 +1198,7 @@ public class FichePosteServiceTest {
 		assertNotNull(result);
 		assertEquals(0, result.getErrors().size());
 		assertEquals(1, result.getInfos().size());
-		assertEquals("La FDP 2015/3 est dupliquée en 2017/1.", result.getInfos().get(0));
+		assertEquals("La FDP 2015/3 est dupliquée en " + CURRENT_YEAR + "/1.", result.getInfos().get(0));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(HistoFichePoste.class));
 		Mockito.verify(fichePosteDao, Mockito.times(1)).persisEntity(Mockito.isA(FichePoste.class));
 	}
