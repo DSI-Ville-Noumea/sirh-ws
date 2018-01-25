@@ -25,12 +25,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import nc.noumea.mairie.mdf.domain.StatusJob;
-import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutDetAdm;
-import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutEntAdm;
-import nc.noumea.mairie.mdf.domain.cde.adm.FdsMutTotAdm;
-import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutDetPers;
-import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutEntPers;
-import nc.noumea.mairie.mdf.domain.cde.pers.FdsMutTotPers;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutDet;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutEnt;
 import nc.noumea.mairie.mdf.domain.vdn.FdsMutTot;
@@ -71,13 +65,13 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 
 	@Override
 	@Transactional(readOnly = true)
-	public byte[] getRecapMDFAsByteArray(String entite) throws Exception {
+	public byte[] getRecapMDFAsByteArray() throws Exception {
 		
 		// #43390 : Il faut vérifier que les données ont bien été générées via la tâche ant.
-		canStartGeneration(entite);
-		logger.debug("La tâche ant de déclaration des salaires pour " + entite + " s'est déroulée correctement.");
+		canStartGeneration();
+		logger.debug("La tâche ant de déclaration des salaires pour la ville de Nouméa s'est déroulée correctement.");
 		
-		initDatas(entite);
+		initDatas();
 
 		Document document = new Document(PageSize.A4.rotate());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -108,7 +102,7 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 	
 		// on ferme le document
 		document.close();
-		logger.debug("Le bordereau récapitulatif " + entite + " a été généré correctement.");
+		logger.debug("Le bordereau récapitulatif a été généré correctement.");
 	
 		return baos.toByteArray();
 	}
@@ -243,56 +237,30 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		document.add(table);
 	}
 	
-	private void initDatas(String entite) throws ParseException {
-		logger.debug("Entrée dans l'initialisation des données du bordereau récapitulatif " + entite);
+	private void initDatas() throws ParseException {
+		logger.debug("Entrée dans l'initialisation des données du bordereau récapitulatif VDN");
 
 		EnTeteDto enTeteDto = null;
 		List<DetailDto> detailsDto = Lists.newArrayList();
 		TotalDto TotalDto = null;
 		
-		// Pour la ville de nouméa
-		if (entite.equals(VDN)) {
-			FdsMutEnt enTete = personnelRepo.getEnteteVdn();
-			FdsMutTot total = personnelRepo.getTotalVdn();
-			List<FdsMutDet> details = personnelRepo.getAllDetailsVdn();
+		FdsMutEnt enTete = personnelRepo.getEnteteVdn();
+		FdsMutTot total = personnelRepo.getTotalVdn();
+		List<FdsMutDet> details = personnelRepo.getAllDetailsVdn();
 
-			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
-			TotalDto = modelMapper.map(total, TotalDto.class);
-			detailsDto = convertDetailToDto(details);
-			
-		// Pour l'administration de la caisse des écoles
-		} else if (entite.equals(ADM)) {
-			FdsMutEntAdm enTete = personnelRepo.getEnteteAdm();
-			FdsMutTotAdm total = personnelRepo.getTotalAdm();
-			List<FdsMutDetAdm> details = personnelRepo.getAllDetailsAdm();
-
-			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
-			TotalDto = modelMapper.map(total, TotalDto.class);
-			detailsDto = convertDetailToDto(details);
-			
-		// Pour le personnel de la caisse des écoles
-		} else if (entite.equals(PERS)) {
-			FdsMutEntPers enTete = personnelRepo.getEntetePers();
-			FdsMutTotPers total = personnelRepo.getTotalPers();
-			List<FdsMutDetPers> details = personnelRepo.getAllDetailsPers();
-
-			enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
-			TotalDto = modelMapper.map(total, TotalDto.class);
-			detailsDto = convertDetailToDto(details);
-		} else {
-			logger.error("L'entité passée en paramètre ne correspond à aucune entité existante.");
-			throw new IllegalArgumentException("L'entité passée en paramètre ne correspond à aucune entité existante.");
-		}
+		enTeteDto = modelMapper.map(enTete, EnTeteDto.class);
+		TotalDto = modelMapper.map(total, TotalDto.class);
+		detailsDto = convertDetailToDto(details);
 		
 		// On vérifie les données en entrée
 		dataRules.verifyInputDatas(enTeteDto, detailsDto, TotalDto);
 		logger.debug("Les données récupérées sont bien présentes.");
 		
-		AlimenteBordereauBean datas = dataRules.alimenteDatas(enTeteDto, detailsDto, TotalDto, entite);
+		AlimenteBordereauBean datas = dataRules.alimenteDatas(enTeteDto, detailsDto, TotalDto);
 
 		// On vérifie les données en sortie
 		dataRules.verifyConsistency(datas);
-		logger.debug("Les données du bordereau " + entite + " sont complètes.");
+		logger.debug("Les données du bordereau récapitulatif sont complètes.");
 		
 		setDonnees(datas);
 	}
@@ -316,20 +284,20 @@ public class BordereauRecapService extends AbstractReporting implements IBordere
 		return dto;
 	}
 	
-	protected void canStartGeneration(String entite) throws Exception {
+	protected void canStartGeneration() throws Exception {
 		String formatedDate = sdf.format(new Date());
 		
-		List<StatusJob> list = statusJobRepo.getAllStatusByDateAndEntite(formatedDate, entite);
+		List<StatusJob> list = statusJobRepo.getAllStatusByDateForVDN(formatedDate);
 		
 		if (list.isEmpty()) {
-			logger.error("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas lancée !");
-			throw new Exception("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas lancée !");
+			logger.error("La tâche ant de déclaration des salaires pour la ville de Nouméa, pour le mois " + formatedDate + " ne s'est pas lancée !");
+			throw new Exception("La tâche ant de déclaration des salaires pour la ville de Nouméa, pour le mois " + formatedDate + " ne s'est pas lancée !");
 		}
 		
 		for (StatusJob s : list) {
 			if (s.getSeverite().equals("ERROR")) {
-				logger.error("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
-				throw new Exception("La tâche ant de déclaration des salaires pour " + entite + ", pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
+				logger.error("La tâche ant de déclaration des salaires pour la ville de Nouméa, pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
+				throw new Exception("La tâche ant de déclaration des salaires pour la ville de Nouméa, pour le mois " + formatedDate + " ne s'est pas déroulé correctement !");
 			}
 		}
 	}

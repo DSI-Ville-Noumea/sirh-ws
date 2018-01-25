@@ -24,9 +24,6 @@ public class SpcarrRepository implements ISpcarrRepository {
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	private EntityManager sirhEntityManager;
 
-	@PersistenceContext(unitName = "mdfCdePersistenceUnit")
-	private EntityManager cdeEntityManager;
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Integer> getListeCarriereActiveAvecPAAffecte() {
@@ -192,7 +189,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 	}
 
 	@Override
-	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin, String entite) {
+	public Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin) {
 
 		StringBuilder sb = new StringBuilder();
 		
@@ -216,10 +213,7 @@ public class SpcarrRepository implements ISpcarrRepository {
 		sb.append(" and carr.CDCATE not in ('9', '10', '11')");
 
 		Query query = null;
-		if (entite.equals(BordereauRecapService.VDN))
-			query = sirhEntityManager.createNativeQuery(sb.toString());
-		else
-			query = cdeEntityManager.createNativeQuery(sb.toString());
+		query = sirhEntityManager.createNativeQuery(sb.toString());
 
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
 		query.setParameter("datdeb", Integer.valueOf(sdfMairie.format(dateDebut)));

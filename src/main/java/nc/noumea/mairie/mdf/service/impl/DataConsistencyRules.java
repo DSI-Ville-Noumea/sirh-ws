@@ -71,7 +71,7 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 	}
 	
 	@Override
-	public AlimenteBordereauBean alimenteDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total, String entite) throws ParseException {
+	public AlimenteBordereauBean alimenteDatas(EnTeteDto enTete, List<DetailDto> details, TotalDto total) throws ParseException {
 		
 		AlimenteBordereauBean bean = new AlimenteBordereauBean();
 		
@@ -79,10 +79,10 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		
 		bean.setCodeCollectivité(enTete.getCodeCollectivité());
 		bean.setMoisPaye(sdfDateTraitement.format(moisTraitement));
-		bean.setDenominationEmployeur(mapDenominationEmployeur(entite));
+		bean.setDenominationEmployeur("MAIRIE DE NOUMEA");
 		bean.setDateEmission(sdfDateEnvoi.format(new Date()));
 		
-		EffectifBean effectif = mapEffectifs(details, entite);
+		EffectifBean effectif = mapEffectifs(details);
 		bean.setEffectif(effectif);
 		
 		RemunerationBean remuneration = mapRemuneration(details);
@@ -94,12 +94,12 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		CotisationBean cotisationSal = mapCotisations(details, false);
 		bean.setCotisationSalariale(cotisationSal);
 		
-		logger.debug("Les données du bordereau " + entite + "ont bien été générées.");
+		logger.debug("Les données du bordereau récapitulatif ont bien été générées.");
 		
 		return bean;
 	}
 
-	private EffectifBean mapEffectifs(List<DetailDto> details, String entite) {
+	private EffectifBean mapEffectifs(List<DetailDto> details) {
 		EffectifBean effectif = new EffectifBean();
 		List<String> effectifDistinc = Lists.newArrayList();
 		
@@ -115,24 +115,10 @@ public class DataConsistencyRules implements IDataConsistencyRules {
 		//     Rubrique « Effectif de l'employeur au 1er jour du mois + entrants au cours du mois m » 
 		Date finMoisPrecedent = new DateTime().withDayOfMonth(1).minusDays(1).toDate();
 		Date debutMoisPrecedent = new DateTime(finMoisPrecedent).withDayOfMonth(1).toDate();
-		Integer effectifTotal = spcarrRepository.getListeAgentsActifsPourGenerationBordereauMDF(debutMoisPrecedent, finMoisPrecedent, entite);
+		Integer effectifTotal = spcarrRepository.getListeAgentsActifsPourGenerationBordereauMDF(debutMoisPrecedent, finMoisPrecedent);
 		effectif.setEffectif(effectifTotal);
 		
 		return effectif;
-	}
-
-	private String mapDenominationEmployeur(String entite) {
-		String denom = null;
-		if (entite == null)
-			return denom;
-		if (entite.equals(VDN))
-			denom  = "MAIRIE DE NOUMEA";
-		else if (entite.equals(ADM))
-			denom  = "CAISSE DES ECOLES NOUMEA - ADMINISTRATIF";
-		else if (entite.equals(PERS))
-			denom  = "CAISSE DES ECOLES NOUMEA - PERSONNEL";
-		
-		return denom;
 	}
 
 	private RemunerationBean mapRemuneration(List<DetailDto> details) {

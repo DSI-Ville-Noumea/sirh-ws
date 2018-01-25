@@ -59,15 +59,6 @@
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
-
-	<bean id="mdfCdeDb400DataSource"
-		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="org.h2.Driver" />
-		<property name="url"
-			value="jdbc:h2:mem:sirhtest;MODE=DB2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
-		<property name="username" value="sa" />
-		<property name="password" value="" />
-	</bean>
 	
 
 	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
@@ -87,11 +78,6 @@
 		<property name="persistenceXmlLocation" value="/META-INF/persistence.xml" />
 		<property name="persistenceUnitName" value="mdfVdnPersistenceUnit" />
 		<property name="dataSource" ref="mdfVdnDb400DataSource" />
-	</bean>
-	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="mdfCdeEntityManagerFactory">
-		<property name="persistenceXmlLocation" value="/META-INF/persistence.xml" />
-		<property name="persistenceUnitName" value="mdfCdePersistenceUnit" />
-		<property name="dataSource" ref="mdfCdeDb400DataSource" />
 	</bean>
 
 	<bean class="java.lang.String" id="reportServerPath" />
