@@ -59,7 +59,10 @@ public class Agent {
 		Comparator<ParentEnfant> comp = new Comparator<ParentEnfant>() {
 			@Override
 			public int compare(ParentEnfant o1, ParentEnfant o2) {
-				return o1.getEnfant().getDateNaissance().compareTo(o2.getEnfant().getDateNaissance());
+				// #44482 : Gérer le cas des enfants ayant une date de naissance nulle. (mal renseignée)
+				return (o1.getEnfant() == null || o1.getEnfant().getDateNaissance() == null) ?
+						(o2.getEnfant() == null || o2.getEnfant().getDateNaissance() == null ? 0 : -1) :
+						(o2.getEnfant() == null || o2.getEnfant().getDateNaissance() == null ? 1 : o1.getEnfant().getDateNaissance().compareTo(o2.getEnfant().getDateNaissance()));
 			}
 
 		};
