@@ -34,7 +34,7 @@ public class AvancementFonctionnaire {
 	private AvisCap avisCap;
 
 	@Column(name = "ID_MOTIF_AVCT")
-	private Integer idModifAvancement;
+	private Integer idMotifAvancement;
 
 	@Column(name = "ETAT", columnDefinition = "char")
 	private String etat;
@@ -149,12 +149,12 @@ public class AvancementFonctionnaire {
 		this.avisCap = avisCap;
 	}
 
-	public Integer getIdModifAvancement() {
-		return idModifAvancement;
+	public Integer getIdMotifAvancement() {
+		return idMotifAvancement;
 	}
 
-	public void setIdModifAvancement(Integer idModifAvancement) {
-		this.idModifAvancement = idModifAvancement;
+	public void setIdMotifAvancement(Integer idModifAvancement) {
+		this.idMotifAvancement = idModifAvancement;
 	}
 
 	public String getEtat() {

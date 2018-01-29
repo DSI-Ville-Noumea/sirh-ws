@@ -75,7 +75,7 @@ public class ArreteDtoTest {
 		avct.setDateAvctMoy(sdf.parse("01/02/2013"));
 		avct.setDateAvctMaxi(sdf.parse("01/03/2013"));
 		avct.setAvisCapEmployeur(avis);
-		avct.setIdModifAvancement(7);
+		avct.setIdMotifAvancement(7);
 		avct.setAccAnnee(1);
 		avct.setAccMois(0);
 		avct.setAccJour(0);
@@ -163,7 +163,7 @@ public class ArreteDtoTest {
 
 		avct.setAnneeAvancement(2013);
 		avct.setAgent(ag);
-		avct.setIdModifAvancement(5);
+		avct.setIdMotifAvancement(5);
 		avct.setRegularisation(false);
 		avct.setGradeNouveau(gradeNouveau);
 		avct.setAccAnnee(1);
@@ -261,7 +261,7 @@ public class ArreteDtoTest {
 		avct.setDateAvctMoy(sdf.parse("15/02/2013"));
 		avct.setDateAvctMaxi(sdf.parse("15/03/2013"));
 		avct.setAvisCapEmployeur(avis);
-		avct.setIdModifAvancement(7);
+		avct.setIdMotifAvancement(7);
 		avct.setAccAnnee(0);
 		avct.setAccMois(0);
 		avct.setAccJour(0);

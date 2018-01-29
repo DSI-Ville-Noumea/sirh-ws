@@ -85,6 +85,9 @@ public class Spcarr {
 	@Column(name = "BMANNEE", columnDefinition = "decimal")
 	private Integer bmAnnee;
 
+	@Column(name = "MOTIFAVCT", columnDefinition = "numeric")
+	private Integer motifAvct;
+
 	public SpcarrId getId() {
 		return id;
 	}
@@ -187,6 +190,14 @@ public class Spcarr {
 
 	public void setBmAnnee(Integer bmAnnee) {
 		this.bmAnnee = bmAnnee;
+	}
+
+	public Integer getMotifAvct() {
+		return motifAvct;
+	}
+
+	public void setMotifAvct(Integer motifAvct) {
+		this.motifAvct = motifAvct;
 	}
 
 }

@@ -105,10 +105,10 @@ public class AvancementsServiceTest {
 		Cap cap = new Cap();
 		Spgeng corps = new Spgeng();
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
-		avct1.setIdModifAvancement(new Integer(7));
+		avct1.setIdMotifAvancement(new Integer(7));
 		avct1.setAgent(ag);
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
-		avct2.setIdModifAvancement(new Integer(7));
+		avct2.setIdMotifAvancement(new Integer(7));
 		avct2.setAgent(ag);
 		List<AvancementFonctionnaire> list = Arrays.asList(avct1, avct2);
 
@@ -134,10 +134,10 @@ public class AvancementsServiceTest {
 		Cap cap = new Cap();
 		Spgeng corps = new Spgeng();
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
-		avct1.setIdModifAvancement(new Integer(4));
+		avct1.setIdMotifAvancement(new Integer(4));
 		avct1.setAgent(ag);
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
-		avct2.setIdModifAvancement(new Integer(4));
+		avct2.setIdMotifAvancement(new Integer(4));
 		avct2.setAgent(ag);
 		List<AvancementFonctionnaire> list = Arrays.asList(avct1, avct2);
 
@@ -296,7 +296,7 @@ public class AvancementsServiceTest {
 		agent.setIdAgent(9005138);
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
 		avct1.setAgent(agent);
-		avct1.setIdModifAvancement(1);
+		avct1.setIdMotifAvancement(1);
 		List<AvancementFonctionnaire> listeAvctFonct = new ArrayList<AvancementFonctionnaire>();
 		listeAvctFonct.add(avct1);
 
@@ -422,13 +422,13 @@ public class AvancementsServiceTest {
 		agent1.setIdAgent(9005138);
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
 		avct1.setAgent(agent1);
-		avct1.setIdModifAvancement(4);
+		avct1.setIdMotifAvancement(4);
 
 		Agent agent2 = new Agent();
 		agent2.setIdAgent(9005131);
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
 		avct2.setAgent(agent2);
-		avct2.setIdModifAvancement(6);
+		avct2.setIdMotifAvancement(6);
 		List<AvancementFonctionnaire> listeAvctFonct = new ArrayList<AvancementFonctionnaire>();
 		listeAvctFonct.add(avct1);
 		listeAvctFonct.add(avct2);
@@ -503,7 +503,7 @@ public class AvancementsServiceTest {
 		agent1.setNomUsage("Nom 1");
 		AvancementFonctionnaire avct1 = new AvancementFonctionnaire();
 		avct1.setAgent(agent1);
-		avct1.setIdModifAvancement(4);
+		avct1.setIdMotifAvancement(4);
 		avct1.setGradeNouveau(gradeNouveau);
 		avct1.setNouvAccAnnee(1);
 		avct1.setNouvAccMois(1);
@@ -522,7 +522,7 @@ public class AvancementsServiceTest {
 		agent2.setNomUsage("Nom 2");
 		AvancementFonctionnaire avct2 = new AvancementFonctionnaire();
 		avct2.setAgent(agent2);
-		avct2.setIdModifAvancement(6);
+		avct2.setIdMotifAvancement(6);
 		avct2.setGradeNouveau(gradeNouveau);
 		avct2.setNouvAccAnnee(0);
 		avct2.setNouvAccMois(1);

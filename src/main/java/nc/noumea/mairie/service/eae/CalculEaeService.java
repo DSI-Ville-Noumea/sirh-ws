@@ -660,19 +660,20 @@ public class CalculEaeService implements ICalculEaeService {
 
 	@Override
 	public Integer getDernierAvancement(Integer idAgent) {
-		AvancementFonctionnaire dernierAvct = sirhRepository.getDernierAvancement(idAgent);
+		Integer matr = idAgent - 9000000;
+		Spcarr carriereCourante = spcarrRepository.getCarriereActive(matr); 
 		
-		if (dernierAvct == null) {
-			logger.warn("Aucun avancement trouvé pour l'agent matricule {}.", idAgent);
+		if (carriereCourante == null) {
+			logger.warn("Aucune carrière actuelle trouvée pour l'agent matricule {}.", idAgent);
 			return null;
 		}
 		
-		if (dernierAvct.getAvisCapEmployeur() == null) {
-			logger.warn("L'avis de l'employeur n'a pas été renseigné pour l'avancement id {}.", dernierAvct.getIdAvct());
+		if (carriereCourante.getMotifAvct() == null) {
+			logger.warn("Le motif de l'avancement n'a pas été renseigné pour la carrière actuelle de l'agent matricule {}.", idAgent);
 			return null;
 		}
 		
-		return dernierAvct.getAvisCapEmployeur().getIdAvisCap();
+		return carriereCourante.getMotifAvct();
 	}
 
 	@Override
