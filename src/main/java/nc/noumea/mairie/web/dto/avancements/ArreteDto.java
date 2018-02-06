@@ -53,7 +53,7 @@ public class ArreteDto {
 		this.matriculeAgent = avct.getAgent().getNomatr().toString();
 		this.annee = avct.getAnneeAvancement();
 		this.nomComplet = getNomCompletAgent(avct.getAgent());
-		this.changementClasse = avct.getIdModifAvancement() == null ? false : avct.getIdModifAvancement() == 7 || avct.getIdModifAvancement() == 6 ? false : true;
+		this.changementClasse = avct.getIdMotifAvancement() == null ? false : avct.getIdMotifAvancement() == 7 || avct.getIdMotifAvancement() == 6 ? false : true;
 		this.regularisation = avct.isRegularisation();
 		this.deliberationLabel = avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale() == null ? "" : avct.getGradeNouveau().getGradeGenerique().getDeliberationCommunale()
 				.getLibDeliberation().toLowerCase().replace("/cp", "/CP");

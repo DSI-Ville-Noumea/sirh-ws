@@ -250,7 +250,7 @@ public class AvancementsService implements IAvancementsService {
 					aItem.setEaeRealise(false);
 				}
 			}
-			switch (avct.getIdModifAvancement()) {
+			switch (avct.getIdMotifAvancement()) {
 
 				case 7:
 					result.getAvancementsDifferencies().getAvancementsItems().add(aItem);

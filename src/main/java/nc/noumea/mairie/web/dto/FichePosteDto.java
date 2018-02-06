@@ -266,17 +266,14 @@ public class FichePosteDto {
 		}
 
 		if (null != fichePoste.getSuperieurHierarchique()) {
-			this.superieurHierarchiqueFP = fichePoste.getSuperieurHierarchique().getNumFP()
-					+ " "
-					+ fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().substring(0, 1).toUpperCase()
+			this.superieurHierarchiqueFP = fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().substring(0, 1).toUpperCase()
 					+ fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().substring(1, fichePoste.getSuperieurHierarchique().getTitrePoste().getLibTitrePoste().length())
 							.toLowerCase();
 
 			if (null != fichePoste.getSuperieurHierarchique().getAgent()) {
 				for (Affectation supHierar : fichePoste.getSuperieurHierarchique().getAgent()) {
 					this.superieurHierarchiqueAgent = supHierar.getAgent().getDisplayNom() + " " + supHierar.getAgent().getDisplayPrenom().substring(0, 1).toUpperCase()
-							+ supHierar.getAgent().getDisplayPrenom().substring(1, supHierar.getAgent().getDisplayPrenom().length()).toLowerCase() + " (" + supHierar.getAgent().getNomatr().toString()
-							+ ")";
+							+ supHierar.getAgent().getDisplayPrenom().substring(1, supHierar.getAgent().getDisplayPrenom().length()).toLowerCase();
 					break;
 				}
 			}

@@ -234,8 +234,8 @@ public class FichePosteDtoTest {
 		assertEquals("Nom usage Prenom usage (5138)", dto.getAgent());
 		assertEquals("25/02/2013", dto.getDateDebutAffectation());
 		assertEquals("", dto.getFiliere());
-		assertEquals("Usage sup Prenom sup (2990)", dto.getSuperieurHierarchiqueAgent());
-		assertEquals("2011/8 Poste sup", dto.getSuperieurHierarchiqueFP());
+		assertEquals("Usage sup Prenom sup", dto.getSuperieurHierarchiqueAgent());
+		assertEquals("Poste sup", dto.getSuperieurHierarchiqueFP());
 		assertEquals("", dto.getRemplaceAgent());
 		assertEquals("", dto.getRemplaceFP());
 		assertEquals("Nom emploi", dto.getEmploiPrimaire());
