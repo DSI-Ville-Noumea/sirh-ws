@@ -54,6 +54,7 @@
 		<class>nc.noumea.mairie.model.bean.Spgradn</class>
 		<class>nc.noumea.mairie.model.bean.Spgeng</class>
 		<class>nc.noumea.mairie.model.bean.Spfili</class>
+		<class>nc.noumea.mairie.model.bean.Spphre</class>
 		<class>nc.noumea.mairie.model.bean.sirh.StatutFichePoste</class>
 		<class>nc.noumea.mairie.model.bean.Sptyco</class>
 		<class>nc.noumea.mairie.model.bean.sirh.TitrePoste</class>

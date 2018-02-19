@@ -1,9 +1,14 @@
 package nc.noumea.mairie.service.sirh;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class HelperService {
+
+	private static SimpleDateFormat mairieDateFormat = new SimpleDateFormat("yyyyMMdd");
 	
 	public Integer getMairieMatrFromIdAgent(Integer idAgent) {
 		return idAgent - 9000000;
@@ -20,6 +25,10 @@ public class HelperService {
 			return idAgent;
 		}
 		return new Integer(newIdAgent);
+	}
+	
+	public Integer getIntegerDateMairieFromDate(Date date) {
+		return date == null ? 0 : Integer.parseInt(mairieDateFormat.format(date));
 	}
 	
 }
