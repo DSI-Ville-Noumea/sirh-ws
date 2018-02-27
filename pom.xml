@@ -87,9 +87,6 @@
 		<checksum-maven-plugin.version>1.4</checksum-maven-plugin.version>
 	    <coveralls-maven-plugin.repoToken>${env.COVERALLS_REPOTOKEN}</coveralls-maven-plugin.repoToken>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <versioneye-maven-plugin.version>3.11.4</versioneye-maven-plugin.version>
-	    <versioneye-maven-plugin.apiKey>${env.VERSIONEYE_APIKEY}</versioneye-maven-plugin.apiKey>
-	    <versioneye-maven-plugin.projectId>${env.VERSIONEYE_PROJECTID}</versioneye-maven-plugin.projectId>
 		<jacoco.version>0.7.9</jacoco.version>
 	</properties>
 	<repositories>
@@ -430,16 +427,6 @@
 			        <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
 			     </configuration>
 			 </plugin>
-			 <!-- VersionEye -->
-		      <plugin>
-		         <groupId>com.versioneye</groupId>
-		           <artifactId>versioneye-maven-plugin</artifactId>
-		           <version>${versioneye-maven-plugin.version}</version>
-		           <configuration>
-		              <apiKey>${versioneye-maven-plugin.apiKey}</apiKey>
-		            <projectId>${versioneye-maven-plugin.projectId}</projectId>
-		         </configuration>
-		      </plugin>
 		    <!-- Jacoco -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
