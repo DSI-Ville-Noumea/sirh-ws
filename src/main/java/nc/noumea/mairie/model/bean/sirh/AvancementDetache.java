@@ -28,7 +28,7 @@ public class AvancementDetache {
 	private Agent agent;
 
 	@Column(name = "ID_MOTIF_AVCT")
-	private Integer idModifAvancement;
+	private Integer idMotifAvancement;
 
 	@Column(name = "ETAT", columnDefinition = "char")
 	private String etat;
@@ -116,12 +116,12 @@ public class AvancementDetache {
 		this.agent = agent;
 	}
 
-	public Integer getIdModifAvancement() {
-		return idModifAvancement;
+	public Integer getIdMotifAvancement() {
+		return idMotifAvancement;
 	}
 
-	public void setIdModifAvancement(Integer idModifAvancement) {
-		this.idModifAvancement = idModifAvancement;
+	public void setIdMotifAvancement(Integer idMotifAvancement) {
+		this.idMotifAvancement = idMotifAvancement;
 	}
 
 	public String getEtat() {

@@ -130,7 +130,7 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("JOIN FETCH avct.grade ");
 		sb.append("where (avct.etat = 'C' or avct.etat = 'F') ");
 		sb.append("and avct.codeCategporie IN (:codesCategories) ");
-		sb.append("and avct.idModifAvancement IN (4,6, 7) ");
+		sb.append("and avct.idMotifAvancement IN (4,6, 7) ");
 		sb.append("and avct.anneeAvancement = :annee ");
 		sb.append("and avct.agentVDN = :capVDN ");
 		sb.append("and ca.idCap = :idCap ");
@@ -160,7 +160,7 @@ public class AvancementsService implements IAvancementsService {
 		sb.append("INNER JOIN spgeng.caps AS ca ");
 		sb.append("where (avct.etat = 'C' or avct.etat = 'F') ");
 		sb.append("and avct.codeCategporie IN (:codesCategories) ");
-		sb.append("and avct.idModifAvancement IN (4,6, 7) ");
+		sb.append("and avct.idMotifAvancement IN (4,6, 7) ");
 		sb.append("and avct.anneeAvancement = :annee ");
 		sb.append("and ca.idCap = :idCap ");
 		sb.append("and spgeng.cdgeng = :cdgeng");

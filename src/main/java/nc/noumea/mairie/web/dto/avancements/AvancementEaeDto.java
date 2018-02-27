@@ -27,7 +27,7 @@ public class AvancementEaeDto {
 	
 	public AvancementEaeDto(AvancementDetache avct){
 		this.idAvct = avct.getIdAvct();
-		this.idMotifAvct = avct.getIdModifAvancement();
+		this.idMotifAvct = avct.getIdMotifAvancement();
 		this.etat = avct.getEtat();
 		this.dateAvctMoy = avct.getDateAvctMoy();
 		this.grade = new GradeDto(avct.getGradeNouveau());
