@@ -639,7 +639,7 @@ public class AvancementsServiceTest {
 		agent1.setNomUsage("Nom 1");
 		AvancementDetache avct1 = new AvancementDetache();
 		avct1.setAgent(agent1);
-		avct1.setIdModifAvancement(4);
+		avct1.setIdMotifAvancement(4);
 		avct1.setGradeNouveau(gradeNouveau);
 		avct1.setNouvAccAnnee(1);
 		avct1.setNouvAccMois(1);
@@ -655,7 +655,7 @@ public class AvancementsServiceTest {
 		agent2.setNomUsage("Nom 2");
 		AvancementDetache avct2 = new AvancementDetache();
 		avct2.setAgent(agent2);
-		avct2.setIdModifAvancement(6);
+		avct2.setIdMotifAvancement(6);
 		avct2.setGradeNouveau(gradeNouveau);
 		avct2.setNouvAccAnnee(0);
 		avct2.setNouvAccMois(1);

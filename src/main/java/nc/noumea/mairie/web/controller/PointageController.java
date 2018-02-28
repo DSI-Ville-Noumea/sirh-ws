@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nc.noumea.mairie.model.bean.Spphre;
+import nc.noumea.mairie.service.ISpphreService;
 import nc.noumea.mairie.service.sirh.HelperService;
 import nc.noumea.mairie.service.sirh.IAffectationService;
 import nc.noumea.mairie.service.sirh.IPointageService;
@@ -11,6 +13,8 @@ import nc.noumea.mairie.tools.transformer.MSDateTransformer;
 import nc.noumea.mairie.web.dto.AffectationDto;
 import nc.noumea.mairie.web.dto.BaseHorairePointageDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -29,9 +33,14 @@ import flexjson.JSONSerializer;
 @Controller
 @RequestMapping("/pointages")
 public class PointageController {
+	
+	private Logger logger = LoggerFactory.getLogger(PointageController.class);
 
 	@Autowired
 	private IPointageService pointageSrv;
+
+	@Autowired
+	private ISpphreService spphreService;
 	
 	@Autowired
 	private IAffectationService affectationService;
@@ -128,6 +137,21 @@ public class PointageController {
 			return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 
 		String json = new JSONSerializer().exclude("*.class").include("listPrimesAff").transform(new MSDateTransformer(), Date.class).serialize(result);
+
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getSpphre", method = RequestMethod.GET)
+	public ResponseEntity<String> getSpphreByAgentAndDateLundi(
+			@RequestParam(value = "idAgent", required = true) Integer idAgent,
+			@RequestParam(value = "dateLundi", required = true) @DateTimeFormat(pattern = "yyyyMMdd") Date dateLundi) {
+
+		logger.debug("entered GET [pointages/getSpphre] => getSpphre for mondayDate = {} ans matricule = {}", dateLundi, idAgent);
+		
+		Spphre result = spphreService.getSpphreForDayAndAgent(idAgent, dateLundi);
+
+		String json = new JSONSerializer().exclude("*.class").serialize(result);
 
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
