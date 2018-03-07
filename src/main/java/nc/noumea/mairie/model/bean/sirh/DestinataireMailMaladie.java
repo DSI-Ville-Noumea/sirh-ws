@@ -21,6 +21,9 @@ public class DestinataireMailMaladie {
 	@JoinColumn(name = "ID_GROUPE")
 	private DroitsGroupe	groupe;
 
+	@JoinColumn(name = "IS_FOR_JOB")
+	private boolean	isForJob;
+
 	public Integer getIdDestinataireMailMaladie() {
 		return idDestinataireMailMaladie;
 	}
@@ -35,6 +38,14 @@ public class DestinataireMailMaladie {
 
 	public void setGroupe(DroitsGroupe groupe) {
 		this.groupe = groupe;
+	}
+
+	public boolean isForJob() {
+		return isForJob;
+	}
+
+	public void setForJob(boolean isForJob) {
+		this.isForJob = isForJob;
 	}
 
 }
