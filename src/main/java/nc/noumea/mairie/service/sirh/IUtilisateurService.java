@@ -19,6 +19,6 @@ public interface IUtilisateurService {
 
 	List<LightUserDto> getListeUtilisateurSIRH(Integer idAgent);
 
-	List<LightUserDto> getListEmailDestinataire();
+	List<LightUserDto> getListEmailDestinataire(boolean isForJob);
 
 }

@@ -482,7 +482,7 @@ public class SirhRepositoryTest {
 	@Transactional("sirhTransactionManager")
 	public void getListDestinataireMailMaladie_returnNoResult() {
 
-		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie(false);
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -510,7 +510,7 @@ public class SirhRepositoryTest {
 		dest1.setGroupe(drG1);
 		sirhPersistenceUnit.persist(dest1);
 
-		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie(false);
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -555,7 +555,7 @@ public class SirhRepositoryTest {
 		dest1.setGroupe(drG1);
 		sirhPersistenceUnit.persist(dest1);
 
-		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie(false);
 
 		assertNotNull(result);
 		assertEquals(2, result.size());
@@ -612,7 +612,7 @@ public class SirhRepositoryTest {
 		dest1.setGroupe(drG1);
 		sirhPersistenceUnit.persist(dest1);
 
-		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie();
+		List<DestinataireMailMaladie> result = repository.getListDestinataireMailMaladie(false);
 
 		assertNotNull(result);
 		assertEquals(2, result.size());

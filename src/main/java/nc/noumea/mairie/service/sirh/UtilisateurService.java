@@ -195,17 +195,17 @@ public class UtilisateurService implements IUtilisateurService {
 	}
 
 	@Override
-	public List<LightUserDto> getListEmailDestinataire() {
+	public List<LightUserDto> getListEmailDestinataire(boolean isForJob) {
 		List<LightUserDto> result = new ArrayList<>();
-		List<DestinataireMailMaladie> listeDestinataire = sirhRepository.getListDestinataireMailMaladie();
+		List<DestinataireMailMaladie> listeDestinataire = sirhRepository.getListDestinataireMailMaladie(isForJob);
 		for (DestinataireMailMaladie dest : listeDestinataire) {
 			for (Utilisateur util : dest.getGroupe().getUtilisateurs()) {
 				if(util != null && util.getLogin() != null){
-				// Get the assignee email address for To
-				LightUserDto user = radiWSConsumer.getAgentCompteADByLogin(util.getLogin());
-				if (user != null && user.getMail() != null) {
-					result.add(user);
-				}
+					// Get the assignee email address for To
+					LightUserDto user = radiWSConsumer.getAgentCompteADByLogin(util.getLogin());
+					if (user != null && user.getMail() != null) {
+						result.add(user);
+					}
 				}
 			}
 		}

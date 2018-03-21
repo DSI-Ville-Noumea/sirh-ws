@@ -121,14 +121,18 @@ public class SirhRepository implements ISirhRepository {
 
 
 	@Override
-	public List<DestinataireMailMaladie> getListDestinataireMailMaladie() {
+	public List<DestinataireMailMaladie> getListDestinataireMailMaladie(boolean isForJob) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("select distinct(dest) from DestinataireMailMaladie dest ");
 		sb.append("join fetch dest.groupe gr ");
 		sb.append("join fetch gr.utilisateurs ");
+		sb.append("join fetch gr.utilisateurs ");
+		sb.append("where dest.isForJob = :isForJob ");
 		sb.append("order by dest.idDestinataireMailMaladie ");
 
 		TypedQuery<DestinataireMailMaladie> q = sirhEntityManager.createQuery(sb.toString(), DestinataireMailMaladie.class);
+		
+		q.setParameter("isForJob", isForJob);
 
 		return q.getResultList();
 	}

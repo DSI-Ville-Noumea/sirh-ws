@@ -27,5 +27,5 @@ public interface ISirhRepository {
 
 	List<Utilisateur> getListeUtilisateur();
 
-	List<DestinataireMailMaladie> getListDestinataireMailMaladie();
+	List<DestinataireMailMaladie> getListDestinataireMailMaladie(boolean isForJob);
 }

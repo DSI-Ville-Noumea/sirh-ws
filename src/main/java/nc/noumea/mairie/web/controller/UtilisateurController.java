@@ -120,11 +120,11 @@ public class UtilisateurController {
 	@ResponseBody
 	@RequestMapping(value = "/getEmailDestinataire", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getEmailDestinataire() {
+	public ResponseEntity<String> getEmailDestinataire(@RequestParam(value = "isForJob", required = true) boolean isForJob) {
 
 		logger.debug("entered GET [utilisateur/getEmailDestinataire] => getEmailDestinataire");
 
-		List<LightUserDto> res = utilisateurSrv.getListEmailDestinataire();
+		List<LightUserDto> res = utilisateurSrv.getListEmailDestinataire(isForJob);
 
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(res);
 
