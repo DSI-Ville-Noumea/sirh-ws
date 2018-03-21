@@ -13,6 +13,8 @@ public class RefTypeSaisiCongeAnnuelDto {
 	private boolean calendarDateReprise;
 	private Integer quotaMultiple;
 	private boolean decompteSamedi;
+	
+	// #45163 : This field seems not used...
 	private boolean consecutif;
 
 	public RefTypeSaisiCongeAnnuelDto() {
