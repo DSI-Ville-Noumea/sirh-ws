@@ -1087,7 +1087,7 @@ public class AffectationRepositoryTest {
 		a1.setIdAffectation(2);
 		a1.setTempsTravail("tempsTravail");
 		a1.setDateDebutAff(new DateTime(2010, 05, 01, 0, 0, 0).toDate());
-		a1.setDateFinAff(new DateTime(2018, 05, 01, 0, 0, 0).toDate());
+		a1.setDateFinAff(new DateTime(2028, 05, 01, 0, 0, 0).toDate());
 		sirhPersistenceUnit.persist(a1);
 
 		Agent result = repository.getAffectationAgent(9005138, new Date());

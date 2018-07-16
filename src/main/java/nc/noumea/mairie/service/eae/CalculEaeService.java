@@ -561,6 +561,12 @@ public class CalculEaeService implements ICalculEaeService {
 				CalculEaeInfosDto dto = new CalculEaeInfosDto();
 				dto.setDateDebut(affectation.getDateDebutAff());
 				dto.setDateFin(affectation.getDateFinAff());
+				// #44729 : On rajoute le libellé du poste et l'id du service
+				if (affectation.getFichePoste() != null) {
+					dto.setIdServiceAds(affectation.getFichePoste().getIdServiceADS());
+					if (affectation.getFichePoste().getTitrePoste() != null)
+						dto.setLibellePoste(affectation.getFichePoste().getTitrePoste().getLibTitrePoste());
+				}
 				listDto.add(dto);
 			}
 		}
@@ -593,6 +599,7 @@ public class CalculEaeService implements ICalculEaeService {
 		List<Integer> listNoMatr = spcarrRepository.getListeCarriereActiveAvecPA();
 
 		List<AgentDto> result = new ArrayList<AgentDto>();
+		
 		if (null != listNoMatr) {
 			for (Integer noMatr : listNoMatr) {
 				Agent agent = agentRepository.getAgentEligibleEAESansAffectes(noMatr);

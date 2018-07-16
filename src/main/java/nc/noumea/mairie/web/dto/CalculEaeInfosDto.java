@@ -28,6 +28,9 @@ public class CalculEaeInfosDto {
 	CarriereDto carriereActive;
 	CarriereDto carriereAncienneDansGrade;
 	
+	private String libellePoste;
+	private Integer idServiceAds;
+	
 
 	public PositionAdmAgentDto getPositionAdmAgentEnCours() {
 		return positionAdmAgentEnCours;
@@ -134,6 +137,22 @@ public class CalculEaeInfosDto {
 
 	public void setCarriereAncienneDansGrade(CarriereDto carriereAncienneDansGrade) {
 		this.carriereAncienneDansGrade = carriereAncienneDansGrade;
+	}
+
+	public String getLibellePoste() {
+		return libellePoste;
+	}
+
+	public void setLibellePoste(String libellePoste) {
+		this.libellePoste = libellePoste;
+	}
+
+	public Integer getIdServiceAds() {
+		return idServiceAds;
+	}
+
+	public void setIdServiceAds(Integer idServiceAds) {
+		this.idServiceAds = idServiceAds;
 	}
 	
 	
