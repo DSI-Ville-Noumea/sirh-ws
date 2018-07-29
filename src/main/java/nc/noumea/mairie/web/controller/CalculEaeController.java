@@ -50,7 +50,7 @@ public class CalculEaeController {
 
 		return new ResponseEntity<String>(new JSONSerializer().exclude("*.class").serialize(result), HttpStatus.OK);
 	}
-
+	
 	@ResponseBody
 	@RequestMapping(value = "/listeAgentEligibleEAEAffectes", method = RequestMethod.GET)
 	@Transactional(readOnly = true)

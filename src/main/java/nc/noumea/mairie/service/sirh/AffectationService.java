@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import nc.noumea.mairie.ws.ISirhAbsWSConsumer;
 
 @Service
 public class AffectationService implements IAffectationService {
+	
+	private Logger logger = LoggerFactory.getLogger(AffectationService.class);
 
 	@PersistenceContext(unitName = "sirhPersistenceUnit")
 	transient EntityManager sirhEntityManager;
@@ -81,6 +85,10 @@ public class AffectationService implements IAffectationService {
 		
 		if(null != listAffectation) {
 			for(Affectation aff : listAffectation) {
+				if (aff.getIdBaseHoraireAbsence() == null) {
+					logger.warn("Il n'y a pas de base horaire absence correspondant à l'affectation id {}.", aff.getIdAffectation());
+					continue;
+				}
 				RefTypeAbsenceDto dtoBaseHoraireAbs = sirhAbsWSConsumer.getTypAbsenceCongeAnnuelById(aff.getIdBaseHoraireAbsence());
 				AffectationDto dto = new AffectationDto(aff, dtoBaseHoraireAbs.getTypeSaisiCongeAnnuelDto());
 				result.add(dto);
