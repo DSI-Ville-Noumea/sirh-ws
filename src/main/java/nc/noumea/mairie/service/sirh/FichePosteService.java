@@ -657,6 +657,8 @@ public class FichePosteService implements IFichePosteService {
 
 		if (withEntiteChildren) {
 			entiteRoot = adsWSConsumer.getEntiteWithChildrenByIdEntite(idEntite);
+			if (entiteRoot == null)
+				return result;
 			List<Integer> listeEnfant = getListIdsEntiteEnfants(entiteRoot);
 			if (!listeEnfant.contains(entiteRoot.getIdEntite()))
 				listeEnfant.add(entiteRoot.getIdEntite());
