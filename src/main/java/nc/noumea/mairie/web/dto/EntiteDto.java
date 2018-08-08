@@ -13,6 +13,7 @@ public class EntiteDto {
 	private String sigle;
 	private String label;
 	private String labelCourt;
+	private String labelLong;
 	private ReferenceDto typeEntite;
 	private String codeServi;
 	private List<EntiteDto> enfants;
@@ -64,6 +65,14 @@ public class EntiteDto {
 
 	public void setLabelCourt(String labelCourt) {
 		this.labelCourt = labelCourt;
+	}
+
+	public String getLabelLong() {
+		return labelLong;
+	}
+
+	public void setLabelLong(String labelLong) {
+		this.labelLong = labelLong;
 	}
 
 	public ReferenceDto getTypeEntite() {

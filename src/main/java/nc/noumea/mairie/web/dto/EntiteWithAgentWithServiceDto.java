@@ -20,6 +20,7 @@ public class EntiteWithAgentWithServiceDto extends EntiteDto {
 		setSigle(dto.getSigle());
 		setLabel(dto.getLabel());
 		setLabelCourt(dto.getLabelCourt());
+		setLabelLong(dto.getLabelLong());
 		setTypeEntite(dto.getTypeEntite());
 		setCodeServi(dto.getCodeServi());
 		setEnfants(dto.getEnfants());
