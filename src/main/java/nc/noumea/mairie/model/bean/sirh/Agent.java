@@ -234,6 +234,9 @@ public class Agent {
 	@Column(name = "ID_TITRE_REPAS")
 	private Integer idTitreRepas;
 
+	@Column(name = "ID_TIARHE")
+	private String idTiarhe;
+
 	public Integer getIdTitreRepas() {
 		return idTitreRepas;
 	}
@@ -599,5 +602,13 @@ public class Agent {
 
 	public void setNationalite(String nationalite) {
 		this.nationalite = nationalite;
+	}
+
+	public String getIdTiarhe() {
+		return idTiarhe;
+	}
+
+	public void setIdTiarhe(String idTiarhe) {
+		this.idTiarhe = idTiarhe;
 	}
 }

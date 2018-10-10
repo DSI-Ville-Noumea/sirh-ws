@@ -21,6 +21,7 @@ public class AgentGeneriqueDto {
 	private Date dateDerniereEmbauche;
 	// #40074 optimisation our Tickets restaurant
 	private Integer	idTicketRestaurant;
+	private String	idTiarhe;
 
 	public AgentGeneriqueDto(Agent ag) {
 		super();
@@ -34,6 +35,7 @@ public class AgentGeneriqueDto {
 			this.prenomUsage = ag.getPrenomUsage();
 			this.dateDerniereEmbauche = ag.getDateDerniereEmbauche();
 			this.idTicketRestaurant=ag.getIdTitreRepas();
+			this.idTiarhe=ag.getIdTiarhe();
 		}
 	}
 
@@ -107,6 +109,14 @@ public class AgentGeneriqueDto {
 
 	public void setIdTicketRestaurant(Integer idTicketRestaurant) {
 		this.idTicketRestaurant = idTicketRestaurant;
+	}
+
+	public String getIdTiarhe() {
+		return idTiarhe;
+	}
+
+	public void setIdTiarhe(String idTiarhe) {
+		this.idTiarhe = idTiarhe;
 	}
 
 }
