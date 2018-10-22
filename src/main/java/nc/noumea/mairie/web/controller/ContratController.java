@@ -1,8 +1,24 @@
 package nc.noumea.mairie.web.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import nc.noumea.mairie.model.bean.Sibanq;
 import nc.noumea.mairie.model.bean.sirh.Activite;
@@ -29,21 +45,6 @@ import nc.noumea.mairie.web.dto.DiplomeDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.FichePosteDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
-
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/contrat")
@@ -183,6 +184,22 @@ public class ContratController {
 		headers.add("Content-Disposition", String.format("attachment; filename=\"C_%s.doc\"", idContrat));
 
 		return new ResponseEntity<byte[]>(responseData, headers, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getHistoContratsForTiarhe", method = RequestMethod.GET)
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> getXmlPreviousEtatsPayeur() throws IOException, ParseException {
+
+		byte[] byteArray = contratSrv.getHistoContratForTiarhe();
+		
+		logger.debug("Export done");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"histoContrats.xls\""));
+
+		return new ResponseEntity<byte[]>(byteArray, headers, HttpStatus.OK);
 	}
 
 }

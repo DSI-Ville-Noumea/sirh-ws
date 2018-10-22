@@ -28,4 +28,6 @@ public interface ISpadmnRepository {
 	 * @return List<Integer> La liste des nomatr en activité sur la période
 	 */
 	List<Integer> listNomatrEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode);
+	
+	List<Integer> listNomatrEnActivitePourHistoContrats();
 }

@@ -88,6 +88,12 @@ public class Spcarr {
 	@Column(name = "MOTIFAVCT", columnDefinition = "numeric")
 	private Integer motifAvct;
 
+	@Column(name = "CDDCDICA", columnDefinition = "char")
+	private String typeContrat;
+
+	@Column(name = "IBAN", columnDefinition = "char")
+	private String iban;
+
 	public SpcarrId getId() {
 		return id;
 	}
@@ -198,6 +204,22 @@ public class Spcarr {
 
 	public void setMotifAvct(Integer motifAvct) {
 		this.motifAvct = motifAvct;
+	}
+
+	public String getTypeContrat() {
+		return typeContrat;
+	}
+
+	public void setTypeContrat(String typeContrat) {
+		this.typeContrat = typeContrat;
+	}
+
+	public String getIban() {
+		return iban;
+	}
+
+	public void setIban(String iban) {
+		this.iban = iban;
 	}
 
 }

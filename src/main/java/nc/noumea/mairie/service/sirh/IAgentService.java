@@ -144,5 +144,7 @@ public interface IAgentService {
 	 * @return
 	 */
 	public List<Agent> listAgentAvecIdTitreRepas();
+	
+	List<Integer> listIdAgentsActifsForTiahre();
 
 }

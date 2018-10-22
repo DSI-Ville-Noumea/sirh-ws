@@ -45,6 +45,14 @@ public class Contrat {
 	@Column(name = "ID_MOTIF")
 	private Integer idMotif;
 
+	@NotNull
+	@Column(name = "JUSTIFICATION")
+	private String justification;
+
+	@NotNull
+	@Column(name = "ID_TYPE_CONTRAT")
+	private Integer idTypeContrat;
+
 	public Agent getAgent() {
 		return agent;
 	}
@@ -91,5 +99,21 @@ public class Contrat {
 
 	public void setIdMotif(Integer idMotif) {
 		this.idMotif = idMotif;
+	}
+
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
+	}
+
+	public Integer getIdTypeContrat() {
+		return idTypeContrat;
+	}
+
+	public void setIdTypeContrat(Integer idTypeContrat) {
+		this.idTypeContrat = idTypeContrat;
 	}
 }

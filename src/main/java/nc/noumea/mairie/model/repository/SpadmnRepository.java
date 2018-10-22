@@ -134,4 +134,24 @@ public class SpadmnRepository implements ISpadmnRepository {
 		return q.getResultList();
 
 	}
+
+	@Override
+	public List<Integer> listNomatrEnActivitePourHistoContrats() {
+		// on recupere tous les nomatr actifs dans SPADMN
+		StringBuilder sbSpadmn = new StringBuilder();
+		sbSpadmn.append("select distinct(a.id.nomatr) from Spadmn a ");
+		sbSpadmn.append("where ( (a.id.datdeb <= :currDate) and (a.datfin = 0 or a.datfin >= :currDate )) ");
+		sbSpadmn.append("and a.positionAdministrative.cdpAdm not in (:listPAInactiveForTiarhe) ");
+		sbSpadmn.append("and a.id.nomatr < 9000 ");
+		sbSpadmn.append("ORDER BY a.id.nomatr ");
+
+		TypedQuery<Integer> q = sirhEntityManager.createQuery(sbSpadmn.toString(), Integer.class);
+
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		q.setParameter("currDate", Integer.valueOf(sdfMairie.format(new Date())));
+		q.setParameter("listPAInactiveForTiarhe", Arrays.asList("CA", "DC", "DE", "FC", "FI", "LI", "RT", "RV"));
+
+		return q.getResultList();
+
+	}
 }

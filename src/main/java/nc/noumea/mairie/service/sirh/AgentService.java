@@ -601,4 +601,15 @@ public class AgentService implements IAgentService {
 
 		return query.getResultList();
 	}
+
+	@Override
+	public List<Integer> listIdAgentsActifsForTiahre() {
+		// on transforme les nomatr en idAgent
+		List<Integer> listIdAgent = new ArrayList<>();
+		for (Integer nomatr : spadmnRepository.listNomatrEnActivitePourHistoContrats()) {
+			listIdAgent.add(nomatr + 9000000);
+		}
+		
+		return listIdAgent;
+	}
 }

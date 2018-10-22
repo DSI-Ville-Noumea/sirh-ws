@@ -1,5 +1,7 @@
 package nc.noumea.mairie.model.repository;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,12 +13,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.springframework.stereotype.Repository;
+
+import com.google.common.collect.Lists;
+
 import nc.noumea.mairie.mdf.domain.InactivePAEnum;
-import nc.noumea.mairie.mdf.service.impl.BordereauRecapService;
 import nc.noumea.mairie.model.bean.Spcarr;
 import nc.noumea.mairie.model.bean.SpcarrWithoutSpgradn;
-
-import org.springframework.stereotype.Repository;
+import nc.noumea.mairie.web.dto.CarriereDto;
 
 @Repository
 public class SpcarrRepository implements ISpcarrRepository {
@@ -221,5 +225,41 @@ public class SpcarrRepository implements ISpcarrRepository {
 		query.setParameter("listPAInactives", listPAInactives);
 
 		return (Integer) query.getSingleResult();
+	}
+
+	@Override
+	public List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent) throws ParseException {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("select max(cat.licate), max(bar.iban), max(bar.inm), min(carr.datdeb), max(carr.datfin), carr.cddcdica ");
+		sb.append("from Spcarr carr, SPBAREM bar, SPCATG cat ");
+		sb.append("where carr.nomatr = :nomatr AND carr.iban = bar.iban AND cat.cdcate = carr.cdcate ");
+		sb.append("group by carr.cdcate, carr.iban, cddcdica ");
+		sb.append("order by min(carr.datdeb)");
+
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+
+		query.setParameter("nomatr", idAgent - 9000000);
+		
+		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
+		List<CarriereDto> returnList = Lists.newArrayList();
+		CarriereDto newCarr;
+		
+		for (Object[] o : (List<Object[]>)query.getResultList()) {
+			newCarr = new CarriereDto();
+
+			newCarr.setLibelleCategorie((String)o[0]);
+			
+			newCarr.setIBAN((String)o[1]);
+			newCarr.setINM(((BigDecimal)o[2]).toString());
+			newCarr.setDateDebut(sdfMairie.parse(((BigDecimal)o[3]).toString()));
+			if (!((BigDecimal)o[4]).toString().equals("0"))
+				newCarr.setDateFin(sdfMairie.parse(((BigDecimal)o[4]).toString()));
+			newCarr.setTypeContrat((String)o[5]);
+			
+			returnList.add(newCarr);
+		}
+		
+		return returnList;
 	}
 }

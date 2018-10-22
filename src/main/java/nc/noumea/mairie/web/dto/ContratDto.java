@@ -11,6 +11,11 @@ import nc.noumea.mairie.model.bean.sirh.Contrat;
 public class ContratDto {
 	private Integer idContrat;
 	private Integer idMotif;
+	private Integer idAgent;
+	private String idTiarhe;
+	private String typeContrat;
+	private String motif;
+	private String justification;
 	private AgentDto agent;
 	private FichePosteDto fichePoste;
 	private Date dateDebutContrat;
@@ -106,5 +111,45 @@ public class ContratDto {
 
 	public void setIdMotif(Integer idMotif) {
 		this.idMotif = idMotif;
+	}
+
+	public Integer getIdAgent() {
+		return idAgent;
+	}
+
+	public void setIdAgent(Integer idAgent) {
+		this.idAgent = idAgent;
+	}
+
+	public String getIdTiarhe() {
+		return idTiarhe;
+	}
+
+	public void setIdTiarhe(String idTiarhe) {
+		this.idTiarhe = idTiarhe;
+	}
+
+	public String getTypeContrat() {
+		return typeContrat;
+	}
+
+	public void setTypeContrat(String typeContrat) {
+		this.typeContrat = typeContrat;
+	}
+
+	public String getMotif() {
+		return motif;
+	}
+
+	public void setMotif(String motif) {
+		this.motif = motif;
+	}
+
+	public String getJustification() {
+		return justification;
+	}
+
+	public void setJustification(String justification) {
+		this.justification = justification;
 	}
 }

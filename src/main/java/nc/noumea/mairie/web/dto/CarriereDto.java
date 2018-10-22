@@ -12,10 +12,14 @@ public class CarriereDto {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 	private Date dateDebut;
+	private Date dateFin;
 	private Integer noMatr;
 	private Integer codeCategorie;
 	private String libelleCategorie;
 	private GradeDto grade;
+	private String INM;
+	private String IBAN;
+	private String typeContrat;
 
 	public CarriereDto() {
 	}
@@ -88,6 +92,38 @@ public class CarriereDto {
 
 	public void setGrade(GradeDto grade) {
 		this.grade = grade;
+	}
+
+	public Date getDateFin() {
+		return dateFin;
+	}
+
+	public void setDateFin(Date dateFin) {
+		this.dateFin = dateFin;
+	}
+
+	public String getINM() {
+		return INM;
+	}
+
+	public void setINM(String iNM) {
+		INM = iNM;
+	}
+
+	public String getIBAN() {
+		return IBAN;
+	}
+
+	public void setIBAN(String iBAN) {
+		IBAN = iBAN;
+	}
+
+	public String getTypeContrat() {
+		return typeContrat;
+	}
+
+	public void setTypeContrat(String typeContrat) {
+		this.typeContrat = typeContrat;
 	}
 
 }
