@@ -1,5 +1,7 @@
 package nc.noumea.mairie.service.sirh;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -166,29 +168,20 @@ public class ContratService implements IContratService {
 	
 	private List<HistoContratDto> getHistoContratsList() throws ParseException {
 		List<HistoContratDto> returnList = Lists.newArrayList();
-//		Date curseur;
-//		boolean curseurChanged;
+		Date curseur;
 		
 	    HistoContratDto histo;
-//	    HistoContratDto histo2;
 		
 		// Pour chaque agent actif, on fait le traitement
 		for (Integer idAgent : agentSrv.listIdAgentsActifsForTiahre()) {
-//			curseur = null;
-//			curseurChanged = false;
 			logger.debug("Traitement de l'agent ID " + idAgent);
 			
 			// Récupération des contrats et des carrières
-//			List<ContratDto> contrats = getAllContratsByAgentForTiarhe(idAgent);
 			ContratDto contratUnique;
 			List<CarriereDto> carrieres = spcarrRepository.getAllCarrieresByAgentForTiarhe(idAgent);
 			
 			// Pour chaque contrat différent
 			for (CarriereDto spcarr : carrieres) {
-//				if (!curseurChanged)
-//					curseur = spcarr.getDateDebut();
-//				curseurChanged = false;
-				
 				histo = new HistoContratDto();
 
 				histo.setIdAgent(idAgent);
@@ -216,6 +209,7 @@ public class ContratService implements IContratService {
 						histo.setDateFin(contratUnique.getDateDebutContrat());
 						histo.setDateFinMoinsUnJour(true);
 						returnList.add(histo);
+						histo = new HistoContratDto(histo);
 						// Puis si la date de fin du contrat est inférieure à celle de la carrière, alors il faut créer 2 nouveaux intervals.
 						if (contratUnique.getDateFinContrat() != null && contratUnique.getDateFinContrat().before(spcarr.getDateFin())) {
 							histo.setJustification(contratUnique.getJustification());
@@ -225,6 +219,7 @@ public class ContratService implements IContratService {
 							histo.setDateFin(contratUnique.getDateFinContrat());
 							histo.setDateFinMoinsUnJour(false);
 							returnList.add(histo);
+							histo = new HistoContratDto(histo);
 							
 							histo.setJustification(null);
 							histo.setMotif(null);
@@ -233,6 +228,7 @@ public class ContratService implements IContratService {
 							histo.setDateFin(spcarr.getDateFin());
 							histo.setDateFinMoinsUnJour(true);
 							returnList.add(histo);
+							histo = new HistoContratDto(histo);
 							
 						// Sinon, on créé le dernier.
 						} else {
@@ -244,6 +240,7 @@ public class ContratService implements IContratService {
 							histo.setDateFinMoinsUnJour(true);
 
 							returnList.add(histo);
+							histo = new HistoContratDto(histo);
 						}
 					// Si la date de début du contrat est antérieure ou égale à la date de début de la carrière
 					} else {
@@ -256,14 +253,22 @@ public class ContratService implements IContratService {
 							histo.setDateFin(contratUnique.getDateFinContrat());
 							histo.setDateFinMoinsUnJour(false);
 							returnList.add(histo);
+							histo = new HistoContratDto(histo);
 
-							histo.setJustification(contratUnique.getJustification());
-							histo.setMotif(contratUnique.getMotif());
-							histo.setTypeContrat(contratUnique.getTypeContrat());
-							histo.setDateDebut(new DateTime(contratUnique.getDateFinContrat()).plusDays(1).toDate());
-							histo.setDateFin(spcarr.getDateFin());
-							histo.setDateFinMoinsUnJour(true);
-							returnList.add(histo);
+							// Il ne faut pas renseigner l'historique si on est sur le même jour.
+							if (!new DateTime(contratUnique.getDateFinContrat()).plusDays(1).toDate().equals(spcarr.getDateFin())) {
+								histo.setJustification(null);
+								histo.setMotif(null);
+								histo.setTypeContrat(null);
+								if (contratUnique.getDateFinContrat().equals(spcarr.getDateDebut()))
+									histo.setDateDebut(contratUnique.getDateFinContrat());
+								else
+									histo.setDateDebut(new DateTime(contratUnique.getDateFinContrat()).plusDays(1).toDate());
+								histo.setDateFin(spcarr.getDateFin());
+								histo.setDateFinMoinsUnJour(true);
+								returnList.add(histo);
+								histo = new HistoContratDto(histo);
+							}
 						// Sinon, alors toute la carrière peut prendre les attributs du contrat
 						} else {
 							histo.setJustification(contratUnique.getJustification());
@@ -272,87 +277,101 @@ public class ContratService implements IContratService {
 							histo.setDateFin(spcarr.getDateFin());
 							histo.setDateFinMoinsUnJour(true);
 							returnList.add(histo);
+							histo = new HistoContratDto(histo);
 						}
 					}
 					
 				// ===========  plusieurs contrats sur la période ========== //
 				} else {
-//					for (ContratDto c : listContratsSurCettePeriode) {
-//						if (c.getDateDebutContrat().after(curseur)) {
-//							curseur = c.getDateDebutContrat();
-//							histo.setDateFin(new DateTime(curseur).plusDays(-1).toDate());
-//							returnList.add(histo);
-//							
-//							histo2 = new HistoContratDto(histo);
-//							histo2.setDateDebut(curseur);
-//							if (c.getDateFinContrat() != null && spcarr.getDateFin() != null) {
-//								curseur = c.getDateFinContrat().before(spcarr.getDateFin()) ? c.getDateFinContrat() : spcarr.getDateFin(); 
-//								histo2.setDateFin(curseur);
-//							}
-//							returnList.add(histo2);
-//						} else {
-//							histo2 = new HistoContratDto(histo);
-//							if (c.getDateFinContrat() != null && spcarr.getDateFin() != null) {
-//								curseur = c.getDateFinContrat().before(spcarr.getDateFin()) ? c.getDateFinContrat() : spcarr.getDateFin(); 
-//								histo2.setDateFin(curseur);
-//							}
-//							returnList.add(histo2);
-//						}
-//					}
+					curseur = spcarr.getDateDebut();
+					for (int i = 0 ; i < listContratsSurCettePeriode.size() ; ++i) {
+						ContratDto contrat = listContratsSurCettePeriode.get(i);
+						
+						// Il faut traiter les carrières sans contrats entre les deux (matr. 4877, 31/12/11 -> 06/02/12)
+						if (curseur != null && curseur != spcarr.getDateDebut() && curseur.before(contrat.getDateDebutContrat())) {
+							histo.setDateDebut(curseur);
+							histo.setJustification(null);
+							histo.setMotif(null);
+							histo.setTypeContrat(null);
+							histo.setDateFin(contrat.getDateDebutContrat());
+							histo.setDateFinMoinsUnJour(true);
+							returnList.add(histo);
+							curseur = contrat.getDateDebutContrat();
+							histo = new HistoContratDto(histo);
+						}
+						
+						// Si le contrat commence avant ou à la date de la carrière
+						if (!contrat.getDateDebutContrat().after(spcarr.getDateDebut())) {
+							histo.setDateDebut(curseur);
+							histo.setJustification(contrat.getJustification());
+							histo.setMotif(contrat.getMotif());
+							histo.setTypeContrat(contrat.getTypeContrat());
+							histo.setDateFin(contrat.getDateFinContrat());
+							histo.setDateFinMoinsUnJour(false);
+							returnList.add(histo);
+							histo = new HistoContratDto(histo);
+							curseur = new DateTime(contrat.getDateFinContrat()).plusDays(1).toDate();
+						} else {
+							// Si la date de fin du contrat est inférieure à la date de fin de la carrière, alors il faut créer 2 intervals
+							if (contrat.getDateFinContrat() != null && (spcarr.getDateFin() == null || contrat.getDateFinContrat().before(spcarr.getDateFin()))) {
+								histo.setJustification(contrat.getJustification());
+								histo.setMotif(contrat.getMotif());
+								histo.setTypeContrat(contrat.getTypeContrat());
+								histo.setDateDebut(new DateTime(curseur).toDate());
+								histo.setDateFin(contrat.getDateFinContrat());
+								histo.setDateFinMoinsUnJour(false);
+								returnList.add(histo);
+								histo = new HistoContratDto(histo);
+								curseur = new DateTime(contrat.getDateFinContrat()).plusDays(1).toDate();
+
+								// Il ne faut pas renseigner l'historique si on est sur le même jour, ni si ce n'est pas le dernier contrat sur la période
+								if (!new DateTime(contrat.getDateFinContrat()).plusDays(1).toDate().equals(spcarr.getDateFin()) && i == listContratsSurCettePeriode.size()-1) {
+									histo.setJustification(null);
+									histo.setMotif(null);
+									histo.setTypeContrat(null);
+									if (contrat.getDateFinContrat().equals(spcarr.getDateDebut()))
+										histo.setDateDebut(contrat.getDateFinContrat());
+									else
+										histo.setDateDebut(new DateTime(contrat.getDateFinContrat()).plusDays(1).toDate());
+									histo.setDateFin(spcarr.getDateFin());
+									histo.setDateFinMoinsUnJour(true);
+									returnList.add(histo);
+									histo = new HistoContratDto(histo);
+									curseur = spcarr.getDateFin();
+								}
+							// Sinon, alors toute la carrière peut prendre les attributs du contrat
+							} else {
+								histo.setJustification(contrat.getJustification());
+								histo.setMotif(contrat.getMotif());
+								histo.setTypeContrat(contrat.getTypeContrat());
+								histo.setDateDebut(contrat.getDateDebutContrat());
+								histo.setDateFin(spcarr.getDateFin());
+								histo.setDateFinMoinsUnJour(true);
+								returnList.add(histo);
+								histo = new HistoContratDto(histo);
+								curseur = spcarr.getDateFin();
+							}
+						}
+					}
 					logger.debug("Plusieurs contrats pour l'agent {}, avec la carriere du {} au {}", idAgent, spcarr.getDateDebut(), spcarr.getDateFin());
 				}
-				
-				for (int i = 0; i < returnList.size() ; ++i) {
-					if (i != returnList.size()-1 && returnList.get(i).equals(returnList.get(i+1))) {
-						returnList.get(i).setDateFin(returnList.get(i+1).getDateFin());
-						returnList.remove(i+1);
-						--i;
-					}
+			}
+		}
+		
+		for (int i = 0; i < returnList.size() ; ++i) {
+			if (returnList.get(i).getDateFin() != null) {
+				// Si un contrat possède une date de fin incrémentée de 1 jour, alors on se retrouve dans cette situation.
+				if (!returnList.get(i).getDateFin().after(returnList.get(i).getDateDebut())) {
+					logger.debug("ATTENTION !! La date de fin est inférieure à la date de début pour l'agent {}", returnList.get(i).getIdAgent());
+					returnList.remove(i);
+					--i;
+					continue;
 				}
-				
-				
-				// Pour chaque carrière différente
-//				for (ContratDto contrat : contrats) {
-//					
-//					if ((contrat.getDateFinContrat() != null && curseur.after(contrat.getDateFinContrat()))
-//							|| curseur.before(contrat.getDateDebutContrat()))
-//						continue;
-//
-//					if (spcarr.getDateFin() != null && contrat.getDateDebutContrat().before(spcarr.getDateFin()) && 
-//							(spcarr.getDateFin() == null || spcarr.getDateFin() != null && 
-//							(contrat.getDateFinContrat() != null && contrat.getDateFinContrat().after(spcarr.getDateDebut())))) {
-//						histo.setJustification(contrat.getJustification());
-//						histo.setMotif(contrat.getMotif());
-//						histo.setTypeContratContrat(contrat.getTypeContrat());
-//					}
-					
-					
-					// Si la date de début du contrat est antérieure à celle de la carrière
-//					if (contrat.getDateDebutContrat().before(spcarr.getDateDebut())) {
-//						histo.setDateDebut(contrat.getDateDebutContrat());
-//					} else {
-//						histo.setDateDebut(spcarr.getDateDebut());
-//					}
-//					if (contrat.getDateFinContrat() != null && spcarr.getDateFin() != null && (contrat.getDateFinContrat().before(spcarr.getDateFin()) || 
-//							(contrat.getDateFinContrat() != null && contrat.getDateFinContrat().equals(spcarr.getDateFin())))) {
-//						histo.setDateFin(contrat.getDateFinContrat());
-//						histo.setDateFinMoinsUnJour(false);
-//					} else {
-//						// Un jour doit être oté si la date de fin est celle de la carrière.
-////						histo.setDateFin(spcarr.getDateFin());
-////						histo.setDateFinMoinsUnJour(true);
-//					}
-//					
-//					if (histo.getDateDebut().before(curseur))
-//						histo.setDateDebut(curseur);
-//					
-//					// On replace le curseur sur la dernière période traitée
-//					curseur = histo.getDateFin();
-//
-//					// On ajoute pas la ligne si la date de début est égal à la date de fin.
-//					if (histo.getDateFin() != null && !histo.getDateDebut().equals(histo.getDateFin()) || histo.getDateFin() == null)
-//						returnList.add(histo);
-//				}
+			}
+			if (i != returnList.size()-1 && returnList.get(i).equals(returnList.get(i+1))) {
+				returnList.get(i).setDateFin(returnList.get(i+1).getDateFin());
+				returnList.remove(i+1);
+				--i;
 			}
 		}
 		

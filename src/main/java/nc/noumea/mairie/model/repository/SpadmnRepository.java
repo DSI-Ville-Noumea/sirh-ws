@@ -152,6 +152,5 @@ public class SpadmnRepository implements ISpadmnRepository {
 		q.setParameter("listPAInactiveForTiarhe", Arrays.asList("CA", "DC", "DE", "FC", "FI", "LI", "RT", "RV"));
 
 		return q.getResultList();
-
 	}
 }

@@ -610,13 +610,6 @@ public class AgentService implements IAgentService {
 			listIdAgent.add(nomatr + 9000000);
 		}
 		
-//		listIdAgent = new ArrayList<>();
-//		listIdAgent .add(9004365);
-		for (int i : listIdAgent) {
-			if (i < 9005555)
-				listIdAgent.remove(i);
-		}
-		
 		return listIdAgent;
 	}
 }
