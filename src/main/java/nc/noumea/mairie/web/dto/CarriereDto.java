@@ -20,6 +20,7 @@ public class CarriereDto {
 	private String INM;
 	private String IBAN;
 	private String typeContrat;
+	private String idTiarhe;
 
 	public CarriereDto() {
 	}
@@ -124,6 +125,14 @@ public class CarriereDto {
 
 	public void setTypeContrat(String typeContrat) {
 		this.typeContrat = typeContrat;
+	}
+
+	public String getIdTiarhe() {
+		return idTiarhe;
+	}
+
+	public void setIdTiarhe(String idTiarhe) {
+		this.idTiarhe = idTiarhe;
 	}
 
 }

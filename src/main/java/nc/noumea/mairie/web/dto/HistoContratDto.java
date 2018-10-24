@@ -6,8 +6,7 @@ public class HistoContratDto {
 	
 	private Integer idAgent;
 	private String idTiarhe;
-	private String typeContratCarriere;
-	private String typeContratContrat;
+	private String typeContrat;
 	private Date dateDebut;
 	private Date dateFin;
 	private String statut;
@@ -16,6 +15,25 @@ public class HistoContratDto {
 	private String INM;
 	private String IBAN;
 	private boolean isDateFinMoinsUnJour = false;
+	private String codeGrade;
+	
+	public HistoContratDto() {
+		
+	}
+	public HistoContratDto(HistoContratDto dto) {
+		this.idAgent = dto.getIdAgent();
+		this.idTiarhe = dto.getIdTiarhe();
+		this.typeContrat = dto.getTypeContrat();
+		this.dateDebut = dto.getDateDebut();
+		this.dateFin = dto.getDateFin();
+		this.statut = dto.getStatut();
+		this.motif = dto.getMotif();
+		this.justification = dto.getJustification();
+		this.INM = dto.getINM();
+		this.IBAN = dto.getIBAN();
+		this.isDateFinMoinsUnJour = dto.isDateFinMoinsUnJour;
+		this.codeGrade = dto.getCodeGrade();
+	}
 	
 	public Integer getIdAgent() {
 		return idAgent;
@@ -29,17 +47,11 @@ public class HistoContratDto {
 	public void setIdTiarhe(String idTiarhe) {
 		this.idTiarhe = idTiarhe;
 	}
-	public String getTypeContratCarriere() {
-		return typeContratCarriere;
+	public String getTypeContrat() {
+		return typeContrat;
 	}
-	public void setTypeContratCarriere(String typeContratCarriere) {
-		this.typeContratCarriere = typeContratCarriere;
-	}
-	public String getTypeContratContrat() {
-		return typeContratContrat;
-	}
-	public void setTypeContratContrat(String typeContratContrat) {
-		this.typeContratContrat = typeContratContrat;
+	public void setTypeContrat(String typeContrat) {
+		this.typeContrat = typeContrat;
 	}
 	public Date getDateDebut() {
 		return dateDebut;
@@ -89,23 +101,40 @@ public class HistoContratDto {
 	public void setDateFinMoinsUnJour(boolean isDateFinMoinsUnJour) {
 		this.isDateFinMoinsUnJour = isDateFinMoinsUnJour;
 	}
-	
+	public String getCodeGrade() {
+		return codeGrade;
+	}
+	public void setCodeGrade(String codeGrade) {
+		this.codeGrade = codeGrade;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		HistoContratDto compareObj = (HistoContratDto)obj;
 		
 		if (compareObj == null || compareObj.getIdAgent() == null)
 			return false;
+		if (compareObj.typeContrat == null && this.typeContrat != null
+				|| compareObj.typeContrat == null && this.typeContrat != null)
+			return false;
+		if (compareObj.motif == null && this.motif != null
+				|| compareObj.motif == null && this.motif != null)
+			return false;
+		if (compareObj.justification == null && this.justification != null
+				|| compareObj.justification == null && this.justification != null)
+			return false;
+		if (compareObj.idTiarhe == null && this.idTiarhe != null
+				|| compareObj.idTiarhe == null && this.idTiarhe != null)
+			return false;
 		
 		return compareObj.idAgent.equals(this.idAgent) 
-				&& compareObj.idTiarhe.equals(this.idTiarhe)
-				&& compareObj.typeContratCarriere.equals(this.typeContratCarriere)
-				&& compareObj.typeContratContrat.equals(this.typeContratContrat)
+				&& ((compareObj.idTiarhe == null && this.idTiarhe == null) || compareObj.idTiarhe.equals(this.idTiarhe))
+				&& ((compareObj.typeContrat == null && this.typeContrat == null) || compareObj.typeContrat.equals(this.typeContrat))
 				&& compareObj.statut.equals(this.statut)
-				&& compareObj.motif.equals(this.motif)
-				&& compareObj.justification.equals(this.justification)
+				&& ((compareObj.motif == null && this.motif == null) || compareObj.motif.equals(this.motif))
+				&& ((compareObj.justification == null && this.justification == null) || compareObj.justification.equals(this.justification))
 				&& compareObj.IBAN.equals(this.IBAN)
-				&& compareObj.INM.equals(this.INM);
+				&& compareObj.INM.equals(this.INM)
+				&& compareObj.codeGrade.equals(this.codeGrade);
 	}
 	
 }

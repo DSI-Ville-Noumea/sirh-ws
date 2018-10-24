@@ -21,6 +21,9 @@ public class GradeDto {
 	
 	private String codeMotifAvancement;
 	
+	public GradeDto() {
+	}
+	
 	public GradeDto(Spgradn spGradn) {
 		this.codeGrade = spGradn.getCdgrad();
 		this.libelleGrade = null != spGradn.getLiGrad() ? spGradn.getLiGrad().trim() : "";
