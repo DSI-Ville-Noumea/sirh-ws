@@ -29,5 +29,5 @@ public interface ISpadmnRepository {
 	 */
 	List<Integer> listNomatrEnActiviteSurPeriode(Date dateDebutPeriode, Date dateFinPeriode);
 	
-	List<Integer> listNomatrEnActivitePourHistoContrats();
+	List<Integer> listNomatrEnActivitePourHistoContrats(boolean isFonctionnaire);
 }

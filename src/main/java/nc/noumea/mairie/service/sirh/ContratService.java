@@ -110,8 +110,8 @@ public class ContratService implements IContratService {
 	}
 	
 	@Override
-	public byte[] getHistoContratForTiarhe() throws IOException, ParseException {
-		List<HistoContratDto> dataList = getHistoContratsList();
+	public byte[] getHistoContratForTiarhe(boolean isFonctionnaire) throws IOException, ParseException {
+		List<HistoContratDto> dataList = getHistoContratsList(isFonctionnaire);
 
 		XSSFWorkbook wb = new XSSFWorkbook();
 	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -166,19 +166,19 @@ public class ContratService implements IContratService {
 	    return bos.toByteArray();
 	}
 	
-	private List<HistoContratDto> getHistoContratsList() throws ParseException {
+	private List<HistoContratDto> getHistoContratsList(boolean isFonctionnaire) throws ParseException {
 		List<HistoContratDto> returnList = Lists.newArrayList();
 		Date curseur;
 		
 	    HistoContratDto histo;
 		
 		// Pour chaque agent actif, on fait le traitement
-		for (Integer idAgent : agentSrv.listIdAgentsActifsForTiahre()) {
+		for (Integer idAgent : agentSrv.listIdAgentsActifsForTiahre(isFonctionnaire)) {
 			logger.debug("Traitement de l'agent ID " + idAgent);
 			
 			// Récupération des contrats et des carrières
 			ContratDto contratUnique;
-			List<CarriereDto> carrieres = spcarrRepository.getAllCarrieresByAgentForTiarhe(idAgent);
+			List<CarriereDto> carrieres = spcarrRepository.getAllCarrieresByAgentForTiarhe(idAgent, isFonctionnaire);
 			
 			// Pour chaque contrat différent
 			for (CarriereDto spcarr : carrieres) {

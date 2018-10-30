@@ -1,5 +1,6 @@
 package nc.noumea.mairie.model.repository;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -7,12 +8,17 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
+import com.google.common.collect.Lists;
+
 import nc.noumea.mairie.model.bean.PositDesc;
 import nc.noumea.mairie.model.bean.Spadmn;
+import nc.noumea.mairie.web.dto.CarriereDto;
+import nc.noumea.mairie.web.dto.GradeDto;
 
 @Repository
 public class SpadmnRepository implements ISpadmnRepository {
@@ -135,22 +141,39 @@ public class SpadmnRepository implements ISpadmnRepository {
 
 	}
 
+	
 	@Override
-	public List<Integer> listNomatrEnActivitePourHistoContrats() {
-		// on recupere tous les nomatr actifs dans SPADMN
-		StringBuilder sbSpadmn = new StringBuilder();
-		sbSpadmn.append("select distinct(a.id.nomatr) from Spadmn a ");
-		sbSpadmn.append("where ( (a.id.datdeb <= :currDate) and (a.datfin = 0 or a.datfin >= :currDate )) ");
-		sbSpadmn.append("and a.positionAdministrative.cdpAdm not in (:listPAInactiveForTiarhe) ");
-		sbSpadmn.append("and a.id.nomatr < 9000 ");
-		sbSpadmn.append("ORDER BY a.id.nomatr ");
+	public List<Integer> listNomatrEnActivitePourHistoContrats(boolean isFonctionnaire) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select distinct(a.nomatr) from Spadmn a, spcarr carr ");
+		sb.append("where (a.datdeb <= :currDate and (a.datfin = 0 or a.datfin >= :currDate )) ");
+		sb.append("and (carr.datdeb <= :currDate and (carr.datfin = 0 or carr.datfin >= :currDate )) ");
+		sb.append("and a.cdpAdm not in (:listPAInactiveForTiarhe) ");
+		sb.append("and a.nomatr = carr.nomatr and carr.cdcate in (:listCDCATE) ");
+		sb.append("and a.nomatr < 9000 ");
+		sb.append("ORDER BY a.nomatr ");
 
-		TypedQuery<Integer> q = sirhEntityManager.createQuery(sbSpadmn.toString(), Integer.class);
-
+		Query query = sirhEntityManager.createNativeQuery(sb.toString());
+		
 		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-		q.setParameter("currDate", Integer.valueOf(sdfMairie.format(new Date())));
-		q.setParameter("listPAInactiveForTiarhe", Arrays.asList("CA", "DC", "DE", "FC", "FI", "LI", "RT", "RV"));
+		query.setParameter("currDate", Integer.valueOf(sdfMairie.format(new Date())));
+		query.setParameter("listPAInactiveForTiarhe", Arrays.asList("CA", "DC", "DE", "FC", "FI", "LI", "RT", "RV"));
+		
+		if (isFonctionnaire) {
+			query.setParameter("listCDCATE", Arrays.asList("1","2","6","16","17","18","20"));
+		} else {
+			query.setParameter("listCDCATE", Arrays.asList("4","7"));
+		}
 
-		return q.getResultList();
+		List<Integer> returnList = Lists.newArrayList();
+		
+		for (Object o : query.getResultList()) {
+			returnList.add(((BigDecimal)o).intValue());
+		}
+		
+		return returnList;
 	}
+	
+	
 }

@@ -145,6 +145,6 @@ public interface IAgentService {
 	 */
 	public List<Agent> listAgentAvecIdTitreRepas();
 	
-	List<Integer> listIdAgentsActifsForTiahre();
+	List<Integer> listIdAgentsActifsForTiahre(boolean isFonctionnaire);
 
 }

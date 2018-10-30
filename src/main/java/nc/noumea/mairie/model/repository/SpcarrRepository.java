@@ -228,53 +228,16 @@ public class SpcarrRepository implements ISpcarrRepository {
 		return (Integer) query.getSingleResult();
 	}
 
-//	@Override
-//	public List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent) throws ParseException {
-//		StringBuilder sb = new StringBuilder();
-//
-//		sb.append("select max(cat.licate), max(bar.iban), max(bar.inm), min(carr.datdeb), max(carr.datfin), carr.cddcdica, carr.cdgrad, max(a.id_tiarhe) ");
-//		sb.append("from Spcarr carr, SPBAREM bar, SPCATG cat, AGENT a ");
-//		sb.append("where carr.nomatr = :nomatr AND carr.iban = bar.iban AND cat.cdcate = carr.cdcate AND carr.nomatr = a.nomatr ");
-//		sb.append("group by carr.cdcate, carr.iban, carr.cddcdica, carr.cdgrad ");
-//		sb.append("order by min(carr.datdeb)");
-//
-//		Query query = sirhEntityManager.createNativeQuery(sb.toString());
-//
-//		query.setParameter("nomatr", idAgent - 9000000);
-//		
-//		SimpleDateFormat sdfMairie = new SimpleDateFormat("yyyyMMdd");
-//		List<CarriereDto> returnList = Lists.newArrayList();
-//		CarriereDto newCarr;
-//		GradeDto grade;
-//		
-//		for (Object[] o : (List<Object[]>)query.getResultList()) {
-//			newCarr = new CarriereDto();
-//			grade = new GradeDto();
-//			grade.setCodeGrade((String)o[6]);
-//			
-//			newCarr.setLibelleCategorie((String)o[0]);
-//			newCarr.setIBAN((String)o[1]);
-//			newCarr.setINM(((BigDecimal)o[2]).toString());
-//			newCarr.setDateDebut(sdfMairie.parse(((BigDecimal)o[3]).toString()));
-//			if (!((BigDecimal)o[4]).toString().equals("0"))
-//				newCarr.setDateFin(sdfMairie.parse(((BigDecimal)o[4]).toString()));
-//			newCarr.setTypeContrat((String)o[5]);
-//			newCarr.setGrade(grade);
-//			newCarr.setIdTiarhe((String)o[7]);
-//			
-//			returnList.add(newCarr);
-//		}
-//		
-//		return returnList;
-//	}
-
 	@Override
-	public List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent) throws ParseException {
+	public List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent, boolean isFonctionnaire) throws ParseException {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("select cat.licate, bar.iban, bar.inm, carr.datdeb, carr.datfin, carr.cddcdica, carr.cdgrad, a.id_tiarhe ");
 		sb.append("from Spcarr carr, SPBAREM bar, SPCATG cat, AGENT a ");
 		sb.append("where carr.nomatr = :nomatr AND carr.iban = bar.iban AND cat.cdcate = carr.cdcate AND carr.nomatr = a.nomatr ");
+		if (isFonctionnaire)
+			sb.append("and carr.cdcate = 4 ");
+			
 		sb.append("order by carr.datdeb");
 
 		Query query = sirhEntityManager.createNativeQuery(sb.toString());

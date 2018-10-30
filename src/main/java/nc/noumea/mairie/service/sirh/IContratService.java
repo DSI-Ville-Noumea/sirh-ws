@@ -18,7 +18,7 @@ public interface IContratService {
 
 	boolean isPeriodeEssai(Integer idAgent, Date dateRecherche);
 
-	byte[] getHistoContratForTiarhe() throws IOException, ParseException;
+	byte[] getHistoContratForTiarhe(boolean isFonctionnaire) throws IOException, ParseException;
 	
 	List<ContratDto> getAllContratsByAgentForTiarhe(Integer idAgent);
 }

@@ -28,5 +28,5 @@ public interface ISpcarrRepository {
 	
 	Integer getListeAgentsActifsPourGenerationBordereauMDF(Date dateDebut, Date dateFin);
 	
-	List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent) throws ParseException;
+	List<CarriereDto> getAllCarrieresByAgentForTiarhe(Integer idAgent, boolean isFonctionnaire) throws ParseException;
 }

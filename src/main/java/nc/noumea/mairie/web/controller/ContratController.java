@@ -189,9 +189,9 @@ public class ContratController {
 	@ResponseBody
 	@RequestMapping(value = "/getHistoContratsForTiarhe", method = RequestMethod.GET)
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> getXmlPreviousEtatsPayeur() throws IOException, ParseException {
+	public ResponseEntity<byte[]> getXmlPreviousEtatsPayeur(boolean isFonctionnaire) throws IOException, ParseException {
 
-		byte[] byteArray = contratSrv.getHistoContratForTiarhe();
+		byte[] byteArray = contratSrv.getHistoContratForTiarhe(isFonctionnaire);
 		
 		logger.debug("Export done");
 		

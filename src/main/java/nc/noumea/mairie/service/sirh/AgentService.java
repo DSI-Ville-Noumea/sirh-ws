@@ -603,10 +603,10 @@ public class AgentService implements IAgentService {
 	}
 
 	@Override
-	public List<Integer> listIdAgentsActifsForTiahre() {
+	public List<Integer> listIdAgentsActifsForTiahre(boolean isFonctionnaire) {
 		// on transforme les nomatr en idAgent
 		List<Integer> listIdAgent = new ArrayList<>();
-		for (Integer nomatr : spadmnRepository.listNomatrEnActivitePourHistoContrats()) {
+		for (Integer nomatr : spadmnRepository.listNomatrEnActivitePourHistoContrats(isFonctionnaire)) {
 			listIdAgent.add(nomatr + 9000000);
 		}
 		
