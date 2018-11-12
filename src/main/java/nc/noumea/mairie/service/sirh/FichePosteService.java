@@ -17,7 +17,6 @@ import javax.persistence.TypedQuery;
 
 import nc.noumea.mairie.model.bean.sirh.*;
 import nc.noumea.mairie.model.pk.sirh.*;
-import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,11 +1,32 @@
 package nc.noumea.mairie.web.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import flexjson.JSONSerializer;
 import nc.noumea.mairie.model.bean.sirh.Activite;
 import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
 import nc.noumea.mairie.model.bean.sirh.Agent;
@@ -25,22 +46,6 @@ import nc.noumea.mairie.web.dto.InfoEntiteDto;
 import nc.noumea.mairie.web.dto.SpbhorDto;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 import nc.noumea.mairie.ws.dto.ReturnMessageDto;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import flexjson.JSONSerializer;
 
 @Controller
 @RequestMapping("/fichePostes")
@@ -699,5 +704,38 @@ public class FichePosteController {
 		String response = new JSONSerializer().exclude("*.class").transform(new MSDateTransformer(), Date.class).deepSerialize(result);
 
 		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/getFichePosteParService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	@Transactional(readOnly = true)
+	public ResponseEntity<byte[]> getFichePosteParService(@RequestParam(value = "idService", required = true) Integer idService)
+			throws ParseException, IOException {
+		Map<String, byte[]> listFiles = null;
+
+		try {
+			listFiles = reportingService.getFichePosteParServicePourReorg(idService);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    ZipOutputStream zos = new ZipOutputStream(baos);
+	    for (Entry<String, byte[]> reporte : listFiles.entrySet()) {
+	        ZipEntry entry = new ZipEntry(reporte.getKey());
+	        entry.setSize(reporte.getValue().length);
+	        zos.putNextEntry(entry);
+	        zos.write(reporte.getValue());
+	    }
+	    zos.closeEntry();
+	    zos.close();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/pdf");
+		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.pdf\"", idService));
+
+		return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.OK);
 	}
 }

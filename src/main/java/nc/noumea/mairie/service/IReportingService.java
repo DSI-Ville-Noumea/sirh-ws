@@ -2,6 +2,7 @@ package nc.noumea.mairie.service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Map;
 
 import com.itextpdf.text.DocumentException;
 
@@ -25,4 +26,6 @@ public interface IReportingService {
 	byte[] getTableauAvancementPDF(CommissionAvancementDto dto) throws DocumentException, MalformedURLException, IOException;
 
 	byte[] getCertificatAptitudePDF(VisiteMedicale vm, EntiteDto direction, EntiteDto service, TitrePoste titreFichePoste) throws DocumentException;
+
+	Map<String, byte[]> getFichePosteParServicePourReorg(Integer idService) throws Exception;
 }

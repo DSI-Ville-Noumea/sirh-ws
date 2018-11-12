@@ -16,11 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -49,6 +53,8 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 
 @Service
 public class ReportingService extends AbstractReporting implements IReportingService {
+	
+	private Logger logger = LoggerFactory.getLogger(ReportingService.class);
 
 	@Autowired
 	@Qualifier("reportingBaseUrl")
@@ -981,5 +987,34 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	private String getTitreCertificatAptitude(Agent agent) {
 		String nomPrenom = agent.getDisplayNom() + " " + agent.getDisplayPrenom();
 		return "CERTIFICAT D'APTITUDE DE " + agent.getTitre().toUpperCase() + " " + nomPrenom.toUpperCase();
+	}
+
+	@Override
+	public Map<String, byte[]> getFichePosteParServicePourReorg(Integer idService) throws Exception {
+		Map<String, byte[]> returnList = Maps.newHashMap();
+		ClientResponse response = null;
+		Map<String, String> map = new HashMap<String, String>();
+
+		// TODO : Lister les services/sections enfants !
+		List<Integer> idServices = Lists.newArrayList();
+		idServices.add(1);
+		for (int idServ : idServices) {
+			logger.debug("Traitement du service id {}", idServ);
+			// TODO : Lister les fiches de poste utilisées par ces services
+			List<Integer> idFichePostes = Lists.newArrayList();
+			idFichePostes.add(7430);
+			idFichePostes.add(8765);
+			
+			for (int idFP : idFichePostes) {
+				logger.debug("Traitement de la fiche de poste {}", idFP);
+				map = new HashMap<String, String>();
+				map.put("idFichePoste", String.valueOf(idFP));
+
+				response = createAndFireRequest(map, "fichePosteSIRHPourReferentiel.rptdesign", "PDF");
+				returnList.put("test_"+idServ+"_"+idFP+".pdf", readResponseAsByteArray(response, map));
+			}
+		}
+		
+		return returnList;
 	}
 }
