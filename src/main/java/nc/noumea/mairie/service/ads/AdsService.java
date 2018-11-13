@@ -1,8 +1,17 @@
 package nc.noumea.mairie.service.ads;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
+import nc.noumea.mairie.service.ReportingService;
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.AgentWithServiceDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
@@ -10,14 +19,13 @@ import nc.noumea.mairie.web.dto.EntiteWithAgentWithServiceDto;
 import nc.noumea.mairie.ws.ADSWSConsumer;
 import nc.noumea.mairie.ws.IADSWSConsumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class AdsService implements IAdsService {
 
 	@Autowired
 	private IADSWSConsumer adsWSConsumer;
+	
+	private Logger logger = LoggerFactory.getLogger(ReportingService.class);
 
 	/**
 	 * Ce service optimise les appels à ADS. On passe en parametre une liste d
@@ -213,6 +221,35 @@ public class AdsService implements IAdsService {
 			
 			parcoursTreeToAddAgent(nodeEnfant, result);
 		}
+	}
+	
+	@Override
+	public Map<String, Integer> getListIdsOfEntiteTree(Integer idService) {
+		logger.debug("Récupération de l'arbre des services");
+		EntiteDto tree = adsWSConsumer.getWholeTree();
+		return getChildrenOfServiceRecursive(tree, new HashMap<>(), idService);
+	}
+	
+	private Map<String, Integer> getChildrenOfServiceRecursive(EntiteDto entite, Map<String, Integer> map, Integer idService) {
+		boolean parentSelected = false;
+		
+		if (entite == null || entite.getIdEntite() == null)
+			return map;
+			
+		if (entite.getIdEntite().equals(idService) && entite.getIdStatut().equals(StatutEntiteEnum.ACTIF.getIdRefStatutEntite())) {
+			logger.debug("Entité ajoutée : {} ({})", entite.getSigle(), entite.getIdEntite());
+			map.put(entite.getSigle(), entite.getIdEntite());
+			parentSelected = true;
+		}
+		
+		for (EntiteDto enfant : entite.getEnfants()) {
+			if (parentSelected)
+				map = getChildrenOfServiceRecursive(enfant, map, enfant.getIdEntite());
+			else
+				map = getChildrenOfServiceRecursive(enfant, map, idService);
+		}
+
+		return map;
 	}
 
 }

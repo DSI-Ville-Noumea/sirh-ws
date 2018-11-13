@@ -1,6 +1,7 @@
 package nc.noumea.mairie.service.ads;
 
 import java.util.List;
+import java.util.Map;
 
 import nc.noumea.mairie.web.dto.AgentDto;
 import nc.noumea.mairie.web.dto.EntiteDto;
@@ -28,4 +29,6 @@ public interface IAdsService {
 	 * @return List<AgentDto>
 	 */
 	List<AgentDto> getListeAgentsOfEntiteTree(EntiteWithAgentWithServiceDto tree);
+	
+	Map<String, Integer> getListIdsOfEntiteTree(Integer idService);
 }

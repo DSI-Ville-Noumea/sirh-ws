@@ -710,8 +710,7 @@ public class FichePosteController {
 	@RequestMapping(value = "/getFichePosteParService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> getFichePosteParService(@RequestParam(value = "idService", required = true) Integer idService)
-			throws ParseException, IOException {
+	public ResponseEntity<byte[]> getFichePosteParService(@RequestParam(value = "idService", required = true) Integer idService) throws ParseException, IOException {
 		Map<String, byte[]> listFiles = null;
 
 		try {
@@ -721,6 +720,8 @@ public class FichePosteController {
 			return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+		logger.debug("La liste des fiches de poste a bien été générée.");
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    ZipOutputStream zos = new ZipOutputStream(baos);
 	    for (Entry<String, byte[]> reporte : listFiles.entrySet()) {

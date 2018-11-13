@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
@@ -15,8 +16,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import nc.noumea.mairie.model.bean.sirh.*;
-import nc.noumea.mairie.model.pk.sirh.*;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +23,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import nc.noumea.mairie.model.bean.Spbhor;
 import nc.noumea.mairie.model.bean.Spmtsr;
 import nc.noumea.mairie.model.bean.Sppost;
 import nc.noumea.mairie.model.bean.ads.StatutEntiteEnum;
+import nc.noumea.mairie.model.bean.sirh.ActionFdpJob;
+import nc.noumea.mairie.model.bean.sirh.ActiviteFP;
+import nc.noumea.mairie.model.bean.sirh.ActiviteGeneraleFp;
+import nc.noumea.mairie.model.bean.sirh.ActiviteMetierSavoirFp;
+import nc.noumea.mairie.model.bean.sirh.Affectation;
+import nc.noumea.mairie.model.bean.sirh.AvantageNature;
+import nc.noumea.mairie.model.bean.sirh.AvantageNatureFP;
+import nc.noumea.mairie.model.bean.sirh.CompetenceFP;
+import nc.noumea.mairie.model.bean.sirh.ConditionExerciceFp;
+import nc.noumea.mairie.model.bean.sirh.Delegation;
+import nc.noumea.mairie.model.bean.sirh.DelegationFP;
+import nc.noumea.mairie.model.bean.sirh.EnumStatutFichePoste;
+import nc.noumea.mairie.model.bean.sirh.EnumTypeHisto;
+import nc.noumea.mairie.model.bean.sirh.FeFp;
+import nc.noumea.mairie.model.bean.sirh.FicheEmploi;
+import nc.noumea.mairie.model.bean.sirh.FicheMetier;
+import nc.noumea.mairie.model.bean.sirh.FichePoste;
+import nc.noumea.mairie.model.bean.sirh.FmFp;
+import nc.noumea.mairie.model.bean.sirh.HistoFichePoste;
+import nc.noumea.mairie.model.bean.sirh.NatureCredit;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtude;
+import nc.noumea.mairie.model.bean.sirh.NiveauEtudeFP;
+import nc.noumea.mairie.model.bean.sirh.PrimePointageFP;
+import nc.noumea.mairie.model.bean.sirh.RegIndemFP;
+import nc.noumea.mairie.model.bean.sirh.RegimeIndemnitaire;
+import nc.noumea.mairie.model.bean.sirh.SavoirFaireFp;
+import nc.noumea.mairie.model.bean.sirh.StatutFichePoste;
+import nc.noumea.mairie.model.pk.sirh.ActiviteFPPK;
+import nc.noumea.mairie.model.pk.sirh.CompetenceFPPK;
+import nc.noumea.mairie.model.pk.sirh.FeFpPK;
+import nc.noumea.mairie.model.pk.sirh.PrimePointageFPPK;
 import nc.noumea.mairie.model.repository.IMairieRepository;
 import nc.noumea.mairie.model.repository.sirh.IFichePosteRepository;
 import nc.noumea.mairie.service.ads.IAdsService;
@@ -1792,5 +1825,21 @@ public class FichePosteService implements IFichePosteService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public Map<String, Integer> getListeIdFPActivesParService(Integer idService) {
+		Map<String, Integer> map = Maps.newHashMap();
+		List<Integer> services = Lists.newArrayList();
+		services.add(idService);
+		List<Integer> statutFP = Lists.newArrayList();
+		statutFP.add(EnumStatutFichePoste.VALIDEE.getId());
+		
+		List<FichePoste> listFP = fichePosteDao.getListFichePosteByIdServiceADSAndStatutFDP(services, statutFP);
+		
+		for (FichePoste dto : listFP)
+			map.put(dto.getNumFP(), dto.getIdFichePoste());
+		
+		return map;
 	}
 }

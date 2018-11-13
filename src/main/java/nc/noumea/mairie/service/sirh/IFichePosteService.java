@@ -2,6 +2,7 @@ package nc.noumea.mairie.service.sirh;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import nc.noumea.mairie.model.bean.sirh.FichePoste;
 import nc.noumea.mairie.web.dto.FichePosteDto;
@@ -87,4 +88,6 @@ public interface IFichePosteService {
 	 * @return ReturnMessageDto Message d info et erreur
 	 */
 	public ReturnMessageDto transiteFichePosteFromEntity(Integer idEntite, Integer idAgent);
+	
+	Map<String, Integer> getListeIdFPActivesParService(Integer idService);
 }

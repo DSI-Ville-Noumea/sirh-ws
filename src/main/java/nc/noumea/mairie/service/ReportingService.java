@@ -14,8 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -45,6 +46,8 @@ import nc.noumea.mairie.model.bean.sirh.Medecin;
 import nc.noumea.mairie.model.bean.sirh.Recommandation;
 import nc.noumea.mairie.model.bean.sirh.TitrePoste;
 import nc.noumea.mairie.model.bean.sirh.VisiteMedicale;
+import nc.noumea.mairie.service.ads.AdsService;
+import nc.noumea.mairie.service.sirh.FichePosteService;
 import nc.noumea.mairie.web.dto.EntiteDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
@@ -55,7 +58,7 @@ import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
 public class ReportingService extends AbstractReporting implements IReportingService {
 	
 	private Logger logger = LoggerFactory.getLogger(ReportingService.class);
-
+	
 	@Autowired
 	@Qualifier("reportingBaseUrl")
 	private String				reportingBaseUrl;
@@ -63,6 +66,12 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 	@Autowired
 	@Qualifier("reportServerPath")
 	private String				reportServerPath;
+
+	@Autowired
+	private AdsService adsService;
+	
+	@Autowired
+	private FichePosteService fichePosteService;
 
 	private static final String	REPORT_PAGE		= "frameset";
 	private static final String	PARAM_REPORT	= "__report";
@@ -995,23 +1004,22 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		ClientResponse response = null;
 		Map<String, String> map = new HashMap<String, String>();
 
-		// TODO : Lister les services/sections enfants !
-		List<Integer> idServices = Lists.newArrayList();
-		idServices.add(1);
-		for (int idServ : idServices) {
-			logger.debug("Traitement du service id {}", idServ);
-			// TODO : Lister les fiches de poste utilisées par ces services
-			List<Integer> idFichePostes = Lists.newArrayList();
-			idFichePostes.add(7430);
-			idFichePostes.add(8765);
+		// Récupération des services et sous-services
+		Map<String, Integer> idsServices = adsService.getListIdsOfEntiteTree(idService);
+		logger.debug("Ce service contient {} sous services.", idsServices.size());
+		
+		for (Entry<String, Integer> idServ : idsServices.entrySet()) {
+			logger.debug("Traitement du service {}, id {}", idServ.getKey(), idServ.getValue());
+			// Récupération des fiches de poste actives pour ce service.
+			Map<String, Integer> idFichePostes = fichePosteService.getListeIdFPActivesParService(idServ.getValue());
 			
-			for (int idFP : idFichePostes) {
-				logger.debug("Traitement de la fiche de poste {}", idFP);
+			for (Entry<String, Integer> idFP : idFichePostes.entrySet()) {
+				logger.debug("Traitement de la fiche de poste {} id {}", idFP.getKey(), idFP.getValue());
 				map = new HashMap<String, String>();
-				map.put("idFichePoste", String.valueOf(idFP));
+				map.put("idFichePoste", String.valueOf(idFP.getValue()));
 
 				response = createAndFireRequest(map, "fichePosteSIRHPourReferentiel.rptdesign", "PDF");
-				returnList.put("test_"+idServ+"_"+idFP+".pdf", readResponseAsByteArray(response, map));
+				returnList.put(idServ.getKey()+"_"+StringUtils.replace(idFP.getKey(), "/", "-")+".pdf", readResponseAsByteArray(response, map));
 			}
 		}
 		
