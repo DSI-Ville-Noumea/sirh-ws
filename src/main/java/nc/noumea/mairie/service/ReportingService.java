@@ -53,6 +53,7 @@ import nc.noumea.mairie.web.dto.avancements.AvancementItemDto;
 import nc.noumea.mairie.web.dto.avancements.AvancementsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementCorpsDto;
 import nc.noumea.mairie.web.dto.avancements.CommissionAvancementDto;
+import nc.noumea.mairie.ws.ADSWSConsumer;
 
 @Service
 public class ReportingService extends AbstractReporting implements IReportingService {
@@ -69,6 +70,9 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 
 	@Autowired
 	private AdsService adsService;
+
+	@Autowired
+	private ADSWSConsumer adsWsConsumer;
 	
 	@Autowired
 	private FichePosteService fichePosteService;
@@ -1009,12 +1013,12 @@ public class ReportingService extends AbstractReporting implements IReportingSer
 		logger.debug("Ce service contient {} sous services.", idsServices.size());
 		
 		for (Entry<String, Integer> idServ : idsServices.entrySet()) {
-			logger.debug("Traitement du service {}, id {}", idServ.getKey(), idServ.getValue());
 			// Récupération des fiches de poste actives pour ce service.
 			Map<String, Integer> idFichePostes = fichePosteService.getListeIdFPActivesParService(idServ.getValue());
+			logger.debug("Traitement du service {}, {} fiches de poste", idServ.getKey(), idFichePostes.size());
 			
 			for (Entry<String, Integer> idFP : idFichePostes.entrySet()) {
-				logger.debug("Traitement de la fiche de poste {} id {}", idFP.getKey(), idFP.getValue());
+				logger.debug("Traitement de la fiche de poste {}", idFP.getKey());
 				map = new HashMap<String, String>();
 				map.put("idFichePoste", String.valueOf(idFP.getValue()));
 

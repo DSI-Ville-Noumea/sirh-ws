@@ -732,6 +732,8 @@ public class FichePosteController {
 	    }
 	    zos.closeEntry();
 	    zos.close();
+	    
+		logger.debug("Le ZIP a été créé.");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/pdf");
