@@ -1,6 +1,6 @@
 package nc.noumea.mairie.web.controller;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,9 +9,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -710,7 +711,7 @@ public class FichePosteController {
 	@RequestMapping(value = "/getFichePosteParService", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<byte[]> getFichePosteParService(@RequestParam(value = "idService", required = true) Integer idService) throws ParseException, IOException {
+	public ResponseEntity<byte[]> getFichePosteParService(@RequestParam(value = "idService", required = true) Integer idService, @RequestParam(value = "sigleService", required = true) String sigleService) throws ParseException, IOException {
 		Map<String, byte[]> listFiles = null;
 
 		try {
@@ -722,15 +723,14 @@ public class FichePosteController {
 
 		logger.debug("La liste des fiches de poste a bien été générée.");
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	    ZipOutputStream zos = new ZipOutputStream(baos);
+		File f = new File("/home/teo/Bureau/SIRH/ImpressionFDP/"+sigleService+".zip");
+		ZipArchiveOutputStream zos = new ZipArchiveOutputStream(f);
 	    for (Entry<String, byte[]> reporte : listFiles.entrySet()) {
-	        ZipEntry entry = new ZipEntry(reporte.getKey());
-	        entry.setSize(reporte.getValue().length);
-	        zos.putNextEntry(entry);
+	        ArchiveEntry entry = new ZipArchiveEntry(reporte.getKey());
+	        zos.putArchiveEntry(entry);
 	        zos.write(reporte.getValue());
 	    }
-	    zos.closeEntry();
+	    zos.closeArchiveEntry();
 	    zos.close();
 	    
 		logger.debug("Le ZIP a été créé.");
@@ -739,6 +739,6 @@ public class FichePosteController {
 		headers.add("Content-Type", "application/pdf");
 		headers.add("Content-Disposition", String.format("attachment; filename=\"%s.pdf\"", idService));
 
-		return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.OK);
+		return null;
 	}
 }
