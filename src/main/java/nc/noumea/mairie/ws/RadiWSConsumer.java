@@ -30,7 +30,7 @@ public class RadiWSConsumer extends BaseWsConsumer implements IRadiWSConsumer {
 		String url = String.format(radiWsBaseUrl + searchAgentRadi);
 
 		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("employeenumber", getEmployeeNumberWithNomatr(nomatr));
+		parameters.put("employeeID", getEmployeeNumberWithNomatr(nomatr));
 
 		ClientResponse res = createAndFireGetRequest(parameters, url);
 		if (res.getStatus() == HttpStatus.NO_CONTENT.value()) {
@@ -47,8 +47,8 @@ public class RadiWSConsumer extends BaseWsConsumer implements IRadiWSConsumer {
 		String url = String.format(radiWsBaseUrl + searchAgentRadi);
 
 		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("employeenumber", getEmployeeNumberWithNomatr(nomatr));
-		logger.debug("Call " + url + " with employeenumber=" + getEmployeeNumberWithNomatr(nomatr));
+		parameters.put("employeeID", getEmployeeNumberWithNomatr(nomatr));
+		logger.debug("Call " + url + " with employeeID=" + getEmployeeNumberWithNomatr(nomatr));
 
 		ClientResponse res = createAndFireGetRequest(parameters, url);
 		List<LightUserDto> list = readResponseAsList(LightUserDto.class, res, url);
