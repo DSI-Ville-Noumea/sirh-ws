@@ -234,6 +234,9 @@ public class Agent {
 	@Column(name = "ID_TITRE_REPAS")
 	private Integer idTitreRepas;
 
+	@Column(name = "ID_TIARHE")
+	private String idTiarhe;
+
 	public Integer getIdTitreRepas() {
 		return idTitreRepas;
 	}
@@ -253,7 +256,7 @@ public class Agent {
 	public static JSONSerializer getSerializerAgentForEae() {
 		JSONSerializer serializer = new JSONSerializer().include("idAgent").include("nomatr")
 				.include("nomPatronymique").include("nomMarital").include("nomUsage").include("prenom")
-				.include("prenomUsage").include("dateNaissance").include("dateDerniereEmbauche")
+				.include("prenomUsage").include("dateNaissance").include("dateDerniereEmbauche").include("idTiarhe")
 				.transform(new MSDateTransformer(), Date.class)
 				.transform(new NullableIntegerTransformer(), Integer.class)
 				.transform(new SituationFamilialeTransformer(), SituationFamiliale.class)
@@ -599,5 +602,13 @@ public class Agent {
 
 	public void setNationalite(String nationalite) {
 		this.nationalite = nationalite;
+	}
+
+	public String getIdTiarhe() {
+		return idTiarhe;
+	}
+
+	public void setIdTiarhe(String idTiarhe) {
+		this.idTiarhe = idTiarhe;
 	}
 }
