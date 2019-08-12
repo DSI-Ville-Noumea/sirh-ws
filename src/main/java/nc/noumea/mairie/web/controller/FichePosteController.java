@@ -29,6 +29,7 @@ import nc.noumea.mairie.ws.dto.ReturnMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -280,13 +281,14 @@ public class FichePosteController {
 	@RequestMapping(value = "/getFichePoste", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	@Transactional(readOnly = true)
-	public ResponseEntity<String> getFichePosteAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent) throws ParseException {
+	public ResponseEntity<String> getFichePosteAgentOtherProject(@RequestParam(value = "idAgent", required = true) Long idAgent, 
+			@RequestParam(value = "dateAffectation", required = false) @DateTimeFormat(pattern = "yyyyMMdd") Date dateAffectation) throws ParseException {
 
 		// on remanie l'idAgent
 		String newIdAgent = remanieIdAgent(idAgent);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String dateTemp = sdf.format(new Date());
+		String dateTemp = dateAffectation == null ? sdf.format(new Date()) : sdf.format(dateAffectation);
 		Date dateJour = sdf.parse(dateTemp);
 
 		FichePoste fp = fpSrv.getFichePostePrimaireAgentAffectationEnCours(Integer.valueOf(newIdAgent), dateJour, true);
