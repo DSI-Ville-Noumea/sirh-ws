@@ -109,7 +109,7 @@ public class FichePosteDtoTest {
 		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
-		assertEquals(fp.getMissions(), dto.getMissions());
+//		assertEquals(fp.getMissions(), dto.getMissions());
 		assertEquals(fp.getObservation(), dto.getCommentaire());
 
 		assertEquals(2, dto.getActivites().size());
@@ -226,7 +226,7 @@ public class FichePosteDtoTest {
 		// assertEquals(fp.getService().getSection(), dto.getSection());
 		assertEquals(fp.getLieuPoste().getLibelleLieu(), dto.getLieu());
 		assertEquals(fp.getGradePoste().getGradeInitial(), dto.getGradePoste());
-		assertEquals(fp.getMissions(), dto.getMissions());
+//		assertEquals(fp.getMissions(), dto.getMissions());
 		assertEquals(fp.getObservation(), dto.getCommentaire());
 		assertEquals(fp.getStatutFP().getLibStatut(), dto.getStatutFDP());
 		assertEquals(fp.getNatureCredit().getLibNatureCredit(), dto.getNatureCredit());

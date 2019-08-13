@@ -4,6 +4,8 @@ import nc.noumea.mairie.model.bean.sirh.*;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Lists;
 
 import java.text.SimpleDateFormat;
@@ -146,7 +148,13 @@ public class FichePosteDto {
 		// superieur =
 		// fichePoste.getResponsable().getTitrePoste().getLibTitrePoste();
 
-		this.missions = fichePoste.getMissions();
+		// Pour la migration des EAE, on intègre les spécialisations aux missions.
+		String missions = "";
+		if (StringUtils.isNotEmpty(fichePoste.getMissions()))
+			missions = "   MISSIONS : \n" + fichePoste.getMissions();
+		if (StringUtils.isNotEmpty(fichePoste.getSpecialisation()))
+			missions += "\n\n   SPECIALISATIONS : \n" + fichePoste.getSpecialisation();
+		this.missions = missions;
 
 		for (Activite act : listeActi) {
 			this.activites.add(act.getNomActivite());
